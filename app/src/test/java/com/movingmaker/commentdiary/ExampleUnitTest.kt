@@ -1,4 +1,4 @@
-package cmc.movingmaker.commentdiary
+package com.movingmaker.commentdiary
 
 import org.junit.Test
 

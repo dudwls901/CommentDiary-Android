@@ -1,4 +1,4 @@
-package cmc.movingmaker.commentdiary
+package com.movingmaker.commentdiary
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
