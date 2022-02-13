@@ -1,6 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    // 직렬
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -29,6 +32,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    dataBinding{
+        enabled = true
+    }
 }
 
 dependencies {
@@ -40,4 +47,44 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    // ViewModel
+    def lifecycle_version = "2.4.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.activity:activity-ktx:1.4.0"
+    implementation "androidx.fragment:fragment-ktx:1.4.1"
+
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+
+    //paging
+    def paging_version = "3.1.0"
+    implementation "androidx.paging:paging-runtime:$paging_version"
+
+    //material-calendarview
+    def material_calendarview_version = "1.4.3"
+    implementation "com.prolificinteractive:material-calendarview:$material_calendarview_version"
+
+    //Retrofit2
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    //okhttp3 로깅 인터셉터
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.2")
+    /*
+    클라이언트인 레트로핏에서 서버로 api통신을 할 때 logging으로 중간에서 인터셉트한다.
+    1.기본 매개변수, 사용자의 휴대폰 기종, 안드로이드, 아이폰인지 등을 서버로 보내는데 인터셉트에서 기본 파라미터에
+    인터셉트를 추가해서 전송
+    2.로깅확인 : 레트로핏에서 api통신할 때 데이터들에 대한 로그를 확인 여러가지 옵션으로 ,header, body 등을 볼 수 있다,
+    log창에서 http응답을 좀 더편하게 볼 수 있는 방법
+     */
+
+    //Room
+    def roomVersion = "2.4.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:$roomVersion")
+
+    //Datastore
+    implementation "androidx.datastore:datastore:1.0.0"
+    implementation "androidx.datastore:datastore-core:1.0.0"
 }
