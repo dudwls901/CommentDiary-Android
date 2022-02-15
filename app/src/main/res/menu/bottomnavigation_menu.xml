@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/fragment1"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:title="@string/bottomnavigation_title_writediary"
+        />
+    <item
+        android:id="@+id/fragment2"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_done_outline_24"
+        android:title="@string/bottomnavigation_title_receiveddiary"
+        />
+    <item
+        android:id="@+id/fragment3"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_done_outline_24"
+        android:title="@string/bottomnavigation_title_mydiary"
+        />
+    <item
+        android:id="@+id/fragment4"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_done_outline_24"
+        android:title="@string/bottomnavigation_title_my"
+        />
+</menu>

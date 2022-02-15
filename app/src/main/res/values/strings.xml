@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CommentDiary</string>
+    <string name="bottomnavigation_title_writediary">일기 쓰기</string>
+    <string name="bottomnavigation_title_receiveddiary">받은 일기</string>
+    <string name="bottomnavigation_title_mydiary">내 일기</string>
+    <string name="bottomnavigation_title_my">my</string>
 </resources>
