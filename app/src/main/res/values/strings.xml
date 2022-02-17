@@ -4,4 +4,23 @@
     <string name="bottomnavigation_title_receiveddiary">받은 일기</string>
     <string name="bottomnavigation_title_mydiary">내 일기</string>
     <string name="bottomnavigation_title_my">my</string>
+    <string name="diary_test_text">"2. 캘린더 표시
+- 당일날짜가 자동선택되어 있음(1월 15일쪽에 큰 회색
+동그라미), 과거의 날짜를 선택시, 회색동그라미가 해당 날짜에
+노출
+- 작성한 일기가 있는 날에, 작은 동그라미로 표시됨
+- 12일, 14일
+- 유형이 2개임(코멘트용 일기, 혼자쓰는 일기)
+"</string>
+    <string name="diary_test_date">2022년 02월 21일</string>
+    <string name="diary_test_head">배가 고프다</string>
+    <string name="calendar_with_diary_button_write_text">오늘의 일기 쓰기</string>
+    <string name="calendar_with_diary_button_text">오늘은 어떤 하루였나요?</string>
+    <string name="write_diary_head_hint">제목을 입력해주세요</string>
+    <string name="write_diary_content_hint">오늘 하루는 어땠나요?</string>
+    <string name="bottom_sheet_type_comment_text">다른 사용자에게 전송하고 코멘트를 받아볼게요</string>
+    <string name="bottom_sheet_type_alone_text">혼자 볼게요(일기 전송하지 않음)</string>
+    <string name="bottom_sheet_head_text">일기 저장유형을 선택해 주세요</string>
+    <string name="submit">확인</string>
+
 </resources>
