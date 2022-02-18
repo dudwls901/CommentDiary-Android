@@ -6,11 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.movingmaker.commentdiary.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMyABindingImpl
 import com.movingmaker.commentdiary.databinding.FragmentReceiveddiaryABinding
 
-class Fragment2: Fragment() {
-
+class Fragment2: BaseFragment() {
+    override val TAG: String = Fragment2::class.java.simpleName
     companion object{
         const val TAG: String = "로그"
 

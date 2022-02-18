@@ -2,8 +2,10 @@ package com.movingmaker.commentdiary.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.movingmaker.commentdiary.BaseActivity
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
 import com.movingmaker.commentdiary.view.main.CalendarWithDiaryFragment
@@ -11,9 +13,11 @@ import com.movingmaker.commentdiary.view.main.Fragment2
 import com.movingmaker.commentdiary.view.main.Fragment3
 import com.movingmaker.commentdiary.view.main.Fragment4
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity<ActivityMainBinding>() {
+    override val TAG: String = MainActivity::class.java.simpleName
 
-    private lateinit var binding: ActivityMainBinding
+    override val layoutRes: Int = R.layout.activity_main
+
 
     private lateinit var calendarWithDiaryFragment: CalendarWithDiaryFragment
     private lateinit var fragment2: Fragment2
@@ -23,8 +27,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         initBottomNavigationView()
     }
@@ -36,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         fragment4 = Fragment4.newInstance()
         supportFragmentManager.beginTransaction().add(binding.fragmentContainer.id, calendarWithDiaryFragment).commit()
 
-        bottomNavigationView.setOnItemReselectedListener{menu->
+        bottomNavigationView.setOnItemSelectedListener{menu->
             when(menu.itemId){
                 R.id.fragment1-> replaceFragment(calendarWithDiaryFragment)
                 R.id.fragment2-> replaceFragment(fragment2)
