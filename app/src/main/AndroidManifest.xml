@@ -10,14 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CommentDiary">
         <activity
-            android:name="com.movingmaker.commentdiary.view.MainActivity"
+            android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.MainActivity"/>
+        <activity android:name=".view.onboarding.OnboardingLoginActivity"/>
+        <activity android:name=".view.onboarding.OnboardingSignUpActivity"/>
     </application>
 
 </manifest>

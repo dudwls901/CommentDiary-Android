@@ -12,8 +12,6 @@ import com.movingmaker.commentdiary.databinding.FragmentMyABinding
 class Fragment4: BaseFragment() {
     override val TAG: String = Fragment4::class.java.simpleName
     companion object{
-        const val TAG: String = "로그"
-
         fun newInstance() : Fragment4{
             return Fragment4()
         }

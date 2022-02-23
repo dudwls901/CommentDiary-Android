@@ -13,8 +13,6 @@ import com.movingmaker.commentdiary.databinding.FragmentReceiveddiaryABinding
 class Fragment2: BaseFragment() {
     override val TAG: String = Fragment2::class.java.simpleName
     companion object{
-        const val TAG: String = "로그"
-
         fun newInstance() : Fragment2{
             return Fragment2()
         }
