@@ -15,14 +15,16 @@ class OnboardingIntroActivity : BaseActivity<ActivityOnboardingIntroBinding>() {
     private lateinit var onboardingIntroAdapter: OnboardingIntroAdapter
     private lateinit var indicator: CircleIndicator3
     private lateinit var onboardingSignUpSuccessFragment: OnboardingSignUpSuccessFragment
-    //todo one activity 나머지 프래그먼트 구조로 변경하기
     //todo Retro 작업 (이메일 send, 회원가입, 로그인, pw 찾기)
-    //todo 팝업 작업 (pw찾기, 이메일 send)
     //스플래시
     private var result = ""
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_CommentDiary)
         super.onCreate(savedInstanceState)
-//        val intent = Intent(this, OnboardingSignUpActivity::class.java)
+        //todo if가입한 사람이면 패스
+//        val intent = Intent(this, OnboardingLoginActivity::class.java)
+//        startActivity(intent)
+//        finish()
         result = intent.getStringExtra("result")?: ""
         initViews()
     }
