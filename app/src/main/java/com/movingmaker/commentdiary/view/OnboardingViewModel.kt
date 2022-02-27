@@ -3,12 +3,14 @@ package com.movingmaker.commentdiary.view
 import android.app.Application
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.model.remote.request.EmailCodeCheckRequest
 import com.movingmaker.commentdiary.model.remote.request.SignUpRequest
 import com.movingmaker.commentdiary.model.remote.response.EmailCodeResponse
 import com.movingmaker.commentdiary.model.repository.ForSignUpRespository
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 

@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.movingmaker.commentdiary.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingSignUpSuccessBinding
-import com.movingmaker.commentdiary.view.main.Fragment3
 
 class OnboardingSignUpSuccessFragment: BaseFragment() {
     override val TAG: String = OnboardingSignUpSuccessFragment::class.java.simpleName

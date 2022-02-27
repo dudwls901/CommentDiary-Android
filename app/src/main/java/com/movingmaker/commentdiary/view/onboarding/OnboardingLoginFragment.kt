@@ -1,20 +1,11 @@
 package com.movingmaker.commentdiary.view.onboarding
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.FragmentContainer
-import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.BaseFragment
-import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingLoginBinding
 import com.movingmaker.commentdiary.view.OnboardingViewModel
 

@@ -2,7 +2,6 @@ package com.movingmaker.commentdiary.view.onboarding
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
 import com.movingmaker.commentdiary.BaseActivity
 import com.movingmaker.commentdiary.R

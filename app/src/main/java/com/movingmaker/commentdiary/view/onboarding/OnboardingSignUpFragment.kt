@@ -14,12 +14,14 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import com.movingmaker.commentdiary.BaseFragment
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingSignUpBinding
 import com.movingmaker.commentdiary.view.OnboardingViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {

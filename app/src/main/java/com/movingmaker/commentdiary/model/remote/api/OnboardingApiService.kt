@@ -1,8 +1,8 @@
 package com.movingmaker.commentdiary.model.remote.api
 
 import com.movingmaker.commentdiary.model.remote.Url
-import com.movingmaker.commentdiary.model.remote.request.SignUpRequest
 import com.movingmaker.commentdiary.model.remote.request.EmailCodeCheckRequest
+import com.movingmaker.commentdiary.model.remote.request.SignUpRequest
 import com.movingmaker.commentdiary.model.remote.response.EmailCodeResponse
 import retrofit2.Response
 import retrofit2.http.Body
