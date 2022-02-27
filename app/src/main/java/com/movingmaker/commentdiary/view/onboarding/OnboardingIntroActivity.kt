@@ -30,7 +30,6 @@ class OnboardingIntroActivity : BaseActivity<ActivityOnboardingIntroBinding>() {
     }
 
     private fun initViews() {
-        Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
         if(result ==""){
             initOnboardViewPager()
         }

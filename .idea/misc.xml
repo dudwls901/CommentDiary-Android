@@ -6,12 +6,15 @@
         <entry key="app/src/main/res/drawable-v24/date_background_circle.xml" value="0.153" />
         <entry key="app/src/main/res/drawable-v24/date_selector.xml" value="0.166" />
         <entry key="app/src/main/res/drawable-v24/day_selector.xml" value="0.166" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.151" />
         <entry key="app/src/main/res/drawable-v24/onboard_button_start_radius.xml" value="0.153" />
         <entry key="app/src/main/res/drawable-v24/onboarding_button_login_radius.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/calendar_with_diary_button_edge.xml" value="0.166" />
         <entry key="app/src/main/res/drawable/ic_baseline_chevron_left_24.xml" value="0.173" />
+        <entry key="app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.179" />
         <entry key="app/src/main/res/drawable/ic_baseline_done_outline_24.xml" value="0.166" />
         <entry key="app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.166" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.151" />
         <entry key="app/src/main/res/drawable/onboard_button_onboard_radius.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/onboard_button_radius.xml" value="0.145" />
         <entry key="app/src/main/res/drawable/onboard_button_start_radius.xml" value="0.173" />
@@ -22,9 +25,11 @@
         <entry key="app/src/main/res/drawable/onboarding_button_onboard_radius.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/onboarding_button_start_radius.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/onboarding_button_yellow_radius.xml" value="0.173" />
+        <entry key="app/src/main/res/drawable/onboarding_dialog_button_left_top_border.xml" value="0.179" />
         <entry key="app/src/main/res/drawable/onboarding_edittext_rectangle.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/onboarding_indicator_radius.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/onboarding_intro_indicator_radius.xml" value="0.173" />
+        <entry key="app/src/main/res/drawable/splash_background.xml" value="0.239" />
         <entry key="app/src/main/res/layout-v28/vp_page_onboarding_onboard.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19010416666666666" />
         <entry key="app/src/main/res/layout/activity_onboarding.xml" value="0.23645833333333333" />
@@ -32,11 +37,18 @@
         <entry key="app/src/main/res/layout/activity_onboarding_join.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_onboarding_login.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_onboarding_sign_up.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.3885416666666667" />
         <entry key="app/src/main/res/layout/activity_writediary_writediary.xml" value="0.3297045101088647" />
         <entry key="app/src/main/res/layout/bottom_sheet_fragment_writediary_typeselect.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/dialog_onboarding_email_code_send.xml" value="0.25226449275362317" />
+        <entry key="app/src/main/res/layout/dialog_onboarding_email_send.xml" value="0.165625" />
+        <entry key="app/src/main/res/layout/dialog_onboarding_password_send.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_my_a.xml" value="0.2223731884057971" />
         <entry key="app/src/main/res/layout/fragment_mydiary_a.xml" value="0.24" />
+        <entry key="app/src/main/res/layout/fragment_onboarding_find_password.xml" value="0.20969202898550723" />
         <entry key="app/src/main/res/layout/fragment_onboarding_login.xml" value="0.2391304347826087" />
+        <entry key="app/src/main/res/layout/fragment_onboarding_login1.xml" value="0.2640625" />
+        <entry key="app/src/main/res/layout/fragment_onboarding_sign_up.xml" value="0.2753623188405797" />
         <entry key="app/src/main/res/layout/fragment_onboarding_sign_up_success.xml" value="0.2391304347826087" />
         <entry key="app/src/main/res/layout/fragment_receiveddiary_a.xml" value="0.2223731884057971" />
         <entry key="app/src/main/res/layout/fragment_writediary_calendar_with_diary.xml" value="0.25" />

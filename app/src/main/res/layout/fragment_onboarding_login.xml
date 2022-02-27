@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/loginTextView"
+            app:layout_constraintBottom_toTopOf="@id/emailTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="@string/onboarding_login"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/emailTextView"
+            app:layout_constraintBottom_toTopOf="@id/emailEditText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/loginTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="19dp"
+            android:text="@string/onboarding_email" />
+
+        <EditText
+            android:id="@+id/emailEditText"
+            app:layout_constraintBottom_toTopOf="@id/passwordTextView"
+            app:layout_constraintEnd_toEndOf="@id/emailTextView"
+            app:layout_constraintStart_toStartOf="@id/emailTextView"
+            app:layout_constraintTop_toBottomOf="@id/emailTextView"
+            tools:ignore="RtlSymmetry"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:autofillHints="no"
+            android:textColor="@color/coda_common_text"
+            android:background="@drawable/onboarding_edittext_rectangle"
+            android:hint="@string/onboarding_email_hint"
+            android:inputType="textEmailAddress"
+            android:paddingStart="14dp" />
+
+        <TextView
+            android:id="@+id/passwordTextView"
+            app:layout_constraintBottom_toTopOf="@id/passwordEditText"
+            app:layout_constraintEnd_toEndOf="@id/emailTextView"
+            app:layout_constraintStart_toStartOf="@id/emailTextView"
+            app:layout_constraintTop_toBottomOf="@id/emailEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/onboarding_password" />
+
+
+        <EditText
+            android:id="@+id/passwordEditText"
+            app:layout_constraintBottom_toTopOf="@id/noAccountTextView"
+            app:layout_constraintEnd_toEndOf="@id/emailTextView"
+            app:layout_constraintStart_toStartOf="@id/emailTextView"
+            app:layout_constraintTop_toBottomOf="@id/passwordTextView"
+            tools:ignore="RtlSymmetry"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_marginBottom="14dp"
+            android:autofillHints="no"
+            android:background="@drawable/onboarding_edittext_rectangle"
+            android:hint="@string/onboarding_password_hint"
+            android:inputType="textPassword"
+            android:paddingStart="14dp" />
+
+        <TextView
+            android:id="@+id/noAccountTextView"
+            app:layout_constraintBottom_toTopOf="@id/findPasswordTextView"
+            app:layout_constraintEnd_toStartOf="@id/makeAccountTextView"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/passwordEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/onboarding_noaccount" />
+
+        <TextView
+            android:id="@+id/makeAccountTextView"
+            app:layout_constraintBottom_toTopOf="@id/findPasswordTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/noAccountTextView"
+            app:layout_constraintTop_toTopOf="@id/noAccountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/onboarding_makeaccount"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/findPasswordTextView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/noAccountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/onboarding_find_password"
+            android:textStyle="bold" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

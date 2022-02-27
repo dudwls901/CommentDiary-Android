@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">CommentDiary</string>
+    <string name="submit">확인</string>
+    <string name="cancel">취소</string>
     <string name="bottomnavigation_title_writediary">일기 쓰기</string>
     <string name="bottomnavigation_title_receiveddiary">받은 일기</string>
     <string name="bottomnavigation_title_mydiary">내 일기</string>
@@ -8,11 +10,10 @@
     <string name="onboarding_button_start">시작하기</string>
     <string name="onboarding_login">로그인</string>
     <string name="onboarding_button_write_start">기록 시작하기</string>
-    <string name="onboarding_button_make_account_init">곧 회원가입이 완료돼요!</string>
     <string name="onboarding_ment_first">매일 아침 7시,\n누군가의 일기를 받고\n코멘트를 써줄 수 있어요.</string>
     <string name="onboarding_ment_second">누군가 작성해준\n코멘트를\n읽을 수 있어요.</string>
     <string name="onboarding_ment_third">일기와 코멘트를,\n코다에서\n모아볼 수 있어요.</string>
-    <string name="onboarding_ment_sign_up_succes">회원가입 완료!\n코다에서\n첫번째 일기를\n작성해보세요.</string>
+    <string name="onboarding_ment_sign_up_success">회원가입 완료!\n코다에서\n첫번째 일기를\n작성해보세요.</string>
     <string name="onboarding_email">아이디(이메일)</string>
     <string name="onboarding_password">비밀번호</string>
     <string name="onboarding_noaccount">코다 계정이 없으신가요?</string>
@@ -26,5 +27,13 @@
     <string name="onboarding_password_check_incorrect">일치하지 않아요!</string>
     <string name="onboarding_password_check">비밀번호 확인</string>
     <string name="onboarding_password_condition">대소문자, 숫자, 특수문자를 포함해 8~16자 작성해주세요.</string>
-    <string name="onboarding_sign_up_agree_notice">회원가입 시 코다의 개인정보 취급 방침 및 이용 약관에 동의합니다</string>
+    <string name="onboarding_sign_up_agree_notice">회원가입 시 코다의 개인정보 취급 방침 및 이용 약관에 동의합니다.</string>
+    <string name="onboarding_find_password_notice">코다 가입시 사용했던\n아이디(이메일을 입력해주세요.)</string>
+    <string name="onboarding_send_password">비밀번호 전송하기</string>
+    <string name="onboarding_send_email_notice">이메일로 인증번호가 전송되었습니다.\n확인 후 입력해주세요.</string>
+    <string name="onboarding_code_incorrect">인증번호가 일치하지 않습니다.</string>
+    <string name="onboarding_cannot_found_email">해당 이메일을 가지고 있는\n사용자가 없어요</string>
+    <string name="onboarding_complete_auth">인증완료</string>
+    <string name="onboarding_send_password_complete">비밀번호 전송 완료!</string>
+    <string name="onboarding_check_email_please">이메일을 확인해주세요.</string>
 </resources>

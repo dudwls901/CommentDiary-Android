@@ -3,7 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="onboardingviewModel"
+            type="com.movingmaker.commentdiary.view.OnboardingViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -13,31 +20,30 @@
             android:id="@+id/toolbar"
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/signUpTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="52dp"
+            android:layout_marginTop="50dp"
             android:text="@string/onboarding_makeaccount"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:layout_marginTop="50dp"
             app:layout_constraintBottom_toTopOf="@id/emailTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintVertical_chainStyle="packed"
-            />
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
-            android:layout_marginTop="30dp"
             android:id="@+id/emailTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:text="@string/onboarding_email"
             app:layout_constraintEnd_toStartOf="@id/emailIncorrectTextView"
             app:layout_constraintStart_toStartOf="@id/signUpTextView"
@@ -50,22 +56,23 @@
             android:layout_marginStart="4dp"
             android:text="@string/onboarding_email_incorrect"
             android:textColor="@color/onboarding_red"
-            android:visibility="gone"
+            android:visibility="@{onboardingviewModel.emailCorrect ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toEndOf="@id/emailTextView"
             app:layout_constraintTop_toTopOf="@id/emailTextView"
             tools:visibility="visible" />
 
         <EditText
-            android:layout_marginTop="3dp"
             android:id="@+id/emailEditText"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_marginHorizontal="52dp"
+            android:layout_marginTop="3dp"
             android:autofillHints="no"
             android:background="@drawable/onboarding_edittext_rectangle"
             android:hint="@string/onboarding_email_hint"
             android:inputType="textEmailAddress"
             android:paddingStart="14dp"
+            android:textColor="@color/coda_common_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/emailTextView"
@@ -77,9 +84,11 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/onboarding_button_green_radius"
-            android:textColor="@color/white"
             android:paddingHorizontal="8dp"
             android:text="@string/onboarding_send_auth"
+            android:alpha="0.4"
+            android:enabled="false"
+            android:textColor="@color/white"
             android:textSize="13sp"
             app:layout_constraintBottom_toTopOf="@id/passwordTextView"
             app:layout_constraintEnd_toEndOf="@id/emailEditText"
@@ -102,32 +111,33 @@
             android:layout_marginStart="4dp"
             android:text="@string/onboarding_password_incorrect"
             android:textColor="@color/onboarding_red"
-            android:visibility="gone"
+            android:visibility="@{onboardingviewModel.passwordCorrect ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toEndOf="@id/passwordTextView"
             app:layout_constraintTop_toTopOf="@id/passwordTextView"
             tools:visibility="visible" />
 
         <EditText
-            android:layout_marginTop="4dp"
             android:id="@+id/passwordEditText"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_marginHorizontal="52dp"
+            android:layout_marginTop="4dp"
             android:autofillHints="no"
             android:background="@drawable/onboarding_edittext_rectangle"
             android:hint="@string/onboarding_password_hint"
             android:inputType="textPassword"
             android:paddingStart="14dp"
+            android:textColor="@color/coda_common_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/passwordTextView"
             tools:ignore="RtlSymmetry" />
 
         <TextView
-            android:layout_marginTop="4dp"
             android:id="@+id/password_condition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="@string/onboarding_password_condition"
             android:textSize="11sp"
             app:layout_constraintBottom_toTopOf="@id/passwordCheckTextView"
@@ -151,29 +161,29 @@
             android:layout_marginStart="4dp"
             android:text="@string/onboarding_password_check_incorrect"
             android:textColor="@color/onboarding_red"
-            android:visibility="gone"
+            android:visibility="@{onboardingviewModel.passwordCheckCorrect ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toEndOf="@id/passwordCheckTextView"
             app:layout_constraintTop_toTopOf="@id/passwordCheckTextView"
             tools:visibility="visible" />
 
         <EditText
-            android:layout_marginTop="4dp"
             android:id="@+id/passwordCheckEditText"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_marginHorizontal="52dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="140dp"
             android:autofillHints="no"
             android:background="@drawable/onboarding_edittext_rectangle"
             android:hint="@string/onboarding_password_hint"
             android:inputType="textPassword"
             android:paddingStart="14dp"
+            android:textColor="@color/coda_common_text"
+            app:layout_constraintBottom_toTopOf="@id/signUpAgreeNoticeTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/passwordCheckTextView"
-            app:layout_constraintBottom_toTopOf="@id/signUpAgreeNoticeTextView"
-            tools:ignore="RtlSymmetry"
-            android:layout_marginBottom="140dp"
-            />
+            tools:ignore="RtlSymmetry" />
 
         <TextView
             android:id="@+id/signUpAgreeNoticeTextView"
@@ -183,26 +193,20 @@
             android:layout_marginBottom="12dp"
             android:text="@string/onboarding_sign_up_agree_notice"
             android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@id/signUpButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:enabled="false"
-            android:id="@+id/signUpButton"
-            android:layout_width="0dp"
-            android:layout_height="57dp"
-            android:layout_marginHorizontal="14dp"
-            android:layout_marginBottom="61dp"
-            android:background="@drawable/onboarding_button_green_radius"
-            android:textColor="@color/white"
-            android:text="@string/onboarding_makeaccount"
-            android:alpha="0.4"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
 
+        <ProgressBar
+            android:id="@+id/loadingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
