@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingLoginBinding
@@ -15,6 +16,7 @@ class OnboardingLoginFragment: BaseFragment() {
     private lateinit var binding: FragmentOnboardingLoginBinding
     private lateinit var onboardingSignUpFragment: OnboardingSignUpFragment
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
+
     companion object{
         fun newInstance(): OnboardingLoginFragment{
             return OnboardingLoginFragment()
@@ -23,8 +25,6 @@ class OnboardingLoginFragment: BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentOnboardingLoginBinding.inflate(layoutInflater)
-        onboardingSignUpFragment = OnboardingSignUpFragment.newInstance()
-
     }
 
     override fun onCreateView(
@@ -32,12 +32,24 @@ class OnboardingLoginFragment: BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        onboardingSignUpFragment = OnboardingSignUpFragment.newInstance()
+        binding.onboardingviewModel = onboardingViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
         initViews()
 
         return binding.root
     }
 
     private fun initViews() = with(binding){
+
+        emailEditText.addTextChangedListener {
+            onboardingViewModel.setEmail(emailEditText.text.toString())
+        }
+
+        passwordEditText.addTextChangedListener {
+            onboardingViewModel.setPassword(passwordEditText.text.toString())
+        }
 
         makeAccountTextView.setOnClickListener {
 //            val loginActivity = activity as OnboardingLoginActivity
@@ -48,7 +60,5 @@ class OnboardingLoginFragment: BaseFragment() {
             onboardingViewModel.setCurrentFragment("findPW")
         }
     }
-
-
 
 }

@@ -1,16 +1,20 @@
 package com.movingmaker.commentdiary.view.onboarding
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.movingmaker.commentdiary.BaseActivity
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingLoginBinding
+import com.movingmaker.commentdiary.view.MainActivity
 import com.movingmaker.commentdiary.view.OnboardingViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +38,6 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
     private lateinit var onboardingFindPasswordFragment: OnboardingFindPasswordFragment
     private lateinit var onboardingSignUpSuccessFragment: OnboardingSignUpSuccessFragment
 
-    // todo indpassword
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -58,17 +61,46 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
 
     private fun observeDatas(){
 
+        onboardingViewModel.responseFindPassword.observe(this) {
+            binding.loadingBar.isVisible = false
+            sendPasswordDialog(it.isSuccessful)
+        }
+
+        onboardingViewModel.responseLogin.observe(this){
+//            val grantType = it.body()?.result
+//            val grantType = it.body()?.result?.grantType
+//            val grantType = it.body()?.result?.grantType
+            binding.loadingBar.isVisible = false
+            if (it.isSuccessful) {
+                Log.d(TAG, it.body()?.message ?: "FAIL")
+                Log.d(TAG, it.body()?.result?.grantType ?: "no")
+                Log.d(TAG, it.body()?.result?.accessToken ?: "no")
+                Log.d(TAG, it.body()?.result?.refreshToken ?: "no")
+                Log.d(TAG, it.body()?.result?.accessTokenExpiresIn.toString())
+                Toast.makeText(this, "로그인 성공" + it.body(), Toast.LENGTH_SHORT).show()
+                //todo 로그인 화면 진입
+                startActivity(Intent(this, MainActivity::class.java).apply {
+                    //메인 액티비티 실행하면 현재 화면 필요 없으니 cleartask
+                    //메인 액티비티 실행될 때 Signin 종료
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                })
+            } else {
+                onboardingViewModel.setLoginCorrect(false)
+                Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         onboardingViewModel.responseSignUpComplete.observe(this){
             Log.d(TAG, it.isSuccessful.toString())
             Log.d(TAG, it.body()?.code.toString())
             Log.d(TAG, it.body()?.message ?: "FAIL")
             val message = it.body()?.message ?: "fail"
             val code = it.body()?.code.toString()
-
+            binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
                 Log.d("성공",message + " " + code)
                 Toast.makeText(this, "회원가입 성공" + it.body(), Toast.LENGTH_SHORT).show()
-                //로그인 고고
                 onboardingViewModel.setCurrentFragment("signUpSuccess")
 
             } else {
@@ -134,8 +166,15 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         when (fragment) {
             "login" -> {
                 binding.onboardingBottomButton.setOnClickListener {
-                    //Todo login버튼 클릭시 예외 처리, 로그인 처리
-                    Toast.makeText(this@OnboardingLoginActivity, "login", Toast.LENGTH_SHORT).show()
+                    if(onboardingViewModel.email.value!!.isEmpty() || onboardingViewModel.password.value!!.isEmpty()){
+                        onboardingViewModel.setLoginCorrect(false)
+                    }
+                    else{
+                        binding.loadingBar.isVisible = true
+                        launch(coroutineContext) {
+                            onboardingViewModel.setResponseLogin()
+                        }
+                    }
                 }
             }
             "signUp" -> {
@@ -154,39 +193,55 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                 }
             }
             "findPW" ->{
-                //todo 비밀번호 전송하기 retrofit, 팝
                 binding.onboardingBottomButton.setOnClickListener {
-                    Toast.makeText(this, "비밀번호 전송하기", Toast.LENGTH_SHORT).show()
-                    sendPasswordDialog()
+                    binding.loadingBar.isVisible = true
+                    launch(coroutineContext) {
+                        onboardingViewModel.setResponseFindPassword()
+                    }
                 }
             }
             "signUpSuccess" ->{
                 binding.onboardingBottomButton.setOnClickListener {
-                    Toast.makeText(this, "로그인하기", Toast.LENGTH_SHORT).show()
+                    binding.loadingBar.isVisible = true
+                    launch(coroutineContext) {
+                        onboardingViewModel.setResponseLogin()
+                    }
                 }
             }
         }
     }
 
-    private fun sendPasswordDialog() {
+    private fun sendPasswordDialog(isSuccess: Boolean) {
         val dialogView: View = layoutInflater.inflate(R.layout.dialog_onboarding_password_send, null)
+
         val builder = android.app.AlertDialog.Builder(this)
         builder.setView(dialogView)
 
         val alertDialog = builder.create()
         alertDialog.show()
-
-        val ok_btn = dialogView.findViewById<Button>(R.id.submitButton)
-        ok_btn.setOnClickListener {
-            Toast.makeText(
-                this,
-                "OK 버튼을 눌렀습니다.",
-                Toast.LENGTH_LONG
-            ).show()
-            alertDialog.dismiss()
-
-        }
         val closeButton = dialogView.findViewById<ImageButton>(R.id.closeButton)
+        val okButton = dialogView.findViewById<Button>(R.id.submitButton)
+        val cannotFoundEmailTextView = dialogView.findViewById<TextView>(R.id.cannotFoundEmailTextView)
+        val findPasswordSuccessTextView = dialogView.findViewById<TextView>(R.id.findPasswordSuccessTextView)
+        val findPasswordCheckEmailTextView = dialogView.findViewById<TextView>(R.id.findPasswordCheckEmailTextView)
+
+        if (isSuccess) {
+            closeButton.isVisible = false
+            okButton.isVisible = true
+            cannotFoundEmailTextView.isVisible = false
+            findPasswordCheckEmailTextView.isVisible = true
+            findPasswordSuccessTextView.isVisible = true
+        } else {
+            closeButton.isVisible = true
+            okButton.isVisible = false
+            cannotFoundEmailTextView.isVisible = true
+            findPasswordCheckEmailTextView.isVisible = false
+            findPasswordSuccessTextView.isVisible = false
+        }
+
+        okButton.setOnClickListener {
+            alertDialog.dismiss()
+        }
         closeButton.setOnClickListener {
             alertDialog.dismiss()
         }

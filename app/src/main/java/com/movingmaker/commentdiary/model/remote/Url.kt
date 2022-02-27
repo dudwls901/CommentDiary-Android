@@ -6,4 +6,5 @@ object Url {
     const val EMAIL_CODE_CHECK = "email/confirm"
     const val SIGN_UP = "members"
     const val LOG_IN = "members/login"
+    const val FIND_PW = "email/password"
 }

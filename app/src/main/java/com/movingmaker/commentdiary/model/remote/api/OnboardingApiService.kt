@@ -2,8 +2,10 @@ package com.movingmaker.commentdiary.model.remote.api
 
 import com.movingmaker.commentdiary.model.remote.Url
 import com.movingmaker.commentdiary.model.remote.request.EmailCodeCheckRequest
+import com.movingmaker.commentdiary.model.remote.request.LogInRequest
 import com.movingmaker.commentdiary.model.remote.request.SignUpRequest
 import com.movingmaker.commentdiary.model.remote.response.EmailCodeResponse
+import com.movingmaker.commentdiary.model.remote.response.LogInResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -22,4 +24,10 @@ interface OnboardingApiService {
 
     @POST(Url.SIGN_UP)
     suspend fun signUp(@Body signUpRequest: SignUpRequest): Response<EmailCodeResponse>
+
+    @POST(Url.LOG_IN)
+    suspend fun logIn(@Body logInRequest: LogInRequest): Response<LogInResponse>
+
+    @GET(Url.FIND_PW)
+    suspend fun findPassword(@Query("email") email: String) : Response<EmailCodeResponse>
 }

@@ -3,6 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="onboardingviewModel"
+            type="com.movingmaker.commentdiary.view.OnboardingViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -109,6 +118,18 @@
             android:layout_height="wrap_content"
             android:text="@string/onboarding_find_password"
             android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/onboarding_login_incorrect"
+            android:layout_marginBottom="4dp"
+            android:textColor="@color/onboarding_red"
+            android:visibility="@{onboardingviewModel.loginCorrect ? View.GONE : View.VISIBLE}"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

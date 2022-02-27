@@ -71,16 +71,14 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
     private fun observeDatas(){
         binding.lifecycleOwner?.let { lifecycleOwner ->
             onboardingViewModel.responseEmailSend.observe(lifecycleOwner) {
+                binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
-                    binding.loadingBar.isVisible = false
                     sendCodeDialog()
                 } else {
-                    Log.d("ABCABCABCBAC", onboardingViewModel.responseEmailSend.value.toString())
                     Log.d(TAG, it.isSuccessful.toString())
                     Log.d(TAG, it.body()?.code.toString())
                     Log.d(TAG, it.body()?.message.toString())
                     Toast.makeText(requireContext(), "이메일 전송 실패", Toast.LENGTH_SHORT).show()
-                    binding.loadingBar.isVisible = false
                 }
 
             }

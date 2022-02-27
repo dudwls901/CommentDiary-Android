@@ -42,7 +42,7 @@
         <entry key="app/src/main/res/layout/bottom_sheet_fragment_writediary_typeselect.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_onboarding_email_code_send.xml" value="0.25226449275362317" />
         <entry key="app/src/main/res/layout/dialog_onboarding_email_send.xml" value="0.165625" />
-        <entry key="app/src/main/res/layout/dialog_onboarding_password_send.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/dialog_onboarding_password_send.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_my_a.xml" value="0.2223731884057971" />
         <entry key="app/src/main/res/layout/fragment_mydiary_a.xml" value="0.24" />
         <entry key="app/src/main/res/layout/fragment_onboarding_find_password.xml" value="0.20969202898550723" />

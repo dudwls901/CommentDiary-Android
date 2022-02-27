@@ -28,7 +28,7 @@
     <string name="onboarding_password_check">비밀번호 확인</string>
     <string name="onboarding_password_condition">대소문자, 숫자, 특수문자를 포함해 8~16자 작성해주세요.</string>
     <string name="onboarding_sign_up_agree_notice">회원가입 시 코다의 개인정보 취급 방침 및 이용 약관에 동의합니다.</string>
-    <string name="onboarding_find_password_notice">코다 가입시 사용했던\n아이디(이메일을 입력해주세요.)</string>
+    <string name="onboarding_find_password_notice">코다 가입시 사용했던\n아이디(이메일)을 입력해주세요.</string>
     <string name="onboarding_send_password">비밀번호 전송하기</string>
     <string name="onboarding_send_email_notice">이메일로 인증번호가 전송되었습니다.\n확인 후 입력해주세요.</string>
     <string name="onboarding_code_incorrect">인증번호가 일치하지 않습니다.</string>
@@ -36,4 +36,5 @@
     <string name="onboarding_complete_auth">인증완료</string>
     <string name="onboarding_send_password_complete">비밀번호 전송 완료!</string>
     <string name="onboarding_check_email_please">이메일을 확인해주세요.</string>
+    <string name="onboarding_login_incorrect">이메일 혹은 비밀번호가 올바르지 않습니다.</string>
 </resources>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.BaseFragment
 import com.movingmaker.commentdiary.R
@@ -38,10 +39,19 @@ class OnboardingFindPasswordFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding.toolbar.setNavigationIcon(R.drawable.ic_baseline_chevron_left_24)
-        binding.toolbar.setNavigationOnClickListener {
+
+        initViews()
+        return binding.root
+    }
+
+    private fun initViews() = with(binding){
+        toolbar.setNavigationIcon(R.drawable.ic_baseline_chevron_left_24)
+        toolbar.setNavigationOnClickListener {
             onboardingViewModel.setCurrentFragment("login")
         }
-        return binding.root
+        findPasswordEditText.addTextChangedListener {
+            onboardingViewModel.setFindPasswordEmail(findPasswordEditText.text.toString())
+        }
+
     }
 }

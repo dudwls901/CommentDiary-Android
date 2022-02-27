@@ -2,8 +2,10 @@ package com.movingmaker.commentdiary.model.repository
 
 import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.model.remote.request.EmailCodeCheckRequest
+import com.movingmaker.commentdiary.model.remote.request.LogInRequest
 import com.movingmaker.commentdiary.model.remote.request.SignUpRequest
 import com.movingmaker.commentdiary.model.remote.response.EmailCodeResponse
+import com.movingmaker.commentdiary.model.remote.response.LogInResponse
 import retrofit2.Response
 
 class ForSignUpRespository {
@@ -24,6 +26,12 @@ class ForSignUpRespository {
 
     suspend fun signUp(signUpRequest: SignUpRequest): Response<EmailCodeResponse> =
         RetrofitClient.onboardingApiService.signUp(signUpRequest)
+
+    suspend fun logIn(logInRequest: LogInRequest): Response<LogInResponse> =
+        RetrofitClient.onboardingApiService.logIn(logInRequest)
+
+    suspend fun findPassword(email: String): Response<EmailCodeResponse> =
+        RetrofitClient.onboardingApiService.findPassword(email)
 
 
 //    private val onboardingApiService: OnboardingApiService = RetrofitClient.onboardingApiService
