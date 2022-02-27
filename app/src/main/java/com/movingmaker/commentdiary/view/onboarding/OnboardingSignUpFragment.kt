@@ -106,7 +106,7 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
                 sendAuthButton.alpha = 1.0f
             }
             onboardingViewModel.setEmail(emailEditText.text.toString())
-            onboardingViewModel.setIsCorrect(isEmailCorrect, "email")
+            onboardingViewModel.setSignUpIsCorrect(isEmailCorrect, "email")
             onboardingViewModel.setCanMakeAccount(
                 emailEditText.text.isNotEmpty() && passwordEditText.text.isNotEmpty() &&
                         passwordCheckEditText.text.isNotEmpty()
@@ -131,8 +131,8 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
                 !(passwordCheckEditText.text.isNotEmpty() && (passwordEditText.text.toString() != passwordCheckEditText.text.toString()))
 
             onboardingViewModel.setPassword(passwordEditText.text.toString())
-            onboardingViewModel.setIsCorrect(isPasswordCorrect, "password")
-            onboardingViewModel.setIsCorrect(isPasswordCheckCorrect, "passwordCheck")
+            onboardingViewModel.setSignUpIsCorrect(isPasswordCorrect, "password")
+            onboardingViewModel.setSignUpIsCorrect(isPasswordCheckCorrect, "passwordCheck")
             onboardingViewModel.setCanMakeAccount(
                 emailEditText.text.isNotEmpty() &&
                         passwordEditText.text.isNotEmpty() &&
@@ -145,7 +145,7 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
                     (passwordEditText.text.toString() != passwordCheckEditText.text.toString()))
 
             onboardingViewModel.setCheckPassword(passwordCheckEditText.text.toString())
-            onboardingViewModel.setIsCorrect(isPasswordCheckCorrect, "passwordCheck")
+            onboardingViewModel.setSignUpIsCorrect(isPasswordCheckCorrect, "passwordCheck")
             onboardingViewModel.setCanMakeAccount(
                 emailEditText.text.isNotEmpty() &&
                         passwordEditText.text.isNotEmpty() &&
