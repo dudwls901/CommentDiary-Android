@@ -2,27 +2,28 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.movingmaker.commentdiary">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:usesCleartextTraffic="true"
+        android:name=".CodaApplicationApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CommentDiary">
+        android:theme="@style/Theme.CommentDiary"
+        android:usesCleartextTraffic="true">
         <activity
             android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"
-            android:theme="@style/SplashTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.MainActivity"/>
-        <activity android:name=".view.onboarding.OnboardingLoginActivity"/>
+        <activity android:name=".view.MainActivity" />
+        <activity android:name=".view.onboarding.OnboardingLoginActivity" />
     </application>
 
 </manifest>
