@@ -3,13 +3,13 @@ package com.movingmaker.commentdiary
 import android.app.Application
 import com.movingmaker.commentdiary.model.AuthProvider
 
-class CodaApplicationApplication(): Application() {
+class CodaApplication(): Application() {
 
     private lateinit var dataStore : AuthProvider
 
     companion object {
-        private lateinit var sampleApplication: CodaApplicationApplication
-        fun getInstance() : CodaApplicationApplication = sampleApplication
+        private lateinit var sampleApplication: CodaApplication
+        fun getInstance() : CodaApplication = sampleApplication
     }
 
     override fun onCreate() {
