@@ -7,6 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dot_red">#FB8C8C</color>
+    <color name="dot_sky">#5DB7FF</color>
+    <color name="date_selected_color">#EEE</color>
+
     <color name="onboarding_yellow_button">#FFECE4A5</color>
     <color name="onboarding_green_button">#73BF90</color>
     <color name="onboarding_green_box">#98C2A8</color>
