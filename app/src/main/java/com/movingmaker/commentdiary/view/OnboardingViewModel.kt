@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.model.remote.request.EmailCodeCheckRequest
 import com.movingmaker.commentdiary.model.remote.request.LogInRequest
 import com.movingmaker.commentdiary.model.remote.request.SignUpRequest
-import com.movingmaker.commentdiary.model.remote.response.EmailCodeResponse
+import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.model.remote.response.LogInResponse
 import com.movingmaker.commentdiary.model.repository.ForSignUpRespository
 import kotlinx.coroutines.withContext
@@ -26,11 +26,11 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     private var _emailCodeCheckComplete = MutableLiveData<Boolean>()
     private var _loginCorrect = MutableLiveData<Boolean>()
     //api response
-    private var _responseEmailSend = MutableLiveData<Response<EmailCodeResponse>>()
-    private var _responseEmailCodeCheck = MutableLiveData<Response<EmailCodeResponse>>()
-    private var _responseSignUpComplete = MutableLiveData<Response<EmailCodeResponse>>()
+    private var _responseEmailSend = MutableLiveData<Response<IsSuccessResponse>>()
+    private var _responseEmailCodeCheck = MutableLiveData<Response<IsSuccessResponse>>()
+    private var _responseSignUpComplete = MutableLiveData<Response<IsSuccessResponse>>()
     private var _responseLogin = MutableLiveData<Response<LogInResponse>>()
-    private var _responseFindPassword = MutableLiveData<Response<EmailCodeResponse>>()
+    private var _responseFindPassword = MutableLiveData<Response<IsSuccessResponse>>()
 
     //for signUp, logIn data share
     private var _email = MutableLiveData<String>()
@@ -57,16 +57,16 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     val currentFragment: LiveData<String>
         get() = _currentFragment
 
-    val responseEmailSend: LiveData<Response<EmailCodeResponse>>
+    val responseEmailSend: LiveData<Response<IsSuccessResponse>>
         get() = _responseEmailSend
 
-    val responseEmailCodeCheck: LiveData<Response<EmailCodeResponse>>
+    val responseIsSuccessCheck: LiveData<Response<IsSuccessResponse>>
         get() = _responseEmailCodeCheck
 
     val emailCodeCheckComplete: LiveData<Boolean>
         get() = _emailCodeCheckComplete
 
-    val responseSignUpComplete: LiveData<Response<EmailCodeResponse>>
+    val responseSignUpComplete: LiveData<Response<IsSuccessResponse>>
         get() = _responseSignUpComplete
 
     val email: LiveData<String>
@@ -87,7 +87,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     val findPasswordEmail: LiveData<String>
         get() = _findPasswordEmail
 
-    val responseFindPassword: LiveData<Response<EmailCodeResponse>>
+    val responseFindPassword: LiveData<Response<IsSuccessResponse>>
         get() = _responseFindPassword
 
     init {

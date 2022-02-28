@@ -4,7 +4,7 @@ import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.model.remote.request.EmailCodeCheckRequest
 import com.movingmaker.commentdiary.model.remote.request.LogInRequest
 import com.movingmaker.commentdiary.model.remote.request.SignUpRequest
-import com.movingmaker.commentdiary.model.remote.response.EmailCodeResponse
+import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.model.remote.response.LogInResponse
 import retrofit2.Response
 
@@ -16,21 +16,21 @@ class ForSignUpRespository {
     }
 
 
-    suspend fun sendEmailCode(email: String): Response<EmailCodeResponse> =
+    suspend fun sendEmailCode(email: String): Response<IsSuccessResponse> =
         RetrofitClient.onboardingApiService.sendEmailCode(email)
 
 
-    suspend fun emailCodeCheck(emailCodeCheckRequest: EmailCodeCheckRequest): Response<EmailCodeResponse> =
+    suspend fun emailCodeCheck(emailCodeCheckRequest: EmailCodeCheckRequest): Response<IsSuccessResponse> =
         RetrofitClient.onboardingApiService.emailCodeCheck(emailCodeCheckRequest)
 
 
-    suspend fun signUp(signUpRequest: SignUpRequest): Response<EmailCodeResponse> =
+    suspend fun signUp(signUpRequest: SignUpRequest): Response<IsSuccessResponse> =
         RetrofitClient.onboardingApiService.signUp(signUpRequest)
 
     suspend fun logIn(logInRequest: LogInRequest): Response<LogInResponse> =
         RetrofitClient.onboardingApiService.logIn(logInRequest)
 
-    suspend fun findPassword(email: String): Response<EmailCodeResponse> =
+    suspend fun findPassword(email: String): Response<IsSuccessResponse> =
         RetrofitClient.onboardingApiService.findPassword(email)
 
 

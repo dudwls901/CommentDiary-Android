@@ -174,7 +174,7 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
         val codeIncorrectTextView = dialogView.findViewById<TextView>(R.id.codeInCorrectTextView)
 
         binding.lifecycleOwner?.let { lifecycleOwner ->
-            onboardingViewModel.responseEmailCodeCheck.observe(lifecycleOwner){
+            onboardingViewModel.responseIsSuccessCheck.observe(lifecycleOwner){
                 Log.d(TAG, it.isSuccessful.toString())
                 Log.d(TAG, (it.body()?.code ?: 1111).toString())
                 Log.d(TAG, it.body()?.message ?: "FAIL")
