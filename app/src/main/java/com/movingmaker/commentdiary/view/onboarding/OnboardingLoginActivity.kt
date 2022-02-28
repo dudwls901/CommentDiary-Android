@@ -10,8 +10,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.movingmaker.commentdiary.BaseActivity
+import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingLoginBinding
 import com.movingmaker.commentdiary.view.MainActivity
@@ -67,9 +69,6 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         }
 
         onboardingViewModel.responseLogin.observe(this){
-//            val grantType = it.body()?.result
-//            val grantType = it.body()?.result?.grantType
-//            val grantType = it.body()?.result?.grantType
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
                 Log.d(TAG, it.body()?.message ?: "FAIL")
@@ -78,7 +77,18 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                 Log.d(TAG, it.body()?.result?.refreshToken ?: "no")
                 Log.d(TAG, it.body()?.result?.accessTokenExpiresIn.toString())
                 Toast.makeText(this, "로그인 성공" + it.body(), Toast.LENGTH_SHORT).show()
-                //todo 로그인 화면 진입
+
+                val accessToken = it.body()?.result?.accessToken
+                val refreshToken = it.body()?.result?.refreshToken
+                val accessTokenExpiresIn = it.body()?.result?.accessTokenExpiresIn
+
+                if(accessToken == null || refreshToken == null || accessTokenExpiresIn == null){
+                    Toast.makeText(this, "토큰 저장 실패", Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    insertAuth(accessToken, refreshToken, accessTokenExpiresIn)
+                }
+
                 startActivity(Intent(this, MainActivity::class.java).apply {
                     //메인 액티비티 실행하면 현재 화면 필요 없으니 cleartask
                     //메인 액티비티 실행될 때 Signin 종료
@@ -105,25 +115,21 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
 
             } else {
                 Log.d("실패",message + " " + code)
-                Toast.makeText(this, "회원가입실패", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "회원가입 실패", Toast.LENGTH_SHORT).show()
             }
         }
 
         val observeFragmentState = Observer<String> { fragment ->
             when (fragment) {
                 "login" -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(binding.fragmentContainer.id, onboardingLoginFragment)
-                        .commit()
+                    replaceFragment(onboardingLoginFragment)
                     binding.onboardingBottomButton.alpha = 1.0f
                     binding.onboardingBottomButton.isEnabled = true
                     binding.onboardingBottomButton.text = getString(R.string.onboarding_login)
                     addButtonEvent(fragment)
                 }
                 "signUp" -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(binding.fragmentContainer.id, onboardingSignUpFragment)
-                        .commit()
+                    replaceFragment(onboardingSignUpFragment)
                     binding.onboardingBottomButton.alpha = 0.4f
                     binding.onboardingBottomButton.isEnabled = false
                     binding.onboardingBottomButton.text = getString(R.string.onboarding_makeaccount)
@@ -140,17 +146,13 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                     onboardingViewModel.canMakeAccount.observe(this, observeButtonState)
                 }
                 "findPW" ->{
-                    supportFragmentManager.beginTransaction()
-                        .replace(binding.fragmentContainer.id, onboardingFindPasswordFragment)
-                        .commit()
+                    replaceFragment(onboardingFindPasswordFragment)
                     binding.onboardingBottomButton.isEnabled = true
                     binding.onboardingBottomButton.text = getString(R.string.onboarding_send_password)
                     addButtonEvent(fragment)
                 }
                 "signUpSuccess" ->{
-                    supportFragmentManager.beginTransaction()
-                        .replace(binding.fragmentContainer.id, onboardingSignUpSuccessFragment)
-                        .commit()
+                    replaceFragment(onboardingSignUpSuccessFragment)
                     binding.onboardingBottomButton.isEnabled = true
                     binding.onboardingBottomButton.text = getString(R.string.onboarding_button_write_start)
                     addButtonEvent(fragment)
@@ -160,6 +162,21 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
 
 
         onboardingViewModel.currentFragment.observe(this, observeFragmentState)
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().apply {
+            replace(binding.fragmentContainer.id, fragment)
+            commit()
+        }
+    }
+
+    private fun insertAuth(accessToken: String, refreshToken: String, accessTokenExpiresIn: Long){
+        launch(Dispatchers.IO) {
+            CodaApplication.getInstance().getDataStore().setAccessToken(accessToken)
+            CodaApplication.getInstance().getDataStore().setRefreshToken(refreshToken)
+            CodaApplication.getInstance().getDataStore().setAccessTokenExpiresIn(accessTokenExpiresIn)
+        }
     }
 
     private fun addButtonEvent(fragment: String) {

@@ -8,13 +8,13 @@ class CodaApplication(): Application() {
     private lateinit var dataStore : AuthProvider
 
     companion object {
-        private lateinit var sampleApplication: CodaApplication
-        fun getInstance() : CodaApplication = sampleApplication
+        private lateinit var codaApplication: CodaApplication
+        fun getInstance() : CodaApplication = codaApplication
     }
 
     override fun onCreate() {
         super.onCreate()
-        sampleApplication = this
+        codaApplication = this
         dataStore = AuthProvider(this)
     }
 
