@@ -1,86 +1,98 @@
 package com.movingmaker.commentdiary.view.onboarding
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.movingmaker.commentdiary.BaseActivity
+import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingIntroBinding
+import com.movingmaker.commentdiary.view.MainActivity
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
 import me.relex.circleindicator.CircleIndicator3
+import java.util.*
+import kotlin.coroutines.CoroutineContext
 
-class OnboardingIntroActivity : BaseActivity<ActivityOnboardingIntroBinding>() {
-    override val TAG: String = OnboardingIntroActivity::class.java.simpleName
-    override val layoutRes = R.layout.activity_onboarding_intro
+class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
+//    private val TAG: String = OnboardingIntroActivity::class.java.simpleName
     private lateinit var onboardingIntroAdapter: OnboardingIntroAdapter
     private lateinit var indicator: CircleIndicator3
-    private lateinit var onboardingSignUpSuccessFragment: OnboardingSignUpSuccessFragment
-    //todo Retro 작업 (이메일 send, 회원가입, 로그인, pw 찾기)
-    //스플래시
-    private var result = ""
+    private lateinit var binding: ActivityOnboardingIntroBinding
+    private val job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+    //Todo 스플래시 31>=, 31< 대응... 자동로그인이냐 인트로 화면이냐
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.Theme_CommentDiary)
+        //31버전보다 아래일 시
+//        if(Build.VERSION.SDK_INT< Build.VERSION_CODES.S){
+            setTheme(R.style.Theme_CommentDiary)
+//        }
         super.onCreate(savedInstanceState)
-        //todo if가입한 사람이면 패스
-//        val intent = Intent(this, OnboardingLoginActivity::class.java)
-//        startActivity(intent)
-//        finish()
-        result = intent.getStringExtra("result")?: ""
-        initViews()
+        binding = ActivityOnboardingIntroBinding.inflate(layoutInflater)
+
+        launch(coroutineContext) {
+            var refreshToken = withContext(Dispatchers.IO) {
+                CodaApplication.getInstance().getDataStore().refreshToken.first()
+            }
+            //자동 로그인
+            if(refreshToken.isNotEmpty()){
+                //todo accessToken 갱신 아직 api없음
+                delay(3000L)
+//                finish()
+                startActivity(Intent(this@OnboardingIntroActivity, MainActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                })
+
+            }
+            else{
+                setContentView(binding.root)
+                initViews()
+            }
+        }
     }
 
     private fun initViews() {
-        if(result ==""){
-            initOnboardViewPager()
-        }
-        else{
-            onboardingSignUpSuccessFragment = OnboardingSignUpSuccessFragment.newInstance()
-            supportFragmentManager.beginTransaction().add(binding.onboardingFrameLayout.id,onboardingSignUpSuccessFragment).commit()
-            changeButton()
-        }
+        initOnboardViewPager()
         initOnboardButton()
     }
 
 
     private fun initOnboardButton() = with(binding) {
-        //todo 현재 회원가입 화면에서 sendAuth누르면 오게끔 되어있음
         onboardingButton.setOnClickListener {
-            if(result=="") {
-                if (introViewPager.currentItem == 2) {
-                    startActivity(
-                        Intent(
-                            this@OnboardingIntroActivity,
-                            OnboardingLoginActivity::class.java
-                        )
+            if (introViewPager.currentItem == 2) {
+                startActivity(
+                    Intent(
+                        this@OnboardingIntroActivity,
+                        OnboardingLoginActivity::class.java
                     )
-                    finish()
-                } else {
-                    introViewPager.setCurrentItem(introViewPager.currentItem + 1, true)
-                    changeButton()
-                }
-            }
-            else{
-
+                )
+                finish()
+            } else {
+                introViewPager.setCurrentItem(introViewPager.currentItem + 1, true)
+                changeButton()
             }
         }
     }
 
     private fun changeButton() {
-        if(result=="ok"){
+        if (binding.introViewPager.currentItem == 2) {
             binding.onboardingButton.setBackgroundResource(R.drawable.onboarding_button_green_radius)
-            binding.onboardingButton.text = getString(R.string.onboarding_button_write_start)
+            binding.onboardingButton.text = getString(R.string.onboarding_button_start)
             binding.onboardingButton.setTextColor(getColor(R.color.white))
+        } else {
+            binding.onboardingButton.setBackgroundResource(R.drawable.onboarding_button_yellow_radius)
+            binding.onboardingButton.text = getString(R.string.onboarding_button_next)
+            binding.onboardingButton.setTextColor(getColor(R.color.black))
         }
-        else {
-            if (binding.introViewPager.currentItem == 2) {
-                binding.onboardingButton.setBackgroundResource(R.drawable.onboarding_button_green_radius)
-                binding.onboardingButton.text = getString(R.string.onboarding_button_start)
-                binding.onboardingButton.setTextColor(getColor(R.color.white))
-            } else {
-                binding.onboardingButton.setBackgroundResource(R.drawable.onboarding_button_yellow_radius)
-                binding.onboardingButton.text = getString(R.string.onboarding_button_next)
-                binding.onboardingButton.setTextColor(getColor(R.color.black))
-            }
-        }
+
 
     }
 
@@ -107,6 +119,9 @@ class OnboardingIntroActivity : BaseActivity<ActivityOnboardingIntroBinding>() {
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
+                Log.d("???????????", theme.toString())
+                setTheme(R.style.Theme_CommentDiary)
+                Log.d("???????????", theme.toString())
                 changeButton()
             }
         })
