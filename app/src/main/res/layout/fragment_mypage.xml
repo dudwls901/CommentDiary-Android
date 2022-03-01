@@ -5,6 +5,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/passwordCheckEditText"
+            app:layout_constraintVertical_chainStyle="packed"
+            />
+
+        <EditText
+            android:id="@+id/passwordCheckEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/logOutButton"
+            />
+
+
         <Button
             android:id="@+id/logOutButton"
             android:layout_width="wrap_content"

@@ -2,6 +2,7 @@ package com.movingmaker.commentdiary.model.repository
 
 import android.util.Log
 import com.movingmaker.commentdiary.model.remote.RetrofitClient
+import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
 import retrofit2.Response
 
@@ -15,6 +16,11 @@ class MyPageRepository {
     suspend fun signOut(): Response<IsSuccessResponse> {
         Log.d(TAG, "signOut: 불린겨 뭐여?????????????")
         return RetrofitClient.myPageApiService.signOut()
+    }
+
+    suspend fun changePassword(changePasswordRequest: ChangePasswordRequest): Response<IsSuccessResponse>{
+        Log.d(TAG, "changePassword: ")
+        return RetrofitClient.myPageApiService.changePassword(changePasswordRequest)
     }
 
 }

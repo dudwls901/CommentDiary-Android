@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
+import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.view.main.MainActivity
 import com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
@@ -82,6 +83,41 @@ class TempMyPageFragment: BaseFragment(), CoroutineScope {
 
             }
         }
+
+        binding.lifecycleOwner?.let { lifecycleOwner ->
+            myPageViewModel.responseChangePassword.observe(lifecycleOwner) {
+//                binding.loadingBar.isVisible = false
+                //todo 비밀번호 생성 규칙 처리
+                if (it.isSuccessful) {
+                    Log.d(TAG, it.isSuccessful.toString())
+                    Log.d(TAG, it.body()?.code.toString())
+                    Log.d(TAG, it.body()?.message.toString())
+                    Toast.makeText(requireContext(), "비밀번호 변경 성공!!!!!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.d(TAG, it.isSuccessful.toString())
+                    Log.d(TAG, it.body()?.code.toString())
+                    Log.d(TAG, it.body()?.message.toString())
+                    Toast.makeText(requireContext(), "비밀번호 변경 실패", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }
+    }
+
+    private fun initViews() = with(binding){
+        signOutButton.setOnClickListener {
+            launch(coroutineContext) {
+                myPageViewModel.setResponseSignOut()
+            }
+        }
+        changePasswordButton.setOnClickListener {
+            launch(coroutineContext) {
+                myPageViewModel.setResponseChangePassword(ChangePasswordRequest(
+                    password = passwordEditText.text.toString(),
+                    checkPassword = passwordCheckEditText.text.toString()
+                ))
+            }
+        }
     }
 
     private fun logOut(){
@@ -97,11 +133,4 @@ class TempMyPageFragment: BaseFragment(), CoroutineScope {
         })
     }
 
-    private fun initViews() = with(binding){
-        signOutButton.setOnClickListener {
-            launch(coroutineContext) {
-                myPageViewModel.setResponseSignOut()
-            }
-        }
-    }
 }

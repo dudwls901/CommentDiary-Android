@@ -96,7 +96,7 @@ object RetrofitClient {
                 return null
             }
 
-            return response.request.newBuilder().header("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY0NjE0NDI5Nn0.24CJEkIR4MpPaTjMOCO8iUjozRV3KkVpkNsmn6odndt-rshS-IMgE8OacbqRL3aVLubgn8OqRySztwH6v_N3Yw").build()
+            return response.request.newBuilder().header("Authorization", "Bearer ").build()
         }
     }
 //    OkHttpClient.Builder().authenticator(TokenAuthenticator()).build()
