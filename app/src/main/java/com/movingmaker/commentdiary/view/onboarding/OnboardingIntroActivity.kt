@@ -8,7 +8,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingIntroBinding
-import com.movingmaker.commentdiary.view.MainActivity
+import com.movingmaker.commentdiary.view.main.MainActivity
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import me.relex.circleindicator.CircleIndicator3

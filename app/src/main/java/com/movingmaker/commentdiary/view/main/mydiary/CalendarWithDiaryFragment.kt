@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.view.main
+package com.movingmaker.commentdiary.view.main.mydiary
 
 import android.content.Intent
 import android.os.Bundle
@@ -64,7 +64,7 @@ class CalendarWithDiaryFragment: Fragment(R.layout.fragment_writediary_calendar_
     companion object{
         const val TAG: String = "로그"
 
-        fun newInstance() : CalendarWithDiaryFragment{
+        fun newInstance() : CalendarWithDiaryFragment {
             return CalendarWithDiaryFragment()
         }
         //7시간

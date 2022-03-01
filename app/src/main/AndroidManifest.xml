@@ -22,9 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.MainActivity" />
+        <activity android:name=".view.main.MainActivity" />
         <activity android:name=".view.onboarding.OnboardingLoginActivity" />
-        <activity android:name=".view.main.WriteDiaryActivity"/>
+        <activity android:name=".view.main.mydiary.WriteDiaryActivity"/>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.view.main
+package com.movingmaker.commentdiary.view.main.mydiary
 
 import android.annotation.SuppressLint
 import android.os.Bundle

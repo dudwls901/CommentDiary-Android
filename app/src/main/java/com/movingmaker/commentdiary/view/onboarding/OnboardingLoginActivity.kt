@@ -12,12 +12,12 @@ import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.movingmaker.commentdiary.BaseActivity
+import com.movingmaker.commentdiary.base.BaseActivity
 import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingLoginBinding
-import com.movingmaker.commentdiary.view.MainActivity
-import com.movingmaker.commentdiary.view.OnboardingViewModel
+import com.movingmaker.commentdiary.view.main.MainActivity
+import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

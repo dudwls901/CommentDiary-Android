@@ -7,7 +7,7 @@
 
         <variable
             name="calendarViewModel"
-            type="com.movingmaker.commentdiary.viewmodel.CalendarViewModel" />
+            type="com.movingmaker.commentdiary.viewmodel.mydiary.CalendarViewModel" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

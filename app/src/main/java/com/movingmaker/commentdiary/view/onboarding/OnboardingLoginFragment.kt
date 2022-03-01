@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
-import com.movingmaker.commentdiary.BaseFragment
+import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingLoginBinding
-import com.movingmaker.commentdiary.view.OnboardingViewModel
+import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
+
 
 class OnboardingLoginFragment: BaseFragment() {
     override val TAG: String = OnboardingLoginFragment::class.java.simpleName

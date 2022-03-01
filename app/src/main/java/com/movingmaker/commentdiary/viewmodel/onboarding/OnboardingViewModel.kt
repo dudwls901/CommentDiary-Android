@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.view
+package com.movingmaker.commentdiary.viewmodel.onboarding
 
 import android.app.Application
 import android.content.ContentValues.TAG

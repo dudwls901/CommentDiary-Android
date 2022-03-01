@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary
+package com.movingmaker.commentdiary.base
 
 import android.os.Bundle
 import android.util.Log

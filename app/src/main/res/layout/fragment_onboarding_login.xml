@@ -9,7 +9,7 @@
 
         <variable
             name="onboardingviewModel"
-            type="com.movingmaker.commentdiary.view.OnboardingViewModel" />
+            type="com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

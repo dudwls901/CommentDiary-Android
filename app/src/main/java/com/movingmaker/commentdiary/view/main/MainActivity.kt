@@ -1,17 +1,14 @@
-package com.movingmaker.commentdiary.view
+package com.movingmaker.commentdiary.view.main
 
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.movingmaker.commentdiary.BaseActivity
+import com.movingmaker.commentdiary.base.BaseActivity
 import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
-import com.movingmaker.commentdiary.view.main.CalendarWithDiaryFragment
-import com.movingmaker.commentdiary.view.main.Fragment2
-import com.movingmaker.commentdiary.view.main.Fragment3
-import com.movingmaker.commentdiary.view.main.Fragment4
+import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlin.coroutines.CoroutineContext

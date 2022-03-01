@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.viewmodel
+package com.movingmaker.commentdiary.viewmodel.mydiary
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

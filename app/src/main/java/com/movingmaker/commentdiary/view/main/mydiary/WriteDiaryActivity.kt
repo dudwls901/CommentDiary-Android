@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.view.main
+package com.movingmaker.commentdiary.view.main.mydiary
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
