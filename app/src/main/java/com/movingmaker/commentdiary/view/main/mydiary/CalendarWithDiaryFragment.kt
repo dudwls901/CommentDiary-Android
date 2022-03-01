@@ -8,7 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.FragmentWritediaryCalendarWithDiaryBinding
-import com.movingmaker.commentdiary.model.remote.Diary
+import com.movingmaker.commentdiary.model.entity.Diary
 import com.movingmaker.commentdiary.view.main.mydiary.calendardecorator.AloneDotDecorator
 import com.movingmaker.commentdiary.view.main.mydiary.calendardecorator.CommentDotDecorator
 import com.prolificinteractive.materialcalendarview.CalendarDay

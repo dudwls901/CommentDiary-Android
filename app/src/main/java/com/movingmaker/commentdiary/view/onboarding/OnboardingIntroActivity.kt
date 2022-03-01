@@ -40,7 +40,7 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
             //자동 로그인
             if(refreshToken.isNotEmpty()){
                 //todo accessToken 갱신 아직 api없음
-                delay(3000L)
+                delay(100L)
 //                finish()
                 startActivity(Intent(this@OnboardingIntroActivity, MainActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -115,9 +115,9 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                Log.d("???????????", theme.toString())
+//                Log.d("???????????", theme.toString())
                 setTheme(R.style.Theme_CommentDiary)
-                Log.d("???????????", theme.toString())
+//                Log.d("???????????", theme.toString())
                 changeButton()
             }
         })

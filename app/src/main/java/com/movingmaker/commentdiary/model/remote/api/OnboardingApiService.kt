@@ -22,7 +22,7 @@ interface OnboardingApiService {
     @POST(Url.EMAIL_CODE_CHECK)
     suspend fun emailCodeCheck(@Body emailCodeCheckRequest: EmailCodeCheckRequest): Response<IsSuccessResponse>
 
-    @POST(Url.SIGN_UP)
+    @POST(Url.SIGN)
     suspend fun signUp(@Body signUpRequest: SignUpRequest): Response<IsSuccessResponse>
 
     @POST(Url.LOG_IN)

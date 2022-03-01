@@ -3,12 +3,15 @@ package com.movingmaker.commentdiary.view.main
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import com.movingmaker.commentdiary.base.BaseActivity
 import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
 import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment
+import com.movingmaker.commentdiary.view.main.mypage.TempMyPageFragment
+import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlin.coroutines.CoroutineContext
@@ -23,10 +26,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
+    private val myPageViewModel: MyPageViewModel by viewModels()
+
     private lateinit var calendarWithDiaryFragment: CalendarWithDiaryFragment
     private lateinit var fragment2: Fragment2
     private lateinit var fragment3: Fragment3
-    private lateinit var fragment4: Fragment4
+    private lateinit var tempMyPageFragment: TempMyPageFragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +44,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         calendarWithDiaryFragment = CalendarWithDiaryFragment.newInstance()
         fragment2 = Fragment2.newInstance()
         fragment3 = Fragment3.newInstance()
-        fragment4 = Fragment4.newInstance()
+        tempMyPageFragment = TempMyPageFragment.newInstance()
         supportFragmentManager.beginTransaction().add(binding.fragmentContainer.id, calendarWithDiaryFragment).commit()
 
         bottomNavigationView.setOnItemSelectedListener{menu->
@@ -47,7 +52,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
                 R.id.fragment1-> replaceFragment(calendarWithDiaryFragment)
                 R.id.fragment2-> replaceFragment(fragment2)
                 R.id.fragment3-> replaceFragment(fragment3)
-                R.id.fragment4-> replaceFragment(fragment4)
+                R.id.fragment4-> replaceFragment(tempMyPageFragment)
             }
             true
         }
@@ -79,5 +84,5 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             commit()
         }
     }
-
+    
 }

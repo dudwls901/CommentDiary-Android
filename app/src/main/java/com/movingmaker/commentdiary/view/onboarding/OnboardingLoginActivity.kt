@@ -86,7 +86,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                     Toast.makeText(this, "토큰 저장 실패", Toast.LENGTH_SHORT).show()
                 }
                 else{
-                    insertAuth(accessToken, refreshToken, accessTokenExpiresIn)
+                    CodaApplication.getInstance().getDataStore().insertAuth(accessToken, refreshToken, accessTokenExpiresIn)
                 }
 
                 startActivity(Intent(this, MainActivity::class.java).apply {
@@ -171,13 +171,13 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         }
     }
 
-    private fun insertAuth(accessToken: String, refreshToken: String, accessTokenExpiresIn: Long){
-        launch(Dispatchers.IO) {
-            CodaApplication.getInstance().getDataStore().setAccessToken(accessToken)
-            CodaApplication.getInstance().getDataStore().setRefreshToken(refreshToken)
-            CodaApplication.getInstance().getDataStore().setAccessTokenExpiresIn(accessTokenExpiresIn)
-        }
-    }
+//    private fun insertAuth(accessToken: String, refreshToken: String, accessTokenExpiresIn: Long){
+//        launch(Dispatchers.IO) {
+//            CodaApplication.getInstance().getDataStore().setAccessToken(accessToken)
+//            CodaApplication.getInstance().getDataStore().setRefreshToken(refreshToken)
+//            CodaApplication.getInstance().getDataStore().setAccessTokenExpiresIn(accessTokenExpiresIn)
+//        }
+//    }
 
     private fun addButtonEvent(fragment: String) {
         when (fragment) {

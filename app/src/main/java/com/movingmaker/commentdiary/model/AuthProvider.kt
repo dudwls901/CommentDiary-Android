@@ -6,9 +6,13 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.movingmaker.commentdiary.CodaApplication
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 
@@ -71,6 +75,14 @@ class AuthProvider(private val context : Context) {
     suspend fun setAccessTokenExpiresIn(time : Long){
         context.dataStore.edit { preferences ->
             preferences[accessTokenExpiresInKey] = time
+        }
+    }
+
+    fun insertAuth(accessToken: String, refreshToken: String, accessTokenExpiresIn: Long){
+        CoroutineScope(Dispatchers.IO).launch {
+            CodaApplication.getInstance().getDataStore().setAccessToken(accessToken)
+            CodaApplication.getInstance().getDataStore().setRefreshToken(refreshToken)
+            CodaApplication.getInstance().getDataStore().setAccessTokenExpiresIn(accessTokenExpiresIn)
         }
     }
 

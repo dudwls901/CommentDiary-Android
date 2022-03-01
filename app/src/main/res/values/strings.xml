@@ -2,10 +2,10 @@
     <string name="app_name">CommentDiary</string>
     <string name="submit">확인</string>
     <string name="cancel">취소</string>
-    <string name="bottomnavigation_title_writediary">일기 쓰기</string>
-    <string name="bottomnavigation_title_receiveddiary">받은 일기</string>
+    <string name="bottomnavigation_title_alldiary">모아보기</string>
+    <string name="bottomnavigation_title_receiveddiary">도착한 일기</string>
     <string name="bottomnavigation_title_mydiary">내 일기</string>
-    <string name="bottomnavigation_title_my">my</string>
+    <string name="bottomnavigation_title_my">마이페이지</string>
     <string name="diary_test_text">"2. 캘린더 표시
 - 당일날짜가 자동선택되어 있음(1월 15일쪽에 큰 회색
 동그라미), 과거의 날짜를 선택시, 회색동그라미가 해당 날짜에

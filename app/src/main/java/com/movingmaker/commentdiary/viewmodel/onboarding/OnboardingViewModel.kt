@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 class OnboardingViewModel(application: Application) : AndroidViewModel(application) {
-    private var _currentNum = MutableLiveData<Int>()
+//    private var _currentNum = MutableLiveData<Int>()
     private var _emailCorrect = MutableLiveData<Boolean>()
     private var _passwordCorrect = MutableLiveData<Boolean>()
     private var _passwordCheckCorrect = MutableLiveData<Boolean>()
@@ -91,7 +91,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
         get() = _responseFindPassword
 
     init {
-        _currentNum.value = 0
+//        _currentNum.value = 0
         _emailCorrect.value = true
         _passwordCorrect.value = true
         _passwordCheckCorrect.value = true
