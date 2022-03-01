@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.model.remote
+package com.movingmaker.commentdiary.model.entity
 
 data class Diary(
     val content: String,
