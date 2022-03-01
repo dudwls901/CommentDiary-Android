@@ -18,7 +18,7 @@ import kotlin.coroutines.CoroutineContext
 
 class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     override val TAG: String = MainActivity::class.java.simpleName
-
+    //test
     override val layoutRes: Int = R.layout.activity_main
 
     private val job = Job()
