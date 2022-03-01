@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.view.main.calendardecorator
+package com.movingmaker.commentdiary.view.main.mydiary.calendardecorator
 
 import android.content.ContentValues
 import android.content.Context

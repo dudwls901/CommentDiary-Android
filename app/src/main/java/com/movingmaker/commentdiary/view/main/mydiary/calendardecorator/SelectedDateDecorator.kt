@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.view.main.calendardecorator
+package com.movingmaker.commentdiary.view.main.mydiary.calendardecorator
 
 import android.app.Activity
 import android.graphics.drawable.Drawable
