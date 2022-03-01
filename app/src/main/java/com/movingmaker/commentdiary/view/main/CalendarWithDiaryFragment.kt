@@ -2,7 +2,6 @@ package com.movingmaker.commentdiary.view.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -10,17 +9,15 @@ import androidx.fragment.app.Fragment
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.FragmentWritediaryCalendarWithDiaryBinding
 import com.movingmaker.commentdiary.model.remote.Diary
-import com.movingmaker.commentdiary.view.main.calendardecorator.*
+import com.movingmaker.commentdiary.view.main.calendardecorator.AloneDotDecorator
+import com.movingmaker.commentdiary.view.main.calendardecorator.CommentDotDecorator
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import kotlinx.coroutines.*
-import java.lang.Thread.sleep
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 import kotlin.coroutines.CoroutineContext
-import kotlin.math.log
 
 class CalendarWithDiaryFragment: Fragment(R.layout.fragment_writediary_calendar_with_diary), CoroutineScope {
 

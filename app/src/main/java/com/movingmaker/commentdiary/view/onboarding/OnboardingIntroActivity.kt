@@ -1,13 +1,10 @@
 package com.movingmaker.commentdiary.view.onboarding
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.movingmaker.commentdiary.BaseActivity
 import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingIntroBinding
@@ -15,7 +12,6 @@ import com.movingmaker.commentdiary.view.MainActivity
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import me.relex.circleindicator.CircleIndicator3
-import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {

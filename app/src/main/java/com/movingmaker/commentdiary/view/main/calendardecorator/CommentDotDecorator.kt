@@ -1,6 +1,5 @@
 package com.movingmaker.commentdiary.view.main.calendardecorator
 
-import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.util.Log

@@ -1,7 +1,6 @@
 package com.movingmaker.commentdiary.util
 
 import com.prolificinteractive.materialcalendarview.CalendarDay
-import java.text.SimpleDateFormat
 import java.util.*
 
 object DateConverter {
