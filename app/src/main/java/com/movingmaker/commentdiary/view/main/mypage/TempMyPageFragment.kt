@@ -23,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
+import kotlin.math.log
 
 class TempMyPageFragment: BaseFragment(), CoroutineScope {
     override val TAG: String = TempMyPageFragment::class.java.simpleName
@@ -108,6 +109,11 @@ class TempMyPageFragment: BaseFragment(), CoroutineScope {
         signOutButton.setOnClickListener {
             launch(coroutineContext) {
                 myPageViewModel.setResponseSignOut()
+            }
+        }
+        logOutButton.setOnClickListener {
+            launch(coroutineContext) {
+//                myPageViewModel.setResponseLogOut()
             }
         }
         changePasswordButton.setOnClickListener {

@@ -5,8 +5,11 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.movingmaker.commentdiary.BuildConfig
 import com.movingmaker.commentdiary.CodaApplication
+import com.movingmaker.commentdiary.model.remote.api.MyDiaryApiService
 import com.movingmaker.commentdiary.model.remote.api.MyPageApiService
 import com.movingmaker.commentdiary.model.remote.api.OnboardingApiService
+import com.movingmaker.commentdiary.model.remote.api.ReIssueTokenApiService
+import com.movingmaker.commentdiary.model.repository.ReIssueTokenRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import okhttp3.*
@@ -14,20 +17,30 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.lang.Exception
+import java.sql.Date
+import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.coroutineContext
 
 object RetrofitClient {
+    private val TAG: String? = "Interceptor"
     val onboardingApiService: OnboardingApiService by lazy {
-        getOnboardingRetrofit().create(OnboardingApiService::class.java)
+        getSimpleRetrofit().create(OnboardingApiService::class.java)
     }
 
     val myPageApiService: MyPageApiService by lazy {
-        getMyPageRetrofit().create(MyPageApiService::class.java)
+        getAuthRetrofit(1).create(MyPageApiService::class.java)
     }
 
-    private fun getOnboardingRetrofit(): Retrofit {
+    val myDiaryApiService: MyDiaryApiService by lazy{
+        getAuthRetrofit(1).create(MyDiaryApiService::class.java)
+    }
+
+    val reIssueTokenApiService: ReIssueTokenApiService by lazy{
+        getAuthRetrofit(2).create(ReIssueTokenApiService::class.java)
+    }
+
+    private fun getSimpleRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Url.CODA_BASE_URL)
             .addConverterFactory(
@@ -41,10 +54,10 @@ object RetrofitClient {
             .build()
     }
 
-    private fun getMyPageRetrofit(): Retrofit {
+    private fun getAuthRetrofit(headerCount: Int): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Url.BASE_URL)
-            .client(buildHeaderOkHttpClient())
+            .client(buildHeaderOkHttpClient(headerCount))
             .addConverterFactory(
                 GsonConverterFactory.create(
                     GsonBuilder()
@@ -55,21 +68,29 @@ object RetrofitClient {
             .build()
     }
     //로깅 + 헤더
-    private fun buildHeaderOkHttpClient(): OkHttpClient {
+    private fun buildHeaderOkHttpClient(headerCount: Int): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         if (BuildConfig.DEBUG) {
             interceptor.level = HttpLoggingInterceptor.Level.BODY
         } else {
             interceptor.level = HttpLoggingInterceptor.Level.NONE
         }
-
         //todo Authenticator로 바꾸기
-        return OkHttpClient.Builder()
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .addInterceptor(interceptor)
+        if(headerCount==1) {
+            return OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .addInterceptor(interceptor)
 //            .authenticator(TokenAuthenticator())
-            .addInterceptor(HeaderInterceptor())
-            .build()
+                .addInterceptor(HeaderInterceptor())
+                .build()
+        }
+        else{
+            return OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .addInterceptor(interceptor)
+                .addInterceptor(ReIssueHeaderInterceptor())
+                .build()
+        }
     }
 
 
@@ -88,44 +109,90 @@ object RetrofitClient {
             .build()
     }
 
-    class TokenAuthenticator : Authenticator {
-        override fun authenticate(route: Route?, response: Response): Request? {
-//            Log.d("111111111111", "Token " + "token")
-            if (response.request.header("Authorization") != null) {
-//                Log.d("2222222222222", "Token " + "token")
-                return null
-            }
-
-            return response.request.newBuilder().header("Authorization", "Bearer ").build()
-        }
-    }
-//    OkHttpClient.Builder().authenticator(TokenAuthenticator()).build()
-
     class HeaderInterceptor: Interceptor {
+        //todo 조건 분기로 인터셉터 구조 변경
         @Throws(IOException::class)
         override fun intercept(chain: Interceptor.Chain): Response {
-
 
             val accessTokenExpiresIn  = runBlocking {
                 CodaApplication.getInstance().getDataStore().accessTokenExpiresIn.first()
             }
             var accessToken = ""
+//            val date = Date(accessTokenExpiresIn)
+            val simpleDateFormatTime = SimpleDateFormat("MM-DD HH:mm:ss")
+
+            Log.d("만료 시간!!!!!!!!!!!!!!!!!!", simpleDateFormatTime.format(Date(accessTokenExpiresIn)) + " 지금 시간 : " + simpleDateFormatTime.format(Date(accessTokenExpiresIn)))
+
             if(accessTokenExpiresIn <= System.currentTimeMillis()){
-                //토큰 갱신 api 호출
-                Log.d("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "intercept: 토큰 만료됨 ")
+                //todo 토큰 갱신 api 호출
+                Log.d(TAG, "intercept: accessToken 만료됨 ")
+                accessToken = runBlocking {
+
+                    val response = ReIssueTokenRepository.INSTANCE.reIssueToken()
+
+                        try {
+                            CodaApplication.getInstance().getDataStore().setAccessToken(response.body()!!.result.accessToken)
+                            CodaApplication.getInstance().getDataStore().setRefreshToken(response.body()!!.result.refreshToken)
+                            CodaApplication.getInstance().getDataStore().setAccessTokenExpiresIn(response.body()!!.result.accessTokenExpiresIn)
+                        }
+                        catch (e: Exception){
+                            Log.d(TAG, e.toString())
+                            Log.d(TAG, "갱신한 토큰을 데이터스토어에 저장하는 데 실패하였습니다. ")
+                        }
+
+                    response.body()?.result?.accessToken?: "Empty Token"
+                }
+                Log.d(TAG, "토큰 갱신, 저장 성공")
             }
             else{
                 accessToken = runBlocking {
                     CodaApplication.getInstance().getDataStore().accessToken.first()
                 }
             }
+            //리프레쉬가 짧아서 갱신 테스트가 안
 
-            val token = "Bearer $accessToken"
-            Log.d("3333333333333",  token)
-            val newRequest = chain.request().newBuilder().addHeader("Authorization", token)
+            Log.d(TAG,  accessToken)
+            val newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer ${accessToken}")
                 .build()
+            Log.d("REQUEST@@@@@@@@@@@@@@@@@@@@@@@@",  newRequest.toString())
             return chain.proceed(newRequest)
         }
     }
 
+
+    class ReIssueHeaderInterceptor: Interceptor {
+        //todo refreshtoken도 만료됐다면??
+
+        @Throws(IOException::class)
+        override fun intercept(chain: Interceptor.Chain): Response {
+            //갱신 전 토큰들
+            val refreshToken  = runBlocking {
+                CodaApplication.getInstance().getDataStore().refreshToken.first()
+            }
+            val accessToken = runBlocking {
+                CodaApplication.getInstance().getDataStore().accessToken.first()
+            }
+            //리프레쉬가 짧아서 갱신 테스트가 안
+
+            val token = "X-AUTH-TOKEN $accessToken REFRESH-TOKEN $refreshToken"
+//            val newRequest = chain.request().newBuilder().addHeader("Authorization", token)
+            val newRequest = chain.request().newBuilder().addHeader("X-AUTH-TOKEN", accessToken).addHeader("REFRESH-TOKEN", refreshToken)
+                .build()
+            Log.d("reIssue REQUEST@@@@@@@@@@@@@@@@@@@@@@@@",  newRequest.toString())
+            return chain.proceed(newRequest)
+        }
+    }
+
+    //    class TokenAuthenticator : Authenticator {
+//        override fun authenticate(route: Route?, response: Response): Request? {
+////            Log.d("111111111111", "Token " + "token")
+//            if (response.request.header("Authorization") != null) {
+////                Log.d("2222222222222", "Token " + "token")
+//                return null
+//            }
+//
+//            return response.request.newBuilder().header("Authorization", "Bearer ").build()
+//        }
+//    }
+////    OkHttpClient.Builder().authenticator(TokenAuthenticator()).build()
 }

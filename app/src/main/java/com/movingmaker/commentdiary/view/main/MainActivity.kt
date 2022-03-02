@@ -11,6 +11,7 @@ import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
 import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment
 import com.movingmaker.commentdiary.view.main.mypage.TempMyPageFragment
+import com.movingmaker.commentdiary.viewmodel.mydiary.CalendarViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
@@ -27,6 +28,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         get() = Dispatchers.Main + job
 
     private val myPageViewModel: MyPageViewModel by viewModels()
+    private val myDiaryViewModel: CalendarViewModel by viewModels()
 
     private lateinit var calendarWithDiaryFragment: CalendarWithDiaryFragment
     private lateinit var fragment2: Fragment2
@@ -75,7 +77,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             accessTokenExpiresIn = withContext(Dispatchers.IO) {
                 CodaApplication.getInstance().getDataStore().accessTokenExpiresIn.first()
             }
-            Log.d(TAG, "replaceFragment: $accessToken + \" \" + $refreshToken + \" \" + $accessTokenExpiresIn")
+            Log.d(TAG, "accessToken: $accessToken ")
+            Log.d(TAG, "refreshToken :  $refreshToken")
+            Log.d(TAG, "accessTokenExpiresIn $accessTokenExpiresIn")
             Toast.makeText(this@MainActivity, accessToken + " " + refreshToken + " " + accessTokenExpiresIn, Toast.LENGTH_SHORT).show()
         }
         supportFragmentManager.beginTransaction().apply {

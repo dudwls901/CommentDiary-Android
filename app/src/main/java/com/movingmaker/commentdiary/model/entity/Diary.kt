@@ -1,7 +1,19 @@
 package com.movingmaker.commentdiary.model.entity
 
+import com.google.gson.annotations.SerializedName
+import org.w3c.dom.Comment
+
 data class Diary(
+    @SerializedName(value = "id")
+    val id: Int,
+    @SerializedName(value = "title")
+    val title: String,
+    @SerializedName(value = "content")
     val content: String,
-    val deliveryYN: Char,
-    val createdAt: String
+    @SerializedName(value = "date")
+    val date: String,
+    @SerializedName(value = "deliveryYN")
+    val deliveryYN: String,
+    @SerializedName(value = "commentResponseList")
+    val commentList: MutableList<Comment>?
 )
