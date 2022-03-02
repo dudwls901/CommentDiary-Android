@@ -86,6 +86,24 @@ class TempMyPageFragment: BaseFragment(), CoroutineScope {
         }
 
         binding.lifecycleOwner?.let { lifecycleOwner ->
+            myPageViewModel.responseLogOut.observe(lifecycleOwner) {
+//                binding.loadingBar.isVisible = false
+                if (it.isSuccessful) {
+                    Log.d(TAG, it.isSuccessful.toString())
+                    Log.d(TAG, it.body()?.code.toString())
+                    Log.d(TAG, it.body()?.message.toString())
+                    logOut()
+                } else {
+                    Log.d(TAG, it.isSuccessful.toString())
+                    Log.d(TAG, it.body()?.code.toString())
+                    Log.d(TAG, it.body()?.message.toString())
+                    Toast.makeText(requireContext(), "로그아웃 실패", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }
+
+        binding.lifecycleOwner?.let { lifecycleOwner ->
             myPageViewModel.responseChangePassword.observe(lifecycleOwner) {
 //                binding.loadingBar.isVisible = false
                 //todo 비밀번호 생성 규칙 처리
@@ -103,6 +121,8 @@ class TempMyPageFragment: BaseFragment(), CoroutineScope {
 
             }
         }
+
+
     }
 
     private fun initViews() = with(binding){
@@ -113,7 +133,7 @@ class TempMyPageFragment: BaseFragment(), CoroutineScope {
         }
         logOutButton.setOnClickListener {
             launch(coroutineContext) {
-//                myPageViewModel.setResponseLogOut()
+                myPageViewModel.setResponseLogOut()
             }
         }
         changePasswordButton.setOnClickListener {
@@ -129,8 +149,8 @@ class TempMyPageFragment: BaseFragment(), CoroutineScope {
     private fun logOut(){
 
 
-        //Todo 값 삭제
         CodaApplication.getInstance().getDataStore().insertAuth("", "", 0L)
+        Log.d(TAG, "logOut: datastore 토큰 삭제 완료")
 
         startActivity(Intent(requireContext(), OnboardingLoginActivity::class.java).apply {
             //메인 액티비티 실행하면 현재 화면 필요 없으니 cleartask

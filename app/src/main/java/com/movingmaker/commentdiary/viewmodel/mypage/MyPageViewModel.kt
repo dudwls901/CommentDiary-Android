@@ -15,12 +15,16 @@ import retrofit2.Response
 class MyPageViewModel (application: Application) : AndroidViewModel(application) {
     //api response
     private var _responseSignOut = MutableLiveData<Response<IsSuccessResponse>>()
+    private var _responseLogOut = MutableLiveData<Response<IsSuccessResponse>>()
     private var _responseChangePassword = MutableLiveData<Response<IsSuccessResponse>>()
     val responseSignOut: LiveData<Response<IsSuccessResponse>>
         get() = _responseSignOut
 
     val responseChangePassword: LiveData<Response<IsSuccessResponse>>
         get() = _responseChangePassword
+
+    val responseLogOut: LiveData<Response<IsSuccessResponse>>
+        get() = _responseLogOut
 
     init{
 
@@ -35,6 +39,12 @@ class MyPageViewModel (application: Application) : AndroidViewModel(application)
     suspend fun setResponseChangePassword(changePasswordRequest: ChangePasswordRequest) {
         withContext(viewModelScope.coroutineContext) {
             _responseChangePassword.value = MyPageRepository.INSTANCE.changePassword(changePasswordRequest)
+        }
+    }
+
+    suspend fun setResponseLogOut(){
+        withContext(viewModelScope.coroutineContext){
+            _responseLogOut.value = MyPageRepository.INSTANCE.logOut()
         }
     }
 }

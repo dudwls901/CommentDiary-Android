@@ -16,4 +16,7 @@ interface MyPageApiService {
 
     @PATCH(Url.SIGN)
     suspend fun changePassword(@Body changePasswordRequest: ChangePasswordRequest): Response<IsSuccessResponse>
+
+    @DELETE(Url.SIGN + Url.LOG_OUT)
+    suspend fun logOut(): Response<IsSuccessResponse>
 }
