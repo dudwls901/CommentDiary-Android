@@ -179,12 +179,11 @@
             android:inputType="textPassword"
             android:paddingStart="14dp"
             android:textColor="@color/coda_common_text"
-            app:layout_constraintBottom_toTopOf="@id/signUpAgreeNoticeTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/passwordCheckTextView"
             tools:ignore="RtlSymmetry" />
-
+<!--        app:layout_constraintBottom_toTopOf="@id/signUpAgreeNoticeTextView"-->
         <TextView
             android:id="@+id/signUpAgreeNoticeTextView"
             android:layout_width="0dp"
