@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.movingmaker.commentdiary.model.entity.Diary
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.model.remote.response.DiaryListResponse
 import com.movingmaker.commentdiary.model.repository.MyDiaryRepository
@@ -15,6 +16,7 @@ import retrofit2.Response
 class CalendarViewModel : ViewModel() {
     private var _aloneDiary = MutableLiveData<List<CalendarDay>>()
     private var _commentDiary = MutableLiveData<List<CalendarDay>>()
+    private var _monthDiaries = MutableLiveData<List<Diary>>()
 
     //api response
     private var _responseGetMonthDiary = MutableLiveData<Response<DiaryListResponse>>()
@@ -25,14 +27,24 @@ class CalendarViewModel : ViewModel() {
     val commentDiary : LiveData<List<CalendarDay>>
         get() = _commentDiary
 
+    val monthDiaries: LiveData<List<Diary>>
+        get() = _monthDiaries
+
     val responseGetMonthDiary: LiveData<Response<DiaryListResponse>>
         get() = _responseGetMonthDiary
+
+
 
     fun setAloneDiary(list : List<CalendarDay>){
         _aloneDiary.value = list
     }
+
     fun setCommentDiary(list : List<CalendarDay>){
         _commentDiary.value = list
+    }
+
+    fun setMonthDiaries(list: List<Diary>){
+        _monthDiaries.value = list
     }
 
     suspend fun setResponseGetMonthDiary(date: String) {

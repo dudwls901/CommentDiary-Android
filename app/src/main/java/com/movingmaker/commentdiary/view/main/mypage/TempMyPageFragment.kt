@@ -147,16 +147,10 @@ class TempMyPageFragment: BaseFragment(), CoroutineScope {
     }
 
     private fun logOut(){
-
-
         CodaApplication.getInstance().getDataStore().insertAuth("", "", 0L)
         Log.d(TAG, "logOut: datastore 토큰 삭제 완료")
 
-        startActivity(Intent(requireContext(), OnboardingLoginActivity::class.java).apply {
-            //메인 액티비티 실행하면 현재 화면 필요 없으니 cleartask
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        })
+        CodaApplication.getInstance().logOut()
     }
 
 }

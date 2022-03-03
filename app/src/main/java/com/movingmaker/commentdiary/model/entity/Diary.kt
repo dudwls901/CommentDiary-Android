@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Diary(
     @SerializedName(value = "id")
-    val id: Int,
+    val id: Long,
     @SerializedName(value = "title")
     val title: String,
     @SerializedName(value = "content")

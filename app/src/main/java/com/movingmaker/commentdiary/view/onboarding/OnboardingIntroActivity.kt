@@ -39,7 +39,7 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
             }
             //자동 로그인
             if(refreshToken.isNotEmpty()){
-                //todo accessToken 갱신 아직 api없음
+                //todo refresh토큰 갱신하는 api 필요 refreshToken만료됐는지 검사 후 accessToken,refreshToken,expiresIn발급
                 delay(100L)
 //                finish()
                 startActivity(Intent(this@OnboardingIntroActivity, MainActivity::class.java).apply {

@@ -1,15 +1,21 @@
 package com.movingmaker.commentdiary.view.main.mydiary
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
+import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentWritediaryCalendarWithDiaryBinding
 import com.movingmaker.commentdiary.model.entity.Diary
 import com.movingmaker.commentdiary.view.main.MainActivity
@@ -21,84 +27,12 @@ import com.prolificinteractive.materialcalendarview.CalendarMode
 import kotlinx.coroutines.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-class CalendarWithDiaryFragment: Fragment(R.layout.fragment_writediary_calendar_with_diary), CoroutineScope {
-
-    //당일 날짜 디폴트 선택(회색 동글)
-    //코멘트용 일기 레드 닷, 혼자 쓴 일기 블루 닷
-    private val diaryList = arrayOf(
-        Diary(
-            id = 1,
-            title = "제목1",
-            content = "코멘트용 일기1",
-            date = "2022.02.25",
-            deliveryYN ="y",
-            commentList = null
-        ),
-        Diary(
-            id = 2,
-            title = "제목2",
-            content = "개인 일기1",
-            date = "2022.02.28",
-            deliveryYN ="n",
-            commentList = null
-        ),
-        Diary(
-            id = 3,
-            title = "제목3",
-            content = "코멘트용 일기2",
-            date = "2022.02.4",
-            deliveryYN ="n",
-            commentList = null
-        ),
-        Diary(
-            id = 4,
-            title = "제목4",
-            content = "개인 일기2",
-            date = "2022.02.15",
-            deliveryYN ="n",
-            commentList = null
-        ),
-        Diary(
-            id = 5,
-            title = "제목5",
-            content = "코멘트용 일기3",
-            date = "2022.02.11",
-            deliveryYN ="y",
-            commentList = null
-        ),
-        Diary(
-            id = 6,
-            title = "제목6",
-            content = "코멘트용 일기4",
-            date = "2022.02.9",
-            deliveryYN ="y",
-            commentList = null
-        ),
-        Diary(
-            id = 7,
-            title = "제목7",
-            content = "개인 일기1",
-            date = "2022.02.30",
-            deliveryYN ="n",
-            commentList = null
-        )
-
-    )
-    companion object{
-        const val TAG: String = "로그"
-
-        fun newInstance() : CalendarWithDiaryFragment {
-            return CalendarWithDiaryFragment()
-        }
-        //7시간
-        const val minusCodaTime = 60*60*7*1000
-
-        val ymdFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-
-    }
+class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
+    override val TAG: String = CalendarWithDiaryFragment::class.java.simpleName
 
     private val job = Job()
 
@@ -109,20 +43,118 @@ class CalendarWithDiaryFragment: Fragment(R.layout.fragment_writediary_calendar_
 
     private val myDiaryViewModel: CalendarViewModel by activityViewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding = FragmentWritediaryCalendarWithDiaryBinding.bind(view)
+
+
+    //당일 날짜 디폴트 선택(회색 동글)
+    //코멘트용 일기 레드 닷, 혼자 쓴 일기 블루 닷
+    private val diaryList = arrayOf(
+        Diary(
+            id = 1,
+            title = "제목1",
+            content = "코멘트용 일기1",
+            date = "2022.02.25",
+            deliveryYN = "y",
+            commentList = null
+        ),
+        Diary(
+            id = 2,
+            title = "제목2",
+            content = "개인 일기1",
+            date = "2022.02.28",
+            deliveryYN = "n",
+            commentList = null
+        ),
+        Diary(
+            id = 3,
+            title = "제목3",
+            content = "코멘트용 일기2",
+            date = "2022.02.4",
+            deliveryYN = "n",
+            commentList = null
+        ),
+        Diary(
+            id = 4,
+            title = "제목4",
+            content = "개인 일기2",
+            date = "2022.02.15",
+            deliveryYN = "n",
+            commentList = null
+        ),
+        Diary(
+            id = 5,
+            title = "제목5",
+            content = "코멘트용 일기3",
+            date = "2022.02.11",
+            deliveryYN = "y",
+            commentList = null
+        ),
+        Diary(
+            id = 6,
+            title = "제목6",
+            content = "코멘트용 일기4",
+            date = "2022.02.9",
+            deliveryYN = "y",
+            commentList = null
+        ),
+        Diary(
+            id = 7,
+            title = "제목7",
+            content = "개인 일기1",
+            date = "2022.02.30",
+            deliveryYN = "n",
+            commentList = null
+        )
+
+    )
+
+    companion object {
+        const val TAG: String = "로그"
+
+        fun newInstance(): CalendarWithDiaryFragment {
+            return CalendarWithDiaryFragment()
+        }
+        //7시간
+//        const val minusCodaTime = 60*60*7*1000
+//        val ymdFormat1: SimpleDateFormat = SimpleDateFormat("yyyy.mm.dd")
+//        @SuppressLint("SimpleDateFormat")
+//        val ymdFormat: Any = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            DateTimeFormatter.ofPattern("yyyy.mm.dd")
+//        } else {
+//            SimpleDateFormat("yyyy.mm.dd")
+//        }
+        val ymdFormat: SimpleDateFormat = SimpleDateFormat("yyyy.mm.dd")
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = FragmentWritediaryCalendarWithDiaryBinding.inflate(layoutInflater)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding.calendarViewModel = myDiaryViewModel
         binding.lifecycleOwner = viewLifecycleOwner
+
 
         initSwipeRefresh()
         initCalendar()
         initWriteButton()
         observeData()
 
+        return binding.root
     }
 
-    private fun observeData(){
-        myDiaryViewModel.responseGetMonthDiary.observe(viewLifecycleOwner){
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+    }
+
+    private fun observeData() {
+        myDiaryViewModel.responseGetMonthDiary.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
                 Log.d(TAG, (it.body()?.code ?: 0).toString())
                 Log.d(TAG, it.body()?.message ?: "FAIL")
@@ -140,18 +172,18 @@ class CalendarWithDiaryFragment: Fragment(R.layout.fragment_writediary_calendar_
         }
     }
 
-    private fun initWriteButton() = with(binding){
-       writeDiaryLinearLayout.setOnClickListener {
+    private fun initWriteButton() = with(binding) {
+        writeDiaryLinearLayout.setOnClickListener {
             val intent = Intent(requireContext(), WriteDiaryActivity::class.java)
             startActivity(intent)
         }
     }
 
-    private fun initSwipeRefresh() = with(binding){
+    private fun initSwipeRefresh() = with(binding) {
         //Todo swipe 이벤트 처리
         swipeRefreshLayout.setOnRefreshListener {
             //위의 동작 완료시 리프레쉬 종료
-            swipeRefreshLayout.isRefreshing =false
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 
@@ -163,22 +195,23 @@ class CalendarWithDiaryFragment: Fragment(R.layout.fragment_writediary_calendar_
             .setCalendarDisplayMode(CalendarMode.MONTHS) // 월 달력, 주 달력
             .commit()
 
-        //todo date deprecated 알아보기 , simpledatavforamt도?
-        materialCalendarView.selectedDate = CalendarDay.from(Date(Calendar.getInstance().time.time- minusCodaTime))
+        // todo date deprecated 알아보기 , simpledatavforamt도?
+//        materialCalendarView.selectedDate = CalendarDay.from(Date(Calendar.getInstance().time.time- minusCodaTime))
 
+        //7시간 뺀 날짜
         val codaTime = Calendar.getInstance()
+        codaTime.add(Calendar.HOUR, -7)
 
-        codaTime.add(Calendar.HOUR,-7)
+        //디폴트 날짜 오늘 날짜(-7)
         materialCalendarView.selectedDate = CalendarDay.from(codaTime)
 
-        launch(coroutineContext){
+        launch(coroutineContext) {
             myDiaryViewModel.setResponseGetMonthDiary("2022.02")
         }
 
-        launch(coroutineContext){
+        launch(coroutineContext) {
             loadData()
         }
-
 
         //오늘 날짜 디폴트
         checkSelectedDate(CalendarDay.from(codaTime))
@@ -191,27 +224,29 @@ class CalendarWithDiaryFragment: Fragment(R.layout.fragment_writediary_calendar_
         }
     }
 
-    private fun checkSelectedDate(date: CalendarDay) = with(binding){
+    private fun checkSelectedDate(date: CalendarDay) = with(binding) {
         //fragment context 사용 ->requireContext()
         val calendar = Calendar.getInstance()
         val codaToday = Calendar.getInstance()
         codaToday.add(Calendar.HOUR, -7)
-        calendar.set(date.year, date.month,date.day)
+        calendar.set(date.year, date.month, date.day)
 
         //미래 날짜면 모두 제거
-        if(calendar> codaToday){
+        if (calendar > codaToday) {
             readDiaryConstraintLayout.isVisible = false
             writeDiaryLinearLayout.isVisible = false
             return
         }
-        for(diary in diaryList){
+//        for(diary in )
+
+        for (diary in diaryList) {
 //            val ymd = diary.date.split(' ')
             val ymd = diary.date
-            val (year,month,day) = ymd.split('.').map{it.toInt()}
+            val (year, month, day) = ymd.split('.').map { it.toInt() }
             val curDiary = Calendar.getInstance()
-            curDiary.set(year,month-1,day)
-            curDiary.add(Calendar.HOUR,-7)
-            if(ymdFormat.format(curDiary.time)== ymdFormat.format(calendar.time)){
+            curDiary.set(year, month - 1, day)
+            curDiary.add(Calendar.HOUR, -7)
+            if (ymdFormat.format(curDiary.time) == ymdFormat.format(calendar.time)) {
                 Toast.makeText(requireContext(), "일기가 있어유!!", Toast.LENGTH_SHORT).show()
                 readDiaryConstraintLayout.isVisible = true
                 writeDiaryLinearLayout.isVisible = false
@@ -227,23 +262,22 @@ class CalendarWithDiaryFragment: Fragment(R.layout.fragment_writediary_calendar_
         val aloneDiary = ArrayList<CalendarDay>()
         val commentDiary = ArrayList<CalendarDay>()
 
-        for(selectedDiary in diaryList){
+        for (selectedDiary in diaryList) {
             val ymd = selectedDiary.date
             val calendar = Calendar.getInstance()
 
-            val (year,month,day) = ymd.split('.').map{it.toInt()}
+            val (year, month, day) = ymd.split('.').map { it.toInt() }
 //            val (hour,minute) = hm.split(':').map{it.toInt()}
 
 //            calendar.set(year,month-1,day,hour,minute)
-            calendar.set(year,month-1,day)
+            calendar.set(year, month - 1, day)
 //            Log.d("aaaaaaa",df.format(calendar.time))
 
-            calendar.add(Calendar.HOUR,-7)
+            calendar.add(Calendar.HOUR, -7)
 //            Log.d("aaaaaaa",df.format(calendar.time))
-            if(selectedDiary.deliveryYN=="y"){
+            if (selectedDiary.deliveryYN == "y") {
                 commentDiary.add(CalendarDay.from(calendar))
-            }
-            else{
+            } else {
                 aloneDiary.add(CalendarDay.from(calendar))
             }
         }
@@ -262,6 +296,7 @@ class CalendarWithDiaryFragment: Fragment(R.layout.fragment_writediary_calendar_
         }
 
     }
+
 
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)

@@ -1,8 +1,8 @@
-package com.movingmaker.commentdiary.model.remote.response
+package com.movingmaker.commentdiary.model.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class AuthTokenResponse(
+data class AuthTokens(
     @SerializedName(value="grantType")
     val grantType: String,
     @SerializedName(value="accessToken")

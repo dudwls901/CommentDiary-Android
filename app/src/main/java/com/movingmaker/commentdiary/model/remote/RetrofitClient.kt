@@ -9,6 +9,8 @@ import com.movingmaker.commentdiary.model.remote.api.MyDiaryApiService
 import com.movingmaker.commentdiary.model.remote.api.MyPageApiService
 import com.movingmaker.commentdiary.model.remote.api.OnboardingApiService
 import com.movingmaker.commentdiary.model.remote.api.ReIssueTokenApiService
+import com.movingmaker.commentdiary.model.remote.response.ErrorResponse
+import com.movingmaker.commentdiary.model.repository.MyPageRepository
 import com.movingmaker.commentdiary.model.repository.ReIssueTokenRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
@@ -54,7 +56,7 @@ object RetrofitClient {
             .build()
     }
 
-    private fun getAuthRetrofit(headerCount: Int): Retrofit {
+     fun getAuthRetrofit(headerCount: Int): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Url.BASE_URL)
             .client(buildHeaderOkHttpClient(headerCount))
@@ -109,6 +111,13 @@ object RetrofitClient {
             .build()
     }
 
+    /*
+    * bearer 토큰 필요한 api 사용시 accessToken유효한지 검사
+    * 유효하지 않다면 재발급 api 호출
+    * 재발급 api호출 시 refreshToken이 유효하지 않다면 error 401~404
+    * 이 경우 로그아웃
+    * refreshToken이 유효혀다면 정상적으로 accessToken재발급 후 기존 api 동작 완료
+    * */
     class HeaderInterceptor: Interceptor {
         //todo 조건 분기로 인터셉터 구조 변경
         @Throws(IOException::class)
@@ -124,34 +133,40 @@ object RetrofitClient {
             Log.d("만료 시간!!!!!!!!!!!!!!!!!!", simpleDateFormatTime.format(Date(accessTokenExpiresIn)) + " 지금 시간 : " + simpleDateFormatTime.format(Date(accessTokenExpiresIn)))
 
             if(accessTokenExpiresIn <= System.currentTimeMillis()){
-                //todo 토큰 갱신 api 호출
+
                 Log.d(TAG, "intercept: accessToken 만료됨 ")
                 accessToken = runBlocking {
-
+                    //토큰 갱신 api 호출
                     val response = ReIssueTokenRepository.INSTANCE.reIssueToken()
-
+                    val errorResponse = response.errorBody()?.let { getErrorResponse(it) }
+                    Log.d("ERRORBODYCONVERT", errorResponse?.code?:"no Error")
+                    Log.d("ERRORBODYCONVERT", errorResponse?.message?:"no Error")
+                    Log.d("ERRORBODYCONVERT", errorResponse?.status.toString())
+                    //refreshToken  만료된 경우
+                    if(errorResponse?.status in 401 .. 404){
+                        CodaApplication.getInstance().logOut()
+                    }else {
                         try {
-                            CodaApplication.getInstance().getDataStore().setAccessToken(response.body()!!.result.accessToken)
-                            CodaApplication.getInstance().getDataStore().setRefreshToken(response.body()!!.result.refreshToken)
-                            CodaApplication.getInstance().getDataStore().setAccessTokenExpiresIn(response.body()!!.result.accessTokenExpiresIn)
-                        }
-                        catch (e: Exception){
+                            CodaApplication.getInstance().getDataStore()
+                                .setAccessToken(response.body()!!.result.accessToken)
+                            CodaApplication.getInstance().getDataStore()
+                                .setRefreshToken(response.body()!!.result.refreshToken)
+                            CodaApplication.getInstance().getDataStore()
+                                .setAccessTokenExpiresIn(response.body()!!.result.accessTokenExpiresIn)
+                        } catch (e: Exception) {
                             Log.d(TAG, e.toString())
                             Log.d(TAG, "갱신한 토큰을 데이터스토어에 저장하는 데 실패하였습니다. ")
                         }
-
+                    }
                     response.body()?.result?.accessToken?: "Empty Token"
                 }
-                Log.d(TAG, "토큰 갱신, 저장 성공")
             }
             else{
                 accessToken = runBlocking {
                     CodaApplication.getInstance().getDataStore().accessToken.first()
                 }
             }
-            //리프레쉬가 짧아서 갱신 테스트가 안
-
-            Log.d(TAG,  accessToken)
+            Log.d("뭔데시발",  accessToken)
             val newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer ${accessToken}")
                 .build()
             Log.d("REQUEST@@@@@@@@@@@@@@@@@@@@@@@@",  newRequest.toString())
@@ -174,13 +189,19 @@ object RetrofitClient {
             }
             //리프레쉬가 짧아서 갱신 테스트가 안
 
-            val token = "X-AUTH-TOKEN $accessToken REFRESH-TOKEN $refreshToken"
-//            val newRequest = chain.request().newBuilder().addHeader("Authorization", token)
             val newRequest = chain.request().newBuilder().addHeader("X-AUTH-TOKEN", accessToken).addHeader("REFRESH-TOKEN", refreshToken)
                 .build()
             Log.d("reIssue REQUEST@@@@@@@@@@@@@@@@@@@@@@@@",  newRequest.toString())
             return chain.proceed(newRequest)
         }
+    }
+
+    private fun getErrorResponse(errorBody: ResponseBody): ErrorResponse? {
+//      errorBody로그로 찍고 그 담에 errorBody변수 사용하면 null값 들어옴.. 버근가?  Log.d("errorbody뭐들어오는데", errorBody.string())
+        return getAuthRetrofit(2).responseBodyConverter<ErrorResponse>(
+            ErrorResponse::class.java,
+            ErrorResponse::class.java.annotations
+        ).convert(errorBody)
     }
 
     //    class TokenAuthenticator : Authenticator {
