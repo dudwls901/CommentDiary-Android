@@ -1,7 +1,6 @@
 package com.movingmaker.commentdiary.model.entity
 
 import com.google.gson.annotations.SerializedName
-import org.w3c.dom.Comment
 
 data class Diary(
     @SerializedName(value = "id")
