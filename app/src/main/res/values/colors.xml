@@ -20,7 +20,8 @@
     <color name="onboarding_red">#E46962</color>
     <color name="coda_common_text">#5F5D59</color>
     <color name="coda_common_text_hint">#E2DFD7</color>
-    <color name="coda_background">#FDFDF9</color>
+    <color name="onboarding_background">#FDFDF9</color>
 
+    <color name="coda_background">#f4ede3</color>
 
 </resources>

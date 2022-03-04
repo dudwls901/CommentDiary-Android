@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/coda_common_text</item>
         <item name="android:textColorHint">@color/coda_common_text_hint</item>
-        <item name="android:colorBackground">@color/coda_background</item>
+        <item name="android:colorBackground">@color/onboarding_background</item>
         <item name="android:windowLightStatusBar">true</item>
 <!--        android:windowBackground : 이 설정은 window의 배경을 설정하는 것이다. color 또는 drawable 설정이 가능하다. -->
 <!--        <item name="android:windowBackground">@color/coda_background</item>-->

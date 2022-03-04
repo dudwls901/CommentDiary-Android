@@ -1,29 +1,23 @@
 package com.movingmaker.commentdiary.view.main.mypage
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
-import com.movingmaker.commentdiary.view.main.MainActivity
-import com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
-import kotlin.math.log
 
 class TempMyPageFragment: BaseFragment(), CoroutineScope {
     override val TAG: String = TempMyPageFragment::class.java.simpleName

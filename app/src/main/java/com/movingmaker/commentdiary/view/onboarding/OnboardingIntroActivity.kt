@@ -3,6 +3,7 @@ package com.movingmaker.commentdiary.view.onboarding
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.movingmaker.commentdiary.CodaApplication
@@ -32,6 +33,9 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
 //        }
         super.onCreate(savedInstanceState)
         binding = ActivityOnboardingIntroBinding.inflate(layoutInflater)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.statusBarColor = getColor(R.color.onboarding_background)
 
         launch(coroutineContext) {
             var refreshToken = withContext(Dispatchers.IO) {

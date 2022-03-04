@@ -13,15 +13,16 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentWritediaryCalendarWithDiaryBinding
-import com.movingmaker.commentdiary.model.entity.Diary
+import com.movingmaker.commentdiary.databinding.FragmentMydiaryWithCalendarBinding
 import com.movingmaker.commentdiary.view.main.mydiary.calendardecorator.AloneDotDecorator
 import com.movingmaker.commentdiary.view.main.mydiary.calendardecorator.CommentDotDecorator
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
-import com.prolificinteractive.materialcalendarview.format.DateFormatDayFormatter
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -37,7 +38,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private lateinit var binding: FragmentWritediaryCalendarWithDiaryBinding
+    private lateinit var binding: FragmentMydiaryWithCalendarBinding
 
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
 
@@ -52,7 +53,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentWritediaryCalendarWithDiaryBinding.inflate(layoutInflater)
+        binding = FragmentMydiaryWithCalendarBinding.inflate(layoutInflater)
     }
 
     override fun onCreateView(

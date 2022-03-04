@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.movingmaker.commentdiary.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentMydiaryABinding
+import com.movingmaker.commentdiary.databinding.FragmentCollectionABinding
 
 class Fragment3: BaseFragment() {
     override val TAG: String = Fragment3::class.java.simpleName
@@ -16,11 +16,11 @@ class Fragment3: BaseFragment() {
         }
     }
 
-    private lateinit var binding: FragmentMydiaryABinding
+    private lateinit var binding: FragmentCollectionABinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentMydiaryABinding.inflate(layoutInflater)
+        binding = FragmentCollectionABinding.inflate(layoutInflater)
     }
 
     override fun onAttach(context: Context) {
