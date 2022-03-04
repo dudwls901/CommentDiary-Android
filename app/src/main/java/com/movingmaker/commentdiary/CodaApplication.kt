@@ -21,6 +21,7 @@ class CodaApplication(): Application() {
     }
 
     fun logOut(){
+        getInstance().getDataStore().insertAuth("", "", 0L)
         startActivity(Intent(this, OnboardingLoginActivity::class.java).apply {
             //메인 액티비티 실행하면 현재 화면 필요 없으니 cleartask
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)

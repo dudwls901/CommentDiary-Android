@@ -1,5 +1,7 @@
 package com.movingmaker.commentdiary.viewmodel.mydiary
 
+import android.os.Build
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,8 +14,9 @@ import com.movingmaker.commentdiary.model.repository.MyPageRepository
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import kotlinx.coroutines.withContext
 import retrofit2.Response
+import java.util.*
 
-class CalendarViewModel : ViewModel() {
+class MyDiaryViewModel : ViewModel() {
     private var _aloneDiary = MutableLiveData<List<CalendarDay>>()
     private var _commentDiary = MutableLiveData<List<CalendarDay>>()
     private var _monthDiaries = MutableLiveData<List<Diary>>()
@@ -21,10 +24,10 @@ class CalendarViewModel : ViewModel() {
     //api response
     private var _responseGetMonthDiary = MutableLiveData<Response<DiaryListResponse>>()
 
-    val aloneDiary : LiveData<List<CalendarDay>>
+    val aloneDiary: LiveData<List<CalendarDay>>
         get() = _aloneDiary
 
-    val commentDiary : LiveData<List<CalendarDay>>
+    val commentDiary: LiveData<List<CalendarDay>>
         get() = _commentDiary
 
     val monthDiaries: LiveData<List<Diary>>
@@ -34,17 +37,44 @@ class CalendarViewModel : ViewModel() {
         get() = _responseGetMonthDiary
 
 
+    init {
+        _aloneDiary.value = emptyList()
+        _commentDiary.value = emptyList()
+        _monthDiaries.value = emptyList()
+    }
 
-    fun setAloneDiary(list : List<CalendarDay>){
+    private fun setAloneDiary(list: List<CalendarDay>) {
+        Log.d("mydiaryviewmodel", "setMonthDiaries: ${list.size}")
         _aloneDiary.value = list
     }
 
-    fun setCommentDiary(list : List<CalendarDay>){
+    private fun setCommentDiary(list: List<CalendarDay>) {
+        Log.d("mydiaryviewmodel", "setMonthDiaries: ${list.size}")
         _commentDiary.value = list
     }
 
-    fun setMonthDiaries(list: List<Diary>){
+    fun setMonthDiaries(list: List<Diary>) {
         _monthDiaries.value = list
+
+        val aloneDiary = ArrayList<CalendarDay>()
+        val commentDiary = ArrayList<CalendarDay>()
+
+        for (selectedDiary in list) {
+            val ymd = selectedDiary.date
+            val (year, month, day) = ymd.split('.').map { it.toInt() }
+            if (selectedDiary.deliveryYN == "Y") {
+                commentDiary.add(CalendarDay.from(year, month-1, day))
+            } else {
+                aloneDiary.add(CalendarDay.from(year, month-1, day))
+            }
+
+        }
+
+        //그냥 실행하면 background thread로 작업돼서 컴파일 에러
+        //livedata의 setValue는 백그라운드 스레드로 작업 불가
+        setCommentDiary(commentDiary.toList())
+        setAloneDiary(aloneDiary.toList())
+
     }
 
     suspend fun setResponseGetMonthDiary(date: String) {

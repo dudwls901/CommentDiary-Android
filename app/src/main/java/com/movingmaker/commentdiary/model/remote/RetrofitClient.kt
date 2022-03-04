@@ -107,7 +107,6 @@ object RetrofitClient {
         return OkHttpClient.Builder()
             .connectTimeout(5, TimeUnit.SECONDS)
             .addInterceptor(interceptor)
-//            .addInterceptor(HeaderInterceptor("abc"))
             .build()
     }
 
@@ -147,12 +146,11 @@ object RetrofitClient {
                         CodaApplication.getInstance().logOut()
                     }else {
                         try {
-                            CodaApplication.getInstance().getDataStore()
-                                .setAccessToken(response.body()!!.result.accessToken)
-                            CodaApplication.getInstance().getDataStore()
-                                .setRefreshToken(response.body()!!.result.refreshToken)
-                            CodaApplication.getInstance().getDataStore()
-                                .setAccessTokenExpiresIn(response.body()!!.result.accessTokenExpiresIn)
+                            CodaApplication.getInstance().getDataStore().insertAuth(
+                                response.body()!!.result.accessToken,
+                                response.body()!!.result.refreshToken,
+                                response.body()!!.result.accessTokenExpiresIn
+                            )
                         } catch (e: Exception) {
                             Log.d(TAG, e.toString())
                             Log.d(TAG, "갱신한 토큰을 데이터스토어에 저장하는 데 실패하였습니다. ")
@@ -166,7 +164,7 @@ object RetrofitClient {
                     CodaApplication.getInstance().getDataStore().accessToken.first()
                 }
             }
-            Log.d("뭔데시발",  accessToken)
+            Log.d("뭔데",  accessToken)
             val newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer ${accessToken}")
                 .build()
             Log.d("REQUEST@@@@@@@@@@@@@@@@@@@@@@@@",  newRequest.toString())

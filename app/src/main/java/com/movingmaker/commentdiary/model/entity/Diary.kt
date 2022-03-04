@@ -11,7 +11,7 @@ data class Diary(
     val content: String,
     @SerializedName(value = "date")
     val date: String,
-    @SerializedName(value = "deliveryYN")
+    @SerializedName(value = "deliveryYn")
     val deliveryYN: String,
     @SerializedName(value = "commentResponseList")
     val commentList: MutableList<Comment>?

@@ -11,7 +11,7 @@ import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
 import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment
 import com.movingmaker.commentdiary.view.main.mypage.TempMyPageFragment
-import com.movingmaker.commentdiary.viewmodel.mydiary.CalendarViewModel
+import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
@@ -28,7 +28,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         get() = Dispatchers.Main + job
 
     private val myPageViewModel: MyPageViewModel by viewModels()
-    private val myDiaryViewModel: CalendarViewModel by viewModels()
+    private val myDiaryViewModel: MyDiaryViewModel by viewModels()
 
     private lateinit var calendarWithDiaryFragment: CalendarWithDiaryFragment
     private lateinit var fragment2: Fragment2

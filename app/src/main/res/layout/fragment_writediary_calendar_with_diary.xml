@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="calendarViewModel"
-            type="com.movingmaker.commentdiary.viewmodel.mydiary.CalendarViewModel" />
+            name="myDiaryviewModel"
+            type="com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
