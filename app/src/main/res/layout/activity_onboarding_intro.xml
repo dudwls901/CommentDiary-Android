@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="56dp"
-            android:background="@drawable/onboarding_button_yellow_radius"
+            android:background="@drawable/large_button_yellow_radius_107"
             android:text="@string/onboarding_button_next"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"

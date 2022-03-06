@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.movingmaker.commentdiary.model.entity.Comment
 import com.movingmaker.commentdiary.model.entity.Diary
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.model.remote.response.DiaryListResponse
@@ -20,7 +21,14 @@ class MyDiaryViewModel : ViewModel() {
     private var _aloneDiary = MutableLiveData<List<CalendarDay>>()
     private var _commentDiary = MutableLiveData<List<CalendarDay>>()
     private var _monthDiaries = MutableLiveData<List<Diary>>()
+    private var _selectedDiary = MutableLiveData<Diary>()
+    private var _dateDiaryText = MutableLiveData<String>()
+    private var _diaryType = MutableLiveData<Int>()
+    private var _commentDiaryTextCount = MutableLiveData<Int>()
+    private var _curDateDiaryState = MutableLiveData<Int>()
+    private var _saveOrEdit = MutableLiveData<String>()
 
+    val diaryTypeMap =  HashMap<Int,String>()
     //api response
     private var _responseGetMonthDiary = MutableLiveData<Response<DiaryListResponse>>()
 
@@ -36,11 +44,34 @@ class MyDiaryViewModel : ViewModel() {
     val responseGetMonthDiary: LiveData<Response<DiaryListResponse>>
         get() = _responseGetMonthDiary
 
+    val selectedDiary: LiveData<Diary>
+        get() = _selectedDiary
+
+    val dateDiaryText: LiveData<String>
+        get() = _dateDiaryText
+
+    val diaryType: LiveData<Int>
+        get() = _diaryType
+
+    val commentDiaryTextCount: LiveData<Int>
+        get() = _commentDiaryTextCount
+
+    val saveOrEdit: LiveData<String>
+        get() = _saveOrEdit
 
     init {
         _aloneDiary.value = emptyList()
         _commentDiary.value = emptyList()
         _monthDiaries.value = emptyList()
+        _selectedDiary.value = Diary(0L,"","","",' ', null)
+        _dateDiaryText.value = ""
+        _diaryType.value = -1
+        _commentDiaryTextCount.value = 0
+        diaryTypeMap[0] = "aloneDiarySave"
+        diaryTypeMap[1] = "commentDiarySave"
+        diaryTypeMap[2] = "aloneDiaryEdit"
+        diaryTypeMap[3] = "commentDiaryEdit"
+        _saveOrEdit.value = ""
     }
 
     private fun setAloneDiary(list: List<CalendarDay>) {
@@ -53,6 +84,14 @@ class MyDiaryViewModel : ViewModel() {
         _commentDiary.value = list
     }
 
+    fun setDateDiaryText(text: String){
+        _dateDiaryText.value= text
+    }
+
+    fun setSelectedDiary(diary: Diary){
+        _selectedDiary.value = diary
+    }
+
     fun setMonthDiaries(list: List<Diary>) {
         _monthDiaries.value = list
 
@@ -62,7 +101,7 @@ class MyDiaryViewModel : ViewModel() {
         for (selectedDiary in list) {
             val ymd = selectedDiary.date
             val (year, month, day) = ymd.split('.').map { it.toInt() }
-            if (selectedDiary.deliveryYN == "Y") {
+            if (selectedDiary.deliveryYN == 'Y') {
                 commentDiary.add(CalendarDay.from(year, month-1, day))
             } else {
                 aloneDiary.add(CalendarDay.from(year, month-1, day))
@@ -75,6 +114,18 @@ class MyDiaryViewModel : ViewModel() {
         setCommentDiary(commentDiary.toList())
         setAloneDiary(aloneDiary.toList())
 
+    }
+
+    fun setDiaryType(type: Int){
+        _diaryType.value = type
+    }
+
+    fun setCommentDiaryTextCount(count: Int){
+        _commentDiaryTextCount.value = count
+    }
+
+    fun setSaveOrEdit(state: String){
+        _saveOrEdit.value = state
     }
 
     suspend fun setResponseGetMonthDiary(date: String) {

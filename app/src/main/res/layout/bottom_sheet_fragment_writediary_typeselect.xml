@@ -1,42 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+        <variable
+            name="myDiaryviewModel"
+            type="com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel" />
+    </data>
+
     <LinearLayout
+        android:background="@drawable/background_ivory_radius_top_10"
+        android:id="@+id/bottomSheetLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingHorizontal="20dp">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/selectAloneDiary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
+            android:id="@+id/selectDiaryHeadTextView"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:enabled="false"
+            android:fontFamily="@font/roboto_bold"
+            android:gravity="center_vertical|center"
             android:text="@string/bottom_sheet_head_text"
+            android:textColor="@color/text_black"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/selectCommentDiary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:text="@string/bottom_sheet_type_alone_text" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/text_brown"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:text="@string/bottom_sheet_type_comment_text" />
+            android:id="@+id/selectAloneDiaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:background="@{myDiaryviewModel.diaryType == 0 ? @color/brand_bright_green : @color/background_ivory }"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center_vertical|center"
+            android:text="@string/bottom_sheet_type_alone_text"
+            android:textColor="@color/text_black"
+            android:textSize="13sp" />
 
-        <Button
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/text_brown"/>
+
+        <TextView
+            android:id="@+id/selectCommentDiaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:background="@{myDiaryviewModel.diaryType == 1 ? @color/brand_bright_green : @color/background_ivory }"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center_vertical|center"
+            android:text="@string/bottom_sheet_type_comment_text"
+            android:textColor="@color/text_black"
+            android:textSize="13sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/text_brown"/>
+
+        <TextView
             android:id="@+id/submitButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/submit" />
+            android:layout_height="78dp"
+            android:background="@color/background_ivory"
+            android:fontFamily="@font/roboto_bold"
+            android:gravity="center_vertical|center"
+            android:text="@string/submit"
+            android:textColor="@color/text_black"
+            android:textSize="18sp" />
 
 
     </LinearLayout>

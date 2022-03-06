@@ -8,10 +8,8 @@
 <!--</shape>-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-    <corners
-        android:radius="3dp"
-         />
-    <solid android:color="@color/date_selected_color"/>
+
+    <solid android:color="@color/dot_red"/>
 <!--    <stroke-->
 <!--        android:width="5px"-->
 <!--        android:color="#673AB7" />-->

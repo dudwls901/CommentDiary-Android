@@ -12,7 +12,7 @@ data class Diary(
     @SerializedName(value = "date")
     val date: String,
     @SerializedName(value = "deliveryYn")
-    val deliveryYN: String,
+    val deliveryYN: Char,
     @SerializedName(value = "commentResponseList")
     val commentList: MutableList<Comment>?
 )

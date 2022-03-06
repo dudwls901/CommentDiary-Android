@@ -43,6 +43,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     }
 
     private fun initBottomNavigationView() = with(binding){
+        bottomNavigationView.itemIconTintList=null
+        bottomNavigationView.itemTextColor =null
+        //클릭시 퍼지는 색상 변경
+//        bottomNavigationView.itemRippleColor = null
         calendarWithDiaryFragment = CalendarWithDiaryFragment.newInstance()
         fragment2 = Fragment2.newInstance()
         fragment3 = Fragment3.newInstance()

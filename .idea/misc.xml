@@ -10,12 +10,31 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.151" />
         <entry key="app/src/main/res/drawable-v24/onboard_button_start_radius.xml" value="0.153" />
         <entry key="app/src/main/res/drawable-v24/onboarding_button_login_radius.xml" value="0.173" />
+        <entry key="app/src/main/res/drawable/background_brown_radius_59.xml" value="0.1495" />
+        <entry key="app/src/main/res/drawable/background_ivory_radius_10.xml" value="0.116" />
+        <entry key="app/src/main/res/drawable/background_ivory_radius_top_10.xml" value="0.1495" />
+        <entry key="app/src/main/res/drawable/background_pure_green_radius_bottom_10.xml" value="0.2125" />
+        <entry key="app/src/main/res/drawable/background_pure_green_radius_top_10.xml" value="0.116" />
+        <entry key="app/src/main/res/drawable/bottom_brown_border.xml" value="0.1085" />
         <entry key="app/src/main/res/drawable/calendar_with_diary_button_edge.xml" value="0.166" />
         <entry key="app/src/main/res/drawable/ic_baseline_chevron_left_24.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.179" />
         <entry key="app/src/main/res/drawable/ic_baseline_done_outline_24.xml" value="0.166" />
         <entry key="app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.166" />
+        <entry key="app/src/main/res/drawable/ic_bottomnavi.xml" value="0.124" />
+        <entry key="app/src/main/res/drawable/ic_edit.xml" value="0.1495" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.151" />
+        <entry key="app/src/main/res/drawable/ic_navi_diary_light.xml" value="0.116" />
+        <entry key="app/src/main/res/drawable/ic_navi_email_light.xml" value="0.124" />
+        <entry key="app/src/main/res/drawable/ic_navi_mail_bold.xml" value="0.124" />
+        <entry key="app/src/main/res/drawable/ic_navi_mail_light.xml" value="0.116" />
+        <entry key="app/src/main/res/drawable/ic_navi_mypage_bold.xml" value="0.124" />
+        <entry key="app/src/main/res/drawable/ic_navi_mypage_light.xml" value="0.116" />
+        <entry key="app/src/main/res/drawable/ic_navi_write.xml" value="0.124" />
+        <entry key="app/src/main/res/drawable/ic_navi_write_bold.xml" value="0.116" />
+        <entry key="app/src/main/res/drawable/ic_navi_write_light.xml" value="0.116" />
+        <entry key="app/src/main/res/drawable/large_button_green_radius_107.xml" value="0.1495" />
+        <entry key="app/src/main/res/drawable/mydiary_calendar_green_radius.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/onboard_button_onboard_radius.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/onboard_button_radius.xml" value="0.145" />
         <entry key="app/src/main/res/drawable/onboard_button_start_radius.xml" value="0.173" />
@@ -30,9 +49,16 @@
         <entry key="app/src/main/res/drawable/onboarding_edittext_rectangle.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/onboarding_indicator_radius.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/onboarding_intro_indicator_radius.xml" value="0.173" />
+        <entry key="app/src/main/res/drawable/onboarding_large_button_radius_107.xml" value="0.1085" />
+        <entry key="app/src/main/res/drawable/save_large_button_radius_42.xml" value="0.1085" />
         <entry key="app/src/main/res/drawable/splash_background.xml" value="0.239" />
+        <entry key="app/src/main/res/font/roboto.xml" value="0.22685185185185186" />
+        <entry key="app/src/main/res/font/roboto_bold.xml" value="0.18055555555555555" />
+        <entry key="app/src/main/res/font/roboto_medium.xml" value="0.22685185185185186" />
         <entry key="app/src/main/res/layout-v28/vp_page_onboarding_onboard.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19010416666666666" />
+        <entry key="app/src/main/res/layout/activity_mydiary_editdiary.xml" value="0.23052536231884058" />
+        <entry key="app/src/main/res/layout/activity_mydiary_writediary.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_onboarding.xml" value="0.23645833333333333" />
         <entry key="app/src/main/res/layout/activity_onboarding_intro.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_onboarding_join.xml" value="0.25" />
@@ -44,11 +70,13 @@
         <entry key="app/src/main/res/layout/dialog_onboarding_email_code_send.xml" value="0.25226449275362317" />
         <entry key="app/src/main/res/layout/dialog_onboarding_email_send.xml" value="0.165625" />
         <entry key="app/src/main/res/layout/dialog_onboarding_password_send.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_collection_a.xml" value="0.10663627152988855" />
         <entry key="app/src/main/res/layout/fragment_my_a.xml" value="0.2223731884057971" />
         <entry key="app/src/main/res/layout/fragment_mydiary_a.xml" value="0.24" />
+        <entry key="app/src/main/res/layout/fragment_mydiary_with_calendar.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_mypage.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/fragment_onboarding_find_password.xml" value="0.20969202898550723" />
-        <entry key="app/src/main/res/layout/fragment_onboarding_login.xml" value="0.2391304347826087" />
+        <entry key="app/src/main/res/layout/fragment_onboarding_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_onboarding_login1.xml" value="0.2640625" />
         <entry key="app/src/main/res/layout/fragment_onboarding_sign_up.xml" value="0.2753623188405797" />
         <entry key="app/src/main/res/layout/fragment_onboarding_sign_up_success.xml" value="0.2391304347826087" />

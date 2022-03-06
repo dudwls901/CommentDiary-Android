@@ -5,23 +5,43 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+
+    <color name="transparent">#00000000</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="dot_red">#FB8C8C</color>
-    <color name="dot_sky">#5DB7FF</color>
+    <color name="dot_red">#ffac86</color>
+    <color name="dot_sky">#73bf90</color>
     <color name="date_selected_color">#EEE</color>
 
     <color name="onboarding_yellow_button">#FFECE4A5</color>
     <color name="onboarding_green_button">#73BF90</color>
     <color name="onboarding_green_box">#98C2A8</color>
-    <color name="brand_orange">#F7BC86</color>
-    <color name="text_dark_brown">#5F5D59</color>
     <color name="onboarding_orange_button">#F5CDA9</color>
     <color name="onboarding_red">#E46962</color>
     <color name="coda_common_text">#5F5D59</color>
     <color name="coda_common_text_hint">#E2DFD7</color>
-    <color name="onboarding_background">#FDFDF9</color>
+    <color name="onboarding_background">#fdfcf9</color>
 
+    <color name="bottomnavigation_background">#F4F1EB</color>
     <color name="coda_background">#f4ede3</color>
+    <color name="pure_orange">#ffac86</color>
 
+    <color name="text_gray">#d3cdbd</color>
+
+
+    <color name="background_ivory">#fdfcf9</color>
+    <color name="brand_light_yellow">#f7f3d5</color>
+    <color name="brand_green">#98c2a8</color>
+    <color name="brand_orange">#f7bc86</color>
+    <color name="brand_bright_green">#abd4bb</color>
+    <color name="brand_bright_orange">#f5cda9</color>
+    <color name="text_dark_brown">#5f5d59</color>
+    <color name="text_brown">#878379</color>
+    <color name="text_light_brown">#e2dfd7</color>
+    <color name="text_black">#4e4c49</color>
+    <color name="notice_notice">#e46962</color>
+    <color name="core_pure_green">#73bf90</color>
+    <color name="core_pure_orange">#ffac86</color>
+    <color name="core_beige">#f4ede3</color>
+    <color name="core_ivory">#fdf8e9</color>
 </resources>

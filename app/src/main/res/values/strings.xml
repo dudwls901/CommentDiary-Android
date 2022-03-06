@@ -6,23 +6,7 @@
     <string name="bottomnavigation_title_receiveddiary">도착한 일기</string>
     <string name="bottomnavigation_title_mydiary">내 일기</string>
     <string name="bottomnavigation_title_my">마이페이지</string>
-    <string name="diary_test_text">"2. 캘린더 표시
-- 당일날짜가 자동선택되어 있음(1월 15일쪽에 큰 회색
-동그라미), 과거의 날짜를 선택시, 회색동그라미가 해당 날짜에
-노출
-- 작성한 일기가 있는 날에, 작은 동그라미로 표시됨
-- 12일, 14일
-- 유형이 2개임(코멘트용 일기, 혼자쓰는 일기)
-"</string>
-    <string name="diary_test_date">2022년 02월 21일</string>
-    <string name="diary_test_head">배가 고프다</string>
-    <string name="calendar_with_diary_button_write_text">오늘의 일기 쓰기</string>
-    <string name="calendar_with_diary_button_text">오늘은 어떤 하루였나요?</string>
-    <string name="write_diary_head_hint">제목을 입력해주세요</string>
-    <string name="write_diary_content_hint">오늘 하루는 어땠나요?</string>
-    <string name="bottom_sheet_type_comment_text">다른 사용자에게 전송하고 코멘트를 받아볼게요</string>
-    <string name="bottom_sheet_type_alone_text">혼자 볼게요(일기 전송하지 않음)</string>
-    <string name="bottom_sheet_head_text">일기 저장유형을 선택해 주세요</string>
+
     <string name="onboarding_button_next">넘어가기</string>
     <string name="onboarding_button_start">시작하기</string>
     <string name="onboarding_login">로그인</string>
@@ -54,4 +38,48 @@
     <string name="onboarding_send_password_complete">비밀번호 전송 완료!</string>
     <string name="onboarding_check_email_please">이메일을 확인해주세요.</string>
     <string name="onboarding_login_incorrect">이메일 혹은 비밀번호가 올바르지 않습니다.</string>
+
+    <string name="diary_test_text">내가 서툴고 불안해 보였나요.\n그건 내가 진심이었단 증거입니다</string>
+    <string name="diary_test_date">2022년 02월 21일</string>
+    <string name="diary_test_head">배가 고프다</string>
+    <string name="calendar_with_diary_button_write_text">오늘의 일기 쓰기</string>
+    <string name="calendar_with_diary_button_text">오늘은 어떤 하루였나요?</string>
+    <string name="write_diary_head_hint">제목을 입력해주세요</string>
+    <string name="write_diary_content_hint">오늘 하루는 어땠나요?</string>
+    <string name="mydiary_text_decoration">오늘은 기록이 없어요. 기록을 하고 코멘트를 받아봐요 :)</string>
+    <string name="write_text">작성하기</string>
+    <string name="store_text">저장하기</string>
+    <string name="send_text">전송하기</string>
+    <string name="temp_store_text">임시저장</string>
+    <string name="calendar_with_diary_comment_soon">코멘트가 곧 도착해요 :) 조금만 기다려주세요.</string>
+    <string name="bottom_sheet_type_comment_text">다른 누군가에게 전송하고 코멘트를 받아볼게요.</string>
+    <string name="bottom_sheet_type_alone_text">전송하지 않고 혼자 볼게요.</string>
+    <string name="bottom_sheet_head_text">일기 저장유형을 선택해 주세요.</string>
+    <string name="backbutton">backButton</string>
+    <string name="write_comment_diary_notice">코멘트를 받기 위해서는 N자 이상 작성해야 해요.</string>
+    <string name="comment_diary_text_limit">%s/200</string>
+    <string-array name="custom_weekdays">
+        <item>일</item>
+        <item>월</item>
+        <item>화</item>
+        <item>수</item>
+        <item>목</item>
+        <item>금</item>
+        <item>토</item>
+    </string-array>
+
+    <string-array name="custom_months">
+        <item>1월</item>
+        <item>2월</item>
+        <item>3월</item>
+        <item>4월</item>
+        <item>5월</item>
+        <item>6월</item>
+        <item>7월</item>
+        <item>8월</item>
+        <item>9월</item>
+        <item>10월</item>
+        <item>11월</item>
+        <item>12월</item>
+    </string-array>
 </resources>

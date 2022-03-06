@@ -1,5 +1,6 @@
 package com.movingmaker.commentdiary.view.onboarding
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -83,15 +84,16 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun changeButton() {
         if (binding.introViewPager.currentItem == 2) {
-            binding.onboardingButton.setBackgroundResource(R.drawable.onboarding_button_green_radius)
+            binding.onboardingButton.setBackgroundResource(R.drawable.large_button_green_radius_107)
             binding.onboardingButton.text = getString(R.string.onboarding_button_start)
-            binding.onboardingButton.setTextColor(getColor(R.color.white))
+            binding.onboardingButton.setTextColor(getColor(R.color.background_ivory))
         } else {
-            binding.onboardingButton.setBackgroundResource(R.drawable.onboarding_button_yellow_radius)
+            binding.onboardingButton.setBackgroundResource(R.drawable.large_button_yellow_radius_107)
             binding.onboardingButton.text = getString(R.string.onboarding_button_next)
-            binding.onboardingButton.setTextColor(getColor(R.color.black))
+            binding.onboardingButton.setTextColor(getColor(R.color.text_brown))
         }
 
 

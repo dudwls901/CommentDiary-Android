@@ -25,6 +25,10 @@
         <activity android:name=".view.main.MainActivity" />
         <activity android:name=".view.onboarding.OnboardingLoginActivity" />
         <activity android:name=".view.main.mydiary.WriteDiaryActivity"/>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
