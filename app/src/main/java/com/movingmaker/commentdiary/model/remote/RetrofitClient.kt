@@ -5,12 +5,10 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.movingmaker.commentdiary.BuildConfig
 import com.movingmaker.commentdiary.CodaApplication
-import com.movingmaker.commentdiary.model.remote.api.MyDiaryApiService
-import com.movingmaker.commentdiary.model.remote.api.MyPageApiService
-import com.movingmaker.commentdiary.model.remote.api.OnboardingApiService
-import com.movingmaker.commentdiary.model.remote.api.ReIssueTokenApiService
+import com.movingmaker.commentdiary.model.remote.api.*
 import com.movingmaker.commentdiary.model.remote.response.ErrorResponse
 import com.movingmaker.commentdiary.model.repository.ReIssueTokenRepository
+import com.movingmaker.commentdiary.util.RetrofitHeaderCondition
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -28,39 +26,43 @@ import java.util.concurrent.TimeUnit
 object RetrofitClient {
     private val TAG: String? = "Interceptor"
     val onboardingApiService: OnboardingApiService by lazy {
-        getSimpleRetrofit().create(OnboardingApiService::class.java)
+        getRetrofit(RetrofitHeaderCondition.NO_HEADER).create(OnboardingApiService::class.java)
     }
 
     val myPageApiService: MyPageApiService by lazy {
-        getAuthRetrofit(1).create(MyPageApiService::class.java)
+        getRetrofit(RetrofitHeaderCondition.BEARER).create(MyPageApiService::class.java)
     }
 
     val myDiaryApiService: MyDiaryApiService by lazy{
-        getAuthRetrofit(1).create(MyDiaryApiService::class.java)
+        getRetrofit(RetrofitHeaderCondition.BEARER).create(MyDiaryApiService::class.java)
     }
 
     val reIssueTokenApiService: ReIssueTokenApiService by lazy{
-        getAuthRetrofit(2).create(ReIssueTokenApiService::class.java)
+        getRetrofit(RetrofitHeaderCondition.TWO_HEADER).create(ReIssueTokenApiService::class.java)
     }
 
-    private fun getSimpleRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(Url.CODA_BASE_URL)
-            .addConverterFactory(
-                GsonConverterFactory.create(
-                    GsonBuilder()
-                        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                        .create()
-                )
-            )
-            .client(buildOkHttpClient())
-            .build()
+    val logOutApiService: LogOutApiService by lazy{
+        getRetrofit(RetrofitHeaderCondition.ONE_HEADER).create(LogOutApiService::class.java)
     }
 
-     fun getAuthRetrofit(headerCount: Int): Retrofit {
+//    private fun getSimpleRetrofit(): Retrofit {
+//        return Retrofit.Builder()
+//            .baseUrl(Url.CODA_BASE_URL)
+//            .addConverterFactory(
+//                GsonConverterFactory.create(
+//                    GsonBuilder()
+//                        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+//                        .create()
+//                )
+//            )
+//            .client(buildOkHttpClient())
+//            .build()
+//    }
+
+     private fun getRetrofit(headerCondition: String): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Url.BASE_URL)
-            .client(buildHeaderOkHttpClient(headerCount))
+            .client(buildHeaderOkHttpClient(headerCondition))
             .addConverterFactory(
                 GsonConverterFactory.create(
                     GsonBuilder()
@@ -71,44 +73,74 @@ object RetrofitClient {
             .build()
     }
     //로깅 + 헤더
-    private fun buildHeaderOkHttpClient(headerCount: Int): OkHttpClient {
-        val interceptor = HttpLoggingInterceptor()
+    private fun buildHeaderOkHttpClient(headerCondition: String): OkHttpClient {
+        val loggingInterceptor = HttpLoggingInterceptor()
         if (BuildConfig.DEBUG) {
-            interceptor.level = HttpLoggingInterceptor.Level.BODY
+            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         } else {
-            interceptor.level = HttpLoggingInterceptor.Level.NONE
+            loggingInterceptor.level = HttpLoggingInterceptor.Level.NONE
         }
         //todo Authenticator로 바꾸기
-        if(headerCount==1) {
-            return OkHttpClient.Builder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .addInterceptor(interceptor)
+        when(headerCondition) {
+            RetrofitHeaderCondition.NO_HEADER->{
+                return OkHttpClient.Builder()
+            .connectTimeout(5, TimeUnit.SECONDS)
+            .addInterceptor(loggingInterceptor)
+            .build()
+            }
+            RetrofitHeaderCondition.BEARER->{
+                return OkHttpClient.Builder()
+                    .connectTimeout(5, TimeUnit.SECONDS)
+                    .addInterceptor(loggingInterceptor)
 //            .authenticator(TokenAuthenticator())
-                .addInterceptor(HeaderInterceptor())
-                .build()
+                    .addInterceptor(BearerInterceptor())
+                    .build()
+            }
+            RetrofitHeaderCondition.ONE_HEADER->{
+                return OkHttpClient.Builder()
+                    .connectTimeout(5, TimeUnit.SECONDS)
+                    .addInterceptor(loggingInterceptor)
+                    .addInterceptor(OneHeaderInterceptor())
+                    .build()
+            }
+            RetrofitHeaderCondition.TWO_HEADER->{
+                return OkHttpClient.Builder()
+                    .connectTimeout(5, TimeUnit.SECONDS)
+                    .addInterceptor(loggingInterceptor)
+                    .addInterceptor(TwoHeaderInterceptor())
+                    .build()
+            }
         }
-        else{
-            return OkHttpClient.Builder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .addInterceptor(interceptor)
-                .addInterceptor(ReIssueHeaderInterceptor())
-                .build()
-        }
+        return OkHttpClient.Builder().build()
     }
 
 
-    private fun buildOkHttpClient(): OkHttpClient {
-        val interceptor = HttpLoggingInterceptor()
-        if (BuildConfig.DEBUG) {
-            interceptor.level = HttpLoggingInterceptor.Level.BODY
-        } else {
-            interceptor.level = HttpLoggingInterceptor.Level.NONE
-        }
+//    private fun buildOkHttpClient(): OkHttpClient {
+//        val interceptor = HttpLoggingInterceptor()
+//        if (BuildConfig.DEBUG) {
+//            interceptor.level = HttpLoggingInterceptor.Level.BODY
+//        } else {
+//            interceptor.level = HttpLoggingInterceptor.Level.NONE
+//        }
+//
+//        return OkHttpClient.Builder()
+//            .connectTimeout(5, TimeUnit.SECONDS)
+//            .addInterceptor(interceptor)
+//            .build()
+//    }
 
-        return OkHttpClient.Builder()
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .addInterceptor(interceptor)
-            .build()
+    //우선 로그아웃 api에 사용하는데 만료된 토큰 보내도 에러x
+    class OneHeaderInterceptor: Interceptor{
+        @Throws(IOException::class)
+        override fun intercept(chain: Interceptor.Chain): Response {
+
+            val accessToken = runBlocking {
+                CodaApplication.getInstance().getDataStore().accessToken.first()
+            }
+            val newRequest = chain.request().newBuilder().addHeader("X-AUTH-TOKEN", accessToken).build()
+            Log.d("logout REQUEST",  newRequest.toString())
+            return chain.proceed(newRequest)
+        }
     }
 
     /*
@@ -118,7 +150,7 @@ object RetrofitClient {
     * 이 경우 로그아웃
     * refreshToken이 유효혀다면 정상적으로 accessToken재발급 후 기존 api 동작 완료
     * */
-    class HeaderInterceptor: Interceptor {
+    class BearerInterceptor: Interceptor {
         //todo 조건 분기로 인터셉터 구조 변경
         @Throws(IOException::class)
         override fun intercept(chain: Interceptor.Chain): Response {
@@ -174,7 +206,7 @@ object RetrofitClient {
     }
 
 
-    class ReIssueHeaderInterceptor: Interceptor {
+    class TwoHeaderInterceptor: Interceptor {
         //todo refreshtoken도 만료됐다면??
 
         @Throws(IOException::class)
@@ -197,7 +229,7 @@ object RetrofitClient {
 
     private fun getErrorResponse(errorBody: ResponseBody): ErrorResponse? {
 //      errorBody로그로 찍고 그 담에 errorBody변수 사용하면 null값 들어옴.. 버근가?  Log.d("errorbody뭐들어오는데", errorBody.string())
-        return getAuthRetrofit(2).responseBodyConverter<ErrorResponse>(
+        return getRetrofit(RetrofitHeaderCondition.TWO_HEADER).responseBodyConverter<ErrorResponse>(
             ErrorResponse::class.java,
             ErrorResponse::class.java.annotations
         ).convert(errorBody)

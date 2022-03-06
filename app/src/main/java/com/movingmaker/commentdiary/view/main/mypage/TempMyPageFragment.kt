@@ -141,9 +141,7 @@ class TempMyPageFragment: BaseFragment(), CoroutineScope {
     }
 
     private fun logOut(){
-//        CodaApplication.getInstance().getDataStore().insertAuth("", "", 0L)
         Log.d(TAG, "logOut: datastore 토큰 삭제 완료")
-
         CodaApplication.getInstance().logOut()
     }
 

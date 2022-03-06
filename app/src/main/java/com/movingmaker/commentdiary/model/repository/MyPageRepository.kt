@@ -22,9 +22,4 @@ class MyPageRepository {
         Log.d(TAG, "changePassword: ")
         return RetrofitClient.myPageApiService.changePassword(changePasswordRequest)
     }
-
-    suspend fun logOut(): Response<IsSuccessResponse> {
-        Log.d(TAG, "logOut: 불린겨 뭐여?????????????")
-        return RetrofitClient.myPageApiService.logOut()
-    }
 }

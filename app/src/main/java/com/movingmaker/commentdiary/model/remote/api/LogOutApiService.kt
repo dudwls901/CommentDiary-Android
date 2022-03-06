@@ -9,12 +9,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.PATCH
 
 
-interface MyPageApiService {
-//    @Headers("Authorization: Bearer ")
-    @DELETE(Url.SIGN)
-    suspend fun signOut(): Response<IsSuccessResponse>
-
-    @PATCH(Url.SIGN)
-    suspend fun changePassword(@Body changePasswordRequest: ChangePasswordRequest): Response<IsSuccessResponse>
-
+interface LogOutApiService {
+    @DELETE(Url.SIGN + Url.LOG_OUT)
+    suspend fun logOut(): Response<IsSuccessResponse>
 }

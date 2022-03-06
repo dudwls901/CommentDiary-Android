@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
+import com.movingmaker.commentdiary.model.repository.LogOutRepository
 import com.movingmaker.commentdiary.model.repository.MyPageRepository
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -44,7 +45,7 @@ class MyPageViewModel (application: Application) : AndroidViewModel(application)
 
     suspend fun setResponseLogOut(){
         withContext(viewModelScope.coroutineContext){
-            _responseLogOut.value = MyPageRepository.INSTANCE.logOut()
+            _responseLogOut.value = LogOutRepository.INSTANCE.logOut()
         }
     }
 }
