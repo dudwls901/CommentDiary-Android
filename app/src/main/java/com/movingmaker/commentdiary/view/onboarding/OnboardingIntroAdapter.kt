@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.movingmaker.commentdiary.databinding.VpPageOnboardingIntroBinding
+import com.movingmaker.commentdiary.viewmodel.onboarding.IntroViewModel
 
 class OnboardingIntroAdapter(private val pageList: List<String>) : RecyclerView.Adapter<OnboardingIntroAdapter.OnBoardViewHolder>() {
 

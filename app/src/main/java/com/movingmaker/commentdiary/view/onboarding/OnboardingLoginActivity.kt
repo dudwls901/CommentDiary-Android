@@ -47,6 +47,8 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.statusBarColor = getColor(R.color.onboarding_background)
 
+
+
         onboardingLoginFragment = OnboardingLoginFragment.newInstance()
         onboardingSignUpFragment = OnboardingSignUpFragment.newInstance()
         onboardingFindPasswordFragment = OnboardingFindPasswordFragment.newInstance()
@@ -80,7 +82,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                 Log.d(TAG, it.body()?.result?.accessToken ?: "no")
                 Log.d(TAG, it.body()?.result?.refreshToken ?: "no")
                 Log.d(TAG, it.body()?.result?.accessTokenExpiresIn.toString())
-                Toast.makeText(this, "로그인 성공" + it.body(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
 
                 val accessToken = it.body()?.result?.accessToken
                 val refreshToken = it.body()?.result?.refreshToken
