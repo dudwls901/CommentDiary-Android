@@ -4,15 +4,15 @@ import com.google.gson.annotations.SerializedName
 
 data class Diary(
     @SerializedName(value = "id")
-    val id: Long,
+    val id: Long?,
     @SerializedName(value = "title")
-    val title: String,
+    var title: String,
     @SerializedName(value = "content")
-    val content: String,
+    var content: String,
     @SerializedName(value = "date")
-    val date: String,
+    var date: String,
     @SerializedName(value = "deliveryYn")
-    val deliveryYN: Char,
+    var deliveryYN: Char,
     @SerializedName(value = "commentResponseList")
     val commentList: MutableList<Comment>?
 )

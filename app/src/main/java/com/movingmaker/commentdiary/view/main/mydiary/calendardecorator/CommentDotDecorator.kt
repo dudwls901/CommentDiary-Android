@@ -15,13 +15,13 @@ class CommentDotDecorator(context: Context, private val dates: List<CalendarDay>
     override fun shouldDecorate(day: CalendarDay?): Boolean {
         //뭘로 받아올까?
         if(dates.contains(day)){
-            Log.e(ContentValues.TAG, "shouldDecorate: $day ${dates.contains(day)}" )
+//            Log.e(ContentValues.TAG, "shouldDecorate: $day ${dates.contains(day)}" )
         }
         return dates.contains(day)
     }
 
     override fun decorate(view: DayViewFacade) {
-        Log.e(ContentValues.TAG, "abc: $" )
+//        Log.e(ContentValues.TAG, "abc: $" )
         view.addSpan(object: DotSpan(10f,color){})
     }
 }

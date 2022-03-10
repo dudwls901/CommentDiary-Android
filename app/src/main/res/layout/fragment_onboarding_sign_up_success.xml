@@ -4,19 +4,22 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/img_onboarding_4"
+        >
 
         <TextView
             android:id="@+id/onboardingTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:lineSpacingExtra="4sp"
+            android:layout_marginHorizontal="24dp"
             android:text="@string/onboarding_ment_sign_up_success"
             android:textSize="24sp"
+            android:fontFamily="@font/paybooc_bold"
+            app:layout_constraintVertical_bias="0.4"
+            android:lineSpacingExtra="15.5sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        <!-- api28부터 가능   android:lineHeight="32sp"-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

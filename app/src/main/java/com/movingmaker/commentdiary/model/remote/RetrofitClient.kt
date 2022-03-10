@@ -184,6 +184,7 @@ object RetrofitClient {
                                 response.body()!!.result.refreshToken,
                                 response.body()!!.result.accessTokenExpiresIn
                             )
+                            Log.d(TAG, "갱신 api 성공: ${response.body()!!.result.accessToken} ")
                         } catch (e: Exception) {
                             Log.d(TAG, e.toString())
                             Log.d(TAG, "갱신한 토큰을 데이터스토어에 저장하는 데 실패하였습니다. ")

@@ -8,8 +8,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.model.entity.Comment
 import com.movingmaker.commentdiary.model.entity.Diary
+import com.movingmaker.commentdiary.model.entity.DiaryId
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
+import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
+import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.model.remote.response.DiaryListResponse
+import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
+import com.movingmaker.commentdiary.model.remote.response.SaveDiaryResponse
 import com.movingmaker.commentdiary.model.repository.MyDiaryRepository
 import com.movingmaker.commentdiary.model.repository.MyPageRepository
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -23,14 +28,18 @@ class MyDiaryViewModel : ViewModel() {
     private var _monthDiaries = MutableLiveData<List<Diary>>()
     private var _selectedDiary = MutableLiveData<Diary>()
     private var _dateDiaryText = MutableLiveData<String>()
-    private var _diaryType = MutableLiveData<Int>()
+    private var _deliveryYN = MutableLiveData<Char>()
     private var _commentDiaryTextCount = MutableLiveData<Int>()
-    private var _curDateDiaryState = MutableLiveData<Int>()
     private var _saveOrEdit = MutableLiveData<String>()
+    private var _selectedDate = MutableLiveData<String>()
+    private var _commentList = MutableLiveData<List<Comment>>()
 
-    val diaryTypeMap =  HashMap<Int,String>()
+
     //api response
     private var _responseGetMonthDiary = MutableLiveData<Response<DiaryListResponse>>()
+    private var _responseSaveDiary = MutableLiveData<Response<SaveDiaryResponse>>()
+    private var _responseEditDiary = MutableLiveData<Response<IsSuccessResponse>>()
+
 
     val aloneDiary: LiveData<List<CalendarDay>>
         get() = _aloneDiary
@@ -41,17 +50,14 @@ class MyDiaryViewModel : ViewModel() {
     val monthDiaries: LiveData<List<Diary>>
         get() = _monthDiaries
 
-    val responseGetMonthDiary: LiveData<Response<DiaryListResponse>>
-        get() = _responseGetMonthDiary
-
     val selectedDiary: LiveData<Diary>
         get() = _selectedDiary
 
     val dateDiaryText: LiveData<String>
         get() = _dateDiaryText
 
-    val diaryType: LiveData<Int>
-        get() = _diaryType
+    val deliveryYN: LiveData<Char>
+        get() = _deliveryYN
 
     val commentDiaryTextCount: LiveData<Int>
         get() = _commentDiaryTextCount
@@ -59,37 +65,41 @@ class MyDiaryViewModel : ViewModel() {
     val saveOrEdit: LiveData<String>
         get() = _saveOrEdit
 
+    val selectedDate: LiveData<String>
+        get() = _selectedDate
+
+    val commentList: LiveData<List<Comment>>
+        get() = _commentList
+
+    val responseGetMonthDiary: LiveData<Response<DiaryListResponse>>
+        get() = _responseGetMonthDiary
+
+    val responseSaveDiary: LiveData<Response<SaveDiaryResponse>>
+        get() = _responseSaveDiary
+
+    val responseEditDiary: LiveData<Response<IsSuccessResponse>>
+        get() = _responseEditDiary
+
+
     init {
         _aloneDiary.value = emptyList()
         _commentDiary.value = emptyList()
         _monthDiaries.value = emptyList()
-        _selectedDiary.value = Diary(0L,"","","",' ', null)
+        _deliveryYN.value =' '
+        _selectedDiary.value = Diary(null,"","","",' ',null)
         _dateDiaryText.value = ""
-        _diaryType.value = -1
         _commentDiaryTextCount.value = 0
-        diaryTypeMap[0] = "aloneDiarySave"
-        diaryTypeMap[1] = "commentDiarySave"
-        diaryTypeMap[2] = "aloneDiaryEdit"
-        diaryTypeMap[3] = "commentDiaryEdit"
         _saveOrEdit.value = ""
     }
 
     private fun setAloneDiary(list: List<CalendarDay>) {
-        Log.d("mydiaryviewmodel", "setMonthDiaries: ${list.size}")
+        Log.d("mydiaryviewmodel", "setAloneDiary: ${list.size}")
         _aloneDiary.value = list
     }
 
     private fun setCommentDiary(list: List<CalendarDay>) {
-        Log.d("mydiaryviewmodel", "setMonthDiaries: ${list.size}")
+        Log.d("mydiaryviewmodel", "setCommentDiary: ${list.size}")
         _commentDiary.value = list
-    }
-
-    fun setDateDiaryText(text: String){
-        _dateDiaryText.value= text
-    }
-
-    fun setSelectedDiary(diary: Diary){
-        _selectedDiary.value = diary
     }
 
     fun setMonthDiaries(list: List<Diary>) {
@@ -116,8 +126,33 @@ class MyDiaryViewModel : ViewModel() {
 
     }
 
-    fun setDiaryType(type: Int){
-        _diaryType.value = type
+    //for diary data
+    fun setSelectedDiary(diary: Diary){
+        _selectedDiary.value = diary
+        _commentList.value = diary.commentList?: emptyList()
+    }
+
+    fun setDeliveryYN(type: Char){
+        _deliveryYN.value = type
+        _selectedDiary.value!!.deliveryYN = type
+        Log.d("abcabcab", "setDeliveryYN: ${selectedDiary.value!!.deliveryYN}")
+    }
+
+    fun setSelectedDate(date: String){
+//        _selectedDate.value = date
+        _selectedDiary.value!!.date = date
+    }
+    fun setDiaryTitle(title: String){
+        _selectedDiary.value!!.title = title
+    }
+    fun setDiaryContent(content: String){
+        _selectedDiary.value!!.content = content
+    }
+
+
+    //for view
+    fun setDateDiaryText(text: String){
+        _dateDiaryText.value= text
     }
 
     fun setCommentDiaryTextCount(count: Int){
@@ -129,8 +164,21 @@ class MyDiaryViewModel : ViewModel() {
     }
 
     suspend fun setResponseGetMonthDiary(date: String) {
+        Log.d("calendarwithdiary", "setResponseGetMonthDiary:시발몇번불러와 ")
         withContext(viewModelScope.coroutineContext) {
             _responseGetMonthDiary.value = MyDiaryRepository.INSTANCE.getMonthDiary(date)
+        }
+    }
+
+    suspend fun setResponseSaveDiary(saveDiaryRequest: SaveDiaryRequest) {
+        withContext(viewModelScope.coroutineContext) {
+            _responseSaveDiary.value = MyDiaryRepository.INSTANCE.saveDiary(saveDiaryRequest)
+        }
+    }
+
+    suspend fun setResponseEditDiary(diaryId: Long,editDiaryRequest: EditDiaryRequest) {
+        withContext(viewModelScope.coroutineContext) {
+            _responseEditDiary.value = MyDiaryRepository.INSTANCE.editDiary(diaryId,editDiaryRequest)
         }
     }
 }

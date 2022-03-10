@@ -51,6 +51,7 @@
     <string name="store_text">저장하기</string>
     <string name="send_text">전송하기</string>
     <string name="temp_store_text">임시저장</string>
+    <string name="show_all">전체보기</string>
     <string name="calendar_with_diary_comment_soon">코멘트가 곧 도착해요 :) 조금만 기다려주세요.</string>
     <string name="bottom_sheet_type_comment_text">다른 누군가에게 전송하고 코멘트를 받아볼게요.</string>
     <string name="bottom_sheet_type_alone_text">전송하지 않고 혼자 볼게요.</string>
@@ -58,6 +59,19 @@
     <string name="backbutton">backButton</string>
     <string name="write_comment_diary_notice">코멘트를 받기 위해서는 N자 이상 작성해야 해요.</string>
     <string name="comment_diary_text_limit">%s/200</string>
+    <string name="upload_yet_comment_diary">임시저장된 일기예요. 일기를 전송해주세요.</string>
+    <string name="diary_delete_warning">정말 삭제하시나요?\n삭제된 일기는 복구할 수 없어요.</string>
+    <string name="diary_send_warning">다른 누군가에게 일기가 전송됩니다.\n전송 후에는 수정 및 삭제가 어렵습니다.\n전송하시겠어요?</string>
+    <string name="diary_send_notice">전송되었습니다.\n곧 코멘트가 도착할거예요!</string>
+    <string name="diary_content_dummy_data">내가 서툴고 불안해보였나요\n그건 내가 진심이었단 증거입니다\n소중하지 않았다면
+                \n왜 그토록 마음을 기울였겠어요\n망설이고 비틀거리고\n안절부절 못하면서\n\n황경민의 밤 열한시</string>
+    <string name="diary_send_complete">전송완료</string>
+    <string name="comment_wait">전송 후 코멘트 도착까지 조금만 기다려주세요.</string>
+    <string name="received_diary_click">도착한 코멘트 보기</string>
+    <string name="empty_comment">아쉽게도 누군가로부터 코멘트가 도착하지 않았어요.</string>
+    <string name="comment_content">괜찮아. 우리는 모두 처음 사는 인생이잖아.\n너무 서툰 것에 마음 쓰지마. 너만의 어려움이\n있겠지만, 그걸 내가 다 이해할 수는 없겠지만,\n그래도 응원을 보내. 힘내.</string>
+    <string name="comment_head">누군가의 코멘트</string>
+    <string name="comment_report">신고하기</string>
     <string-array name="custom_weekdays">
         <item>일</item>
         <item>월</item>

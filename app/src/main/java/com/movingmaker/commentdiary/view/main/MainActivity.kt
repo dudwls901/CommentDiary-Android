@@ -4,21 +4,23 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
-import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseActivity
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
+import com.movingmaker.commentdiary.view.main.mydiary.CommentDiaryDetailFragment
 import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment
+import com.movingmaker.commentdiary.view.main.mydiary.WriteDiaryFragment
 import com.movingmaker.commentdiary.view.main.mypage.TempMyPageFragment
+import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.first
 import kotlin.coroutines.CoroutineContext
 
 class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     override val TAG: String = MainActivity::class.java.simpleName
+
+    private var backButtonTime = 0L
     //test
     override val layoutRes: Int = R.layout.activity_main
 
@@ -29,17 +31,36 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
 
     private val myPageViewModel: MyPageViewModel by viewModels()
     private val myDiaryViewModel: MyDiaryViewModel by viewModels()
+    private val fragmentViewModel: FragmentViewModel by viewModels()
 
     private lateinit var calendarWithDiaryFragment: CalendarWithDiaryFragment
     private lateinit var fragment2: Fragment2
     private lateinit var fragment3: Fragment3
     private lateinit var tempMyPageFragment: TempMyPageFragment
-
+    private lateinit var writeDiaryFragment: WriteDiaryFragment
+    private lateinit var commentDiaryDetailFragment: CommentDiaryDetailFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        binding.lifecycleOwner = this
+        binding.fragmentviewModel = fragmentViewModel
+        Log.d(TAG, "onCreate:  ${fragmentViewModel.hasBottomNavi}")
         initBottomNavigationView()
+        observerFragments()
+//        observeDatas()
+    }
+
+//    private fun observeDatas(){
+//        myDiaryViewModel.saveOrEdit.observe(this){
+//
+//        }
+//    }
+
+    private fun observerFragments(){
+        fragmentViewModel.fragmentState.observe(this){fragment->
+            Log.d(TAG, "observerFragments: $fragment")
+            replaceFragment(fragment)
+        }
     }
 
     private fun initBottomNavigationView() = with(binding){
@@ -51,46 +72,68 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         fragment2 = Fragment2.newInstance()
         fragment3 = Fragment3.newInstance()
         tempMyPageFragment = TempMyPageFragment.newInstance()
+        writeDiaryFragment = WriteDiaryFragment.newInstance()
+        commentDiaryDetailFragment = CommentDiaryDetailFragment.newInstance()
+
         supportFragmentManager.beginTransaction().add(binding.fragmentContainer.id, calendarWithDiaryFragment).commit()
 
         bottomNavigationView.setOnItemSelectedListener{menu->
             when(menu.itemId){
-                R.id.fragment1-> replaceFragment(calendarWithDiaryFragment)
-                R.id.fragment2-> replaceFragment(fragment2)
-                R.id.fragment3-> replaceFragment(fragment3)
-                R.id.fragment4-> replaceFragment(tempMyPageFragment)
+                R.id.myDiary-> fragmentViewModel.setFragmentState("myDiary")
+                R.id.receivedDiary-> fragmentViewModel.setFragmentState("receivedDiary")
+                R.id.collection-> fragmentViewModel.setFragmentState("collection")
+                R.id.myPage-> fragmentViewModel.setFragmentState("myPage")
             }
             true
         }
 
     }
 
-    private fun replaceFragment(fragment: Fragment) {
+    private fun replaceFragment(fragment: String) {
         //액티비티에는 서포트프래그먼트매니저가 있다. 각각 액티비티에 attach되어있는 프래그먼트를 관리
         //트랜잭션 : 이 작업이 시작함을 알리고 커밋까지는 요 작업만 하게끔
-        var accessToken = ""
-        var refreshToken =""
-        var accessTokenExpiresIn = 0L
-        launch(coroutineContext) {
-            accessToken = withContext(Dispatchers.IO) {
-                CodaApplication.getInstance().getDataStore().accessToken.first()
-            }
-            refreshToken = withContext(Dispatchers.IO) {
-                CodaApplication.getInstance().getDataStore().refreshToken.first()
-            }
-            accessTokenExpiresIn = withContext(Dispatchers.IO) {
-                CodaApplication.getInstance().getDataStore().accessTokenExpiresIn.first()
-            }
-            Log.d(TAG, "accessToken: $accessToken ")
-            Log.d(TAG, "refreshToken :  $refreshToken")
-            Log.d(TAG, "accessTokenExpiresIn $accessTokenExpiresIn")
-            Toast.makeText(this@MainActivity, accessToken + " " + refreshToken + " " + accessTokenExpiresIn, Toast.LENGTH_SHORT).show()
-        }
         supportFragmentManager.beginTransaction().apply {
             //R.id.fragmentContainer
-            replace(binding.fragmentContainer.id, fragment)
+            when(fragment){
+                "myDiary"->{
+                    replace(binding.fragmentContainer.id, calendarWithDiaryFragment)
+                }
+                "receivedDiary"->{
+                    replace(binding.fragmentContainer.id, fragment2)
+                }
+                "collection"->{
+                    replace(binding.fragmentContainer.id, fragment3)
+                }
+                "myPage"->{
+                    replace(binding.fragmentContainer.id, tempMyPageFragment)
+                }
+                "writeDiary"->{
+                    replace(binding.fragmentContainer.id, writeDiaryFragment)
+                }
+                "commentDiaryDetail"->{
+                    replace(binding.fragmentContainer.id, commentDiaryDetailFragment)
+                }
+            }
+            addToBackStack(null)
             commit()
         }
     }
-    
+
+    override fun onBackPressed() {
+        val currentTime = System.currentTimeMillis()
+        val gapTime = currentTime - backButtonTime
+
+        if (gapTime in 0..2000) {
+            // 2초 안에 두번 뒤로가기 누를 시 앱 종료
+            if (supportFragmentManager.backStackEntryCount == 0) finish()
+        }
+        else {
+            backButtonTime = currentTime
+            if (supportFragmentManager.backStackEntryCount == 0) Toast.makeText(this, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+            else{
+                supportFragmentManager.popBackStack()
+            }
+        }
+    }
+
 }
