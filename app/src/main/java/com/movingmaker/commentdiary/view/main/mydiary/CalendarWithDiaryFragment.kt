@@ -81,7 +81,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         super.onViewCreated(view, savedInstanceState)
         binding.myDiaryviewModel = myDiaryViewModel
         fragmentViewModel.setHasBottomNavi(true)
-        Log.d(TAG, "onCreateView: oncreateview가 왜 계속 불리는데")
+        Log.d(TAG, "onCreateView: oncreateview  $view")
 //        Log.d(TAG, "dataSelected : ${myDiaryViewModel.selectedDate.value}")
 //        Log.d(TAG, "dataSelected : ${myDiaryViewModel.selectedDate.value == null} ${myDiaryViewModel.selectedDate.value == ""}")
 //

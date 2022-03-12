@@ -407,19 +407,28 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                     }
                 }
                 "delete"->{
-                    //todo 임시 삭제, 삭제 후 동작은 그냥 메인화면
+                    //todo 임시 저장 일기 삭제
                     if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='Y'){
 
+                        dialogView.dismiss()
+                        //todo 전환 or popback
+                        parentFragmentManager.popBackStack()
                     }
-                    //todo (혼자 일기 삭제) 일기 삭제 api 호출 후 메인화면
+                    //혼자 일기 삭제 후 메인 화면
                     else{
-
+                        launch(coroutineContext) {
+                            myDiaryViewModel.selectedDiary.value!!.id?.let{
+                                myDiaryViewModel.setResponseDeleteDiary(it)
+                            }
+                            dialogView.dismiss()
+                            //todo 전환 or popback
+                            parentFragmentManager.popBackStack()
+                        }
                     }
                 }
             }
         }
 
-    //todo 취소 누르고 다시 전송하기 누르면 동작을 안해버림
         cancelButton.setOnClickListener {
             dialogView.dismiss()
         }

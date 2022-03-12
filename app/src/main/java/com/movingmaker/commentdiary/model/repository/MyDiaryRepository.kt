@@ -30,4 +30,9 @@ class MyDiaryRepository {
         Log.d(TAG, "editDiary: 불린겨 뭐여?????????????")
         return RetrofitClient.myDiaryApiService.editDiary(diaryId,editDiaryRequest)
     }
+
+    suspend fun deleteDiary(diaryId: Long): Response<IsSuccessResponse>{
+        Log.d(TAG, "editDiary: 불린겨 뭐여?????????????")
+        return RetrofitClient.myDiaryApiService.deleteDiary(diaryId)
+    }
 }

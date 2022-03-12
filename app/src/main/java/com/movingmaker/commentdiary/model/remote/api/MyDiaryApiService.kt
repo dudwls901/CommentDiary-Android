@@ -21,4 +21,8 @@ interface MyDiaryApiService {
     //path variable
     @PATCH("${Url.WRITE_DIARY}/{diaryId}" )
     suspend fun editDiary(@Path("diaryId") diaryId: Long, @Body editDiaryRequest: EditDiaryRequest): Response<IsSuccessResponse>
+
+    //path variable
+    @DELETE("${Url.WRITE_DIARY}/{diaryId}" )
+    suspend fun deleteDiary(@Path("diaryId") diaryId: Long): Response<IsSuccessResponse>
 }

@@ -41,7 +41,7 @@ class MyDiaryViewModel : ViewModel() {
     private var _responseGetMonthDiary = MutableLiveData<Response<DiaryListResponse>>()
     private var _responseSaveDiary = MutableLiveData<Response<SaveDiaryResponse>>()
     private var _responseEditDiary = MutableLiveData<Response<IsSuccessResponse>>()
-
+    private var _responseDeleteDiary = MutableLiveData<Response<IsSuccessResponse>>()
 
     val aloneDiary: LiveData<List<CalendarDay>>
         get() = _aloneDiary
@@ -81,6 +81,9 @@ class MyDiaryViewModel : ViewModel() {
 
     val responseEditDiary: LiveData<Response<IsSuccessResponse>>
         get() = _responseEditDiary
+
+    val responseDeleteDiary: LiveData<Response<IsSuccessResponse>>
+        get() = _responseDeleteDiary
 
 
     init {
@@ -166,7 +169,7 @@ class MyDiaryViewModel : ViewModel() {
     }
 
     suspend fun setResponseGetMonthDiary(date: String) {
-        Log.d("calendarwithdiary", "setResponseGetMonthDiary:시발몇번불러와 ")
+        Log.d("calendarwithdiary", "setResponseGetMonthDiary $date ")
         withContext(viewModelScope.coroutineContext) {
             _responseGetMonthDiary.value = MyDiaryRepository.INSTANCE.getMonthDiary(date)
         }
@@ -183,4 +186,11 @@ class MyDiaryViewModel : ViewModel() {
             _responseEditDiary.value = MyDiaryRepository.INSTANCE.editDiary(diaryId,editDiaryRequest)
         }
     }
+
+    suspend fun setResponseDeleteDiary(diaryId: Long){
+        withContext(viewModelScope.coroutineContext){
+            _responseDeleteDiary.value = MyDiaryRepository.INSTANCE.deleteDiary(diaryId)
+        }
+    }
+
 }
