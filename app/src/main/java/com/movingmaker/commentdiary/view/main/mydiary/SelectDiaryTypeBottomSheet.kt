@@ -16,16 +16,12 @@ import com.movingmaker.commentdiary.databinding.BottomSheetFragmentWritediaryTyp
 import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment.Companion.TAG
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 
-class SelectDiaryTypeBottomSheet: BottomSheetDialogFragment() {
+class SelectDiaryTypeBottomSheet(private val selectDiaryTypeListener: SelectDiaryTypeListener)
+    : BottomSheetDialogFragment() {
 
     private lateinit var binding: BottomSheetFragmentWritediaryTypeselectBinding
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
 
-    companion object{
-        fun newInstance(): SelectDiaryTypeBottomSheet{
-            return SelectDiaryTypeBottomSheet()
-        }
-    }
 
     @SuppressLint("ResourceType")
     override fun onCreateView(
@@ -41,7 +37,6 @@ class SelectDiaryTypeBottomSheet: BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        myDiaryViewModel.setDeliveryYN(' ')
         initViews()
     }
 
@@ -49,26 +44,21 @@ class SelectDiaryTypeBottomSheet: BottomSheetDialogFragment() {
     private fun initViews()= with(binding){
 
         selectAloneDiaryButton.setOnClickListener {
-            myDiaryViewModel.setDeliveryYN('N')
             binding.selectAloneDiaryButton.background = ContextCompat.getDrawable(requireContext(),R.color.brand_bright_green)
             binding.selectCommentDiaryButton.background = ContextCompat.getDrawable(requireContext(),R.color.background_ivory)
-            Toast.makeText(requireContext(), myDiaryViewModel.selectedDiary.value!!.deliveryYN.toString(), Toast.LENGTH_SHORT).show()
+            myDiaryViewModel.selectedDiary.value!!.deliveryYN='N'
+            selectDiaryTypeListener.onSelectDiaryTypeListener('N')
         }
         selectCommentDiaryButton.setOnClickListener {
-            myDiaryViewModel.setDeliveryYN('Y')
-            Toast.makeText(requireContext(), myDiaryViewModel.selectedDiary.value!!.deliveryYN.toString(), Toast.LENGTH_SHORT).show()
             binding.selectAloneDiaryButton.background = ContextCompat.getDrawable(requireContext(),R.color.background_ivory)
             binding.selectCommentDiaryButton.background = ContextCompat.getDrawable(requireContext(),R.color.brand_bright_green)
+            myDiaryViewModel.selectedDiary.value!!.deliveryYN='Y'
+            selectDiaryTypeListener.onSelectDiaryTypeListener('Y')
         }
 
         submitButton.setOnClickListener {
-            //alonediary
             Log.d(TAG, "initViews: ${myDiaryViewModel.deliveryYN.value}")
-            if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='N'){
-                dismiss()
-            }
-            //commentdiary
-            else if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='Y'){
+            if(myDiaryViewModel.selectedDiary.value!!.deliveryYN!=' '){
                 dismiss()
             }
         }

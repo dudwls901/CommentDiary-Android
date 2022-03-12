@@ -12,7 +12,8 @@
             name="myDiaryviewModel"
             type="com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel" />
     </data>
-
+<!--todo nestedScrollView필요 x-->
+<!--todo 작은 기기 화면 대응    -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -50,7 +51,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    >
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/writeDiaryLayout"
@@ -96,7 +98,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_arrow_left"
+                            android:src="@drawable/ic_arrow_right"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -104,11 +106,12 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
+                        android:id="@+id/lineDecorationTextView"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_marginTop="8dp"
                         android:gravity="center"
-                        android:lineSpacingExtra="28sp"
+                        style="@style/MCaption3"
                         android:text="@string/mydiary_text_decoration"
                         android:textColor="@color/text_gray"
                         android:textSize="12sp" />
@@ -117,28 +120,36 @@
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_marginTop="-4dp"
-                        android:background="#e2dfd7" />
+                        android:background="@color/text_light_brown" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_marginTop="28dp"
-                        android:background="#e2dfd7" />
+                        android:background="@color/text_light_brown" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_marginTop="28dp"
-                        android:background="#e2dfd7" />
+                        android:background="@color/text_light_brown" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_marginTop="28dp"
-                        android:background="#e2dfd7" />
+                        android:background="@color/text_light_brown" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="28dp"
+                        android:background="@color/text_light_brown" />
+
                 </LinearLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:visibility="gone"
                     android:id="@+id/readDiaryLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -176,7 +187,7 @@
                         tools:text="나는 오늘도 너무너무 서툴다." />
 
                     <LinearLayout
-                        android:id="@+id/diaryDetailButton"
+                        android:id="@+id/diaryDetailLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -226,29 +237,15 @@
                         app:layout_constraintTop_toBottomOf="@id/line"
                         tools:text="@string/diary_test_text" />
 
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/receivedCommentButton"
-                        style="@style/BCaption"
-                        android:layout_width="0dp"
-                        android:layout_height="53dp"
-                        android:layout_marginHorizontal="21dp"
-                        android:layout_marginBottom="16dp"
-                        android:background="@drawable/background_pure_green_radius_30"
-                        android:text="@string/received_diary_click"
-                        android:visibility="gone"
-                        android:textColor="@color/background_ivory"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-
                     <TextView
-                        android:id="@+id/commentSoonTextView"
+                        android:id="@+id/sendDiaryBeforeAfterTextView"
                         android:layout_width="0dp"
                         android:layout_height="42dp"
                         android:background="@drawable/background_pure_green_radius_bottom_10"
                         android:gravity="center"
                         android:text="@string/calendar_with_diary_comment_soon"
-                        android:textColor="#fdfcf9"
+                        style="@style/MCaption3"
+                        android:textColor="@color/background_ivory"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -259,7 +256,6 @@
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
-
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

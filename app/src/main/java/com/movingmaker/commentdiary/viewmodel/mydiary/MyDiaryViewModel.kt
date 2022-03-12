@@ -33,8 +33,10 @@ class MyDiaryViewModel : ViewModel() {
     private var _saveOrEdit = MutableLiveData<String>()
     private var _selectedDate = MutableLiveData<String>()
     private var _commentList = MutableLiveData<List<Comment>>()
+    private var _test = MutableLiveData<String>()
 
-
+    val test: LiveData<String>
+        get() = _test
     //api response
     private var _responseGetMonthDiary = MutableLiveData<Response<DiaryListResponse>>()
     private var _responseSaveDiary = MutableLiveData<Response<SaveDiaryResponse>>()
@@ -133,7 +135,7 @@ class MyDiaryViewModel : ViewModel() {
     }
 
     fun setDeliveryYN(type: Char){
-        _deliveryYN.value = type
+//        _deliveryYN.value = type
         _selectedDiary.value!!.deliveryYN = type
         Log.d("abcabcab", "setDeliveryYN: ${selectedDiary.value!!.deliveryYN}")
     }

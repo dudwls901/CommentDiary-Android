@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="android.view.View" />
-
         <variable
             name="myDiaryviewModel"
             type="com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel" />
@@ -41,35 +39,23 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <TextView
-                android:id="@+id/saveLocalButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="11dp"
-                android:fontFamily="@font/roboto_bold"
-                android:gravity="center"
-                android:text="@string/temp_store_text"
-                android:textColor="@color/text_black"
-                android:textSize="15sp"
-                tools:visibility="visible" />
-
             <ImageButton
                 android:id="@+id/deleteButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
-                android:contentDescription="@string/deleteButton"
-                android:src="@drawable/ic_delete"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:contentDescription="@string/backButton"
+                android:src="@drawable/ic_delete" />
 
             <ImageButton
                 android:id="@+id/editButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
-                android:contentDescription="@string/editButton"
-                android:src="@drawable/ic_edit"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:contentDescription="@string/backButton"
+                android:src="@drawable/ic_edit" />
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -92,11 +78,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:fontFamily="@font/roboto_bold"
-                android:text="@{myDiaryviewModel.selectedDiary.date}"
                 android:textColor="@color/pure_orange"
                 android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:text="@{myDiaryviewModel.selectedDiary.date}"
                 tools:text="2022.2.21" />
 
             <EditText
@@ -109,10 +95,10 @@
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
                 android:lineSpacingExtra="7sp"
-                android:text="@{myDiaryviewModel.selectedDiary.title}"
                 android:textColor="@color/text_black"
                 android:textColorHint="@color/text_light_brown"
                 android:textSize="20sp"
+                android:text="@{myDiaryviewModel.selectedDiary.title}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/diaryDateTextView" />
@@ -133,60 +119,61 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="22dp"
+                android:layout_marginBottom="6dp"
                 android:background="@null"
                 android:gravity="start"
                 android:hint="@string/write_diary_content_hint"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
                 android:lineSpacingExtra="7sp"
-                android:text="@{myDiaryviewModel.selectedDiary.content}"
                 android:textColor="@color/text_black"
                 android:textColorHint="@color/text_light_brown"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toTopOf="@id/writeCommentDiaryTextLimitTextView"
+                android:text="@{myDiaryviewModel.selectedDiary.content}"
+                app:layout_constraintBottom_toTopOf="@id/writeCommentDiaryNoticeTextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/line" />
 
-            <!--            <TextView-->
-            <!--                android:id="@+id/writeCommentDiaryNoticeTextView"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="28dp"-->
-            <!--                android:layout_marginBottom="6dp"-->
-            <!--                android:textSize="12sp"-->
-            <!--                android:textColor="@color/text_brown"-->
-            <!--                android:background="@drawable/background_light_brown_radius_59"-->
-            <!--                android:gravity="center"-->
-            <!--                android:text="@string/write_comment_diary_notice"-->
-            <!--                app:layout_constraintBottom_toTopOf="@id/writeCommentDiaryTextLimitTextView"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintStart_toStartOf="parent" />-->
-
+            <TextView
+                android:id="@+id/writeCommentDiaryNoticeTextView"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_marginBottom="6dp"
+                android:textSize="12sp"
+                android:textColor="@color/text_brown"
+                android:background="@drawable/background_light_brown_radius_59"
+                android:gravity="center"
+                android:text="@string/write_comment_diary_notice"
+                app:layout_constraintBottom_toTopOf="@id/writeCommentDiaryTextLimitTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+<!--android:visibility="@{myDiaryviewModel.selectedDiary.deliveryYN=='Y' ? View.VISIBLE : View.GONE}"-->
             <TextView
                 android:id="@+id/writeCommentDiaryTextLimitTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/comment_diary_text_limit(myDiaryviewModel.commentDiaryTextCount)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:text="0/100" />
-
+                android:text="@{@string/comment_diary_text_limit(myDiaryviewModel.commentDiaryTextCount)}"
+                tools:text="0/200" />
+<!--                            android:visibility="@{myDiaryviewModel.selectedDiary.deliveryYN=='Y' ? View.VISIBLE : View.GONE}"
+-->
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/diaryUploadServerYetTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:id="@+id/diaryUploadServerYetTextView"
             android:text="@string/upload_yet_comment_diary"
+            app:layout_constraintBottom_toTopOf="@id/saveButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:textColor="@color/text_brown"
             android:textSize="12sp"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/saveButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:visibility="visible" />
+            tools:visibility="visible"
+            android:layout_marginBottom="16dp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/saveButton"
@@ -199,8 +186,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-        <!--            android:text="@{myDiaryviewModel.selectedDiary.deliveryYN=='Y' ?@string/send_text : @string/store_text}"
-        -->
+<!--            android:text="@{myDiaryviewModel.selectedDiary.deliveryYN=='Y' ?@string/send_text : @string/store_text}"
+-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

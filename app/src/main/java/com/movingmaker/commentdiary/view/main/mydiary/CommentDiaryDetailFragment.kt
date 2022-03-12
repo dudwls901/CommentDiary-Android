@@ -46,7 +46,6 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope {
         savedInstanceState: Bundle?
     ): View {
         binding.myDiaryviewModel = myDiaryViewModel
-        binding.lifecycleOwner = this
         fragmentViewModel.setHasBottomNavi(false)
         Log.d(TAG, "onCreateView saveOrEdit: ${myDiaryViewModel.saveOrEdit.value}")
         initViews()
@@ -55,12 +54,13 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope {
     }
 
     private fun initViews() = with(binding){
+        Log.d(TAG, "initViews: detail ${myDiaryViewModel.selectedDiary.value}")
         val codaToday = DateConverter.getCodaToday()
         val selectedDate = DateConverter.ymdToDate(myDiaryViewModel.selectedDiary.value!!.date)
 //        val minusTwoDay = codaToday.minusDays(2)
 //        Log.d(TAG, "initViews: ${selectedDate} ${myDiaryViewModel.selectedDiary.value!!.commentList} ${myDiaryViewModel.selectedDiary.value!!.commentList!!.size}")
         //코멘트 없는 경우
-        if(myDiaryViewModel.selectedDiary.value!!.commentList!!.size==0){
+        if(myDiaryViewModel.selectedDiary.value!!.commentList?.isEmpty()==true){
 
             //todo 리사이클러뷰 안 보이게
             if(selectedDate <= codaToday.minusDays(2)){
@@ -88,7 +88,8 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope {
     private fun initToolBar() = with(binding){
         //툴바
         backButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
+//            parentFragmentManager.popBackStack()
+            fragmentViewModel.setFragmentState("myDiary")
         }
     }
 }

@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
-                android:contentDescription="@string/backbutton"
+                android:contentDescription="@string/backButton"
                 android:src="@drawable/ic_arrow_left" />
 
             <View
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:visibility="gone"
-                android:contentDescription="@string/backbutton"
+                android:contentDescription="@string/backButton"
                 android:src="@drawable/ic_delete" />
 
             <ImageButton
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:visibility="gone"
-                android:contentDescription="@string/backbutton"
+                android:contentDescription="@string/backButton"
                 android:src="@drawable/ic_edit" />
         </LinearLayout>
 

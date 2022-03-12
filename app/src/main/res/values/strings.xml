@@ -24,19 +24,19 @@
     <string name="onboarding_find_password">비밀번호 찾기</string>
     <string name="onboarding_email_incorrect">이메일 양식에 맞춰주세요.</string>
     <string name="onboarding_send_auth">인증번호 보내기</string>
-    <string name="onboarding_password_incorrect">작성 양식을 다시 한 번 확인해주세요.</string>
+    <string name="onboarding_password_incorrect">작성 양식을 다시 한 번 확인해 주세요.</string>
     <string name="onboarding_password_check_incorrect">일치하지 않아요!</string>
     <string name="onboarding_password_check">비밀번호 확인</string>
-    <string name="onboarding_password_condition">대소문자, 숫자, 특수문자를 포함해 8~16자 작성해주세요.</string>
+    <string name="onboarding_password_condition">대소문자, 숫자, 특수문자를 포함해 8~16자 작성해 주세요.</string>
     <string name="onboarding_sign_up_agree_notice">회원가입 시 코다의 개인정보 취급 방침 및 이용 약관에 동의합니다.</string>
-    <string name="onboarding_find_password_notice">코다 가입시 사용했던\n아이디(이메일)을 입력해주세요.</string>
+    <string name="onboarding_find_password_notice">코다 가입시 사용했던\n아이디(이메일)을 입력해 주세요.</string>
     <string name="onboarding_send_password">비밀번호 전송하기</string>
-    <string name="onboarding_send_email_notice">이메일로 인증번호가 전송되었습니다.\n확인 후 입력해주세요.</string>
+    <string name="onboarding_send_email_notice">이메일로 인증번호가 전송되었습니다.\n확인 후 입력해 주세요.</string>
     <string name="onboarding_code_incorrect">인증번호가 일치하지 않습니다.</string>
     <string name="onboarding_cannot_found_email">해당 이메일을 가지고 있는\n사용자가 없어요</string>
     <string name="onboarding_complete_auth">인증완료</string>
     <string name="onboarding_send_password_complete">비밀번호 전송 완료!</string>
-    <string name="onboarding_check_email_please">이메일을 확인해주세요.</string>
+    <string name="onboarding_check_email_please">이메일을 확인해 주세요.</string>
     <string name="onboarding_login_incorrect">이메일 혹은 비밀번호가 올바르지 않습니다.</string>
 
     <string name="diary_test_text">내가 서툴고 불안해 보였나요.\n그건 내가 진심이었단 증거입니다</string>
@@ -44,8 +44,8 @@
     <string name="diary_test_head">배가 고프다</string>
     <string name="calendar_with_diary_button_write_text">오늘의 일기 쓰기</string>
     <string name="calendar_with_diary_button_text">오늘은 어떤 하루였나요?</string>
-    <string name="write_diary_head_hint">제목을 입력해주세요</string>
-    <string name="write_diary_content_hint">오늘 하루는 어땠나요?</string>
+    <string name="write_diary_head_hint">제목을 입력해 주세요.</string>
+    <string name="write_diary_content_hint">내용을 입력해 주세요.</string>
     <string name="mydiary_text_decoration">오늘은 기록이 없어요. 기록을 하고 코멘트를 받아봐요 :)</string>
     <string name="write_text">작성하기</string>
     <string name="store_text">저장하기</string>
@@ -56,10 +56,12 @@
     <string name="bottom_sheet_type_comment_text">다른 누군가에게 전송하고 코멘트를 받아볼게요.</string>
     <string name="bottom_sheet_type_alone_text">전송하지 않고 혼자 볼게요.</string>
     <string name="bottom_sheet_head_text">일기 저장유형을 선택해 주세요.</string>
-    <string name="backbutton">backButton</string>
-    <string name="write_comment_diary_notice">코멘트를 받기 위해서는 N자 이상 작성해야 해요.</string>
-    <string name="comment_diary_text_limit">%s/200</string>
-    <string name="upload_yet_comment_diary">임시저장된 일기예요. 일기를 전송해주세요.</string>
+    <string name="backButton">backButton</string>
+    <string name="deleteButton">deleteButton</string>
+    <string name="editButton">editButton</string>
+    <string name="write_comment_diary_notice">코멘트를 받기 위해서는 100자 이상 작성해야 해요.</string>
+    <string name="comment_diary_text_limit">%s/100</string>
+    <string name="upload_yet_comment_diary">일기 전송은 다가오는 오전 6시에 종료돼요.</string>
     <string name="diary_delete_warning">정말 삭제하시나요?\n삭제된 일기는 복구할 수 없어요.</string>
     <string name="diary_send_warning">다른 누군가에게 일기가 전송됩니다.\n전송 후에는 수정 및 삭제가 어렵습니다.\n전송하시겠어요?</string>
     <string name="diary_send_notice">전송되었습니다.\n곧 코멘트가 도착할거예요!</string>
@@ -72,6 +74,9 @@
     <string name="comment_content">괜찮아. 우리는 모두 처음 사는 인생이잖아.\n너무 서툰 것에 마음 쓰지마. 너만의 어려움이\n있겠지만, 그걸 내가 다 이해할 수는 없겠지만,\n그래도 응원을 보내. 힘내.</string>
     <string name="comment_head">누군가의 코멘트</string>
     <string name="comment_report">신고하기</string>
+    <string name="already_pass_diary_send_time">일기전송 시간이 지났어요..</string>
+    <string name="arrived_comment">코멘트가 도착했어요. 확인해 주세요!</string>
+    <string name="write_diary_yet">아직 일기를 쓸 날이 오지 않았어요!</string>
     <string-array name="custom_weekdays">
         <item>일</item>
         <item>월</item>

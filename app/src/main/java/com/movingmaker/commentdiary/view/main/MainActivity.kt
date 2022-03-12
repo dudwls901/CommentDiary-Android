@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseActivity
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
@@ -12,6 +15,7 @@ import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment
 import com.movingmaker.commentdiary.view.main.mydiary.WriteDiaryFragment
 import com.movingmaker.commentdiary.view.main.mypage.TempMyPageFragment
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
+import com.movingmaker.commentdiary.viewmodel.mydiary.LocalDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.*
@@ -32,6 +36,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     private val myPageViewModel: MyPageViewModel by viewModels()
     private val myDiaryViewModel: MyDiaryViewModel by viewModels()
     private val fragmentViewModel: FragmentViewModel by viewModels()
+    private val localDiaryViewModel: LocalDiaryViewModel by viewModels()
 
     private lateinit var calendarWithDiaryFragment: CalendarWithDiaryFragment
     private lateinit var fragment2: Fragment2
@@ -45,16 +50,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         binding.lifecycleOwner = this
         binding.fragmentviewModel = fragmentViewModel
         Log.d(TAG, "onCreate:  ${fragmentViewModel.hasBottomNavi}")
+        setFragments()
         initBottomNavigationView()
         observerFragments()
 //        observeDatas()
     }
 
-//    private fun observeDatas(){
-//        myDiaryViewModel.saveOrEdit.observe(this){
-//
-//        }
-//    }
+    private fun setFragments(){
+        calendarWithDiaryFragment = CalendarWithDiaryFragment.newInstance()
+        fragment2 = Fragment2.newInstance()
+        fragment3 = Fragment3.newInstance()
+        tempMyPageFragment = TempMyPageFragment.newInstance()
+        writeDiaryFragment = WriteDiaryFragment.newInstance()
+        commentDiaryDetailFragment = CommentDiaryDetailFragment.newInstance()
+    }
+
 
     private fun observerFragments(){
         fragmentViewModel.fragmentState.observe(this){fragment->
@@ -68,13 +78,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         bottomNavigationView.itemTextColor =null
         //클릭시 퍼지는 색상 변경
 //        bottomNavigationView.itemRippleColor = null
-        calendarWithDiaryFragment = CalendarWithDiaryFragment.newInstance()
-        fragment2 = Fragment2.newInstance()
-        fragment3 = Fragment3.newInstance()
-        tempMyPageFragment = TempMyPageFragment.newInstance()
-        writeDiaryFragment = WriteDiaryFragment.newInstance()
-        commentDiaryDetailFragment = CommentDiaryDetailFragment.newInstance()
-
+        Log.d(TAG, "initBottomNavigationView:")
         supportFragmentManager.beginTransaction().add(binding.fragmentContainer.id, calendarWithDiaryFragment).commit()
 
         bottomNavigationView.setOnItemSelectedListener{menu->
@@ -96,27 +100,43 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             //R.id.fragmentContainer
             when(fragment){
                 "myDiary"->{
+                    clearBackStack()
                     replace(binding.fragmentContainer.id, calendarWithDiaryFragment)
                 }
                 "receivedDiary"->{
+                    clearBackStack()
                     replace(binding.fragmentContainer.id, fragment2)
                 }
                 "collection"->{
+                    clearBackStack()
                     replace(binding.fragmentContainer.id, fragment3)
                 }
                 "myPage"->{
+                    clearBackStack()
                     replace(binding.fragmentContainer.id, tempMyPageFragment)
                 }
                 "writeDiary"->{
                     replace(binding.fragmentContainer.id, writeDiaryFragment)
+                    addToBackStack(null)
                 }
                 "commentDiaryDetail"->{
                     replace(binding.fragmentContainer.id, commentDiaryDetailFragment)
+                    addToBackStack(null)
                 }
             }
-            addToBackStack(null)
+            //메인으로갈 때마다 초기화
+//            supportFragmentManager.clearBackStack()
+            Log.d(TAG, "replaceFragment: $fragment")
+            Log.d(TAG, "replaceFragment: ${supportFragmentManager.findFragmentById(R.id.fragmentContainer)}")
+            Log.d(TAG, "replaceFragment: ${supportFragmentManager.backStackEntryCount}")
             commit()
         }
+    }
+
+    fun clearBackStack() {
+        val fragmentManager: FragmentManager = supportFragmentManager
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
     }
 
     override fun onBackPressed() {
