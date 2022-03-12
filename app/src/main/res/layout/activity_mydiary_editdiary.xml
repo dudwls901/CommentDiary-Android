@@ -160,7 +160,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/save_large_button_radius_42"
+            android:background="@drawable/background_pure_green_radius_30"
             android:fontFamily="@font/roboto"
             android:text="@string/store_text"
             android:textColor="@color/background_ivory"

@@ -1,32 +1,22 @@
 package com.movingmaker.commentdiary.view.main.mydiary
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.service.autofill.SaveRequest
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import androidx.databinding.DataBindingUtil.setContentView
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMydiaryWritediaryBinding
@@ -35,7 +25,6 @@ import com.movingmaker.commentdiary.model.local.entity.LocalDiary
 import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.util.DateConverter
-import com.movingmaker.commentdiary.view.main.mypage.TempMyPageFragment
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.LocalDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
@@ -166,6 +155,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
     }
 
 
+    @SuppressLint("ResourceAsColor")
     private fun changeViews() = with(binding){
         //혼자쓴 일기가 있는 경우
         if(myDiaryViewModel.selectedDiary.value!!.id!=null){
@@ -185,12 +175,27 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
             if(myDiaryViewModel.selectedDiary.value!!.content!=""){
                 saveButton.text = getString(R.string.send_text)
                 saveButton.isVisible = true
+                saveButton.setBackgroundResource(R.drawable.background_pure_green_radius_30)
                 editButton.isVisible = true
                 deleteButton.isVisible = true
                 saveLocalButton.isVisible = false
                 diaryUploadServerYetTextView.isVisible = true
                 diaryContentEditText.isEnabled = false
                 diaryHeadEditText.isEnabled = false
+                //이틀 지난 경우
+                if(DateConverter.ymdToDate(myDiaryViewModel.selectedDiary.value!!.date) <=
+                    DateConverter.getCodaToday().minusDays(2)){
+                    diaryUploadServerYetTextView.text = getString(R.string.already_pass_diary_send_time)
+                    editButton.isVisible = false
+                    saveButton.setBackgroundResource(R.drawable.background_light_brown_radius_30)
+                    saveButton.setTextColor(R.color.text_brown)
+                    saveButton.isEnabled = false
+                }
+                else{
+                    diaryUploadServerYetTextView.text = getString(R.string.upload_yet_comment_diary)
+                    saveButton.setTextColor(R.color.background_ivory)
+                    saveButton.isEnabled = true
+                }
             }
             //일기가 없는 경우
             else{
@@ -310,7 +315,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
 
         //임시 저장
         saveLocalButton.setOnClickListener {
-            //insert 충돌 설정값 때문에 수정은 없애도 될 거 같기도ㅗ?
+            //insert 충돌 설정값 때문에 수정은 없애도 될 거 같기도?
             if(myDiaryViewModel.selectedDiary.value!!.title==""){
                 //저장
                 localDiaryViewModel.saveDiary(LocalDiary(
@@ -364,10 +369,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
         }
     }
 
-
-    //todo 테두리 둥글게
     private fun showDialog(deleteOrSave: String) {
-        Log.d(TAG, "showDialog: 왜 안 띄워져???????????")
         val dialogView = Dialog(requireContext())
         dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialogView.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -407,9 +409,18 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                     }
                 }
                 "delete"->{
-                    //todo 임시 저장 일기 삭제
+                    //임시 저장 일기 삭제
+                    Log.d(TAG, "showDialog: $deleteOrSave ${myDiaryViewModel.selectedDiary.value!!.deliveryYN}")
                     if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='Y'){
-
+                        localDiaryViewModel.deleteDiary(
+                            LocalDiary(
+                                date = myDiaryViewModel.selectedDiary.value!!.date,
+                                title = myDiaryViewModel.selectedDiary.value!!.title,
+                                content =myDiaryViewModel.selectedDiary.value!!.content,
+                                deliveryYN = myDiaryViewModel.selectedDiary.value!!.deliveryYN
+                            )
+                        )
+                        Log.d(TAG, "showDialog: 임시 저장 일기 삭제 완료")
                         dialogView.dismiss()
                         //todo 전환 or popback
                         parentFragmentManager.popBackStack()

@@ -191,10 +191,11 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/saveButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/save_large_button_radius_42"
+            android:background="@drawable/background_pure_green_radius_30"
             android:fontFamily="@font/roboto"
+            style="@style/BSubheadline"
             android:textColor="@color/background_ivory"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

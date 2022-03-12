@@ -118,7 +118,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 //                Log.d(TAG, (it.body()?.result?.get(0)?.deliveryYN ?: " "))
 //                Log.d(TAG, it.body()?.result?.get(0)?.commentList?.isEmpty().toString())
                 myDiaryViewModel.setMonthDiaries(it.body()!!.result)
-//                Log.d(TAG, "observeData: 일기를 몇 번 불러와")
+                Log.d(TAG, "observeData: responeGetMonthDiary")
 //                Toast.makeText(requireContext(), "로그인 성공", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(requireContext(), "한 달 일기 불러오기 실패", Toast.LENGTH_SHORT).show()
@@ -221,7 +221,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
 
         materialCalendarView.setOnDateChangedListener { widget, date, selected ->
-            Log.d(TAG, "setOndateChangedListener: 나는 언제 불려? ${date} ")
+            Log.d(TAG, "setOndateChangedListener: ${date} ")
             checkSelectedDate(date)
         }
 
@@ -255,11 +255,10 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     private fun checkSelectedDate(date: CalendarDay?) = with(binding) {
         Log.d(TAG, "checkSElectedDate: $date ")
         Log.d(TAG, "checkSelectedDate: ${myDiaryViewModel.selectedDiary.value}")
-        //달 이동한 경우 포커스 해제
+        //달 이동한 경우 포커스 해제 or 냅두기?
         if (date == null) {
             readDiaryLayout.isVisible = false
             writeDiaryWrapLayout.isVisible = false
-            //todo 미래 날짜 눌렀을 때랑 같은 화면 띄우기
             return
         }
         val codaToday = DateConverter.getCodaToday()
@@ -274,7 +273,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
             writeDiaryLayout.isVisible = false
             lineDecorationTextView.text = getString(R.string.write_diary_yet)
             readDiaryLayout.isVisible = false
-            //todo 미래날짜 화면 띄우기
+            noCommentTextView.isVisible = false
             return
         }
         //시간 남으면 databinding으로 옮기기
@@ -291,32 +290,41 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                     //viewmodel로 넘기기
                     myDiaryViewModel.setSelectedDiary(diary)
                     Log.d(TAG, "checkSelectedDate: 일기 있음${myDiaryViewModel.selectedDiary.value}")
-//                    myDiaryViewModel.setDeliveryYN(diary.deliveryYN)
-//                    myDiaryViewModel.setSelectedDiary(diary)
-//                    myDiaryViewModel.setSaveOrEdit("edit")
-                    //코멘트일기 관련
-//                    sendDiaryBeforeAfterTextView.text = getString(R.string.calendar_with_diary_comment_soon)
-//                    sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_pure_green_radius_bottom_10)
-//                    sendDiaryBeforeAfterTextView.setTextColor(Color.parseColor("#fdfcf9"))
 
-//                    Log.d(TAG, "selectedDiary ${diary} ")
-                    //혼자쓰는일기면 가리고 코멘트 일기면 보이기
-                    sendDiaryBeforeAfterTextView.isVisible = diary.deliveryYN != 'N'
-
-                    //코멘트가 아직 도착하지 않은 경우 or 삭제된 경우 or서버에서 빈 값 내려올 땐 null?
-                    //todo 서버에서 빈 코멘트올 때 무슨 값인지 확인
-                    if (diary.commentList == null || diary.commentList.size == 0) {
-                        sendDiaryBeforeAfterTextView.text = getString(R.string.calendar_with_diary_comment_soon)
-                        sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_light_brown_radius_bottom_10)
-                        sendDiaryBeforeAfterTextView.setTextColor(R.color.text_dark_brown)
+                    //혼자 일기인 경우
+                    if(diary.deliveryYN=='N'){
+                        sendDiaryBeforeAfterTextView.isVisible = false
+                        noCommentTextView.isVisible = false
                     }
-                    //코멘트 있는 경우
-                    else {
-                        sendDiaryBeforeAfterTextView.text = getString(R.string.arrived_comment)
-                        sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_pure_green_radius_bottom_10)
-                        sendDiaryBeforeAfterTextView.setTextColor(R.color.text_dark_brown)
+                    //코멘트 일기인 경우
+                    else{
+                        sendDiaryBeforeAfterTextView.isVisible = true
+                        //혼자쓰는일기면 가리고 코멘트 일기면 보이기
+                        //코멘트가 아직 도착하지 않은 경우 or 삭제된 경우 or서버에서 빈 값 내려올 땐 null?
+                        //todo 서버에서 빈 코멘트올 때 무슨 값인지 확인
+                        if (diary.commentList == null || diary.commentList.size == 0) {
+                            //코멘트가 도착하지 않았는데 이틀 지난 경우
+                            Log.d(TAG, "checkSelectedDate: ${DateConverter.ymdToDate(diary.date) } ${selectedDate.minusDays(2)}")
+                            if(DateConverter.ymdToDate(diary.date)<=codaToday.minusDays(2)){
+                                sendDiaryBeforeAfterTextView.isVisible = false
+                                noCommentTextView.isVisible = true
+                            }
+                            //아직 코멘트 기다리는 경우
+                            else {
+                                sendDiaryBeforeAfterTextView.text = getString(R.string.calendar_with_diary_comment_soon)
+                                sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_light_brown_radius_bottom_10)
+                                sendDiaryBeforeAfterTextView.setTextColor(R.color.text_dark_brown)
+                                noCommentTextView.isVisible = false
+                            }
+                        }
+                        //코멘트 있는 경우
+                        else {
+                            sendDiaryBeforeAfterTextView.text = getString(R.string.arrived_comment)
+                            sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_pure_green_radius_bottom_10)
+                            sendDiaryBeforeAfterTextView.setTextColor(R.color.text_dark_brown)
+                            noCommentTextView.isVisible = false
+                        }
                     }
-
                     readDiaryLayout.isVisible = true
                     writeDiaryWrapLayout.isVisible = false
                     return
@@ -328,7 +336,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         //todo 임시저장 일기도 한 달치로 바꾸기
         for(diary in localDiaryViewModel.localDiaryList.value!!){
             if(diary.date == selectedDate.toString().replace('-', '.')){
-//                Log.d(TAG, "checkSelectedDate: localdiary ${diary.date} ${selectedDate.toString().replace('-', '.')}")
+                Log.d(TAG, "checkSelectedDate: localdiary showdialog ${diary} ${selectedDate.toString().replace('-', '.')}")
 
                 //selectedDiary 대입
                 myDiaryViewModel.setSelectedDiary(Diary(null,
@@ -339,18 +347,26 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                     null
                 )
                 )
+                noCommentTextView.isVisible = false
                 Log.d(TAG, "checkSelectedDate: 임시저장 일기 있음${myDiaryViewModel.selectedDiary.value}")
+                //일기 전송 시간(이틀) 지난 경우
+                if(DateConverter.ymdToDate(diary.date)<=codaToday.minusDays(2)){
+                    sendDiaryBeforeAfterTextView.isVisible = false
+                }
+                //아직 전송 가능한 경우
+                else{
+                    sendDiaryBeforeAfterTextView.isVisible = true
+                    sendDiaryBeforeAfterTextView.text = getString(R.string.upload_yet_comment_diary)
+                    sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_brand_orange_radius_bottom_10)
+                    sendDiaryBeforeAfterTextView.setTextColor(R.color.text_dark_brown)
+                }
+
                 readDiaryLayout.isVisible = true
                 writeDiaryWrapLayout.isVisible = false
-
                 //서버 저장된 일기는 xml데이터바인딩처리되어있음 임시저장은 여기서 처리
                 diaryHeadTextView.text = diary.title
                 diaryContentsTextView.text = diary.content
 
-                sendDiaryBeforeAfterTextView.isVisible = true
-                sendDiaryBeforeAfterTextView.text = getString(R.string.upload_yet_comment_diary)
-                sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_brand_orange_radius_bottom_10)
-                sendDiaryBeforeAfterTextView.setTextColor(R.color.text_dark_brown)
 
                 return
             }
@@ -368,7 +384,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         writeDiaryLayout.isVisible = true
         lineDecorationTextView.text = getString(R.string.mydiary_text_decoration)
         readDiaryLayout.isVisible = false
-
+        noCommentTextView.isVisible = false
     }
 
 }

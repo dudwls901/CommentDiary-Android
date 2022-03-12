@@ -62,7 +62,6 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope {
         //코멘트 없는 경우
         if(myDiaryViewModel.selectedDiary.value!!.commentList?.isEmpty()==true){
 
-            //todo 리사이클러뷰 안 보이게
             if(selectedDate <= codaToday.minusDays(2)){
                 //이틀이 지나 영영 코멘트를 받을 수 없음
                 emptyCommentTextView.isVisible = true
@@ -78,7 +77,6 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope {
         }
         //코멘트 있는 경우 리사이클러뷰 띄우기
         else{
-            //todo 리사이클러뷰 보이게
             emptyCommentTextView.isVisible = false
             diaryUploadServerYetTextView.isVisible = false
             sendCompleteTextView.isVisible = false

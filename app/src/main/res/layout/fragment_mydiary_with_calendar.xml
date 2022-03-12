@@ -28,14 +28,13 @@
             android:layout_height="match_parent"
             android:fillViewport="true">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
                 <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                     android:id="@+id/materialCalendarView"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:background="@drawable/mydiary_calendar_green_radius"
@@ -44,14 +43,21 @@
                     app:mcv_dateTextAppearance="@style/CalendarDateText"
                     app:mcv_headerTextAppearance="@style/CalendarViewHeaderCustomText"
                     app:mcv_selectionColor="@color/date_selected_color"
-                    app:mcv_weekDayTextAppearance="@style/CalendarDayOfWeek" />
+                    app:mcv_weekDayTextAppearance="@style/CalendarDayOfWeek"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
 
                 <LinearLayout
                     android:id="@+id/writeDiaryWrapLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/materialCalendarView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     >
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -149,14 +155,17 @@
                 </LinearLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:visibility="gone"
                     android:id="@+id/readDiaryLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/background_ivory_radius_10"
-                    android:orientation="vertical">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/materialCalendarView"
+                    app:layout_constraintBottom_toTopOf="@id/noCommentTextView"
+                    >
 
                     <TextView
                         android:id="@+id/diaryDateTextView"
@@ -226,15 +235,16 @@
                     <TextView
                         android:id="@+id/diaryContentsTextView"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="22dp"
+                        android:layout_height="0dp"
+                        android:layout_marginHorizontal="22dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginEnd="22dp"
+                        android:layout_marginBottom="22dp"
                         android:lineSpacingExtra="9sp"
                         android:text="@{myDiaryviewModel.selectedDiary.content}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line"
+                        app:layout_constraintBottom_toTopOf="@id/sendDiaryBeforeAfterTextView"
                         tools:text="@string/diary_test_text" />
 
                     <TextView
@@ -253,7 +263,21 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </LinearLayout>
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/noCommentTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/MCaption3"
+                    android:text="@string/no_comment"
+                    android:textAlignment="center"
+                    android:textColor="@color/text_brown"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="17dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
 

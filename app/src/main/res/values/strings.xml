@@ -77,6 +77,7 @@
     <string name="already_pass_diary_send_time">일기전송 시간이 지났어요..</string>
     <string name="arrived_comment">코멘트가 도착했어요. 확인해 주세요!</string>
     <string name="write_diary_yet">아직 일기를 쓸 날이 오지 않았어요!</string>
+    <string name="no_comment">아쉽게도 코멘트가 도착하지 않았어요.\n그래도 오늘의 기록은 내일의 기억이 될 거예요 :)</string>
     <string-array name="custom_weekdays">
         <item>일</item>
         <item>월</item>
