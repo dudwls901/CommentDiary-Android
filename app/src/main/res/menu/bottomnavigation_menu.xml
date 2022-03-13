@@ -4,22 +4,22 @@
 
     <item
         android:id="@+id/myDiary"
-        android:icon="@drawable/ic_navi_write_light"
+        android:icon="@drawable/bottom_ic_mydiary"
         android:title="@string/bottomnavigation_title_mydiary"
         />
     <item
         android:id="@+id/receivedDiary"
-        android:icon="@drawable/ic_navi_mail_light"
+        android:icon="@drawable/bottom_ic_received"
         android:title="@string/bottomnavigation_title_receiveddiary"
         />
     <item
         android:id="@+id/collection"
-        android:icon="@drawable/ic_navi_diary_light"
+        android:icon="@drawable/bottom_ic_gather"
         android:title="@string/bottomnavigation_title_alldiary"
         />
     <item
         android:id="@+id/myPage"
-        android:icon="@drawable/ic_navi_mypage_light"
+        android:icon="@drawable/bottom_ic_mypage"
         android:title="@string/bottomnavigation_title_my"
         />
 </menu>
