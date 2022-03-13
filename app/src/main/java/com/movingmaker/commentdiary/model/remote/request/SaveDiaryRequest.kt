@@ -8,4 +8,6 @@ data class SaveDiaryRequest(
     val date: String,
     @SerializedName(value="deliveryYn")
     val deliveryYN: Char,
+    @SerializedName(value="tempYn")
+    val tempYN: Char,
 )

@@ -59,8 +59,9 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope {
         val selectedDate = DateConverter.ymdToDate(myDiaryViewModel.selectedDiary.value!!.date)
 //        val minusTwoDay = codaToday.minusDays(2)
 //        Log.d(TAG, "initViews: ${selectedDate} ${myDiaryViewModel.selectedDiary.value!!.commentList} ${myDiaryViewModel.selectedDiary.value!!.commentList!!.size}")
+        Log.d(TAG, "initViews: detail ${myDiaryViewModel.selectedDiary.value!!.commentList?.isEmpty()}")
         //코멘트 없는 경우
-        if(myDiaryViewModel.selectedDiary.value!!.commentList?.isEmpty()==true){
+        if(myDiaryViewModel.selectedDiary.value!!.commentList?.isEmpty()==true || myDiaryViewModel.selectedDiary.value!!.commentList==null){
 
             if(selectedDate <= codaToday.minusDays(2)){
                 //이틀이 지나 영영 코멘트를 받을 수 없음

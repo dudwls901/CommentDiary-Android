@@ -5,4 +5,6 @@ import com.google.gson.annotations.SerializedName
 data class EditDiaryRequest(
     val title: String,
     val content: String,
+    @SerializedName(value="tempYn")
+    val tempYN: Char,
 )

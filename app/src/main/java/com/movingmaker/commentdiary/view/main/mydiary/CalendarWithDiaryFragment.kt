@@ -1,19 +1,14 @@
 package com.movingmaker.commentdiary.view.main.mydiary
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMydiaryWithCalendarBinding
@@ -23,7 +18,6 @@ import com.movingmaker.commentdiary.view.main.mydiary.calendardecorator.AloneDot
 import com.movingmaker.commentdiary.view.main.mydiary.calendardecorator.CommentDotDecorator
 import com.movingmaker.commentdiary.view.main.mydiary.calendardecorator.SelectedDateDecorator
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
-import com.movingmaker.commentdiary.viewmodel.mydiary.LocalDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
@@ -31,7 +25,6 @@ import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
 import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter
 import kotlinx.coroutines.*
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.coroutines.CoroutineContext
@@ -49,7 +42,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
-    private val localDiaryViewModel: LocalDiaryViewModel by activityViewModels()
 
     companion object {
         const val TAG: String = "로그"
@@ -93,7 +85,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 //            binding.loadingBar.isVisible = false
 //
 //        }
-        Log.d(TAG, "onViewCreated: localDiaryViewModel ${localDiaryViewModel.localDiaryList.value!!}")
         initSwipeRefresh()
         initCalendar()
         initButtons()
@@ -148,7 +139,8 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
             Log.d(TAG, "initButtons: ${myDiaryViewModel.selectedDiary.value!!.id}")
             Log.d(TAG, "initButtons: ${fragmentViewModel.fragmentState}")
             //서버에 저장된 코멘트 일기인 경우
-            if(myDiaryViewModel.selectedDiary.value!!.id!=null && myDiaryViewModel.selectedDiary.value!!.deliveryYN =='Y') {
+            if(myDiaryViewModel.selectedDiary.value!!.tempYN =='N' && myDiaryViewModel.selectedDiary.value!!.deliveryYN=='Y') {
+                Log.d(TAG, "initButtons: 여기여기여기${myDiaryViewModel.selectedDiary.value!!.tempYN}")
                 fragmentViewModel.setFragmentState("commentDiaryDetail")
             }
             //임시저장(코멘트일기)인 경우, 혼자쓴 일기인 경우
@@ -227,7 +219,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
         binding.materialCalendarView.setOnMonthChangedListener { widget, date ->
             //선택된 일기 없애주기
-            myDiaryViewModel.setSelectedDiary(Diary(null,"","","",' ',null))
+            myDiaryViewModel.setSelectedDiary(Diary(null,"","","",' ',' ', null))
 
             val requestDate = LocalDate.of(date.year, date.month+1, date.day)
                 .format(DateTimeFormatter.ofPattern("yyyy.MM"))
@@ -247,7 +239,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
         launch(coroutineContext) {
             myDiaryViewModel.setResponseGetMonthDiary(yearMonth)
-            localDiaryViewModel.getAll()
         }
     }
 
@@ -301,20 +292,29 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                         sendDiaryBeforeAfterTextView.isVisible = true
                         //혼자쓰는일기면 가리고 코멘트 일기면 보이기
                         //코멘트가 아직 도착하지 않은 경우 or 삭제된 경우 or서버에서 빈 값 내려올 땐 null?
+
+                        //todo
                         //todo 서버에서 빈 코멘트올 때 무슨 값인지 확인
                         if (diary.commentList == null || diary.commentList.size == 0) {
                             //코멘트가 도착하지 않았는데 이틀 지난 경우
                             Log.d(TAG, "checkSelectedDate: ${DateConverter.ymdToDate(diary.date) } ${selectedDate.minusDays(2)}")
                             if(DateConverter.ymdToDate(diary.date)<=codaToday.minusDays(2)){
                                 sendDiaryBeforeAfterTextView.isVisible = false
-                                noCommentTextView.isVisible = true
+                                noCommentTextView.isVisible = diary.tempYN=='N'
                             }
                             //아직 코멘트 기다리는 경우
                             else {
-                                sendDiaryBeforeAfterTextView.text = getString(R.string.calendar_with_diary_comment_soon)
-                                sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_light_brown_radius_bottom_10)
+                                //임시저장인 경우
                                 sendDiaryBeforeAfterTextView.setTextColor(R.color.text_dark_brown)
                                 noCommentTextView.isVisible = false
+                                if(diary.tempYN=='Y'){
+                                    sendDiaryBeforeAfterTextView.text = getString(R.string.upload_yet_comment_diary)
+                                    sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_brand_orange_radius_bottom_10)
+                                }
+                                else{
+                                    sendDiaryBeforeAfterTextView.text = getString(R.string.calendar_with_diary_comment_soon)
+                                    sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_light_brown_radius_bottom_10)
+                                }
                             }
                         }
                         //코멘트 있는 경우
@@ -332,51 +332,14 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
             }
         }
 
-        //임시저장 일기 있다면
-        //todo 임시저장 일기도 한 달치로 바꾸기
-        for(diary in localDiaryViewModel.localDiaryList.value!!){
-            if(diary.date == selectedDate.toString().replace('-', '.')){
-                Log.d(TAG, "checkSelectedDate: localdiary showdialog ${diary} ${selectedDate.toString().replace('-', '.')}")
-
-                //selectedDiary 대입
-                myDiaryViewModel.setSelectedDiary(Diary(null,
-                    diary.title,
-                    diary.content,
-                    diary.date,
-                    diary.deliveryYN,
-                    null
-                )
-                )
-                noCommentTextView.isVisible = false
-                Log.d(TAG, "checkSelectedDate: 임시저장 일기 있음${myDiaryViewModel.selectedDiary.value}")
-                //일기 전송 시간(이틀) 지난 경우
-                if(DateConverter.ymdToDate(diary.date)<=codaToday.minusDays(2)){
-                    sendDiaryBeforeAfterTextView.isVisible = false
-                }
-                //아직 전송 가능한 경우
-                else{
-                    sendDiaryBeforeAfterTextView.isVisible = true
-                    sendDiaryBeforeAfterTextView.text = getString(R.string.upload_yet_comment_diary)
-                    sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_brand_orange_radius_bottom_10)
-                    sendDiaryBeforeAfterTextView.setTextColor(R.color.text_dark_brown)
-                }
-
-                readDiaryLayout.isVisible = true
-                writeDiaryWrapLayout.isVisible = false
-                //서버 저장된 일기는 xml데이터바인딩처리되어있음 임시저장은 여기서 처리
-                diaryHeadTextView.text = diary.title
-                diaryContentsTextView.text = diary.content
-
-
-                return
-            }
-        }
         //일기가 없다면
         myDiaryViewModel.setSelectedDiary(Diary(
             null,
             "",
             "",
-            selectedDate.toString().replace('-','.'),' ',
+            selectedDate.toString().replace('-','.'),
+            ' ',
+            ' ',
             null)
         )
         Log.d(TAG, "checkSelectedDate: 일기 없음${myDiaryViewModel.selectedDiary.value}")

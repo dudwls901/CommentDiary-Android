@@ -91,7 +91,7 @@ class MyDiaryViewModel : ViewModel() {
         _commentDiary.value = emptyList()
         _monthDiaries.value = emptyList()
         _deliveryYN.value =' '
-        _selectedDiary.value = Diary(null,"","","",' ',null)
+        _selectedDiary.value = Diary(null,"","","",' ',' ', null)
         _dateDiaryText.value = ""
         _commentDiaryTextCount.value = 0
         _saveOrEdit.value = ""
