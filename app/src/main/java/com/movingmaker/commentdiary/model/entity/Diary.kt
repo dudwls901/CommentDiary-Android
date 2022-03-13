@@ -13,6 +13,8 @@ data class Diary(
     var date: String,
     @SerializedName(value = "deliveryYn")
     var deliveryYN: Char,
+    @SerializedName(value = "tempYn")
+    var tempYN: Char,
     @SerializedName(value = "commentResponseList")
     val commentList: MutableList<Comment>?
 )

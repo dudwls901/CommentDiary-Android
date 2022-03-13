@@ -3,7 +3,6 @@ package com.movingmaker.commentdiary
 import android.app.Application
 import android.content.Intent
 import com.movingmaker.commentdiary.model.AuthProvider
-import com.movingmaker.commentdiary.model.local.CommentDiaryDatabase
 import com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity
 
 class CodaApplication(): Application() {

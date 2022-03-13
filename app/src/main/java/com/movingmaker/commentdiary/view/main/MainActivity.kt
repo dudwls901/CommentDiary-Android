@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseActivity
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
@@ -15,7 +13,6 @@ import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment
 import com.movingmaker.commentdiary.view.main.mydiary.WriteDiaryFragment
 import com.movingmaker.commentdiary.view.main.mypage.TempMyPageFragment
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
-import com.movingmaker.commentdiary.viewmodel.mydiary.LocalDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.*
@@ -36,7 +33,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     private val myPageViewModel: MyPageViewModel by viewModels()
     private val myDiaryViewModel: MyDiaryViewModel by viewModels()
     private val fragmentViewModel: FragmentViewModel by viewModels()
-    private val localDiaryViewModel: LocalDiaryViewModel by viewModels()
 
     private lateinit var calendarWithDiaryFragment: CalendarWithDiaryFragment
     private lateinit var fragment2: Fragment2
