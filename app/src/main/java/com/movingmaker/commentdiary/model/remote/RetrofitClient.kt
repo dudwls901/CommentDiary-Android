@@ -159,13 +159,8 @@ object RetrofitClient {
                 CodaApplication.getInstance().getDataStore().accessTokenExpiresIn.first()
             }
             var accessToken = ""
-//            val date = Date(accessTokenExpiresIn)
-            val simpleDateFormatTime = SimpleDateFormat("MM-DD HH:mm:ss")
-
-            Log.d("만료 시간!!!!!!!!!!!!!!!!!!", simpleDateFormatTime.format(Date(accessTokenExpiresIn)) + " 지금 시간 : " + simpleDateFormatTime.format(Date(accessTokenExpiresIn)))
 
             if(accessTokenExpiresIn <= System.currentTimeMillis()){
-
                 Log.d(TAG, "intercept: accessToken 만료됨 ")
                 accessToken = runBlocking {
                     //토큰 갱신 api 호출
@@ -208,7 +203,7 @@ object RetrofitClient {
 
 
     class TwoHeaderInterceptor: Interceptor {
-        //todo refreshtoken도 만료됐다면??
+        //refreshtoken도 만료됐다면?? 로그아웃
 
         @Throws(IOException::class)
         override fun intercept(chain: Interceptor.Chain): Response {
