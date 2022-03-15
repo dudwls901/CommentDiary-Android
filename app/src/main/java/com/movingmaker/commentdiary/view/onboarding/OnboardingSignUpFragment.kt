@@ -71,14 +71,13 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
     private fun observeDatas(){
         binding.lifecycleOwner?.let { lifecycleOwner ->
             onboardingViewModel.responseEmailSend.observe(lifecycleOwner) {
-                binding.loadingBar.isVisible = false
+//                binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
-                    sendCodeDialog()
                 } else {
                     Log.d(TAG, it.isSuccessful.toString())
                     Log.d(TAG, it.body()?.code.toString())
                     Log.d(TAG, it.body()?.message.toString())
-                    Toast.makeText(requireContext(), "이메일 전송 실패", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(requireContext(), "인증번호 전송 실패", Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -153,8 +152,8 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
 
         sendAuthButton.setOnClickListener {
 
-            binding.loadingBar.isVisible = true
-
+//            binding.loadingBar.isVisible = true
+            sendCodeDialog()
             launch(coroutineContext) {
                 onboardingViewModel.setResponseEmailSend(emailEditText.text.toString())
             }
