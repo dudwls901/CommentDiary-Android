@@ -86,7 +86,7 @@
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.3885416666666667" />
         <entry key="app/src/main/res/layout/activity_writediary_writediary.xml" value="0.3297045101088647" />
         <entry key="app/src/main/res/layout/bottom_sheet_fragment_writediary_typeselect.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/dialog_mydiary_success_notice.xml" value="0.16" />
+        <entry key="app/src/main/res/layout/dialog_mydiary_success_notice.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_mydiary_writediary.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_onboarding_email_code_send.xml" value="0.25226449275362317" />
         <entry key="app/src/main/res/layout/dialog_onboarding_email_send.xml" value="0.165625" />
@@ -96,7 +96,7 @@
         <entry key="app/src/main/res/layout/fragment_mydiary_a.xml" value="0.24" />
         <entry key="app/src/main/res/layout/fragment_mydiary_commentdiary_detail.xml" value="0.19583333333333333" />
         <entry key="app/src/main/res/layout/fragment_mydiary_editdiary.xml" value="0.1388101983002833" />
-        <entry key="app/src/main/res/layout/fragment_mydiary_with_calendar.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_mydiary_with_calendar.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_mydiary_writediary.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_mypage.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/fragment_onboarding_find_password.xml" value="0.20969202898550723" />

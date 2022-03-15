@@ -21,11 +21,15 @@
 <!--        <item name="android:windowBackground">@color/coda_background</item>-->
 <!--        <item name="android:windowSplashScreenBackground">@color/coda_common_text</item>-->
     </style>
+
+<!--    스플래시 -->
     <style name="SplashTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background</item>
 <!--        <item name="android:colorBackground">@color/onboarding_red</item>-->
     </style>
 
+
+<!--    캘린더 -->
     <style name="Widget.CalendarView.Custom" parent="android:Widget.CalendarView">
         <item name="android:focusedMonthDateColor">@android:color/holo_blue_light</item>
         <item name="android:weekNumberColor">@android:color/holo_red_light</item>
@@ -71,6 +75,8 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+
+<!--    다이얼로그 -->
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
@@ -79,6 +85,9 @@
         <item name="android:background">@drawable/background_ivory_radius_top_10</item>
     </style>
 
+
+
+<!--    폰트-->
     <style name="BLargetitle">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>

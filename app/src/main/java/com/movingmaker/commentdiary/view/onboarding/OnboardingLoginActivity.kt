@@ -1,5 +1,6 @@
 package com.movingmaker.commentdiary.view.onboarding
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -41,12 +42,13 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
     private lateinit var onboardingFindPasswordFragment: OnboardingFindPasswordFragment
     private lateinit var onboardingSignUpSuccessFragment: OnboardingSignUpSuccessFragment
 
+    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.statusBarColor = getColor(R.color.onboarding_background)
-
+//        binding.backgroundLayout.setBackgroundColor(R.color.background_ivory)
 
 
         onboardingLoginFragment = OnboardingLoginFragment.newInstance()
