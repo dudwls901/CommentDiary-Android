@@ -15,14 +15,14 @@ interface MyDiaryApiService {
     @GET(Url.MONTH_DIARY)
     suspend fun getMonthDiary(@Query("date") date: String): Response<DiaryListResponse>
 
-    @POST(Url.WRITE_DIARY)
+    @POST(Url.DIARY)
     suspend fun saveDiary(@Body saveDiaryRequest: SaveDiaryRequest): Response<SaveDiaryResponse>
 
     //path variable
-    @PATCH("${Url.WRITE_DIARY}/{diaryId}" )
+    @PATCH("${Url.DIARY}/{diaryId}" )
     suspend fun editDiary(@Path("diaryId") diaryId: Long, @Body editDiaryRequest: EditDiaryRequest): Response<IsSuccessResponse>
 
     //path variable
-    @DELETE("${Url.WRITE_DIARY}/{diaryId}" )
+    @DELETE("${Url.DIARY}/{diaryId}" )
     suspend fun deleteDiary(@Path("diaryId") diaryId: Long): Response<IsSuccessResponse>
 }
