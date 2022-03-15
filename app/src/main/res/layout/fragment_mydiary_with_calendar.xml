@@ -181,19 +181,21 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="2022.02 나의 일기" />
-
+<!--android:text="@{myDiaryviewModel.selectedDiary.title}"-->
                     <TextView
                         android:id="@+id/diaryHeadTextView"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:lineSpacingExtra="14sp"
                         android:text="@{myDiaryviewModel.selectedDiary.title}"
                         android:textAlignment="center"
                         android:textSize="18sp"
-                        android:textStyle="bold"
+                        style="@style/BSubheadline"
+                        android:maxLines="2"
+                        android:ellipsize="end"
                         app:layout_constraintStart_toStartOf="@id/diaryDateTextView"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/diaryDateTextView"
-                        tools:text="나는 오늘도 너무너무 서툴다." />
+                        tools:text="!ㅊㄹ야마르애ㅑㅁ르ㅑㅐㅇ머ㅡ랴ㅐ으ㅑㅐㅁ르ㅑㅐ알머이ㅏ럼어ㅏㅣ크랴ㅐ으ㅑㅐㅂ러ㅑㅐ어베ㅑ9러야ㅐㅔ버랴ㅐㅓ뱌ㅐ러ㅑㅐㅇ버랴ㅐㅇ버ㅑㅐ러얍3ㅐ러ㅑ버ㅑ량버랴ㅐ어ㅑㅂㄹ" />
 
                     <LinearLayout
                         android:id="@+id/diaryDetailLayout"
@@ -239,7 +241,7 @@
                         android:layout_marginHorizontal="22dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="22dp"
-                        android:lineSpacingExtra="9sp"
+                        style="@style/RCaption"
                         android:text="@{myDiaryviewModel.selectedDiary.content}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
