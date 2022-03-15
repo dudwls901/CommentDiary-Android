@@ -312,6 +312,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                                     sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_brand_orange_radius_bottom_10)
                                 }
                                 else{
+                                    sendDiaryBeforeAfterTextView.setTextColor(R.color.text_brown)
                                     sendDiaryBeforeAfterTextView.text = getString(R.string.calendar_with_diary_comment_soon)
                                     sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_light_brown_radius_bottom_10)
                                 }
