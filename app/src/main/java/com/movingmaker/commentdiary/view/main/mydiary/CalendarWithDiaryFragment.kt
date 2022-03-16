@@ -65,14 +65,12 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         //여기선 라이프사이클 지정 안 하면 데이터바인딩 안 되고, commentdiarydetailfragment에선 안 해도 됨
 //        binding.lifecycleOwner = viewLifecycleOwner
         binding.lifecycleOwner = this.viewLifecycleOwner
-        observeData()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.myDiaryviewModel = myDiaryViewModel
-        fragmentViewModel.setHasBottomNavi(true)
         Log.d(TAG, "onCreateView: oncreateview  $view")
 //        Log.d(TAG, "dataSelected : ${myDiaryViewModel.selectedDate.value}")
 //        Log.d(TAG, "dataSelected : ${myDiaryViewModel.selectedDate.value == null} ${myDiaryViewModel.selectedDate.value == ""}")
@@ -86,9 +84,9 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 //
 //        }
         initSwipeRefresh()
-        initCalendar()
+        initViews()
         initButtons()
-
+        observeData()
     }
 
     override fun onResume() {
@@ -159,6 +157,24 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         }
     }
 
+    private fun initViews() = with(binding){
+        materialCalendarView.setOnDateChangedListener { widget, date, selected ->
+            Log.d(TAG, "setOndateChangedListener: ${date} ")
+            checkSelectedDate(date)
+        }
+
+        materialCalendarView.setOnMonthChangedListener { widget, date ->
+            //선택된 일기 없애주기
+            myDiaryViewModel.setSelectedDiary(Diary(null,"","","",' ',' ', null))
+
+            val requestDate = LocalDate.of(date.year, date.month+1, date.day)
+                .format(DateTimeFormatter.ofPattern("yyyy.MM"))
+            Log.d(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@setOnMonthChangedListener: $requestDate")
+            setMonthCalendarDiaries(requestDate)
+        }
+        initCalendar()
+    }
+
     @SuppressLint("SimpleDateFormat", "ResourceType")
     private fun initCalendar() = with(binding) {
 
@@ -191,7 +207,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 //            myDiaryViewModel.setResponseGetMonthDiary(codaToday.format(DateTimeFormatter.ofPattern("yyyy.MM")))
 
         //캘린더 현재 달로 일기 초기화
-        setMonthCalendarDiaries(codaToday.format(DateTimeFormatter.ofPattern("yyyy.MM")))
+//        setMonthCalendarDiaries(codaToday.format(DateTimeFormatter.ofPattern("yyyy.MM")))
 
         val selectedDate = myDiaryViewModel.selectedDiary.value!!.date
         //선택한 날짜 있으면 선택한 날짜로 캘린더 닷 설정
@@ -204,28 +220,11 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 //        //선택한 날짜 없으면 오늘 날짜로 캘린더 닷 설정
 //        else {
             Log.d(TAG, "calendarday ${calendarDay}")
-            materialCalendarView.currentDate = calendarDay
-            materialCalendarView.selectedDate = calendarDay
-            checkSelectedDate(calendarDay)
+//            materialCalendarView.currentDate = calendarDay
+//            materialCalendarView.selectedDate = calendarDay
+//            checkSelectedDate(calendarDay)
 //        }
-//        materialCalendarView.selectedDate = calendarDay
-//        materialCalendarView.currentDate = calendarDay
 
-
-        materialCalendarView.setOnDateChangedListener { widget, date, selected ->
-            Log.d(TAG, "setOndateChangedListener: ${date} ")
-            checkSelectedDate(date)
-        }
-
-        binding.materialCalendarView.setOnMonthChangedListener { widget, date ->
-            //선택된 일기 없애주기
-            myDiaryViewModel.setSelectedDiary(Diary(null,"","","",' ',' ', null))
-
-            val requestDate = LocalDate.of(date.year, date.month+1, date.day)
-                .format(DateTimeFormatter.ofPattern("yyyy.MM"))
-            Log.d(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@setOnMonthChangedListener: $requestDate")
-            setMonthCalendarDiaries(requestDate)
-        }
     }
 
     private fun setMonthCalendarDiaries(yearMonth: String) {

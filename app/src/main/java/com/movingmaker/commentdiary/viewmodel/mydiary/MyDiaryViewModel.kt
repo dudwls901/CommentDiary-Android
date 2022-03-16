@@ -33,10 +33,7 @@ class MyDiaryViewModel : ViewModel() {
     private var _saveOrEdit = MutableLiveData<String>()
     private var _selectedDate = MutableLiveData<String>()
     private var _commentList = MutableLiveData<List<Comment>>()
-    private var _test = MutableLiveData<String>()
 
-    val test: LiveData<String>
-        get() = _test
     //api response
     private var _responseGetMonthDiary = MutableLiveData<Response<DiaryListResponse>>()
     private var _responseSaveDiary = MutableLiveData<Response<SaveDiaryResponse>>()

@@ -73,12 +73,6 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
     }
 
     private fun observeDatas() = with(binding) {
-
-        myDiaryViewModel.test.observe(viewLifecycleOwner){
-            Log.d(TAG, "observeDatas: replace test초기화 test")
-        }
-
-        //todo responseSaveDiary.observe가 계속 감지돼서 일기 저장 후 다른 일기 작성하려할 때 commentDiaryDetail화면이 떠버림
         //저장은 혼자 쓴 일기, 코멘트 일기 둘 다 가능
         myDiaryViewModel.responseSaveDiary.observe(viewLifecycleOwner){
             Log.d(TAG, "observeDatas: replaceobserve ${it.body()}")
@@ -167,11 +161,10 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                     }
                     //임시 저장 전송(edit api)이면
                     else{
+                        fragmentViewModel.setBeforeFragment("writeDiary")
                         fragmentViewModel.setFragmentState("commentDiaryDetail")
                     }
-
                 }
-
             }
             else{
                 Log.d(TAG, "observeDatas: 일기 수정 실패")
@@ -337,7 +330,8 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
     private fun initToolbar() = with(binding){
         //뒤로가기
         backButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
+//            parentFragmentManager.popBackStack()
+            fragmentViewModel.setFragmentState("myDiary")
         }
 
         //임시 저장
@@ -482,7 +476,8 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                         }
                         dialogView.dismiss()
                         //todo 전환 or popback
-                        parentFragmentManager.popBackStack()
+//                        parentFragmentManager.popBackStack()
+                        fragmentViewModel.setFragmentState("myDiary")
                     }
                 }
             }

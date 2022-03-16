@@ -17,6 +17,7 @@ class FragmentViewModel (application: Application) : AndroidViewModel(applicatio
     //api response
     private var _fragmentState = MutableLiveData<String>()
     private var _hasBottomNavi = MutableLiveData<Boolean>()
+    private var _beforeFragment = MutableLiveData<String>()
 
     val fragmentState: LiveData<String>
         get() = _fragmentState
@@ -24,9 +25,13 @@ class FragmentViewModel (application: Application) : AndroidViewModel(applicatio
     val hasBottomNavi: LiveData<Boolean>
         get() = _hasBottomNavi
 
+    val beforeFragment: LiveData<String>
+        get() = _beforeFragment
+
     init{
-        _fragmentState.value =""
+        _fragmentState.value = "myDiary"
         _hasBottomNavi.value = true
+
     }
 
     fun setFragmentState(fragment: String){
@@ -35,5 +40,9 @@ class FragmentViewModel (application: Application) : AndroidViewModel(applicatio
 
     fun setHasBottomNavi(bool: Boolean){
         _hasBottomNavi.value = bool
+    }
+
+    fun setBeforeFragment(fragment: String){
+        _beforeFragment.value = fragment
     }
 }
