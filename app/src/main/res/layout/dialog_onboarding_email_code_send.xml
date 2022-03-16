@@ -56,7 +56,7 @@
         android:layout_height="64dp"
         android:background="@drawable/onboarding_dialog_button_left_top_border"
         android:text="@string/cancel"
-        android:textColor="@color/black"
+        android:textColor="@color/text_black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/submitButton"
         app:layout_constraintStart_toStartOf="parent" />
@@ -67,7 +67,7 @@
         android:layout_height="64dp"
         android:background="@drawable/onboarding_dialog_button_left_top_border"
         android:text="@string/submit"
-        android:textColor="@color/black"
+        android:textColor="@color/text_black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cancelButton" />
