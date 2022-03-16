@@ -174,10 +174,9 @@
                         android:layout_marginStart="22dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="1dp"
-                        android:lineSpacingExtra="10sp"
                         android:text="@{myDiaryviewModel.dateDiaryText}"
-                        android:textColor="#ffac86"
-                        android:textSize="15sp"
+                        style="@style/BHeadline2"
+                        android:textColor="@color/pure_orange"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="2022.02 나의 일기" />
