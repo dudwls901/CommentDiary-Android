@@ -15,7 +15,7 @@ object CommentListBindAdapter {
             adapter.setHasStableIds(true)
             recyclerView.adapter = adapter
         }
-        val dateListAdapter = recyclerView.adapter as CommentListAdapter
-        dateListAdapter.submitList(items.value)
+        val commentListAdapter = recyclerView.adapter as CommentListAdapter
+        commentListAdapter.submitList(items.value)
     }
 }

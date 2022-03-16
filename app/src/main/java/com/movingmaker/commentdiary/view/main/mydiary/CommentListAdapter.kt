@@ -17,7 +17,6 @@ class CommentListAdapter: ListAdapter<Comment,CommentListAdapter.ItemViewHolder>
     ): CommentListAdapter.ItemViewHolder = ItemViewHolder(RvItemMydiaryCommentBinding.inflate(LayoutInflater.from(parent.context),parent,false))
 
     override fun onBindViewHolder(holder: CommentListAdapter.ItemViewHolder, position: Int) {
-        Log.e("rrrrrrrrr",position.toString() +  " " +  currentList[position])
         holder.bind(currentList[position])
     }
 
@@ -31,7 +30,6 @@ class CommentListAdapter: ListAdapter<Comment,CommentListAdapter.ItemViewHolder>
     inner class ItemViewHolder(private val binding: RvItemMydiaryCommentBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(comment : Comment){
             binding.comment = comment
-//            Log.e("bindadapterrrrr" , comment.content + " " + binding.comment.content)
             binding.commentHeartImageView.setOnClickListener {
 
             }
