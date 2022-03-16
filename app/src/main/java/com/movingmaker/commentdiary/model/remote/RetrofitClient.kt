@@ -45,6 +45,11 @@ object RetrofitClient {
         getRetrofit(RetrofitHeaderCondition.ONE_HEADER).create(LogOutApiService::class.java)
     }
 
+    //Todo 일기작성시 accessToken만료됐는데 갱신 안 하는 경우 있는지 확인
+    val gatherDiaryApiService: GatherDiaryApiService by lazy{
+        getRetrofit(RetrofitHeaderCondition.BEARER).create(GatherDiaryApiService::class.java)
+    }
+
 //    private fun getSimpleRetrofit(): Retrofit {
 //        return Retrofit.Builder()
 //            .baseUrl(Url.CODA_BASE_URL)
