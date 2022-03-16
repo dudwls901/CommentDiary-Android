@@ -49,6 +49,7 @@
     <string name="mydiary_text_decoration">오늘은 기록이 없어요. 기록을 하고 코멘트를 받아봐요 :)</string>
     <string name="write_text">작성하기</string>
     <string name="store_text">저장하기</string>
+    <string name="store">저장</string>
     <string name="send_text">전송하기</string>
     <string name="temp_store_text">임시저장</string>
     <string name="show_all">전체보기</string>
@@ -78,6 +79,10 @@
     <string name="arrived_comment">코멘트가 도착했어요. 확인해 주세요!</string>
     <string name="write_diary_yet">아직 일기를 쓸 날이 오지 않았어요!</string>
     <string name="no_comment">아쉽게도 코멘트가 도착하지 않았어요.\n그래도 오늘의 기록은 내일의 기억이 될 거예요 :)</string>
+    <string name="gatherdiary_nodiary">아직 작성된 일기가 없어요! 일기를 작성해주세요 :)</string>
+    <string name="binding_date_format">%s년 %월</string>
+    <string name="look_period">기간별 보기</string>
+    <string name="choice_date_text">날짜 선택</string>
     <string-array name="custom_weekdays">
         <item>일</item>
         <item>월</item>

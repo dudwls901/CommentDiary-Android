@@ -12,7 +12,8 @@ object Url {
     const val MONTH_DIARY = "diary/main"
     const val REISSUE = "members/reissue"
     const val LOG_OUT = "/logout"
-    const val WRITE_DIARY = "diary"
-    const val EDIT_DIARY = "/:diaryId"
+    const val DIARY = "diary"
+    const val MY = "/my"
+    const val ALL = "/all"
 //    const val
 }
