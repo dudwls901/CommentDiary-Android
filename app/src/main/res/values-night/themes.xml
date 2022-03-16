@@ -4,27 +4,30 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/coda_background</item>
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/coda_common_text</item>
         <item name="android:textColorHint">@color/coda_common_text_hint</item>
-        <item name="android:colorBackground">@color/onboarding_background</item>
+        <item name="android:colorBackground">@color/core_beige</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <!--        android:windowBackground : 이 설정은 window의 배경을 설정하는 것이다. color 또는 drawable 설정이 가능하다. -->
         <!--        <item name="android:windowBackground">@color/coda_background</item>-->
         <!--        <item name="android:windowSplashScreenBackground">@color/coda_common_text</item>-->
     </style>
+
+    <!--    스플래시 -->
     <style name="SplashTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background</item>
         <!--        <item name="android:colorBackground">@color/onboarding_red</item>-->
     </style>
 
+
+    <!--    캘린더 -->
     <style name="Widget.CalendarView.Custom" parent="android:Widget.CalendarView">
         <item name="android:focusedMonthDateColor">@android:color/holo_blue_light</item>
         <item name="android:weekNumberColor">@android:color/holo_red_light</item>
@@ -49,7 +52,8 @@
     <style name="CalendarDateText" parent="Theme.AppCompat">
         <item name="android:textColor">@color/text_black</item>
         <item name="android:textSize">14sp</item>
-        <item name="font">@font/roboto_medium</item>>
+        <!--        <item name="font">@font/roboto_medium</item>-->
+        <item name="fontFamily">@font/roboto_medium</item>
     </style>
 
     <!-- 달력 안의 요일들에 적용되는 스타일 -->
@@ -57,7 +61,8 @@
         <item name="android:textColor">@color/text_black</item>
         <item name="android:textSize">12sp</item>
         <!--        <item name="background">@drawable/onboarding_dialog_button_left_top_border</item>-->
-        <item name="font">@font/roboto_medium</item>
+        <!--        <item name="font">@font/roboto_medium</item>-->
+        <item name="fontFamily">@font/roboto_medium</item>
     </style>
 
     <!-- 연, 월을 표시하는 헤더에 적용되는 스타일 -->
@@ -68,4 +73,87 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+
+    <!--    다이얼로그 -->
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/background_ivory_radius_top_10</item>
+    </style>
+
+
+
+    <!--    폰트-->
+    <style name="BLargetitle">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:lineSpacingExtra">12sp</item>
+    </style>
+    <style name="BHeadline">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:lineSpacingExtra">10sp</item>
+    </style>
+    <style name="BSubheadline">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineSpacingExtra">14sp</item>
+    </style>
+    <style name="BHeadline2">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingExtra">10sp</item>
+    </style>
+    <style name="MCaption">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingExtra">10sp</item>
+    </style>
+    <style name="RCaption">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">9sp</item>
+    </style>
+    <style name="BCaption">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:lineSpacingExtra">7sp</item>
+    </style>
+    <style name="MCaption2">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:lineSpacingExtra">9sp</item>
+    </style>
+    <style name="MCaption3">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineSpacingExtra">10sp</item>
+    </style>
+
+    <style name="customNumberPicker">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingExtra">10sp</item>
+        <item name="android:editTextColor">@color/dot_red</item>
+    </style>
+
+    <style name="customNumberPicker1">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingExtra">10sp</item>
+        <item name="android:editTextColor">@color/dot_sky</item>
+    </style>
 </resources>
