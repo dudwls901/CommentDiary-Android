@@ -50,6 +50,11 @@ object RetrofitClient {
         getRetrofit(RetrofitHeaderCondition.BEARER).create(GatherDiaryApiService::class.java)
     }
 
+    val receivedDiaryApiService: ReceivedDiaryApiService by lazy{
+        getRetrofit(RetrofitHeaderCondition.BEARER).create(ReceivedDiaryApiService::class.java)
+    }
+
+
 //    private fun getSimpleRetrofit(): Retrofit {
 //        return Retrofit.Builder()
 //            .baseUrl(Url.CODA_BASE_URL)

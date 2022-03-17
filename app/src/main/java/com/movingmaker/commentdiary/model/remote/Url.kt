@@ -15,5 +15,6 @@ object Url {
     const val DIARY = "diary"
     const val MY = "/my"
     const val ALL = "/all"
+    const val DELIVERY ="delivery"
 //    const val
 }

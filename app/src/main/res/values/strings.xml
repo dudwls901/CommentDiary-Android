@@ -83,6 +83,13 @@
     <string name="binding_date_format">%s년 %월</string>
     <string name="look_period">기간별 보기</string>
     <string name="choice_date_text">날짜 선택</string>
+    <string name="arrived_diary">도착한 일기</string>
+    <string name="report">신고하기</string>
+    <string name="received_diary_comment_head">내가 보내는 코멘트</string>
+    <string name="send_text1">보내기</string>
+    <string name="comment_write_hint">일기를 읽고, 따뜻한 코멘트를 달아주세요</string>
+    <string name="no_received_diary_yet">매일 아침 7시에 누군가의 일기가 도착합니다.\n 도착한 일기를 읽고 따뜻한 코멘트를 남겨주세요 :)</string>
+    <string name="comment_write_limit">%s/30</string>
     <string-array name="custom_weekdays">
         <item>일</item>
         <item>월</item>

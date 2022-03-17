@@ -146,7 +146,6 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">15sp</item>
         <item name="android:lineSpacingExtra">10sp</item>
-        <item name="android:editTextColor">@color/dot_red</item>
     </style>
 
     <style name="customNumberPicker1">
@@ -154,6 +153,5 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">15sp</item>
         <item name="android:lineSpacingExtra">10sp</item>
-        <item name="android:editTextColor">@color/dot_sky</item>
     </style>
 </resources>
