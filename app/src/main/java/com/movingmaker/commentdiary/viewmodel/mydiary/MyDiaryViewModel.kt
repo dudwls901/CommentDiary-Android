@@ -17,6 +17,7 @@ import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.model.remote.response.SaveDiaryResponse
 import com.movingmaker.commentdiary.model.repository.MyDiaryRepository
 import com.movingmaker.commentdiary.model.repository.MyPageRepository
+import com.movingmaker.commentdiary.util.DateConverter
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -92,6 +93,8 @@ class MyDiaryViewModel : ViewModel() {
         _dateDiaryText.value = ""
         _commentDiaryTextCount.value = 0
         _saveOrEdit.value = ""
+//        _selectedDate.value = DateConverter.ymdFormat(DateConverter.getCodaToday())
+        _selectedDate.value = ""
     }
 
     private fun setAloneDiary(list: List<CalendarDay>) {
@@ -141,9 +144,9 @@ class MyDiaryViewModel : ViewModel() {
         Log.d("abcabcab", "setDeliveryYN: ${selectedDiary.value!!.deliveryYN}")
     }
 
-    fun setSelectedDate(date: String){
-//        _selectedDate.value = date
-        _selectedDiary.value!!.date = date
+    fun setSelectedDate(date: String?){
+        _selectedDate.value = date ?: null
+//        _selectedDiary.value!!.date = date
     }
     fun setDiaryTitle(title: String){
         _selectedDiary.value!!.title = title

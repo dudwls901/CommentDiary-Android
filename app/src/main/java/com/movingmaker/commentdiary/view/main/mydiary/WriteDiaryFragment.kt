@@ -23,6 +23,7 @@ import com.movingmaker.commentdiary.model.entity.Diary
 import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.util.DateConverter
+import com.movingmaker.commentdiary.view.main.MainActivity
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import kotlinx.coroutines.*
@@ -65,14 +66,20 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
         binding.lifecycleOwner = viewLifecycleOwner
         fragmentViewModel.setHasBottomNavi(false)
 
-        initViews()
+//        initViews()
         initToolbar()
-        changeViews()
         observeDatas()
         return binding.root
     }
 
     private fun observeDatas() = with(binding) {
+
+        fragmentViewModel.fragmentState.observe(viewLifecycleOwner){ curFragment->
+            if(curFragment=="writeDiary"){
+                initViews()
+            }
+        }
+
         //저장은 혼자 쓴 일기, 코멘트 일기 둘 다 가능
         myDiaryViewModel.responseSaveDiary.observe(viewLifecycleOwner){
             Log.d(TAG, "observeDatas: replaceobserve ${it.body()}")
@@ -242,12 +249,22 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
 
     private fun initViews() = with(binding) {
         Log.d("writeDiaryActivity", "initViews: myDiarViewModel.SaveOrEdit.value ${myDiaryViewModel.saveOrEdit.value}")
+        Log.d(TAG, "writediaryactivity initview: ${myDiaryViewModel.selectedDiary.value!!.date} ${myDiaryViewModel.selectedDate.value} ${myDiaryViewModel.selectedDiary.value!!.id} ${myDiaryViewModel.selectedDiary.value!!.content}")
+        Log.d(TAG, "initViews: ${DateConverter.getCodaToday()} ${DateConverter.ymdToDate(myDiaryViewModel.selectedDiary.value!!.date)}")
         //임시저장도 아니고 글이 아에 없는 경우만
         if (myDiaryViewModel.selectedDiary.value!!.id ==null && myDiaryViewModel.selectedDiary.value!!.content=="") {
-            //바텀시트
-            diaryTypeBottomSheet = SelectDiaryTypeBottomSheet(this@WriteDiaryFragment)
-            diaryTypeBottomSheet.show(parentFragmentManager, "selectDiaryBottomSheet")
-            diaryTypeBottomSheet.isCancelable = false
+            //오늘 날짜면 바텀시트로 선택
+            if(DateConverter.ymdToDate(myDiaryViewModel.selectedDiary.value!!.date) == DateConverter.getCodaToday()){
+                //바텀시트
+                diaryTypeBottomSheet = SelectDiaryTypeBottomSheet(this@WriteDiaryFragment)
+                diaryTypeBottomSheet.show(parentFragmentManager, "selectDiaryBottomSheet")
+                diaryTypeBottomSheet.isCancelable = false
+            }
+            //과거 날짜면 혼자 쓰는 일기만 가능
+            else{
+                myDiaryViewModel.setDeliveryYN('N')
+            }
+
         }
 
 
@@ -324,13 +341,22 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 }
             }
         }
-
+        changeViews()
     }
 
     private fun initToolbar() = with(binding){
         //뒤로가기
         backButton.setOnClickListener {
 //            parentFragmentManager.popBackStack()
+//            MainActivity.fragmentState.remove("writeDiary")
+//            val fragment = parentFragmentManager.findFragmentByTag("writeDiary")
+//            Log.d(TAG, "initToolbar: $fragment")
+//            parentFragmentManager.beginTransaction().apply{
+//                Log.d(TAG, "initToolbar: remove $fragment")
+//                fragment?.let { it -> remove(it) }
+//            }.commit()
+//
+
             fragmentViewModel.setFragmentState("myDiary")
         }
 

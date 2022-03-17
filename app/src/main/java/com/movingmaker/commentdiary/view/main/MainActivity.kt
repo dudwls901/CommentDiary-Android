@@ -42,7 +42,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     private val receivedDiaryViewModel: ReceivedDiaryViewModel by viewModels()
 
     private val fragmentMap = HashMap<String,Fragment>()
-    private val fragmentState = HashMap<String,Fragment>()
+
+    companion object{
+        val fragmentState = HashMap<String,Fragment>()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,7 +118,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             //처음 들어간 프래그먼트 추가
             if(fragmentState[showFragment]==null){
                 fragmentState[showFragment] = fragmentMap[showFragment]!!
-                add(binding.fragmentContainer.id,fragmentMap[showFragment]!!)
+                //writeDiary는 태그 넣기
+//                if(showFragment=="writeDiary"){
+//                    add(binding.fragmentContainer.id,fragmentMap[showFragment]!!, showFragment)
+//                }
+//                else{
+                    add(binding.fragmentContainer.id,fragmentMap[showFragment]!!)
+//                }
             }
             //현재 프래그먼트만 보여주고 나머진 다 hide
             for(fragment in fragmentState) {

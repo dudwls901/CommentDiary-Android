@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.R
@@ -29,7 +28,9 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-
+//todo fragment show됐을 때 캘린더 리프레쉬 시키기
+// 일기 작성하고 다시 메인 왔을 때 갱신이 안됨
+//일기 삭제했을 때 닷이 안 없어짐
 class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     override val TAG: String = CalendarWithDiaryFragment::class.java.simpleName
 
@@ -107,7 +108,19 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 //                Log.d(TAG, (it.body()?.result?.get(0)?.deliveryYN ?: " "))
 //                Log.d(TAG, it.body()?.result?.get(0)?.commentList?.isEmpty().toString())
                 myDiaryViewModel.setMonthDiaries(it.body()!!.result)
+                Log.d(TAG, "observeData: ${myDiaryViewModel.selectedDate.value}")
+                //다른 달로 이동했을 때
+                if(myDiaryViewModel.selectedDate.value == null){
+                    checkSelectedDate(null)
+                }
+                else {
+                    val (y, m, d) = myDiaryViewModel.selectedDate.value!!.split('.').map { it.toInt() }
+                    checkSelectedDate(CalendarDay.from(y, m - 1, d))
+                    Log.d(TAG, "observeData: $y ${m-1} $d")
+                }
+
                 Log.d(TAG, "observeData: responeGetMonthDiary")
+
 //                Toast.makeText(requireContext(), "로그인 성공", Toast.LENGTH_SHORT).show()
             } else {
 //                Toast.makeText(requireContext(), "한 달 일기 불러오기 실패", Toast.LENGTH_SHORT).show()
@@ -230,8 +243,11 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     private fun setMonthCalendarDiaries(yearMonth: String) {
         Log.d(TAG, "calendar: yearmonth : $yearMonth ")
         //월 변경 시 포커스 x
-        if (myDiaryViewModel.selectedDiary.value!!.date == "") {
-            checkSelectedDate(null)
+        if (myDiaryViewModel.selectedDate.value == "") {
+            myDiaryViewModel.setSelectedDate(DateConverter.ymdFormat(DateConverter.getCodaToday()))
+        }
+        else{
+            myDiaryViewModel.setSelectedDate(null)
         }
 //        binding.materialCalendarView.selectedDate = null
         //월 변경 시 해당 월의 일기 셋팅
@@ -245,6 +261,8 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     private fun checkSelectedDate(date: CalendarDay?) = with(binding) {
         Log.d(TAG, "checkSElectedDate: $date ")
         Log.d(TAG, "checkSelectedDate: ${myDiaryViewModel.selectedDiary.value}")
+//        materialCalendarView.currentDate = date
+            materialCalendarView.selectedDate = date
         //달 이동한 경우 포커스 해제 or 냅두기?
         if (date == null) {
             readDiaryLayout.isVisible = false
