@@ -110,7 +110,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                 Log.d(TAG, "observeData: responeGetMonthDiary")
 //                Toast.makeText(requireContext(), "로그인 성공", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(requireContext(), "한 달 일기 불러오기 실패", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(requireContext(), "한 달 일기 불러오기 실패", Toast.LENGTH_SHORT).show()
             }
         }
         myDiaryViewModel.aloneDiary.observe(viewLifecycleOwner) {

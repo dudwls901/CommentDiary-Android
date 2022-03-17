@@ -84,14 +84,14 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                 Log.d(TAG, it.body()?.result?.accessToken ?: "no")
                 Log.d(TAG, it.body()?.result?.refreshToken ?: "no")
                 Log.d(TAG, it.body()?.result?.accessTokenExpiresIn.toString())
-                Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
 
                 val accessToken = it.body()?.result?.accessToken
                 val refreshToken = it.body()?.result?.refreshToken
                 val accessTokenExpiresIn = it.body()?.result?.accessTokenExpiresIn
 
                 if(accessToken == null || refreshToken == null || accessTokenExpiresIn == null){
-                    Toast.makeText(this, "토큰 저장 실패", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this, "토큰 저장 실패", Toast.LENGTH_SHORT).show()
                 }
                 else{
                     CodaApplication.getInstance().getDataStore().insertAuth(accessToken, refreshToken, accessTokenExpiresIn)
@@ -105,7 +105,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                 })
             } else {
                 onboardingViewModel.setLoginCorrect(false)
-                Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -118,12 +118,12 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
                 Log.d("성공",message + " " + code)
-                Toast.makeText(this, "회원가입 성공" + it.body(), Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "회원가입 성공" + it.body(), Toast.LENGTH_SHORT).show()
                 onboardingViewModel.setCurrentFragment("signUpSuccess")
 
             } else {
                 Log.d("실패",message + " " + code)
-                Toast.makeText(this, "회원가입 실패", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "회원가입 실패", Toast.LENGTH_SHORT).show()
             }
         }
 

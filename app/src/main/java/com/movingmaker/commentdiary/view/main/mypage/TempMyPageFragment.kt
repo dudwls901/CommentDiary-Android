@@ -73,7 +73,7 @@ class TempMyPageFragment: BaseFragment(), CoroutineScope {
                     Log.d(TAG, it.isSuccessful.toString())
                     Log.d(TAG, it.body()?.code.toString())
                     Log.d(TAG, it.body()?.message.toString())
-                    Toast.makeText(requireContext(), "회원 탈퇴 실패", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(requireContext(), "회원 탈퇴 실패", Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -91,7 +91,7 @@ class TempMyPageFragment: BaseFragment(), CoroutineScope {
                     Log.d(TAG, it.isSuccessful.toString())
                     Log.d(TAG, it.body()?.code.toString())
                     Log.d(TAG, it.body()?.message.toString())
-                    Toast.makeText(requireContext(), "로그아웃 실패", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(requireContext(), "로그아웃 실패", Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -105,12 +105,12 @@ class TempMyPageFragment: BaseFragment(), CoroutineScope {
                     Log.d(TAG, it.isSuccessful.toString())
                     Log.d(TAG, it.body()?.code.toString())
                     Log.d(TAG, it.body()?.message.toString())
-                    Toast.makeText(requireContext(), "비밀번호 변경 성공!!!!!", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(requireContext(), "비밀번호 변경 성공!!!!!", Toast.LENGTH_SHORT).show()
                 } else {
                     Log.d(TAG, it.isSuccessful.toString())
                     Log.d(TAG, it.body()?.code.toString())
                     Log.d(TAG, it.body()?.message.toString())
-                    Toast.makeText(requireContext(), "비밀번호 변경 실패", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(requireContext(), "비밀번호 변경 실패", Toast.LENGTH_SHORT).show()
                 }
 
             }
