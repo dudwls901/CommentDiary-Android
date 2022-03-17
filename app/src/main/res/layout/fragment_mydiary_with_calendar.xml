@@ -173,7 +173,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="22dp"
                         android:layout_marginTop="16dp"
-                        android:layout_marginBottom="1dp"
                         android:text="@{myDiaryviewModel.dateDiaryText}"
                         style="@style/BHeadline2"
                         android:textColor="@color/pure_orange"
@@ -185,8 +184,9 @@
                         android:id="@+id/diaryHeadTextView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginHorizontal="22dp"
                         android:text="@{myDiaryviewModel.selectedDiary.title}"
-                        android:textSize="18sp"
                         style="@style/BSubheadline"
                         android:maxLines="2"
                         android:ellipsize="end"
@@ -199,7 +199,7 @@
                         android:id="@+id/diaryDetailLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="14dp"
                         android:layout_marginEnd="5dp"
                         android:orientation="horizontal"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -208,11 +208,10 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="24dp"
-                            android:fontFamily="@font/roboto_medium"
                             android:gravity="center"
                             android:text="@string/show_all"
-                            android:textColor="@color/text_dark_brown"
-                            android:textSize="12sp" />
+                            style="@style/MCaption3"
+                            android:textColor="@color/text_dark_brown" />
 
                         <ImageView
                             android:layout_width="wrap_content"
