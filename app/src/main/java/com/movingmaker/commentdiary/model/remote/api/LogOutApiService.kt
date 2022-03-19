@@ -10,6 +10,6 @@ import retrofit2.http.PATCH
 
 
 interface LogOutApiService {
-    @DELETE(Url.SIGN + Url.LOG_OUT)
+    @DELETE(Url.MEMBERS + Url.LOG_OUT)
     suspend fun logOut(): Response<IsSuccessResponse>
 }
