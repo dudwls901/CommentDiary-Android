@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/drawable-v24/background_ivory_radius_15.xml" value="0.1005" />
         <entry key="app/src/main/res/drawable-v24/background_ivory_radius_4.xml" value="0.207" />
         <entry key="app/src/main/res/drawable-v24/background_pure_green_radius_15.xml" value="0.1385" />
+        <entry key="app/src/main/res/drawable-v24/background_pure_orange_radius_10.xml" value="0.2315" />
         <entry key="app/src/main/res/drawable-v24/bottom_ic_mydiary.xml" value="0.126" />
         <entry key="app/src/main/res/drawable-v24/bottom_ic_received.xml" value="0.126" />
         <entry key="app/src/main/res/drawable-v24/date_background_circle.xml" value="0.153" />
@@ -29,20 +30,24 @@
         <entry key="app/src/main/res/drawable/background_ivory_radius_10.xml" value="0.116" />
         <entry key="app/src/main/res/drawable/background_ivory_radius_top_10.xml" value="0.1495" />
         <entry key="app/src/main/res/drawable/background_ivory_test.xml" value="0.1005" />
+        <entry key="app/src/main/res/drawable/background_light_brown_radius_10.xml" value="0.2315" />
         <entry key="app/src/main/res/drawable/background_light_brown_radius_20.xml" value="0.215" />
         <entry key="app/src/main/res/drawable/background_light_brown_radius_30.xml" value="0.207" />
         <entry key="app/src/main/res/drawable/background_light_brown_radius_59.xml" value="0.1315" />
         <entry key="app/src/main/res/drawable/background_light_brown_radius_bottom_10.xml" value="0.1165" />
+        <entry key="app/src/main/res/drawable/background_parent_border_radius_20.xml" value="0.1005" />
         <entry key="app/src/main/res/drawable/background_pure_green_radius_20.xml" value="0.1315" />
         <entry key="app/src/main/res/drawable/background_pure_green_radius_30.xml" value="0.215" />
         <entry key="app/src/main/res/drawable/background_pure_green_radius_bottom_10.xml" value="0.19" />
         <entry key="app/src/main/res/drawable/background_pure_green_radius_top_10.xml" value="0.116" />
+        <entry key="app/src/main/res/drawable/background_tap_color_radius_10.xml" value="0.2315" />
         <entry key="app/src/main/res/drawable/bottom_brown_border.xml" value="0.1085" />
         <entry key="app/src/main/res/drawable/bottom_ic_gather.xml" value="0.126" />
         <entry key="app/src/main/res/drawable/bottom_ic_myapge.xml" value="0.126" />
         <entry key="app/src/main/res/drawable/bottom_text_color.xml" value="0.126" />
         <entry key="app/src/main/res/drawable/button_light_brown_radius_30.xml" value="0.1065" />
         <entry key="app/src/main/res/drawable/calendar_with_diary_button_edge.xml" value="0.166" />
+        <entry key="app/src/main/res/drawable/ic_arrow_down.xml" value="0.2315" />
         <entry key="app/src/main/res/drawable/ic_baseline_chevron_left_24.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.179" />
         <entry key="app/src/main/res/drawable/ic_baseline_done_outline_24.xml" value="0.166" />
@@ -79,6 +84,8 @@
         <entry key="app/src/main/res/drawable/onboarding_intro_indicator_radius.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/onboarding_large_button_radius_107.xml" value="0.1085" />
         <entry key="app/src/main/res/drawable/save_large_button_radius_42.xml" value="0.1085" />
+        <entry key="app/src/main/res/drawable/seekbar_background.xml" value="0.2315" />
+        <entry key="app/src/main/res/drawable/seekbar_thumb.xml" value="0.2315" />
         <entry key="app/src/main/res/drawable/splash_background.xml" value="0.239" />
         <entry key="app/src/main/res/font/roboto.xml" value="0.22685185185185186" />
         <entry key="app/src/main/res/font/roboto_bold.xml" value="0.18055555555555555" />
@@ -112,7 +119,12 @@
         <entry key="app/src/main/res/layout/fragment_mydiary_editdiary.xml" value="0.1388101983002833" />
         <entry key="app/src/main/res/layout/fragment_mydiary_with_calendar.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_mydiary_writediary.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_mypage.xml" value="0.19791666666666666" />
+        <entry key="app/src/main/res/layout/fragment_mypage.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_mypage_logout.xml" value="0.11271529888551166" />
+        <entry key="app/src/main/res/layout/fragment_mypage_myaccount.xml" value="0.11271529888551166" />
+        <entry key="app/src/main/res/layout/fragment_mypage_sended_comment_list.xml" value="0.11271529888551166" />
+        <entry key="app/src/main/res/layout/fragment_mypage_signout.xml" value="0.11271529888551166" />
+        <entry key="app/src/main/res/layout/fragment_mypage_terms.xml" value="0.11271529888551166" />
         <entry key="app/src/main/res/layout/fragment_onboarding_find_password.xml" value="0.20969202898550723" />
         <entry key="app/src/main/res/layout/fragment_onboarding_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_onboarding_login1.xml" value="0.2640625" />

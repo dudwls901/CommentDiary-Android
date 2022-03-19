@@ -4,6 +4,7 @@ import android.util.Log
 import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
+import com.movingmaker.commentdiary.model.remote.response.MyPageResponse
 import retrofit2.Response
 
 class MyPageRepository {
@@ -21,5 +22,10 @@ class MyPageRepository {
     suspend fun changePassword(changePasswordRequest: ChangePasswordRequest): Response<IsSuccessResponse>{
         Log.d(TAG, "changePassword: ")
         return RetrofitClient.myPageApiService.changePassword(changePasswordRequest)
+    }
+
+    suspend fun getMyPage(): Response<MyPageResponse>{
+        Log.d(TAG, "getMyPage: 불린겨 뭐여?????????????")
+        return RetrofitClient.myPageApiService.getMyPage()
     }
 }

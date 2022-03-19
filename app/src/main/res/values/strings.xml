@@ -92,6 +92,14 @@
     <string name="comment_write_limit">%s/30</string>
     <string name="send_comment_notice">코멘트를 전송합니다.\n 전송 후에는 수정 및 삭제가 어렵습니다.\n 전송하시겠어요?</string>
     <string name="report_content">신고 사유를 자세히 작성해주세요.\n사실과 다를 경우 이용 제재를\n받을 수 있습니다.</string>
+    <string name="mypage">마이페이지</string>
+    <string name="my_temperature">나의 온도</string>
+    <string name="temperature_notice">보낸 코멘트가 \'좋아요\'를 받을 때 온도가 채워집니다.</string>
+    <string name="my_account">내 계정</string>
+    <string name="sended_comment">보낸 코멘트</string>
+    <string name="push_alarm">푸시알림</string>
+    <string name="terms_and_policy">약관 및 정책</string>
+    <string name="temperature_thumb">temperature thumb</string>
     <string-array name="custom_weekdays">
         <item>일</item>
         <item>월</item>
