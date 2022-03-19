@@ -118,7 +118,7 @@
         <entry key="app/src/main/res/layout/fragment_onboarding_login1.xml" value="0.2640625" />
         <entry key="app/src/main/res/layout/fragment_onboarding_sign_up.xml" value="0.2753623188405797" />
         <entry key="app/src/main/res/layout/fragment_onboarding_sign_up_success.xml" value="0.2391304347826087" />
-        <entry key="app/src/main/res/layout/fragment_receiveddiary.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_receiveddiary.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_receiveddiary_a.xml" value="0.2223731884057971" />
         <entry key="app/src/main/res/layout/fragment_writediary_calendar_with_diary.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_writediary_calendarwithdiary.xml" value="0.2223731884057971" />
