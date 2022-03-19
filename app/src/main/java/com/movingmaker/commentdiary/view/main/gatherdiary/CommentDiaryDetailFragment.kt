@@ -46,6 +46,7 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope {
         savedInstanceState: Bundle?
     ): View {
         binding.myDiaryviewModel = myDiaryViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 //        Log.d(TAG, "onCreateView saveOrEdit: ${myDiaryViewModel.saveOrEdit.value}")
         observeDatas()
         initViews()
@@ -63,6 +64,7 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope {
             //        val minusTwoDay = codaToday.minusDays(2)
 //        Log.d(TAG, "initViews: ${selectedDate} ${myDiaryViewModel.selectedDiary.value!!.commentList} ${myDiaryViewModel.selectedDiary.value!!.commentList!!.size}")
             Log.d(TAG, "initViews: detail mydiary ${myDiaryViewModel.selectedDiary.value!!.commentList?.isEmpty()}")
+            Log.d(TAG, "observeDatas detail: ${myDiaryViewModel.selectedDiary.value}")
             //코멘트 없는 경우
             if(diary.commentList?.isEmpty()==true || diary.commentList==null){
 

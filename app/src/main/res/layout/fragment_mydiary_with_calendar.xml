@@ -190,7 +190,7 @@
                         style="@style/BSubheadline"
                         android:maxLines="2"
                         android:ellipsize="end"
-                        app:layout_constraintStart_toStartOf="@id/diaryDateTextView"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/diaryDateTextView"
                         tools:text="!ㅊㄹ야마르애ㅑㅁ르ㅑㅐㅇ머ㅡ랴ㅐ으ㅑㅐㅁ르ㅑㅐ알머이ㅏ럼어ㅏㅣ크랴ㅐ으ㅑㅐㅂ러ㅑㅐ어베ㅑ9러야ㅐㅔ버랴ㅐㅓ뱌ㅐ러ㅑㅐㅇ버랴ㅐㅇ버ㅑㅐ러얍3ㅐ러ㅑ버ㅑ량버랴ㅐ어ㅑㅂㄹ" />

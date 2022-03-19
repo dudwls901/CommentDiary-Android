@@ -30,7 +30,7 @@ android:paddingBottom="9dp">
 <TextView
     android:id="@+id/commentContentTextView"
     style="@style/RCaption"
-    android:layout_width="wrap_content"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="24dp"
     android:layout_marginTop="8dp"
@@ -38,6 +38,7 @@ android:paddingBottom="9dp">
     android:text="@{comment.content}"
     android:textColor="@color/text_black"
     app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@id/commentHeaderTextView" />
 
 <ImageView
