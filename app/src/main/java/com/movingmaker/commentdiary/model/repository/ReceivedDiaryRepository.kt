@@ -2,8 +2,7 @@ package com.movingmaker.commentdiary.model.repository
 
 import android.util.Log
 import com.movingmaker.commentdiary.model.remote.RetrofitClient
-import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
-import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
+import com.movingmaker.commentdiary.model.remote.request.*
 import com.movingmaker.commentdiary.model.remote.response.DiaryListResponse
 import com.movingmaker.commentdiary.model.remote.response.DiaryResponse
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
@@ -20,6 +19,16 @@ class ReceivedDiaryRepository {
     suspend fun getReceivedDiary(date: String): Response<DiaryResponse>{
         Log.d(TAG, "getReceived: 불린겨 뭐여?????????????")
         return RetrofitClient.receivedDiaryApiService.getReceivedDiary(date)
+    }
+
+    suspend fun saveComment(saveCommentRequest: SaveCommentRequest): Response<IsSuccessResponse>{
+        Log.d(TAG, "saveComment: 불린겨 뭐여?????????????")
+        return RetrofitClient.receivedDiaryApiService.saveComment(saveCommentRequest)
+    }
+
+    suspend fun reportDiary(reportDiaryRequest: ReportDiaryRequest): Response<IsSuccessResponse>{
+        Log.d(TAG, "reportDiary: 불린겨 뭐여?????????????")
+        return RetrofitClient.receivedDiaryApiService.reportDiary(reportDiaryRequest)
     }
 
 }

@@ -7,6 +7,8 @@ data class Comment(
     val id: Long,
     @SerializedName(value = "content")
     val content: String,
+    @SerializedName(value ="date")
+    val date: String,
     @SerializedName(value = "like")
     val like: Boolean
 )

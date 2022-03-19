@@ -9,9 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.model.entity.Comment
 import com.movingmaker.commentdiary.model.entity.Diary
 import com.movingmaker.commentdiary.model.entity.DiaryId
-import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
-import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
-import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
+import com.movingmaker.commentdiary.model.remote.request.*
 import com.movingmaker.commentdiary.model.remote.response.DiaryListResponse
 import com.movingmaker.commentdiary.model.remote.response.DiaryResponse
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
@@ -27,12 +25,22 @@ import retrofit2.Response
 import java.util.*
 
 class ReceivedDiaryViewModel : ViewModel() {
-    private var _responseGetReceivedDiary = MutableLiveData<Response<DiaryResponse>>()
+
     private var _receivedDiary = MutableLiveData<Diary>()
     private var _commentTextCount = MutableLiveData<Int>()
 
+    private var _responseGetReceivedDiary = MutableLiveData<Response<DiaryResponse>>()
+    private var _responseSaveComment = MutableLiveData<Response<IsSuccessResponse>>()
+    private var _responseReportDiary = MutableLiveData<Response<IsSuccessResponse>>()
+
     val responseGetReceivedDiary: LiveData<Response<DiaryResponse>>
         get() = _responseGetReceivedDiary
+
+    val responseSaveComment: LiveData<Response<IsSuccessResponse>>
+        get() = _responseSaveComment
+
+    val responseReportDiary: LiveData<Response<IsSuccessResponse>>
+        get() = _responseReportDiary
 
     val receivedDiary: LiveData<Diary>
         get() = _receivedDiary
@@ -55,9 +63,37 @@ class ReceivedDiaryViewModel : ViewModel() {
     //오늘 날짜로 받은 일기 조회
     suspend fun setResponseGetReceivedDiary() {
         val date = DateConverter.ymdFormat(DateConverter.getCodaToday())
-        Log.d("receivedDiary", "setResponseGetMonthDiary $date ")
+        Log.d("receivedDiary", "setResponseGetReceivedDiary $date ")
         withContext(viewModelScope.coroutineContext) {
             _responseGetReceivedDiary.value = ReceivedDiaryRepository.INSTANCE.getReceivedDiary(date)
         }
     }
+
+    //코멘트 저장
+    suspend fun setResponseSaveComment(content: String){
+        val date = DateConverter.ymdFormat(DateConverter.getCodaToday())
+        Log.d("saveComment", "setResponseSaveComment $date ")
+        withContext(viewModelScope.coroutineContext){
+            _responseSaveComment.value = ReceivedDiaryRepository.INSTANCE.saveComment(
+                SaveCommentRequest(
+                    diaryId = receivedDiary.value!!.id!!,
+                    date = date,
+                    content = content
+                )
+            )
+        }
+    }
+
+    //일기 신고
+    suspend fun setResponseReportDiary(content: String) {
+        withContext(viewModelScope.coroutineContext) {
+            _responseReportDiary.value = ReceivedDiaryRepository.INSTANCE.reportDiary(
+                ReportDiaryRequest(
+                    id = receivedDiary.value!!.id!!,
+                    content = content
+                )
+            )
+        }
+    }
+
 }
