@@ -6,7 +6,9 @@
     tools:context="com.movingmaker.commentdiary.view.main.MainActivity">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="fragmentviewModel"
             type="com.movingmaker.commentdiary.viewmodel.FragmentViewModel" />
@@ -27,12 +29,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:visibility="@{fragmentviewModel.hasBottomNavi ? View.VISIBLE : View.GONE}"
             android:id="@+id/bottomNavigationView"
             android:layout_width="0dp"
-            app:itemTextColor="@drawable/bottom_text_color"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:background="@color/bottomnavigation_background"
+            android:visibility="@{fragmentviewModel.hasBottomNavi ? View.VISIBLE : View.GONE}"
+            app:itemIconSize="20dp"
+            app:itemTextAppearanceActive="@dimen/design_bottom_navigation_active_text_size"
+            app:itemTextAppearanceInactive="@dimen/design_bottom_navigation_text_size"
+            app:itemTextColor="@drawable/bottom_text_color"
             app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
