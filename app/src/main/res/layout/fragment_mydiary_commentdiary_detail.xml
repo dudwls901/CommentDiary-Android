@@ -15,10 +15,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="2dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
+            android:layout_marginStart="11dp"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -39,6 +39,7 @@
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
+            android:layout_marginHorizontal="16dp"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -54,7 +55,6 @@
                     android:id="@+id/diaryLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:background="@drawable/background_ivory_radius_10"
                     android:paddingHorizontal="24dp"
                     android:paddingVertical="15dp"
@@ -122,7 +122,7 @@
                     android:id="@+id/sendCompleteTextView"
                     style="@style/BCaption"
                     android:layout_width="0dp"
-                    android:layout_height="28dp"
+                    android:layout_height="32dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/background_light_brown_radius_59"
@@ -144,6 +144,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/sendCompleteTextView"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="150dp"
                     tools:visibility="visible" />
 
                 <TextView
@@ -165,6 +167,7 @@
                     android:layout_height="match_parent"
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never"
+                    android:layout_marginTop="8dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
