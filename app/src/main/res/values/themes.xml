@@ -142,10 +142,16 @@
     </style>
 
     <style name="RCaption2">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">11sp</item>
         <item name="android:lineSpacingExtra">29sp</item>
+    </style>
+
+    <style name="RCaption3">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">9sp</item>
     </style>
 
     <style name="customNumberPicker">
