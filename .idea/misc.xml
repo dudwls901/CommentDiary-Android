@@ -21,6 +21,7 @@
         <entry key="app/src/main/res/drawable-xhdpi/background_light_brown_radius_30.xml" value="0.126" />
         <entry key="app/src/main/res/drawable-xxhdpi/background_beige_radius_10.xml" value="0.224" />
         <entry key="app/src/main/res/drawable-xxxhdpi/background_ivory_border_radius_10.xml" value="0.2065" />
+        <entry key="app/src/main/res/drawable/background_beige_left_top_border_light_brown_1.xml" value="0.162" />
         <entry key="app/src/main/res/drawable/background_beige_radius_10.xml" value="0.2045" />
         <entry key="app/src/main/res/drawable/background_beige_top_border_1.xml" value="0.2045" />
         <entry key="app/src/main/res/drawable/background_brand_orange_radius_bottom_10.xml" value="0.1065" />
@@ -28,6 +29,8 @@
         <entry key="app/src/main/res/drawable/background_brown_radius_59.xml" value="0.1495" />
         <entry key="app/src/main/res/drawable/background_ivory_circle.xml" value="0.1315" />
         <entry key="app/src/main/res/drawable/background_ivory_radius_10.xml" value="0.116" />
+        <entry key="app/src/main/res/drawable/background_ivory_radius_15.xml" value="0.162" />
+        <entry key="app/src/main/res/drawable/background_ivory_radius_15_border_brown_1.xml" value="0.162" />
         <entry key="app/src/main/res/drawable/background_ivory_radius_top_10.xml" value="0.1495" />
         <entry key="app/src/main/res/drawable/background_ivory_test.xml" value="0.1005" />
         <entry key="app/src/main/res/drawable/background_light_brown_radius_10.xml" value="0.2315" />
@@ -130,7 +133,7 @@
         <entry key="app/src/main/res/layout/fragment_onboarding_login1.xml" value="0.2640625" />
         <entry key="app/src/main/res/layout/fragment_onboarding_sign_up.xml" value="0.2753623188405797" />
         <entry key="app/src/main/res/layout/fragment_onboarding_sign_up_success.xml" value="0.2391304347826087" />
-        <entry key="app/src/main/res/layout/fragment_receiveddiary.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_receiveddiary.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_receiveddiary_a.xml" value="0.2223731884057971" />
         <entry key="app/src/main/res/layout/fragment_writediary_calendar_with_diary.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_writediary_calendarwithdiary.xml" value="0.2223731884057971" />

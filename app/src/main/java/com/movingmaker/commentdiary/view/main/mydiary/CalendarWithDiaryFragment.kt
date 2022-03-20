@@ -31,6 +31,10 @@ import kotlin.coroutines.CoroutineContext
 //todo fragment show됐을 때 캘린더 리프레쉬 시키기
 // 일기 작성하고 다시 메인 왔을 때 갱신이 안됨
 //일기 삭제했을 때 닷이 안 없어짐
+//todo 작성하기로 가는 탭이 없음
+//todo 이전날짜도 마찬가지고 전체보기 누르면 작성하기
+//todo 멘트도 바꿔주기
+
 class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     override val TAG: String = CalendarWithDiaryFragment::class.java.simpleName
 

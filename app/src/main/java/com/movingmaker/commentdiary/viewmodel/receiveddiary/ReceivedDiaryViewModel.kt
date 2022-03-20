@@ -9,11 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.model.entity.Comment
 import com.movingmaker.commentdiary.model.entity.Diary
 import com.movingmaker.commentdiary.model.entity.DiaryId
+import com.movingmaker.commentdiary.model.entity.ReceivedDiary
 import com.movingmaker.commentdiary.model.remote.request.*
-import com.movingmaker.commentdiary.model.remote.response.DiaryListResponse
-import com.movingmaker.commentdiary.model.remote.response.DiaryResponse
-import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.model.remote.response.SaveDiaryResponse
+import com.movingmaker.commentdiary.model.remote.response.*
 import com.movingmaker.commentdiary.model.repository.GatherDiaryRepository
 import com.movingmaker.commentdiary.model.repository.MyDiaryRepository
 import com.movingmaker.commentdiary.model.repository.MyPageRepository
@@ -26,14 +24,14 @@ import java.util.*
 
 class ReceivedDiaryViewModel : ViewModel() {
 
-    private var _receivedDiary = MutableLiveData<Diary>()
+    private var _receivedDiary = MutableLiveData<ReceivedDiary>()
     private var _commentTextCount = MutableLiveData<Int>()
 
-    private var _responseGetReceivedDiary = MutableLiveData<Response<DiaryResponse>>()
+    private var _responseGetReceivedDiary = MutableLiveData<Response<ReceivedDiaryResponse>>()
     private var _responseSaveComment = MutableLiveData<Response<IsSuccessResponse>>()
     private var _responseReportDiary = MutableLiveData<Response<IsSuccessResponse>>()
 
-    val responseGetReceivedDiary: LiveData<Response<DiaryResponse>>
+    val responseGetReceivedDiary: LiveData<Response<ReceivedDiaryResponse>>
         get() = _responseGetReceivedDiary
 
     val responseSaveComment: LiveData<Response<IsSuccessResponse>>
@@ -42,7 +40,7 @@ class ReceivedDiaryViewModel : ViewModel() {
     val responseReportDiary: LiveData<Response<IsSuccessResponse>>
         get() = _responseReportDiary
 
-    val receivedDiary: LiveData<Diary>
+    val receivedDiary: LiveData<ReceivedDiary>
         get() = _receivedDiary
 
     val commentTextCount: LiveData<Int>
@@ -52,7 +50,7 @@ class ReceivedDiaryViewModel : ViewModel() {
         _commentTextCount.value = 0
     }
 
-    fun setReceivedDiary(diary: Diary){
+    fun setReceivedDiary(diary: ReceivedDiary){
         _receivedDiary.value =diary
     }
 
@@ -73,10 +71,11 @@ class ReceivedDiaryViewModel : ViewModel() {
     suspend fun setResponseSaveComment(content: String){
         val date = DateConverter.ymdFormat(DateConverter.getCodaToday())
         Log.d("saveComment", "setResponseSaveComment $date ")
+        Log.d("saveComment", "setResponseSaveComment:  ${receivedDiary.value!!.id}")
         withContext(viewModelScope.coroutineContext){
             _responseSaveComment.value = ReceivedDiaryRepository.INSTANCE.saveComment(
                 SaveCommentRequest(
-                    diaryId = receivedDiary.value!!.id!!,
+                    id = receivedDiary.value!!.id!!,
                     date = date,
                     content = content
                 )
@@ -87,6 +86,7 @@ class ReceivedDiaryViewModel : ViewModel() {
     //일기 신고
     suspend fun setResponseReportDiary(content: String) {
         withContext(viewModelScope.coroutineContext) {
+            Log.d("receivedDairy", "ob receivedDiary ${receivedDiary.value}")
             _responseReportDiary.value = ReceivedDiaryRepository.INSTANCE.reportDiary(
                 ReportDiaryRequest(
                     id = receivedDiary.value!!.id!!,

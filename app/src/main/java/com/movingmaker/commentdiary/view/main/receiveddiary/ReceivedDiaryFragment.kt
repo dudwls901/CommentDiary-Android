@@ -16,12 +16,14 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentReceiveddiaryBinding
+import com.movingmaker.commentdiary.model.entity.ReceivedDiary
 import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
@@ -75,28 +77,34 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
                 Log.d(TAG, "observeDatas: ${it.body()!!.result}")
                 it.body()?.let { response ->
                     receivedDiaryViewModel.setReceivedDiary(response.result)
+                    Log.d(TAG, "ob receivedDiary ${receivedDiaryViewModel.receivedDiary.value}")
                     binding.commentLayout.isVisible = true
                     binding.diaryLayout.isVisible = true
                     binding.noReceivedDiaryYet.isVisible = false
                     //내가 쓴 코멘트가 있는 경우
-                    if (response.result.commentList != null) {
+                    Log.d(TAG, "ob receivedDIarajiremioar ${response.result.myComment!!.isEmpty()}")
+                    if (response.result.myComment.isNotEmpty()) {
                         binding.sendCommentButton.background = ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.background_ivory_radius_15
+                            R.drawable.background_ivory_radius_15_border_brown_1
                         )
                         binding.sendCommentButton.text = getString(R.string.diary_send_complete)
-                        binding.sendCommentButton.setTextColor(R.color.text_brown)
+                        binding.sendCommentButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.text_brown))
                         binding.sendCommentButton.isEnabled = false
-                        binding.commentEditTextView.setText(response.result.commentList[0].content)
+//                        if(response.result.myComment.isEmpty()){
+//                            binding.commentEditTextView.setText("")
+//                        }
+//                        else {
+                            binding.commentEditTextView.setText(response.result.myComment[0].content)
+//                        }
                         binding.commentEditTextView.isEnabled = false
                     } else {
                         binding.sendCommentButton.background = ContextCompat.getDrawable(
                             requireContext(),
                             R.drawable.background_pure_green_radius_15
                         )
-                        binding.sendCommentButton.text = getString(R.string.diary_send_complete)
-                        binding.sendCommentButton.setTextColor(R.color.background_ivory)
-                        binding.sendCommentButton.isEnabled = true
+                        binding.sendCommentButton.text = getString(R.string.send_text1)
+                        binding.sendCommentButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.background_ivory))
                         binding.commentEditTextView.text = null
                         binding.commentEditTextView.isEnabled = true
 
@@ -126,6 +134,16 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
 
         receivedDiaryViewModel.responseReportDiary.observe(viewLifecycleOwner){ response ->
             if(response.isSuccessful){
+                receivedDiaryViewModel.setReceivedDiary(ReceivedDiary(
+                    null,
+                    "",
+                    "",
+                    "",
+                    ' ',
+                    ' ',
+                    null
+                ))
+                initViews()
                 Toast.makeText(requireContext(), "신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
             }
             //todo 신고 실패 처리
