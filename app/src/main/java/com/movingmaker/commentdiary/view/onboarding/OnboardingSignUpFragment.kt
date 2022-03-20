@@ -110,20 +110,18 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
             )
         }
         passwordEditText.addTextChangedListener {
-            var hasUpper = false
-            var hasLower = false
+            var hasLetter = false
             var hasNum = false
             var hasSign = false
             for (ch in passwordEditText.text.toString()) {
                 when {
-                    ch.isUpperCase() -> hasUpper = true
-                    ch.isLowerCase() -> hasLower = true
+                    ch.isLetter() -> hasLetter = true
                     ch.isDigit() -> hasNum = true
                     else -> hasSign = true
                 }
             }
             val isPasswordCorrect =
-                !(passwordEditText.text.isNotEmpty() && (passwordEditText.text.length < 8 || !hasUpper || !hasLower || !hasNum || !hasSign))
+                !(passwordEditText.text.isNotEmpty() && (passwordEditText.text.length < 8 || !hasLetter || !hasNum || !hasSign || passwordEditText.text.length>16))
             val isPasswordCheckCorrect =
                 !(passwordCheckEditText.text.isNotEmpty() && (passwordEditText.text.toString() != passwordCheckEditText.text.toString()))
 

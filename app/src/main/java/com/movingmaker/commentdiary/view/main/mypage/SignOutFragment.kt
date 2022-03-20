@@ -11,6 +11,7 @@ import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
 import com.movingmaker.commentdiary.databinding.FragmentMypageMyaccountBinding
+import com.movingmaker.commentdiary.databinding.FragmentMypageSignoutBinding
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
@@ -20,8 +21,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class MyAccountFragment: BaseFragment(), CoroutineScope {
-    override val TAG: String = MyAccountFragment::class.java.simpleName
+class SignOutFragment: BaseFragment(), CoroutineScope {
+    override val TAG: String = SignOutFragment::class.java.simpleName
 
     private val job = Job()
 
@@ -32,16 +33,16 @@ class MyAccountFragment: BaseFragment(), CoroutineScope {
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
 
     companion object{
-        fun newInstance() : MyAccountFragment {
-            return MyAccountFragment()
+        fun newInstance() : SignOutFragment {
+            return SignOutFragment()
         }
     }
 
-    private lateinit var binding: FragmentMypageMyaccountBinding
+    private lateinit var binding: FragmentMypageSignoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentMypageMyaccountBinding.inflate(layoutInflater)
+        binding = FragmentMypageSignoutBinding.inflate(layoutInflater)
 
     }
 
@@ -58,23 +59,23 @@ class MyAccountFragment: BaseFragment(), CoroutineScope {
     }
 
     private fun observeDatas(){
-//        binding.lifecycleOwner?.let { lifecycleOwner ->
-//            myPageViewModel.responseSignOut.observe(lifecycleOwner) {
-////                binding.loadingBar.isVisible = false
-//                if (it.isSuccessful) {
-//                    Log.d(TAG, it.isSuccessful.toString())
-//                    Log.d(TAG, it.body()?.code.toString())
-//                    Log.d(TAG, it.body()?.message.toString())
-//                    logOut()
-//                } else {
-//                    Log.d(TAG, it.isSuccessful.toString())
-//                    Log.d(TAG, it.body()?.code.toString())
-//                    Log.d(TAG, it.body()?.message.toString())
-////                    Toast.makeText(requireContext(), "회원 탈퇴 실패", Toast.LENGTH_SHORT).show()
-//                }
-//
-//            }
-//        }
+        binding.lifecycleOwner?.let { lifecycleOwner ->
+            myPageViewModel.responseSignOut.observe(lifecycleOwner) {
+//                binding.loadingBar.isVisible = false
+                if (it.isSuccessful) {
+                    Log.d(TAG, it.isSuccessful.toString())
+                    Log.d(TAG, it.body()?.code.toString())
+                    Log.d(TAG, it.body()?.message.toString())
+                    logOut()
+                } else {
+                    Log.d(TAG, it.isSuccessful.toString())
+                    Log.d(TAG, it.body()?.code.toString())
+                    Log.d(TAG, it.body()?.message.toString())
+//                    Toast.makeText(requireContext(), "회원 탈퇴 실패", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }
 
         binding.lifecycleOwner?.let { lifecycleOwner ->
             myPageViewModel.responseLogOut.observe(lifecycleOwner) {
@@ -117,24 +118,13 @@ class MyAccountFragment: BaseFragment(), CoroutineScope {
     }
 
     private fun initViews() = with(binding){
-//        signOutButton.setOnClickListener {
-//            launch(coroutineContext) {
-//                myPageViewModel.setResponseSignOut()
-//            }
-//        }
-        logoutLayout.setOnClickListener {
+        signOutButton.setOnClickListener {
             launch(coroutineContext) {
-                myPageViewModel.setResponseLogOut()
+                myPageViewModel.setResponseSignOut()
             }
         }
-        signOutLayout.setOnClickListener {
-            fragmentViewModel.setFragmentState("signOut")
-        }
-        changePasswordLayout.setOnClickListener {
-            fragmentViewModel.setFragmentState("changePassword")
-        }
         backButton.setOnClickListener {
-            fragmentViewModel.setFragmentState("myPage")
+            fragmentViewModel.setFragmentState("myAccount")
         }
     }
 

@@ -27,7 +27,7 @@
     <string name="onboarding_password_incorrect">작성 양식을 다시 한 번 확인해 주세요.</string>
     <string name="onboarding_password_check_incorrect">일치하지 않아요!</string>
     <string name="onboarding_password_check">비밀번호 확인</string>
-    <string name="onboarding_password_condition">대소문자, 숫자, 특수문자를 포함해 8~16자 작성해 주세요.</string>
+    <string name="onboarding_password_condition">영문자, 숫자, 특수문자를 포함해 8~16자 작성해 주세요.</string>
     <string name="onboarding_sign_up_agree_notice">회원가입 시 코다의 개인정보 취급 방침 및 이용 약관에 동의합니다.</string>
     <string name="onboarding_find_password_notice">코다 가입시 사용했던\n아이디(이메일)을 입력해 주세요.</string>
     <string name="onboarding_send_password">비밀번호 전송하기</string>
@@ -95,11 +95,20 @@
     <string name="mypage">마이페이지</string>
     <string name="my_temperature">나의 온도</string>
     <string name="temperature_notice">보낸 코멘트가 \'좋아요\'를 받을 때 온도가 채워집니다.</string>
-    <string name="my_account">내 계정</string>
     <string name="sended_comment">보낸 코멘트</string>
     <string name="push_alarm">푸시알림</string>
     <string name="terms_and_policy">약관 및 정책</string>
     <string name="temperature_thumb">temperature thumb</string>
+    <string name="my_account">내 계정</string>
+    <string name="logout">로그아웃</string>
+    <string name="signout">회원탈퇴</string>
+    <string name="signout_notice">탈퇴하시면 모든 일기와 코멘트가 삭제됩니다.\n삭제된 모든 글은 복구 할 수 없습니다.\n정말 탈퇴하시나요?</string>
+    <string name="do_signout">탈퇴하기</string>
+    <string name="policy">개인정보 처리 방침</string>
+    <string name="terms">이용 약관</string>
+    <string name="no_comment_write">아직 보낸 코멘트가 없어요.\n코멘트를 작성해주세요.</string>
+    <string name="change_password">비밀번호 변경</string>
+    <string name="change">변경하기</string>
     <string-array name="custom_weekdays">
         <item>일</item>
         <item>월</item>

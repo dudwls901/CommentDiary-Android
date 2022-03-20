@@ -12,7 +12,7 @@ import com.movingmaker.commentdiary.view.main.gatherdiary.DiaryListFragment
 import com.movingmaker.commentdiary.view.main.gatherdiary.CommentDiaryDetailFragment
 import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment
 import com.movingmaker.commentdiary.view.main.mydiary.WriteDiaryFragment
-import com.movingmaker.commentdiary.view.main.mypage.MyPageFragment
+import com.movingmaker.commentdiary.view.main.mypage.*
 import com.movingmaker.commentdiary.view.main.receiveddiary.ReceivedDiaryFragment
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.gatherdiary.GatherDiaryViewModel
@@ -72,7 +72,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         fragmentMap["myPage"] = MyPageFragment.newInstance()
         fragmentMap["writeDiary"] = WriteDiaryFragment.newInstance()
         fragmentMap["commentDiaryDetail"] = CommentDiaryDetailFragment.newInstance()
-
+        fragmentMap["myAccount"] = MyAccountFragment.newInstance()
+        fragmentMap["signOut"] = SignOutFragment.newInstance()
+        fragmentMap["terms"] = TermsFragment.newInstance()
+        fragmentMap["sendedCommentList"] = SendedCommentListFragment.newInstance()
+        fragmentMap["changePassword"] = ChangePasswordFragment.newInstance()
     }
 
 
@@ -85,7 +89,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     }
 
     private fun initViews(){
-
         initBottomNavigationView()
     }
 
@@ -152,6 +155,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
                     fragmentViewModel.setHasBottomNavi(false)
                 }
                 "commentDiaryDetail" -> {
+                    fragmentViewModel.setHasBottomNavi(false)
+                }
+                "myAccount"->{
+                    fragmentViewModel.setHasBottomNavi(false)
+                }
+                "signOut"->{
+                    fragmentViewModel.setHasBottomNavi(false)
+                }
+                "terms"->{
+                    fragmentViewModel.setHasBottomNavi(false)
+                }
+                "sendedCommentList"->{
+                    fragmentViewModel.setHasBottomNavi(false)
+                }
+                "changePassword"->{
                     fragmentViewModel.setHasBottomNavi(false)
                 }
             }

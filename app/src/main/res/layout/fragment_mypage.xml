@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -31,7 +31,6 @@
         <TextView
             android:id="@+id/emailTextView"
             style="@style/BCaption"
-            android:text="@{mypageviewmodel.myAccount}"
             android:layout_width="wrap_content"
             android:layout_height="26dp"
             android:layout_marginTop="7dp"
@@ -39,6 +38,7 @@
             android:gravity="center"
             android:paddingHorizontal="14dp"
             android:paddingVertical="0dp"
+            android:text="@{mypageviewmodel.myAccount}"
             android:textAlignment="center"
             android:textColor="@color/text_black"
             app:layout_constraintEnd_toEndOf="parent"
@@ -107,34 +107,36 @@
                 <TextView
                     style="@style/MCaption3"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:text="36.5"
+                    android:layout_height="16dp"
+                    android:text="@{mypageviewmodel.temperature.toString()}"
                     android:textColor="@color/text_brown"
                     app:layout_constraintBottom_toTopOf="@id/seekBarThumb"
                     app:layout_constraintEnd_toEndOf="@id/seekBarThumb"
-                    app:layout_constraintStart_toStartOf="@id/seekBarThumb" />
+                    app:layout_constraintStart_toStartOf="@id/seekBarThumb"
+                    tools:text="36.5" />
 
                 <ImageView
                     android:id="@+id/seekBarThumb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="-12dp"
-                    android:layout_marginBottom="14dp"
-                    android:background="@drawable/ic_arrow_down"
+                    android:layout_marginEnd="-2dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/ic_thumb"
+                    android:contentDescription="@string/temperature_thumb"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@id/temperatureBar"
-                    android:contentDescription="@string/temperature_thumb" />
+                    app:layout_constraintEnd_toEndOf="@id/temperatureBar" />
 
                 <View
                     android:id="@+id/temperatureBar"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="6dp"
-                    android:layout_gravity="center"
                     android:layout_marginHorizontal="6dp"
                     android:background="@drawable/background_pure_orange_radius_10"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -213,9 +215,35 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/myCommentLayout" />
+<!--todo 푸시알림-->
+<!--        <LinearLayout-->
+<!--            android:id="@+id/pushAlarmLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="56dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:orientation="vertical"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/line4">-->
+
+<!--            <TextView-->
+<!--                style="@style/RCaption"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="26dp"-->
+<!--                android:text="@string/push_alarm"-->
+<!--                android:textColor="@color/text_black" />-->
+<!--        </LinearLayout>-->
+
+<!--        <View-->
+<!--            android:id="@+id/line5"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:background="@color/text_light_brown"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/pushAlarmLayout" />-->
 
         <LinearLayout
-            android:id="@+id/pushAlarmLayout"
+            android:id="@+id/termsAndPolicyLayout"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:gravity="center_vertical"
@@ -227,35 +255,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="26dp"
-                android:text="@string/push_alarm"
-                android:textColor="@color/text_black" />
-        </LinearLayout>
-
-        <View
-            android:id="@+id/line5"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="@color/text_light_brown"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pushAlarmLayout" />
-
-        <LinearLayout
-            android:id="@+id/termsAndPolicyLayout"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/line5">
-
-            <TextView
-                style="@style/RCaption"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="26dp"
                 android:text="@string/terms_and_policy"
                 android:textColor="@color/text_black" />
         </LinearLayout>
+
         <View
             android:id="@+id/line6"
             android:layout_width="0dp"

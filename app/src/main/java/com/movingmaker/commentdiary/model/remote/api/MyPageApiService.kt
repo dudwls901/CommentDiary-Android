@@ -2,13 +2,11 @@ package com.movingmaker.commentdiary.model.remote.api
 
 import com.movingmaker.commentdiary.model.remote.Url
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
+import com.movingmaker.commentdiary.model.remote.response.CommentListResponse
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.model.remote.response.MyPageResponse
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.PATCH
+import retrofit2.http.*
 
 
 interface MyPageApiService {
@@ -22,4 +20,9 @@ interface MyPageApiService {
     @GET(Url.MEMBERS)
     suspend fun getMyPage(): Response<MyPageResponse>
 
+    @GET(Url.COMMENT+Url.ALL)
+    suspend fun getAllComment(): Response<CommentListResponse>
+    //날짜 조회 코멘트
+    @GET(Url.COMMENT)
+    suspend fun getMonthComment(@Query("date") date: String): Response<CommentListResponse>
 }

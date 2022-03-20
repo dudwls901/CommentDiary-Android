@@ -3,6 +3,7 @@ package com.movingmaker.commentdiary.model.repository
 import android.util.Log
 import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
+import com.movingmaker.commentdiary.model.remote.response.CommentListResponse
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.model.remote.response.MyPageResponse
 import retrofit2.Response
@@ -27,5 +28,14 @@ class MyPageRepository {
     suspend fun getMyPage(): Response<MyPageResponse>{
         Log.d(TAG, "getMyPage: 불린겨 뭐여?????????????")
         return RetrofitClient.myPageApiService.getMyPage()
+    }
+    suspend fun getAllComment(): Response<CommentListResponse>{
+        Log.d(TAG, "getAllComment: 불린겨 뭐여?????????????")
+        return RetrofitClient.myPageApiService.getAllComment()
+    }
+
+    suspend fun getMonthComment(date: String): Response<CommentListResponse>{
+        Log.d(TAG, "getMonthComment: 불린겨 뭐여?????????????")
+        return RetrofitClient.myPageApiService.getMonthComment(date)
     }
 }

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="comment"
+            type="com.movingmaker.commentdiary.model.entity.Comment" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/diaryLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="142dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/background_ivory_radius_10"
+        android:paddingStart="24dp"
+        android:paddingTop="19dp"
+        android:paddingBottom="24dp"
+        tools:ignore="RtlSymmetry">
+
+        <TextView
+            android:id="@+id/dateTextView"
+            style="@style/BHeadline2"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center"
+            android:text="@{comment.date}"
+            android:textColor="@color/core_pure_green"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2022.12.22" />
+
+        <ImageView
+            android:visibility="@{comment.like ? View.VISIBLE : View.GONE}"
+            android:id="@+id/commentHeartImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="18dp"
+            android:contentDescription="likeButton"
+            android:src="@drawable/ic_heart_fill"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/diaryContentTextView"
+            style="@style/RCaption"
+            android:layout_marginTop="5dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{comment.content}"
+            android:textColor="@color/text_black"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dateTextView"
+            tools:text="@string/diary_test_text" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

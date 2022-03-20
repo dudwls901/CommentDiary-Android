@@ -5,6 +5,6 @@ import com.google.gson.annotations.SerializedName
 data class MyInfo(
     @SerializedName(value = "email")
     val email: String,
-    @SerializedName(value = "temp")
+    @SerializedName(value = "temperature")
     val temperature: Double,
 )
