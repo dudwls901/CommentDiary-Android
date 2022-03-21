@@ -5,7 +5,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/backgroundLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/background_ivory"
+        >
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainer"
@@ -18,13 +20,14 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/onboardingBottomButton"
+            style="@style/BSubheadline"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="56dp"
+            android:layout_marginBottom="40dp"
             android:background="@drawable/background_pure_green_radius_30"
             android:text="@string/onboarding_login"
-            android:textColor="@color/white"
+            android:textColor="@color/background_ivory"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

@@ -31,12 +31,11 @@
     <string name="onboarding_sign_up_agree_notice">회원가입 시 코다의 개인정보 취급 방침 및 이용 약관에 동의합니다.</string>
     <string name="onboarding_find_password_notice">코다 가입시 사용했던\n아이디(이메일)을 입력해 주세요.</string>
     <string name="onboarding_send_password">비밀번호 전송하기</string>
-    <string name="onboarding_send_email_notice">이메일로 인증번호가 전송되었습니다.\n확인 후 입력해 주세요.</string>
+    <string name="onboarding_send_email_notice">이메일로 인증번호가\n전송되었습니다.\n확인 후 입력해 주세요.</string>
     <string name="onboarding_code_incorrect">인증번호가 일치하지 않습니다.</string>
     <string name="onboarding_cannot_found_email">해당 이메일을 가지고 있는\n사용자가 없어요</string>
     <string name="onboarding_complete_auth">인증완료</string>
-    <string name="onboarding_send_password_complete">비밀번호 전송 완료!</string>
-    <string name="onboarding_check_email_please">이메일을 확인해 주세요.</string>
+    <string name="onboarding_send_password_complete">비밀번호 전송 완료!\n이메일을 확인해 주세요.</string>
     <string name="onboarding_login_incorrect">이메일 혹은 비밀번호가 올바르지 않습니다.</string>
 
     <string name="diary_test_text">내가 서툴고 불안해 보였나요.\n그건 내가 진심이었단 증거입니다</string>

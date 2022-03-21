@@ -70,17 +70,18 @@
                         android:fontFamily="@font/roboto_bold"
                         android:text="@{myDiaryviewModel.selectedDiary.date}"
                         android:textColor="@color/pure_orange"
-                        android:textSize="15sp"
+                        android:textSize="15dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:text="2022.2.21" />
+                        tools:text="2022.2.21"
+                        tools:ignore="SpUsage" />
 
                     <TextView
                         android:id="@+id/diaryHeadEditText"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_bold"
-                        android:lineSpacingExtra="7sp"
+                        android:lineSpacingExtra="7dp"
                         android:text="@{myDiaryviewModel.selectedDiary.title}"
                         android:textColor="@color/text_black"
                         android:textColorHint="@color/text_light_brown"

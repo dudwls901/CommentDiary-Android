@@ -29,7 +29,8 @@
             android:textColor="@color/text_black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpUsage"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/diaryLayout"
@@ -50,9 +51,9 @@
                 android:layout_height="wrap_content"
                 android:text="@{receivedDiaryviewModel.receivedDiary.date}"
                 android:textColor="@color/pure_orange"
-                android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="SpUsage"
                 tools:text="2022.2.21" />
 
             <TextView
@@ -62,11 +63,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:text="@{receivedDiaryviewModel.receivedDiary.title}"
+                android:autoSizeTextType="none"
                 android:textColor="@color/text_black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/diaryDateTextView"
-                tools:text="abckmoamiodmiobvam" />
+                app:layout_constraintTop_toBottomOf="@id/diaryDateTextView" />
 
             <View
                 android:id="@+id/line"
@@ -87,6 +88,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="11dp"
                 android:text="@{receivedDiaryviewModel.receivedDiary.content}"
+                tools:ignore="SpUsage"
                 android:textColor="@color/text_black"
                 app:layout_constraintBottom_toTopOf="@id/reportButton"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -139,7 +141,7 @@
                 android:layout_marginEnd="16dp"
                 android:alpha="@{receivedDiaryviewModel.commentTextCount >= 30 ? 1.0f : 0.4f}"
                 android:background="@drawable/background_pure_green_radius_15"
-                android:enabled="@{receivedDiaryviewModel.commentTextCount >= 30 &amp;&amp; receivedDiaryviewModel.receivedDiary.myComment == null ? true : false}"
+                android:enabled="@{receivedDiaryviewModel.commentTextCount >= 30 &amp;&amp; receivedDiaryviewModel.receivedDiary.myComment != null ? true : false}"
                 android:paddingHorizontal="9dp"
                 android:text="@string/send_text1"
                 android:textColor="@color/background_ivory"
@@ -174,7 +176,8 @@
                 android:text="@{@string/comment_write_limit(receivedDiaryviewModel.commentTextCount)}"
                 android:textColor="@color/text_brown"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

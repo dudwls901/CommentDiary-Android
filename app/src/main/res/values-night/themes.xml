@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.CommentDiary" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -40,7 +40,7 @@
 
     <!-- 달력에 사용하는 스타일 -->
     <style name="CustomTextAppearance" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize" tools:ignore="SpUsage">20dp</item>
         <item name="android:textColor">@color/mcv_text_date_light</item>
         <item name="android:textStyle">bold</item>
         <item name="android:includeFontPadding">false</item>
@@ -51,7 +51,7 @@
     <!-- 달력 안의 숫자들에 적용되는 스타일 -->
     <style name="CalendarDateText" parent="Theme.AppCompat">
         <item name="android:textColor">@color/text_black</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize" tools:ignore="SpUsage">14dp</item>
         <!--        <item name="font">@font/roboto_medium</item>-->
         <item name="fontFamily">@font/roboto_medium</item>
     </style>
@@ -59,7 +59,7 @@
     <!-- 달력 안의 요일들에 적용되는 스타일 -->
     <style name="CalendarDayOfWeek" parent="Theme.AppCompat">
         <item name="android:textColor">@color/text_black</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize" tools:ignore="SpUsage">12dp</item>
         <!--        <item name="background">@drawable/onboarding_dialog_button_left_top_border</item>-->
         <!--        <item name="font">@font/roboto_medium</item>-->
         <item name="fontFamily">@font/roboto_medium</item>
@@ -67,7 +67,7 @@
 
     <!-- 연, 월을 표시하는 헤더에 적용되는 스타일 -->
     <style name="CalendarViewHeaderCustomText">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize" tools:ignore="SpUsage">18dp</item>
         <item name="android:textColor">@color/text_black</item>
         <item name="font">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
@@ -86,72 +86,85 @@
 
 
     <!--    폰트-->
-    <style name="BLargetitle">
+    <style name="BLargetitle" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">28sp</item>
-        <item name="android:lineSpacingExtra">12sp</item>
+        <item name="android:textSize" >28dp</item>
+        <item name="android:lineSpacingExtra">12dp</item>
     </style>
-    <style name="BHeadline">
+    <style name="BHeadline" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:lineSpacingExtra">10sp</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:lineSpacingExtra">10dp</item>
     </style>
-    <style name="BSubheadline">
+    <style name="BSubheadline" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:lineSpacingExtra">14sp</item>
+        <item name="android:textSize" >18dp</item>
+        <item name="android:lineSpacingExtra">14dp</item>
     </style>
-    <style name="BHeadline2">
+    <style name="BHeadline2" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:lineSpacingExtra">10sp</item>
+        <item name="android:textSize" >15dp</item>
+        <item name="android:lineSpacingExtra">10dp</item>
     </style>
-    <style name="MCaption">
+    <style name="MCaption" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:lineSpacingExtra">10sp</item>
+        <item name="android:textSize" >15dp</item>
+        <item name="android:lineSpacingExtra">10dp</item>
     </style>
-    <style name="RCaption">
+    <style name="RCaption" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:lineSpacingExtra">9sp</item>
+        <item name="android:textSize" >14dp</item>
+        <item name="android:lineSpacingExtra">9dp</item>
     </style>
-    <style name="BCaption">
+    <style name="BCaption" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:lineSpacingExtra">7sp</item>
+        <item name="android:textSize" >13dp</item>
+        <item name="android:lineSpacingExtra">7dp</item>
     </style>
-    <style name="MCaption2">
+    <style name="MCaption2" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:lineSpacingExtra">9sp</item>
+        <item name="android:textSize" >13dp</item>
+        <item name="android:lineSpacingExtra">9dp</item>
     </style>
-    <style name="MCaption3">
+    <style name="MCaption3" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:lineSpacingExtra">10sp</item>
+        <item name="android:textSize" >12dp</item>
+        <item name="android:lineSpacingExtra">10dp</item>
+    </style>
+
+    <style name="RCaption2" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">11dp</item>
+        <item name="android:lineSpacingExtra">29dp</item>
+    </style>
+
+    <style name="RCaption3" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">9dp</item>
     </style>
 
     <style name="customNumberPicker">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:lineSpacingExtra">10sp</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:lineSpacingExtra">10dp</item>
     </style>
 
     <style name="customNumberPicker1">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:lineSpacingExtra">10sp</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:lineSpacingExtra">10dp</item>
     </style>
 </resources>

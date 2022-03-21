@@ -51,9 +51,10 @@
                 android:gravity="center"
                 android:text="@string/temp_store_text"
                 android:textColor="@color/text_black"
-                android:textSize="15sp"
+                android:textSize="15dp"
                 android:visibility="gone"
-                tools:visibility="visible" />
+                tools:visibility="visible"
+                tools:ignore="SpUsage" />
 
             <ImageButton
                 android:id="@+id/deleteButton"
@@ -99,10 +100,11 @@
                 android:fontFamily="@font/roboto_bold"
                 android:text="@{myDiaryviewModel.selectedDiary.date}"
                 android:textColor="@color/pure_orange"
-                android:textSize="15sp"
+                android:textSize="15dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="2022.2.21" />
+                tools:text="2022.2.21"
+                tools:ignore="SpUsage" />
 
             <EditText
                 android:id="@+id/diaryHeadEditText"
@@ -113,14 +115,15 @@
                 android:hint="@string/write_diary_head_hint"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
-                android:lineSpacingExtra="7sp"
+                android:lineSpacingExtra="7dp"
                 android:text="@{myDiaryviewModel.selectedDiary.title}"
                 android:textColor="@color/text_black"
                 android:textColorHint="@color/text_light_brown"
-                android:textSize="20sp"
+                android:textSize="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/diaryDateTextView" />
+                app:layout_constraintTop_toBottomOf="@id/diaryDateTextView"
+                tools:ignore="SpUsage" />
 
             <View
                 android:id="@+id/line"
@@ -144,15 +147,16 @@
                 android:hint="@string/write_diary_content_hint"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
-                android:lineSpacingExtra="7sp"
+                android:lineSpacingExtra="7dp"
                 android:text="@{myDiaryviewModel.selectedDiary.content}"
                 android:textColor="@color/text_black"
                 android:textColorHint="@color/text_light_brown"
-                android:textSize="14sp"
+                android:textSize="14dp"
                 app:layout_constraintBottom_toTopOf="@id/writeCommentDiaryTextLimitTextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/line" />
+                app:layout_constraintTop_toBottomOf="@id/line"
+                tools:ignore="SpUsage" />
 
             <!--            <TextView-->
             <!--                android:id="@+id/writeCommentDiaryNoticeTextView"-->
@@ -186,12 +190,13 @@
             android:layout_marginBottom="16dp"
             android:text="@string/upload_yet_comment_diary"
             android:textColor="@color/text_brown"
-            android:textSize="12sp"
+            android:textSize="12dp"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/saveButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:visibility="visible" />
+            tools:visibility="visible"
+            tools:ignore="SpUsage" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:layout_marginHorizontal="16dp"

@@ -1,10 +1,14 @@
 package com.movingmaker.commentdiary.view.onboarding
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
@@ -48,6 +52,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
 
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.statusBarColor = getColor(R.color.onboarding_background)
+        //todo 스플래시 대응 시발
 //        binding.backgroundLayout.setBackgroundColor(R.color.background_ivory)
 
 
@@ -110,9 +115,6 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         }
 
         onboardingViewModel.responseSignUpComplete.observe(this){
-            Log.d(TAG, it.isSuccessful.toString())
-            Log.d(TAG, it.body()?.code.toString())
-            Log.d(TAG, it.body()?.message ?: "FAIL")
             val message = it.body()?.message ?: "fail"
             val code = it.body()?.code.toString()
             binding.loadingBar.isVisible = false
@@ -179,14 +181,6 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         }
     }
 
-//    private fun insertAuth(accessToken: String, refreshToken: String, accessTokenExpiresIn: Long){
-//        launch(Dispatchers.IO) {
-//            CodaApplication.getInstance().getDataStore().setAccessToken(accessToken)
-//            CodaApplication.getInstance().getDataStore().setRefreshToken(refreshToken)
-//            CodaApplication.getInstance().getDataStore().setAccessTokenExpiresIn(accessTokenExpiresIn)
-//        }
-//    }
-
     private fun addButtonEvent(fragment: String) {
         when (fragment) {
             "login" -> {
@@ -237,38 +231,34 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
     }
 
     private fun sendPasswordDialog(isSuccess: Boolean) {
-        val dialogView: View = layoutInflater.inflate(R.layout.dialog_onboarding_password_send, null)
+        val dialogView = Dialog(this@OnboardingLoginActivity)
+        dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogView.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialogView.setContentView(R.layout.dialog_onboarding_password_send)
+        dialogView.show()
 
-        val builder = android.app.AlertDialog.Builder(this)
-        builder.setView(dialogView)
-
-        val alertDialog = builder.create()
-        alertDialog.show()
         val closeButton = dialogView.findViewById<ImageButton>(R.id.closeButton)
         val okButton = dialogView.findViewById<Button>(R.id.submitButton)
         val cannotFoundEmailTextView = dialogView.findViewById<TextView>(R.id.cannotFoundEmailTextView)
         val findPasswordSuccessTextView = dialogView.findViewById<TextView>(R.id.findPasswordSuccessTextView)
-        val findPasswordCheckEmailTextView = dialogView.findViewById<TextView>(R.id.findPasswordCheckEmailTextView)
 
         if (isSuccess) {
             closeButton.isVisible = false
             okButton.isVisible = true
             cannotFoundEmailTextView.isVisible = false
-            findPasswordCheckEmailTextView.isVisible = true
             findPasswordSuccessTextView.isVisible = true
         } else {
             closeButton.isVisible = true
             okButton.isVisible = false
             cannotFoundEmailTextView.isVisible = true
-            findPasswordCheckEmailTextView.isVisible = false
             findPasswordSuccessTextView.isVisible = false
         }
 
         okButton.setOnClickListener {
-            alertDialog.dismiss()
+            dialogView.dismiss()
         }
         closeButton.setOnClickListener {
-            alertDialog.dismiss()
+            dialogView.dismiss()
         }
     }
 }

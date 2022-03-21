@@ -1,12 +1,16 @@
 package com.movingmaker.commentdiary.view.onboarding
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -22,6 +26,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.lang.Exception
+import java.lang.NumberFormatException
 import kotlin.coroutines.CoroutineContext
 
 class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
@@ -58,8 +64,7 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
     ): View {
         binding.onboardingviewModel = onboardingViewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.toolbar.setNavigationIcon(R.drawable.ic_baseline_chevron_left_24)
-        binding.toolbar.setNavigationOnClickListener {
+        binding.backButton.setOnClickListener {
             onboardingViewModel.setCurrentFragment("login")
         }
         initViews()
@@ -158,12 +163,11 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
         }
     }
     private fun sendCodeDialog() {
-        val dialogView: View = layoutInflater.inflate(R.layout.dialog_onboarding_email_code_send, null)
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setView(dialogView)
-
-        val alertDialog = builder.create()
-        alertDialog.show()
+        val dialogView = Dialog(requireContext())
+        dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogView.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialogView.setContentView(R.layout.dialog_onboarding_email_code_send)
+        dialogView.show()
 
         val submitButton = dialogView.findViewById<Button>(R.id.submitButton)
         val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
@@ -181,7 +185,7 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
                     binding.sendAuthButton.alpha = 0.4f
                     binding.sendAuthButton.isEnabled = false
                     onboardingViewModel.setEmailCodeCheckComplete(true)
-                    alertDialog.dismiss()
+                    dialogView.dismiss()
                 }
                 else{
                     codeIncorrectTextView.isVisible = true
@@ -192,23 +196,31 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
 
         submitButton.setOnClickListener {
             codeIncorrectTextView.isVisible = false
-            if(codeEditText.text.toString().isNotEmpty()) {
-                launch(coroutineContext) {
-                    onboardingViewModel.setResponseEmailCodeCheck(
-                        email = binding.emailEditText.text.toString(),
-                        code = codeEditText.text.toString().toInt()
-                    )
+            try {
+                val password = codeEditText.text.toString().toInt()
+                if(codeEditText.text.toString().isNotEmpty()) {
+                    launch(coroutineContext) {
+                        onboardingViewModel.setResponseEmailCodeCheck(
+                            email = binding.emailEditText.text.toString(),
+                            code = password
+                        )
+                    }
+                }
+                else{
+                    codeIncorrectTextView.isVisible = true
+                    onboardingViewModel.setEmailCodeCheckComplete(false)
                 }
             }
-            else{
+            catch (e: NumberFormatException){
                 codeIncorrectTextView.isVisible = true
                 onboardingViewModel.setEmailCodeCheckComplete(false)
             }
+
         }
 
 
         cancelButton.setOnClickListener {
-            alertDialog.dismiss()
+            dialogView.dismiss()
         }
     }
 

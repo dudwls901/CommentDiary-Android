@@ -46,10 +46,9 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
             var refreshToken = withContext(Dispatchers.IO) {
                 CodaApplication.getInstance().getDataStore().refreshToken.first()
             }
-            Log.d("?????????????????????????????????????????", "onCreate: ${refreshToken}")
             //자동 로그인
             if(refreshToken.isNotEmpty()){
-                //todo refresh토큰 갱신하는 api 필요 refreshToken만료됐는지 검사 후 accessToken,refreshToken,expiresIn발급
+                //refresh토큰 갱신하는 api 필요 refreshToken만료됐는지 검사 후 accessToken,refreshToken,expiresIn발급
                 delay(100L)
 //                finish()
                 startActivity(Intent(this@OnboardingIntroActivity, MainActivity::class.java).apply {
@@ -68,7 +67,6 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
 
     private fun observeDatas(){
         introViewModel.introImage.observe(this){image->
-            Log.d("onboardingintroactivity", "observeDatas: ${image}")
             binding.introLayout.setBackgroundResource(image)
         }
     }
@@ -99,11 +97,11 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
     @SuppressLint("ResourceAsColor")
     private fun changeButton() {
         if (binding.introViewPager.currentItem == 2) {
-            binding.onboardingButton.setBackgroundResource(R.drawable.large_button_green_radius_107)
+            binding.onboardingButton.setBackgroundResource(R.drawable.background_pure_green_radius_30)
             binding.onboardingButton.text = getString(R.string.onboarding_button_start)
             binding.onboardingButton.setTextColor(getColor(R.color.background_ivory))
         } else {
-            binding.onboardingButton.setBackgroundResource(R.drawable.large_button_beige_radius_30)
+            binding.onboardingButton.setBackgroundResource(R.drawable.background_beige_radius_30)
             binding.onboardingButton.text = getString(R.string.onboarding_button_next)
             binding.onboardingButton.setTextColor(getColor(R.color.text_brown))
         }

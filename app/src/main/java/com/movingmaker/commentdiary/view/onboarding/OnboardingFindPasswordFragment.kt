@@ -45,8 +45,7 @@ class OnboardingFindPasswordFragment : BaseFragment() {
     }
 
     private fun initViews() = with(binding){
-        toolbar.setNavigationIcon(R.drawable.ic_baseline_chevron_left_24)
-        toolbar.setNavigationOnClickListener {
+        backButton.setOnClickListener {
             onboardingViewModel.setCurrentFragment("login")
         }
         findPasswordEditText.addTextChangedListener {
