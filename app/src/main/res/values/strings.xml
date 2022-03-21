@@ -88,7 +88,7 @@
     <string name="send_text1">보내기</string>
     <string name="comment_write_hint">일기를 읽고, 따뜻한 코멘트를 달아주세요</string>
     <string name="no_received_diary_yet">매일 아침 7시에 누군가의 일기가 도착합니다.\n 도착한 일기를 읽고 따뜻한 코멘트를 남겨주세요 :)</string>
-    <string name="comment_write_limit">%s/30</string>
+    <string name="comment_write_limit">%s/20</string>
     <string name="send_comment_notice">코멘트를 전송합니다.\n 전송 후에는 수정 및 삭제가 어렵습니다.\n 전송하시겠어요?</string>
     <string name="report_content">신고 사유를 자세히 작성해주세요.\n사실과 다를 경우 이용 제재를\n받을 수 있습니다.</string>
     <string name="mypage">마이페이지</string>
@@ -108,6 +108,7 @@
     <string name="no_comment_write">아직 보낸 코멘트가 없어요.\n코멘트를 작성해주세요.</string>
     <string name="change_password">비밀번호 변경</string>
     <string name="change">변경하기</string>
+    <string name="write_comment">코멘트 작성하기</string>
     <string-array name="custom_weekdays">
         <item>일</item>
         <item>월</item>

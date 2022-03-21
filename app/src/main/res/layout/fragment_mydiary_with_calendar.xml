@@ -12,15 +12,12 @@
             name="myDiaryviewModel"
             type="com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel" />
     </data>
-    <!--todo nestedScrollView필요 x-->
     <!--todo 작은 기기 화면 대응    -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingHorizontal="16dp">
-
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -47,12 +44,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/materialCalendarView">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:visibility="gone"
                     android:id="@+id/writeDiaryLayout"
                     android:layout_width="match_parent"
                     android:layout_height="97dp"
@@ -62,38 +60,34 @@
                     android:focusable="true"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:paddingStart="25dp"
-                    android:paddingEnd="22dp">
+                    android:paddingStart="16dp"
+                    android:paddingEnd="10dp">
 
                     <TextView
                         android:id="@+id/writeDiaryHeaderTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
                         android:layout_marginTop="19dp"
-                        android:fontFamily="@font/roboto_bold"
                         android:text="@{myDiaryviewModel.dateDiaryText}"
                         android:textColor="@color/pure_orange"
-                        android:textSize="13dp"
+                        style="@style/BCaption"
                         app:layout_constraintBottom_toTopOf="@id/writeDiaryTextView"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_chainStyle="packed"
-                        tools:text="12.22일 나의 일기"
-                        tools:ignore="SpUsage" />
+                        tools:text="12.22일 나의 일기" />
 
                     <TextView
                         android:id="@+id/writeDiaryTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
                         android:layout_marginTop="2dp"
-                        android:fontFamily="@font/roboto_bold"
                         android:text="@string/write_text"
+                        style="@style/BHeadline"
                         android:textColor="@color/text_black"
-                        android:textSize="21dp"
-                        android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="@+id/writeDiaryHeaderTextView"
                         app:layout_constraintTop_toBottomOf="@id/writeDiaryHeaderTextView"
-                        tools:ignore="SpUsage" />
+                        />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -101,7 +95,9 @@
                         android:src="@drawable/ic_arrow_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="write"
+                        tools:ignore="HardcodedText" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -109,18 +105,16 @@
                     android:id="@+id/lineDecorationTextView"
                     style="@style/MCaption3"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_height="22dp"
+                    android:layout_marginTop="17dp"
                     android:gravity="center"
                     android:text="@string/mydiary_text_decoration"
-                    android:textColor="@color/text_gray"
-                    android:textSize="12dp"
-                    tools:ignore="SpUsage" />
+                    android:textColor="@color/text_light_beige" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:layout_marginTop="-4dp"
+                    android:layout_marginTop="3dp"
                     android:background="@color/text_light_brown" />
 
                 <View
@@ -150,11 +144,12 @@
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:visibility="gone"
                 android:id="@+id/readDiaryLayout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="14dp"
                 android:background="@drawable/background_ivory_radius_10"
                 app:layout_constraintBottom_toTopOf="@id/noCommentTextView"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -166,7 +161,7 @@
                     style="@style/BHeadline2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="22dp"
+                    android:layout_marginStart="24dp"
                     android:layout_marginTop="16dp"
                     android:text="@{myDiaryviewModel.dateDiaryText}"
                     android:textColor="@color/pure_orange"
@@ -179,7 +174,7 @@
                     style="@style/BSubheadline"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="5dp"
                     android:ellipsize="end"
                     android:maxLines="2"
@@ -206,7 +201,7 @@
                         android:layout_height="24dp"
                         android:gravity="center"
                         android:text="@string/show_all"
-                        android:textColor="@color/text_dark_brown" />
+                        android:textColor="@color/text_brown" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -219,9 +214,9 @@
                     android:id="@+id/line"
                     android:layout_width="0dp"
                     android:layout_height="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="22dp"
-                    android:background="#e2dfd7"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@color/text_light_brown"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/diaryDateTextView"
                     app:layout_constraintTop_toBottomOf="@id/diaryHeadTextView" />
@@ -231,7 +226,7 @@
                     style="@style/RCaption"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="22dp"
                     android:text="@{myDiaryviewModel.selectedDiary.content}"
@@ -262,7 +257,7 @@
                 style="@style/MCaption3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="17dp"
+                android:layout_marginBottom="15dp"
                 android:text="@string/no_comment"
                 android:textAlignment="center"
                 android:textColor="@color/text_brown"

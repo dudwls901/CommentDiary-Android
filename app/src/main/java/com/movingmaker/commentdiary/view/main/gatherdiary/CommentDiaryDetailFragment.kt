@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentMydiaryCommentdiaryDetailBinding
+import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryCommentdiaryDetailBinding
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
@@ -19,7 +19,7 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope {
 
     override val TAG: String = CommentDiaryDetailFragment::class.java.simpleName
 
-    private lateinit var binding: FragmentMydiaryCommentdiaryDetailBinding
+    private lateinit var binding: FragmentGatherdiaryCommentdiaryDetailBinding
 
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
@@ -37,7 +37,7 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentMydiaryCommentdiaryDetailBinding.inflate(layoutInflater)
+        binding = FragmentGatherdiaryCommentdiaryDetailBinding.inflate(layoutInflater)
     }
 
     override fun onCreateView(

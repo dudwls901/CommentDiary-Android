@@ -45,6 +45,6 @@
     <color name="core_beige">#f4ede3</color>
     <color name="core_ivory">#fdf8e9</color>
     <color name="background_tap">#f4f1eb</color>
-    <color name="text_graybrown">#b2afaa</color>
-    <color name="text_lightbeige">#d3cdbd</color>
+    <color name="text_gray_brown">#b2afaa</color>
+    <color name="text_light_beige">#d3cdbd</color>
 </resources>

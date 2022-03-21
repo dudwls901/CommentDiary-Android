@@ -102,7 +102,7 @@
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize" >18dp</item>
-        <item name="android:lineSpacingExtra">14dp</item>
+        <item name="android:lineSpacingExtra">8dp</item>
     </style>
     <style name="BHeadline2">
         <item name="android:fontFamily">@font/roboto_bold</item>

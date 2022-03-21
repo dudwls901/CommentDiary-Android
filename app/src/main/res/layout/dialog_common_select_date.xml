@@ -6,12 +6,13 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_ivory_radius_10">
 
+<!--    todo 넘버피커 폰트-->
     <TextView
         android:id="@+id/headTextView"
         style="@style/BSubheadline"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="29dp"
+        android:layout_marginTop="26dp"
         android:text="@string/look_period"
         android:textAlignment="center"
         android:textColor="@color/text_black"

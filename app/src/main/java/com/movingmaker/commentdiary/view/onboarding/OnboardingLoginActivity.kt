@@ -52,7 +52,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
 
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.statusBarColor = getColor(R.color.onboarding_background)
-        //todo 스플래시 대응 시발
+        //todo 스플래시 대응 수부
 //        binding.backgroundLayout.setBackgroundColor(R.color.background_ivory)
 
 

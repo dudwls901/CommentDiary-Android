@@ -15,6 +15,7 @@
         android:text="@string/diary_send_notice"
         android:textAlignment="center"
         style="@style/BCaption"
+        android:textColor="@color/text_dark_brown"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

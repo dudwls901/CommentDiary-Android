@@ -29,8 +29,7 @@
             android:textColor="@color/text_black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SpUsage"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/diaryLayout"
@@ -53,7 +52,6 @@
                 android:textColor="@color/pure_orange"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpUsage"
                 tools:text="2022.2.21" />
 
             <TextView
@@ -65,6 +63,7 @@
                 android:text="@{receivedDiaryviewModel.receivedDiary.title}"
                 android:autoSizeTextType="none"
                 android:textColor="@color/text_black"
+                tools:text="@string/diary_content_dummy_data"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/diaryDateTextView" />
@@ -73,7 +72,7 @@
                 android:id="@+id/line"
                 android:layout_width="0dp"
                 android:layout_height="2dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="6dp"
                 android:background="@color/text_light_brown"
                 app:layout_constraintBottom_toTopOf="@id/diaryContentEditText"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -85,12 +84,12 @@
                 style="@style/RCaption"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="11dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginBottom="72dp"
                 android:text="@{receivedDiaryviewModel.receivedDiary.content}"
                 tools:ignore="SpUsage"
                 android:textColor="@color/text_black"
-                app:layout_constraintBottom_toTopOf="@id/reportButton"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/line"
@@ -126,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="17dp"
                 android:text="@string/received_diary_comment_head"
                 android:textColor="@color/core_pure_green"
                 app:layout_constraintStart_toStartOf="parent"
@@ -147,7 +146,7 @@
                 android:textColor="@color/background_ivory"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
+<!--todo 수부 에딧테스트 간격조정-->
             <EditText
                 android:id="@+id/commentEditTextView"
                 style="@style/MCaption2"
@@ -177,6 +176,7 @@
                 android:textColor="@color/text_brown"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                tools:text="0/20"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -188,6 +188,8 @@
             android:layout_marginTop="23dp"
             android:text="@string/no_received_diary_yet"
             android:textAlignment="center"
+            style="@style/MCaption2"
+            android:textColor="@color/text_brown"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
