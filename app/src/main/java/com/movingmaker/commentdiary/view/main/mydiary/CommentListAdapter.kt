@@ -39,7 +39,7 @@ class CommentListAdapter: ListAdapter<Comment,CommentListAdapter.ItemViewHolder>
     companion object{
         val diffUtil = object: DiffUtil.ItemCallback<Comment>(){
             override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
-                return oldItem == newItem
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: Comment, newItem: Comment): Boolean {
