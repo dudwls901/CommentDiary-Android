@@ -172,7 +172,10 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/diaryLayout" />
 
+<!--                todo 수부  분기처리-->
                 <androidx.appcompat.widget.AppCompatButton
+                    android:visibility="gone"
+                    android:id="@+id/goToWriteCommentButton"
                     style="@style/BCaption"
                     android:layout_width="0dp"
                     android:layout_height="53dp"
@@ -183,7 +186,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/recyclerView"
-
                     />
 
 

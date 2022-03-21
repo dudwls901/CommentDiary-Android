@@ -146,7 +146,7 @@
                 android:textColor="@color/background_ivory"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-<!--todo 수부 에딧테스트 간격조정-->
+
             <EditText
                 android:id="@+id/commentEditTextView"
                 style="@style/MCaption2"
