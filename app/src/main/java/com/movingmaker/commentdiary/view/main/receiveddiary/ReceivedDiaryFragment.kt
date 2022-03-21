@@ -123,12 +123,12 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
         receivedDiaryViewModel.responseSaveComment.observe(viewLifecycleOwner) { response ->
 
             if (response.isSuccessful) {
-                Toast.makeText(requireContext(), "코멘트가 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "코멘트가 전송되었습니다.", Toast.LENGTH_SHORT).show()
                 initViews()
             }
             //todo 일기 전송 실패 처리
             else {
-                Toast.makeText(requireContext(), "코멘트가 저장되지 않았습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "코멘트가 전송되지 않았습니다.", Toast.LENGTH_SHORT).show()
             }
         }
 
