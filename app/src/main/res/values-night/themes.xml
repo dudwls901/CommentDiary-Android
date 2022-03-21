@@ -86,72 +86,79 @@
 
 
     <!--    폰트-->
-    <style name="BLargetitle" parent="Widget.AppCompat.TextView">
+    <style name="BLargetitle">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize" >28dp</item>
         <item name="android:lineSpacingExtra">12dp</item>
     </style>
-    <style name="BHeadline" parent="Widget.AppCompat.TextView">
+    <style name="BHeadline">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">20dp</item>
         <item name="android:lineSpacingExtra">10dp</item>
     </style>
-    <style name="BSubheadline" parent="Widget.AppCompat.TextView">
+    <style name="BSubheadline">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize" >18dp</item>
-        <item name="android:lineSpacingExtra">14dp</item>
+        <item name="android:lineSpacingExtra">8dp</item>
     </style>
-    <style name="BHeadline2" parent="Widget.AppCompat.TextView">
+    <style name="BHeadline2">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize" >15dp</item>
         <item name="android:lineSpacingExtra">10dp</item>
     </style>
-    <style name="MCaption" parent="Widget.AppCompat.TextView">
+    <style name="MCaption">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize" >15dp</item>
         <item name="android:lineSpacingExtra">10dp</item>
     </style>
-    <style name="RCaption" parent="Widget.AppCompat.TextView">
+    <style name="RCaption" >
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize" >14dp</item>
         <item name="android:lineSpacingExtra">9dp</item>
     </style>
-    <style name="BCaption" parent="Widget.AppCompat.TextView">
+    <style name="BCaption" >
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize" >13dp</item>
         <item name="android:lineSpacingExtra">7dp</item>
     </style>
-    <style name="MCaption2" parent="Widget.AppCompat.TextView">
+    <style name="MCaption2" >
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize" >13dp</item>
         <item name="android:lineSpacingExtra">9dp</item>
     </style>
-    <style name="MCaption3" parent="Widget.AppCompat.TextView">
+    <style name="MCaption3" >
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize" >12dp</item>
         <item name="android:lineSpacingExtra">10dp</item>
     </style>
 
-    <style name="RCaption2" parent="Widget.AppCompat.TextView">
+    <style name="RCaption2" >
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">11dp</item>
         <item name="android:lineSpacingExtra">29dp</item>
     </style>
 
-    <style name="RCaption3" parent="Widget.AppCompat.TextView">
+    <style name="RCaption3" >
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">9dp</item>
+    </style>
+
+    <style name="Onboarding">
+        <item name="android:fontFamily">@font/paybooc_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24dp</item>
+        <item name="android:lineSpacingExtra">16dp</item>
     </style>
 
     <style name="customNumberPicker">
