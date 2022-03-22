@@ -1,5 +1,7 @@
 package com.movingmaker.commentdiary.view.main.mypage
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -48,76 +50,24 @@ class TermsFragment: BaseFragment(), CoroutineScope {
         savedInstanceState: Bundle?
     ): View {
         initViews()
-        observeDatas()
 
         return binding.root
     }
 
-    private fun observeDatas(){
-//        binding.lifecycleOwner?.let { lifecycleOwner ->
-//            myPageViewModel.responseSignOut.observe(lifecycleOwner) {
-////                binding.loadingBar.isVisible = false
-//                if (it.isSuccessful) {
-//                    Log.d(TAG, it.isSuccessful.toString())
-//                    Log.d(TAG, it.body()?.code.toString())
-//                    Log.d(TAG, it.body()?.message.toString())
-//                    logOut()
-//                } else {
-//                    Log.d(TAG, it.isSuccessful.toString())
-//                    Log.d(TAG, it.body()?.code.toString())
-//                    Log.d(TAG, it.body()?.message.toString())
-////                    Toast.makeText(requireContext(), "회원 탈퇴 실패", Toast.LENGTH_SHORT).show()
-//                }
-//
-//            }
-//        }
-
-//        binding.lifecycleOwner?.let { lifecycleOwner ->
-//            myPageViewModel.responseLogOut.observe(lifecycleOwner) {
-////                binding.loadingBar.isVisible = false
-//                if (it.isSuccessful) {
-//                    Log.d(TAG, it.isSuccessful.toString())
-//                    Log.d(TAG, it.body()?.code.toString())
-//                    Log.d(TAG, it.body()?.message.toString())
-////                    logOut()
-//                } else {
-//                    Log.d(TAG, it.isSuccessful.toString())
-//                    Log.d(TAG, it.body()?.code.toString())
-//                    Log.d(TAG, it.body()?.message.toString())
-////                    Toast.makeText(requireContext(), "로그아웃 실패", Toast.LENGTH_SHORT).show()
-//                }
-//
-//            }
-//        }
-
-
-
-    }
-
     private fun initViews() = with(binding){
-//        signOutButton.setOnClickListener {
-//            launch(coroutineContext) {
-//                myPageViewModel.setResponseSignOut()
-//            }
-//        }
-//        logoutLayout.setOnClickListener {
-//            launch(coroutineContext) {
-//                myPageViewModel.setResponseLogOut()
-//            }
-//        }
-//        signOutLayout.setOnClickListener {
-//            fragmentViewModel.setFragmentState("signOut")
-//        }
+
+        policyLayout.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(CodaApplication.policyUrl))
+            startActivity(intent)
+        }
+        termsLayout.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(CodaApplication.termsUrl))
+            startActivity(intent)
+        }
+
         backButton.setOnClickListener {
             fragmentViewModel.setFragmentState("myPage")
         }
-//        changePasswordButton.setOnClickListener {
-//            launch(coroutineContext) {
-//                myPageViewModel.setResponseChangePassword(ChangePasswordRequest(
-//                    password = passwordEditText.text.toString(),
-//                    checkPassword = passwordCheckEditText.text.toString()
-//                ))
-//            }
-//        }
+
     }
 }

@@ -8,11 +8,14 @@ import com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity
 class CodaApplication(): Application() {
 
     private lateinit var dataStore : AuthProvider
+
 //    val database by lazy { CommentDiaryDatabase.getInstance(this) }
 //    val repository by lazy { ContactRepository(database!!.contactDao()) }
     companion object {
         private lateinit var codaApplication: CodaApplication
         fun getInstance() : CodaApplication = codaApplication
+        const val termsUrl =  "https://glittery-silk-987.notion.site/fb0c6c765a7a411c9362dc8d102c95e0"
+        const val policyUrl = "https://www.notion.so/59a704f6702f4382b9398fa3b4a0d780"
     }
 
     override fun onCreate() {
