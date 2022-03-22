@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +16,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.NumberPicker
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.CodaApplication
@@ -142,6 +147,12 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
         yearPicker.value = y.toInt()
         monthPicker.value = m.toInt()
 
+        val typeface = resources.getFont(R.font.robotomedium)
+        setNumberPickerStyle(yearPicker,
+            ContextCompat.getColor(requireContext(), R.color.text_black), typeface)
+        setNumberPickerStyle(monthPicker,
+            ContextCompat.getColor(requireContext(), R.color.text_black), typeface)
+
         saveButton.setOnClickListener {
             // 날짜로 일기 불러오기 검색
             val date = "${yearPicker.value}.${String.format("%02d",monthPicker.value)}"
@@ -159,6 +170,68 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
             dialogView.dismiss()
         }
 
+    }
+
+    // 넘버 픽커 텍스트 색깔 설정하는 함수
+    @SuppressLint("DiscouragedPrivateApi")
+    private fun setNumberPickerStyle(numberPicker: NumberPicker, color: Int, typeface: Typeface) {
+        //글자 포커싱되어 수정하지 못하게
+        numberPicker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            Log.d(TAG, "setNumberPickerStyle: downversion")
+            val count = numberPicker.childCount
+            for (i in 0..count) {
+                val child = numberPicker.getChildAt(i)
+                if (child is TextView) {
+                    try {
+                        child.setTextColor(color)
+//                        child.typeface = typeface
+                        numberPicker.invalidate()
+//                        Log.d(TAG, "setNumberPickerText: downversion ${child::class.java.simpleName}")
+                        var selectorWheelPaintField =
+                            numberPicker.javaClass.getDeclaredField("mSelectorWheelPaint")
+                        var accessible = selectorWheelPaintField.isAccessible
+                        selectorWheelPaintField.isAccessible = true
+                        (selectorWheelPaintField.get(numberPicker) as Paint).color = color
+                        selectorWheelPaintField.isAccessible = accessible
+                        (selectorWheelPaintField.get(numberPicker) as Paint).typeface = typeface
+
+                        numberPicker.invalidate()
+                        var selectionDividerField =
+                            numberPicker.javaClass.getDeclaredField("mSelectionDivider")
+                        accessible = selectionDividerField.isAccessible
+                        selectionDividerField.isAccessible = true
+                        selectionDividerField.set(numberPicker, null)
+                        selectionDividerField.isAccessible = accessible
+                        (selectionDividerField.get(numberPicker) as Paint).typeface = typeface
+                        numberPicker.invalidate()
+                    } catch (exception: Exception) {
+                        Log.d("test", "exception $exception")
+                    }
+                }
+            }
+        } else {
+//            Log.d(TAG, "setNumberPickerStyle: upversion")
+            numberPicker.textColor = color
+            val count = numberPicker.childCount
+            for (i in 0..count) {
+                val child = numberPicker.getChildAt(i)
+                try {
+                    if(child is TextView) {
+//                        child.typeface = typeface
+                        val paint = Paint()
+                        paint.typeface = typeface
+                        numberPicker.setLayerPaint(paint)
+                        numberPicker.invalidate()
+                    }
+                } catch (exception: Exception) {
+                    Log.d("test", "exception $exception")
+                }
+
+                numberPicker.invalidate()
+            }
+        }
     }
 }
 
