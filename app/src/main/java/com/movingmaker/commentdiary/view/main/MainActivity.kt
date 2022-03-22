@@ -193,7 +193,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
 
         if (gapTime in 0..2000) {
             // 2초 안에 두번 뒤로가기 누를 시 앱 종료
-            if (supportFragmentManager.backStackEntryCount == 0) finish()
+            if (supportFragmentManager.backStackEntryCount == 0){
+//                finish()
+                finishAndRemoveTask()
+                android.os.Process.killProcess(android.os.Process.myPid())
+            }
         }
         else {
             backButtonTime = currentTime
