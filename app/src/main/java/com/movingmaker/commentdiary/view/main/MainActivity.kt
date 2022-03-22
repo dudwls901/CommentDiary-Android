@@ -143,9 +143,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             when (showFragment) {
                 "myDiary" -> {
                     fragmentViewModel.setHasBottomNavi(true)
-                    val toast = Toast.makeText(this@MainActivity, "Welcome to blackjin Tistory", Toast.LENGTH_SHORT)
-//                    toast.setGravity(Gravity.BOTTOM or Gravity.START, 20.toPx(), 20.toPx())
-                    toast.show()
                 }
                 "receivedDiary" -> {
                     fragmentViewModel.setHasBottomNavi(true)
