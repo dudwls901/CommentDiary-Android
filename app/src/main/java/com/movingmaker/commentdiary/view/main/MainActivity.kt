@@ -2,12 +2,14 @@ package com.movingmaker.commentdiary.view.main
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseActivity
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
+import com.movingmaker.commentdiary.util.Extension.toPx
 import com.movingmaker.commentdiary.view.main.gatherdiary.DiaryListFragment
 import com.movingmaker.commentdiary.view.main.gatherdiary.CommentDiaryDetailFragment
 import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment
@@ -141,6 +143,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             when (showFragment) {
                 "myDiary" -> {
                     fragmentViewModel.setHasBottomNavi(true)
+                    val toast = Toast.makeText(this@MainActivity, "Welcome to blackjin Tistory", Toast.LENGTH_SHORT)
+//                    toast.setGravity(Gravity.BOTTOM or Gravity.START, 20.toPx(), 20.toPx())
+                    toast.show()
                 }
                 "receivedDiary" -> {
                     fragmentViewModel.setHasBottomNavi(true)

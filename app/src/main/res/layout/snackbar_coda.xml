@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:background="@android:color/transparent"
+            android:layout_height="28dp">
+
+            <LinearLayout
+                android:layout_marginHorizontal="32dp"
+                android:background="@drawable/background_dark_brown_radius_40"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                >
+            <TextView
+                android:id="@+id/tvSample"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Hello World!"
+                android:textColor="@color/background_ivory"
+                style="@style/MCaption3" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
