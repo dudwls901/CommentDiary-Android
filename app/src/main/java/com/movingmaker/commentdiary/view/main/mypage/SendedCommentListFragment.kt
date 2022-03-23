@@ -48,6 +48,8 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
     private val myPageViewModel: MyPageViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
 
+    private var searchPeriod="all"
+
     companion object {
         private const val MAX_YEAR = 2099
         private const val MIN_YEAR = 1980
@@ -72,13 +74,19 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
     ): View {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.mypageviewmodel= myPageViewModel
-        setDiaries("all")
         observeDatas()
         initViews()
         return binding.root
     }
 
     private fun observeDatas() {
+
+        fragmentViewModel.fragmentState.observe(viewLifecycleOwner){ fragment->
+            if(fragment=="sendedCommentList"){
+                setComments()
+            }
+        }
+
         myPageViewModel.responseGetAllComment.observe(viewLifecycleOwner) {
             Log.d(TAG, "observeDatas: ????? ${it}")
             binding.loadingBar.isVisible = false
@@ -108,16 +116,16 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
         }
     }
 
-    private fun setDiaries(date: String) {
+    private fun setComments() {
         launch(coroutineContext) {
             binding.loadingBar.isVisible = true
             launch(Dispatchers.IO) {
-                when (date) {
+                when (searchPeriod) {
                     "all" -> {
                         myPageViewModel.setResponseGetAllComment()
                     }
                     else -> {
-                        myPageViewModel.setResponseGetMonthComment(date)
+                        myPageViewModel.setResponseGetMonthComment(searchPeriod)
                     }
                 }
             }
@@ -156,7 +164,8 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
         saveButton.setOnClickListener {
             // 날짜로 일기 불러오기 검색
             val date = "${yearPicker.value}.${String.format("%02d",monthPicker.value)}"
-            setDiaries(date)
+            searchPeriod = date
+            setComments()
             myPageViewModel.setSelectedMonth(date)
             binding.selectDateTextView.text = "${yearPicker.value}년 ${String.format("%02d",monthPicker.value)}월"
             dialogView.dismiss()
@@ -164,7 +173,8 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
 
         allPeriodButton.setOnClickListener {
             // 전체 보기
-            setDiaries("all")
+            searchPeriod = "all"
+            setComments()
             myPageViewModel.setSelectedMonth(DateConverter.ymFormat(DateConverter.getCodaToday()))
             binding.selectDateTextView.text = getString(R.string.show_all)
             dialogView.dismiss()

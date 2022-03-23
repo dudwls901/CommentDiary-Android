@@ -34,9 +34,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                style="@style/MCaption2"
                 app:mcv_dateTextAppearance="@style/CalendarDateText"
                 app:mcv_headerTextAppearance="@style/CalendarViewHeaderCustomText"
-                app:mcv_selectionColor="@color/date_selected_color"
+                app:mcv_selectionColor="@color/pure_orange"
                 app:mcv_weekDayTextAppearance="@style/CalendarDayOfWeek" />
 
             <LinearLayout

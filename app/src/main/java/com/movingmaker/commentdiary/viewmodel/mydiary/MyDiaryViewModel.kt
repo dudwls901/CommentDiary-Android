@@ -12,6 +12,7 @@ import com.movingmaker.commentdiary.model.entity.DiaryId
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
+import com.movingmaker.commentdiary.model.remote.response.CommentListResponse
 import com.movingmaker.commentdiary.model.remote.response.DiaryListResponse
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.model.remote.response.SaveDiaryResponse
@@ -34,12 +35,14 @@ class MyDiaryViewModel : ViewModel() {
     private var _saveOrEdit = MutableLiveData<String>()
     private var _selectedDate = MutableLiveData<String>()
     private var _commentList = MutableLiveData<List<Comment>>()
+    private var _haveDayMyComment = MutableLiveData<Boolean>()
 
     //api response
     private var _responseGetMonthDiary = MutableLiveData<Response<DiaryListResponse>>()
     private var _responseSaveDiary = MutableLiveData<Response<SaveDiaryResponse>>()
     private var _responseEditDiary = MutableLiveData<Response<IsSuccessResponse>>()
     private var _responseDeleteDiary = MutableLiveData<Response<IsSuccessResponse>>()
+    private var _responseGetDayComment = MutableLiveData<Response<CommentListResponse>>()
 
     val aloneDiary: LiveData<List<CalendarDay>>
         get() = _aloneDiary
@@ -71,6 +74,10 @@ class MyDiaryViewModel : ViewModel() {
     val commentList: LiveData<List<Comment>>
         get() = _commentList
 
+    val haveDayMyComment: LiveData<Boolean>
+        get() = _haveDayMyComment
+
+
     val responseGetMonthDiary: LiveData<Response<DiaryListResponse>>
         get() = _responseGetMonthDiary
 
@@ -83,11 +90,14 @@ class MyDiaryViewModel : ViewModel() {
     val responseDeleteDiary: LiveData<Response<IsSuccessResponse>>
         get() = _responseDeleteDiary
 
+    val responseGetDayComment: LiveData<Response<CommentListResponse>>
+        get() = _responseGetDayComment
+
 
     init {
-        _aloneDiary.value = emptyList()
-        _commentDiary.value = emptyList()
-        _monthDiaries.value = emptyList()
+//        _aloneDiary.value = emptyList()
+//        _commentDiary.value = emptyList()
+//        _monthDiaries.value = emptyList()
         _deliveryYN.value =' '
         _selectedDiary.value = Diary(null,"","","",' ',' ', null)
         _dateDiaryText.value = ""
@@ -108,7 +118,7 @@ class MyDiaryViewModel : ViewModel() {
     }
 
     fun setMonthDiaries(list: List<Diary>) {
-        _monthDiaries.value = list
+        Log.e("mydiaryviewmodel", "setMonthDiaries: ${list.size}", )
 
         val aloneDiary = ArrayList<CalendarDay>()
         val commentDiary = ArrayList<CalendarDay>()
@@ -129,13 +139,14 @@ class MyDiaryViewModel : ViewModel() {
         //livedata의 setValue는 백그라운드 스레드로 작업 불가
         setCommentDiary(commentDiary.toList())
         setAloneDiary(aloneDiary.toList())
-
+        _monthDiaries.value = list
     }
 
     //for diary data
     fun setSelectedDiary(diary: Diary){
         _selectedDiary.value = diary
         _commentList.value = diary.commentList?: emptyList()
+        Log.d("report", "observeDatas: before report ${selectedDiary.value}")
     }
 
     fun setDeliveryYN(type: Char){
@@ -169,6 +180,39 @@ class MyDiaryViewModel : ViewModel() {
         _saveOrEdit.value = state
     }
 
+    fun setHaveDayMyComment(isHave: Boolean){
+        _haveDayMyComment.value = isHave
+    }
+
+    fun deleteLocalReportedComment(commentId: Long){
+        Log.d("report", "observeDatas: report ${selectedDiary.value}")
+        //신고한 코멘트 삭
+        Log.d("report", "deleteLocalReportedComment: commentList size :  ${_selectedDiary.value!!.commentList!!.size}")
+        for(idx in _selectedDiary.value!!.commentList!!.indices){
+            Log.d("report", "deleteLocalReportedComment: idx :  ${idx} reporetedId : ${commentId}")
+            val comment = selectedDiary.value!!.commentList!![idx]
+            if(comment.id == commentId){
+                _selectedDiary.value!!.commentList!!.removeAt(idx)
+                return
+            }
+        }
+    }
+
+    fun likeLocalComment(commentId: Long){
+        Log.d("like", "observeDatas: like ${selectedDiary.value}")
+        //신고한 코멘트 삭
+        Log.d("like", "likeLocalComment: commentList size :  ${_selectedDiary.value!!.commentList!!.size}")
+        for(idx in _selectedDiary.value!!.commentList!!.indices){
+            Log.d("report", "likeLocalComment: idx :  ${idx} likedId : ${commentId}")
+            val comment = selectedDiary.value!!.commentList!![idx]
+            if(comment.id == commentId){
+                _selectedDiary.value!!.commentList!![idx].like=true
+                return
+            }
+        }
+    }
+
+
     suspend fun setResponseGetMonthDiary(date: String) {
         Log.d("calendarwithdiary", "setResponseGetMonthDiary $date ")
         withContext(viewModelScope.coroutineContext) {
@@ -191,6 +235,12 @@ class MyDiaryViewModel : ViewModel() {
     suspend fun setResponseDeleteDiary(diaryId: Long){
         withContext(viewModelScope.coroutineContext){
             _responseDeleteDiary.value = MyDiaryRepository.INSTANCE.deleteDiary(diaryId)
+        }
+    }
+
+    suspend fun setResponseGetDayComment(date: String){
+        withContext(viewModelScope.coroutineContext){
+            _responseGetDayComment.value = MyPageRepository.INSTANCE.getMonthComment(date)
         }
     }
 

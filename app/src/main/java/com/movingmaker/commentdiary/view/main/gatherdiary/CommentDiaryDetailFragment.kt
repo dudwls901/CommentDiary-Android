@@ -1,21 +1,32 @@
 package com.movingmaker.commentdiary.view.main.gatherdiary
 
+import android.annotation.SuppressLint
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryCommentdiaryDetailBinding
+import com.movingmaker.commentdiary.model.remote.request.ReportCommentRequest
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
+import com.movingmaker.commentdiary.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope {
+class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSelectListener {
 
     override val TAG: String = CommentDiaryDetailFragment::class.java.simpleName
 
@@ -23,14 +34,16 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope {
 
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
-
+    private val gatherDiaryViewModel: GatherDiaryViewModel by activityViewModels()
+    private lateinit var commentListAdapter: CommentListAdapter
     private val job = Job()
-
+    private var reportedCommentId = -1L
+    private var likedCommentId = -1L
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    companion object{
-        fun newInstance() : CommentDiaryDetailFragment {
+    companion object {
+        fun newInstance(): CommentDiaryDetailFragment {
             return CommentDiaryDetailFragment()
         }
     }
@@ -54,59 +67,183 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope {
         return binding.root
     }
 
-    private fun observeDatas(){
+    @SuppressLint("NotifyDataSetChanged")
+    private fun observeDatas() {
         Log.d(TAG, "initViews: detail ${myDiaryViewModel.selectedDiary.value}")
-        val codaToday = DateConverter.getCodaToday()
-        val selectedDate = DateConverter.ymdToDate(myDiaryViewModel.selectedDiary.value!!.date)
 
-        myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner){ diary->
 
-            //        val minusTwoDay = codaToday.minusDays(2)
-//        Log.d(TAG, "initViews: ${selectedDate} ${myDiaryViewModel.selectedDiary.value!!.commentList} ${myDiaryViewModel.selectedDiary.value!!.commentList!!.size}")
-            Log.d(TAG, "initViews: detail mydiary ${myDiaryViewModel.selectedDiary.value!!.commentList?.isEmpty()}")
-            Log.d(TAG, "observeDatas detail: ${myDiaryViewModel.selectedDiary.value}")
+
+        myDiaryViewModel.responseGetDayComment.observe(viewLifecycleOwner){ response ->
+            //하루 코멘트 가져오기
+            if(response.isSuccessful){
+
+                myDiaryViewModel.setHaveDayMyComment(response.body()!!.result.isNotEmpty())
+                Log.d(TAG, "observeData: haveComment date : ${myDiaryViewModel.selectedDiary.value!!.date} response : ${response.body()!!.result}  haveComment : ${ myDiaryViewModel.haveDayMyComment.value}")
+            }
+            //
+            else{
+            }
+        }
+
+        gatherDiaryViewModel.responseLikeComment.observe(viewLifecycleOwner){response->
+            if(response.isSuccessful){
+                if(likedCommentId!=-1L){
+                    myDiaryViewModel.likeLocalComment(likedCommentId)
+                    commentListAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+
+        gatherDiaryViewModel.responseReportComment.observe(viewLifecycleOwner){response->
+            //신고 성공한 경우
+            if(response.isSuccessful){
+                //신고한 코멘트 삭제해서 갱신
+                //어댑터 갱신
+                if(reportedCommentId!=-1L){
+                    myDiaryViewModel.deleteLocalReportedComment(reportedCommentId)
+                    commentListAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+
+        myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
+            commentListAdapter.submitList(diary.commentList)
+        }
+
+        myDiaryViewModel.haveDayMyComment.observe(viewLifecycleOwner) {
+            val diary = myDiaryViewModel.selectedDiary.value!!
+            val codaToday = DateConverter.getCodaToday()
+            val selectedDate = DateConverter.ymdToDate(diary.date)
+            Log.d(TAG, "observeDatas: detail 5 ${selectedDate} ${codaToday.minusDays(2)}")
+
             //코멘트 없는 경우
-            if(diary.commentList?.isEmpty()==true || diary.commentList==null){
-
-                if(selectedDate <= codaToday.minusDays(2)){
+            if (diary.commentList?.isEmpty() == true || diary.commentList == null) {
+                Log.d(TAG, "observeDatas: 코멘트 없음")
+                binding.goToWriteCommentButton.isVisible = false
+                binding.goToWriteCommentTextView.isVisible = false
+                binding.noWriteCommentTextView.isVisible = false
+                binding.recyclerView.isVisible = false
+                if (selectedDate <= codaToday.minusDays(2)) {
+                    Log.d(TAG, "observeDatas: 코멘트 없음 이틀이 지나 영영 못받음")
                     //이틀이 지나 영영 코멘트를 받을 수 없음
                     binding.emptyCommentTextView.isVisible = true
                     binding.diaryUploadServerYetTextView.isVisible = false
                     binding.sendCompleteTextView.isVisible = false
-                }
-                else{
+                } else {
                     //아직 코멘트를 받지 못한 경우
+                    Log.d(TAG, "observeDatas: 코멘트 없음 아직 이틀 안 지나서 받을 순 있음")
                     binding.emptyCommentTextView.isVisible = false
-                    binding.diaryUploadServerYetTextView.isVisible= true
+                    binding.diaryUploadServerYetTextView.isVisible = true
                     binding.sendCompleteTextView.isVisible = true
                 }
             }
             //코멘트 있는 경우 리사이클러뷰 띄우기
-            else{
+            else {
                 binding.emptyCommentTextView.isVisible = false
                 binding.diaryUploadServerYetTextView.isVisible = false
                 binding.sendCompleteTextView.isVisible = false
+                //내가 코멘트를 작성 한 경우
+                if (myDiaryViewModel.haveDayMyComment.value == true) {
+                    Log.d(TAG, "observeDatas: 코멘트 있음 나도 코멘트 작성함")
+                    binding.recyclerView.isVisible = true
+                    binding.goToWriteCommentButton.isVisible = false
+                    binding.goToWriteCommentTextView.isVisible = false
+                    binding.noWriteCommentTextView.isVisible = false
+                } else {
+                    //내가 코멘트를 작성 안 한 경우
+                    //                    Log.d(TAG, "observeDatas: detail 6 ${selectedDate} ${codaToday.minusDays(2)}")
+                    if (selectedDate <= codaToday.minusDays(2)) {
+                        Log.d(TAG, "observeDatas: 코멘트 있음 난 코멘트 작성 안 했는데 이틀 지나서 영영 못봄")
+                        binding.goToWriteCommentButton.isVisible = false
+                        binding.goToWriteCommentTextView.isVisible = false
+                        binding.noWriteCommentTextView.isVisible = true
+                    } else {
+                        Log.d(TAG, "observeDatas: 코멘트 있음 난 코멘트 작성 안 했는데 이틀 안 지나서 아직 볼 수 있음")
+                        binding.goToWriteCommentButton.isVisible = true
+                        binding.goToWriteCommentTextView.isVisible = true
+                        binding.noWriteCommentTextView.isVisible = false
+                    }
+                    binding.recyclerView.isVisible = false
+                }
             }
         }
     }
 
-    private fun initViews() = with(binding){
+    private fun initViews() = with(binding) {
+
+        binding.goToWriteCommentButton.setOnClickListener {
+            fragmentViewModel.setFragmentState("receivedDiary")
+        }
+        commentListAdapter = CommentListAdapter(this@CommentDiaryDetailFragment)
+        commentListAdapter.setHasStableIds(true)
+        binding.recyclerView.adapter = commentListAdapter
     }
 
-    private fun initToolBar() = with(binding){
-        //툴바
+    private fun initToolBar() = with(binding) {
+
         backButton.setOnClickListener {
+            Log.d(TAG, "inittoolbar backbutton: ${fragmentViewModel.beforeFragment.value}")
 //            parentFragmentManager.popBackStack()
 //            fragmentViewModel.setHasBottomNavi(true)
-            if(fragmentViewModel.beforeFragment.value=="writeDiary") {
+            if (fragmentViewModel.beforeFragment.value == "writeDiary") {
                 fragmentViewModel.setFragmentState("myDiary")
-            }
-            else if(fragmentViewModel.beforeFragment.value=="gatherDiary"){
+            } else if (fragmentViewModel.beforeFragment.value == "gatherDiary") {
                 fragmentViewModel.setFragmentState("gatherDiary")
-            }
-            else{
+            } else {
                 fragmentViewModel.setFragmentState("myDiary")
             }
         }
     }
+
+    override fun onHeartClickListener(commentId: Long) {
+        Toast.makeText(requireContext(), "hear", Toast.LENGTH_SHORT).show()
+        likedCommentId = commentId
+        launch(coroutineContext) {
+            gatherDiaryViewModel.setResponseLikeComment(commentId)
+        }
+    }
+
+    override fun onReportClickListener(commentId: Long) {
+        showReportDialog(commentId)
+    }
+
+    private fun showReportDialog(commentId: Long) {
+        val dialogView = Dialog(requireContext())
+        dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogView.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialogView.setContentView(R.layout.dialog_common_report)
+        dialogView.setCancelable(false)
+        dialogView.show()
+
+
+        val submitButton = dialogView.findViewById<Button>(R.id.submitButton)
+        val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+        val reportContentEditText = dialogView.findViewById<EditText>(R.id.reportContentEditText)
+
+        submitButton.setOnClickListener {
+            val reportContent = reportContentEditText.text.toString()
+            if (reportContent.isEmpty()) {
+                Toast.makeText(requireContext(), "내용 입력해라잉", Toast.LENGTH_SHORT).show()
+            }
+            //한 글자 이상 입력했으면
+            else {
+                //신고
+                //로컬에서 코멘트 삭제
+                reportedCommentId = commentId
+                launch(coroutineContext) {
+                    gatherDiaryViewModel.setResponseReportComment(
+                        ReportCommentRequest(
+                            id = commentId,
+                            content = reportContent
+                        )
+                    )
+                }
+                dialogView.dismiss()
+            }
+        }
+        cancelButton.setOnClickListener {
+            dialogView.dismiss()
+        }
+    }
+
 }

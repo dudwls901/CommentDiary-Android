@@ -45,13 +45,14 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
     private lateinit var onboardingSignUpFragment: OnboardingSignUpFragment
     private lateinit var onboardingFindPasswordFragment: OnboardingFindPasswordFragment
     private lateinit var onboardingSignUpSuccessFragment: OnboardingSignUpSuccessFragment
+    private var backButtonTime = 0L
 
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.statusBarColor = getColor(R.color.onboarding_background)
+        window.statusBarColor = getColor(R.color.background_ivory)
         //todo 스플래시 대응 수부
 //        binding.backgroundLayout.setBackgroundColor(R.color.background_ivory)
 
@@ -170,7 +171,6 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
             }
         }
 
-
         onboardingViewModel.currentFragment.observe(this, observeFragmentState)
     }
 
@@ -259,6 +259,31 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         }
         closeButton.setOnClickListener {
             dialogView.dismiss()
+        }
+    }
+
+    override fun onBackPressed() {
+        val currentTime = System.currentTimeMillis()
+        val gapTime = currentTime - backButtonTime
+        val curFragment = onboardingViewModel.currentFragment.value
+        Log.d(TAG, "onBackPressed: ${curFragment}")
+        if(curFragment!="signUp" && curFragment != "findPW") {
+            if (gapTime in 0..2000) {
+                // 2초 안에 두번 뒤로가기 누를 시 앱 종료
+                finishAndRemoveTask()
+                android.os.Process.killProcess(android.os.Process.myPid())
+            }
+            else{
+                backButtonTime = currentTime
+                Toast.makeText(
+                    this,
+                    "뒤로가기 버튼을 한번 더 누르면 종료됩니다.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        else {
+                onboardingViewModel.setCurrentFragment("login")
         }
     }
 }

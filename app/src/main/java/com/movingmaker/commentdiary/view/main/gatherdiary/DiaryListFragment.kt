@@ -42,6 +42,7 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private lateinit var diaryListAdapter: DiaryListAdapter
 
+    private var searchPeriod="all"
 
     private val job = Job()
 
@@ -71,7 +72,6 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.gatherDiaryviewModel = gatherDiaryViewModel
         observeDatas()
-        setDiaries("all")
         initViews()
 
 
@@ -79,6 +79,13 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
     }
 
     private fun observeDatas() {
+
+        fragmentViewModel.fragmentState.observe(viewLifecycleOwner){ fragment->
+            if(fragment=="gatherDiary"){
+                setDiaries()
+            }
+        }
+        
         gatherDiaryViewModel.responseGetAllDiary.observe(viewLifecycleOwner) {
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
@@ -103,17 +110,17 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
         }
     }
 
-    private fun setDiaries(date: String) {
-
+    private fun setDiaries() {
+        Log.d(TAG, "setDiaries: ${searchPeriod}")
         launch(coroutineContext) {
             binding.loadingBar.isVisible = true
             launch(Dispatchers.IO) {
-                when (date) {
+                when (searchPeriod) {
                     "all" -> {
                         gatherDiaryViewModel.setResponseGetAllDiary()
                     }
                     else -> {
-                        gatherDiaryViewModel.setResponseGetMonthDiary(date)
+                        gatherDiaryViewModel.setResponseGetMonthDiary(searchPeriod)
                     }
                 }
             }
@@ -122,7 +129,7 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
 
     private fun initViews() = with(binding) {
 
-        diaryListAdapter = DiaryListAdapter(emptyList(), this@DiaryListFragment)
+        diaryListAdapter = DiaryListAdapter(this@DiaryListFragment)
         diaryListAdapter.setHasStableIds(true)
         binding.diaryListRecyclerView.adapter = diaryListAdapter
         selectDateLayout.setOnClickListener {
@@ -163,7 +170,8 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
         saveButton.setOnClickListener {
             // 날짜로 일기 불러오기 검색
             val date = "${yearPicker.value}.${String.format("%02d", monthPicker.value)}"
-            setDiaries(date)
+            searchPeriod = date
+            setDiaries()
             gatherDiaryViewModel.setSelectedMonth(date)
             binding.selectDateTextView.text =
                 "${yearPicker.value}년 ${String.format("%02d", monthPicker.value)}월"
@@ -172,7 +180,8 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
 
         allPeriodButton.setOnClickListener {
             // 전체 보기
-            setDiaries("all")
+            searchPeriod = "all"
+            setDiaries()
             gatherDiaryViewModel.setSelectedMonth(DateConverter.ymFormat(DateConverter.getCodaToday()))
             binding.selectDateTextView.text = getString(R.string.show_all)
             dialogView.dismiss()
@@ -181,8 +190,17 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
     }
 
     override fun onDiarySelectListener(diary: Diary) {
+
         myDiaryViewModel.setSelectedDiary(diary)
+        val nextDate = DateConverter.ymdToDate(diary.date)
+        val nextDateToString = nextDate.plusDays(1).toString().replace('-','.')
+        Log.d(TAG, "onDiarySelectListener: nextdate $nextDateToString")
+        launch(coroutineContext) {
+            myDiaryViewModel.setResponseGetDayComment(nextDateToString)
+        }
+//        myDiaryViewModel.setSelectedDate(diary.date)
         fragmentViewModel.setBeforeFragment("gatherDiary")
+        Log.d(TAG, "initToolBar: ${fragmentViewModel.beforeFragment.value}")
         fragmentViewModel.setFragmentState("commentDiaryDetail")
     }
 

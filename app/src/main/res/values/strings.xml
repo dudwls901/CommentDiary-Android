@@ -37,7 +37,6 @@
     <string name="onboarding_complete_auth">인증완료</string>
     <string name="onboarding_send_password_complete">비밀번호 전송 완료!\n이메일을 확인해 주세요.</string>
     <string name="onboarding_login_incorrect">이메일 혹은 비밀번호가 올바르지 않습니다.</string>
-
     <string name="diary_test_text">내가 서툴고 불안해 보였나요.\n그건 내가 진심이었단 증거입니다</string>
     <string name="diary_test_date">2022년 02월 21일</string>
     <string name="diary_test_head">배가 고프다</string>
@@ -61,12 +60,14 @@
     <string name="editButton">editButton</string>
     <string name="write_comment_diary_notice">코멘트를 받기 위해서는 100자 이상 작성해야 해요.</string>
     <string name="comment_diary_text_limit">%s/100</string>
-    <string name="upload_yet_comment_diary">일기 전송은 다가오는 오전 6시에 종료돼요.</string>
+    <string name="upload_temp_time_comment_diary">일기 전송은 다가오는 오전 6시에 종료돼요.</string>
+    <string name="upload_temp_comment_please">임시 저장된 일기예요. 일기를 전송해주세요.</string>
     <string name="diary_delete_warning">정말 삭제하시나요?\n삭제된 일기는 복구할 수 없어요.</string>
     <string name="diary_send_warning">다른 누군가에게 일기가 전송됩니다.\n전송 후에는 수정 및 삭제가 어렵습니다.\n전송하시겠어요?</string>
     <string name="diary_send_notice">전송되었습니다.\n곧 코멘트가 도착할거예요!</string>
     <string name="diary_content_dummy_data">내가 서툴고 불안해보였나요\n그건 내가 진심이었단 증거입니다\n소중하지 않았다면
                 \n왜 그토록 마음을 기울였겠어요\n망설이고 비틀거리고\n안절부절 못하면서\n\n황경민의 밤 열한시</string>
+    <string name="write_diary_back">지금 나가면 작성한 일기가 날아가요.\n그래도 나가시나요?</string>
     <string name="diary_send_complete">전송완료</string>
     <string name="comment_wait">전송 후 코멘트 도착까지 조금만 기다려주세요.</string>
     <string name="received_diary_click">도착한 코멘트 보기</string>
@@ -109,6 +110,8 @@
     <string name="change_password">비밀번호 변경</string>
     <string name="change">변경하기</string>
     <string name="write_comment">코멘트 작성하기</string>
+    <string name="yet_write_comment">‘도착한 일기’의 코멘트를 작성해야\n내게 온 코멘트를 확인할 수 있어요.</string>
+    <string name="no_write_comment">‘도착한 일기’의 코멘트를 작성하지 않아서\n코멘트를 놓쳤어요. 다음에는 꼭 작성해주세요.</string>
     <string-array name="custom_weekdays">
         <item>일</item>
         <item>월</item>

@@ -2,9 +2,7 @@ package com.movingmaker.commentdiary.model.remote.api
 
 import com.google.gson.annotations.SerializedName
 import com.movingmaker.commentdiary.model.remote.Url
-import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
-import com.movingmaker.commentdiary.model.remote.request.EmailCodeCheckRequest
-import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
+import com.movingmaker.commentdiary.model.remote.request.*
 import com.movingmaker.commentdiary.model.remote.response.DiaryListResponse
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.model.remote.response.SaveDiaryResponse
@@ -17,5 +15,12 @@ interface GatherDiaryApiService {
 
     @GET(Url.DIARY+Url.MY)
     suspend fun getMonthDiary(@Query("date") date: String): Response<DiaryListResponse>
+
+    @POST(Url.REPORT+Url.COMMENT)
+    suspend fun reportComment(@Body reportCommentRequest: ReportCommentRequest): Response<IsSuccessResponse>
+
+    //path variable
+    @PATCH("${Url.COMMENT}/${Url.LIKE}/{commentId}" )
+    suspend fun likeComment(@Path("commentId") commentId: Long): Response<IsSuccessResponse>
 
 }

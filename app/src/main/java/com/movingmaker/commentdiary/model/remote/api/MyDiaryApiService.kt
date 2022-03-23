@@ -5,6 +5,7 @@ import com.movingmaker.commentdiary.model.remote.Url
 import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.model.remote.request.EmailCodeCheckRequest
 import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
+import com.movingmaker.commentdiary.model.remote.response.CommentListResponse
 import com.movingmaker.commentdiary.model.remote.response.DiaryListResponse
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.model.remote.response.SaveDiaryResponse
@@ -25,4 +26,7 @@ interface MyDiaryApiService {
     //path variable
     @DELETE("${Url.DIARY}/{diaryId}" )
     suspend fun deleteDiary(@Path("diaryId") diaryId: Long): Response<IsSuccessResponse>
+
+    @GET(Url.COMMENT)
+    suspend fun getMonthComment(@Query("date") date: String): Response<CommentListResponse>
 }

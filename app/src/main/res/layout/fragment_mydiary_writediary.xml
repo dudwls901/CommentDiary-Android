@@ -165,7 +165,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="@string/upload_yet_comment_diary"
+            android:text="@string/upload_temp_time_comment_diary"
             android:textColor="@color/text_brown"
             style="@style/MCaption3"
             android:visibility="gone"

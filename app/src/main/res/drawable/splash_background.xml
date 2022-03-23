@@ -2,7 +2,5 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/background_ivory"/>
     <item android:drawable="@drawable/img_logo"
-        android:width="300dp"
-        android:height="300dp"
         android:gravity="center" />
 </layer-list>

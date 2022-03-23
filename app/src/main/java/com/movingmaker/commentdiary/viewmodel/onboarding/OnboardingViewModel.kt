@@ -17,7 +17,6 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 class OnboardingViewModel(application: Application) : AndroidViewModel(application) {
-//    private var _currentNum = MutableLiveData<Int>()
     private var _emailCorrect = MutableLiveData<Boolean>()
     private var _passwordCorrect = MutableLiveData<Boolean>()
     private var _passwordCheckCorrect = MutableLiveData<Boolean>()
@@ -39,7 +38,6 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
 
     //for findPassword
     private var _findPasswordEmail = MutableLiveData<String>()
-
 
 
     val emailCorrect: LiveData<Boolean>
@@ -90,8 +88,8 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     val responseFindPassword: LiveData<Response<IsSuccessResponse>>
         get() = _responseFindPassword
 
+
     init {
-//        _currentNum.value = 0
         _emailCorrect.value = true
         _passwordCorrect.value = true
         _passwordCheckCorrect.value = true
@@ -153,6 +151,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
         _findPasswordEmail.value = text
     }
 
+
     suspend fun setResponseEmailSend(email: String) {
             withContext(viewModelScope.coroutineContext) {
                 _responseEmailSend.value =
@@ -198,22 +197,4 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-
-//    fun setResponseEmailSend(email: String){
-//        val call = RetrofitClient.onboardingApiService.sendEmail(email = email)
-//        call.enqueue(object : retrofit2.Callback<SendEmailCodeResponse>{
-//            //응답 성공시
-//            override fun onResponse(call: Call<SendEmailCodeResponse>, response: Response<SendEmailCodeResponse>) {
-//                Log.d(TAG, "onResponse(): called / response : ${response.raw()}")
-////                completion(RESPONSE_STATE.OKAY,response.body().toString())
-//            }
-//
-//            //응답 실패시
-//            override fun onFailure(call: Call<SendEmailCodeResponse>, t: Throwable) {
-//                Log.d(TAG, "RetrofitManager - onFailure(): called /t : $t")
-////                completion(RESPONSE_STATE.FAIL,t.toString())
-//            }
-//
-//        })
-//    }
 }

@@ -35,7 +35,10 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
 
     private val myPageViewModel: MyPageViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
-    private lateinit var display: Display
+
+    private var temperatureBarMaxWidthPx = 0
+//    private lateinit var display: Display
+
     companion object {
         fun newInstance(): MyPageFragment {
             return MyPageFragment()
@@ -62,7 +65,6 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
         //붙여야 observer가
         binding.lifecycleOwner = viewLifecycleOwner
         binding.mypageviewmodel = myPageViewModel
-        initViews()
         bindButtons()
         observeDatas()
 
@@ -70,6 +72,17 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
     }
 
     private fun observeDatas() {
+
+        binding.lifecycleOwner?.let { lifecycleOwner ->
+            fragmentViewModel.fragmentState.observe(lifecycleOwner) { fragment ->
+                if (fragment == "myPage") {
+                    launch(coroutineContext) {
+                        myPageViewModel.setResponseGetMyPage()
+                    }
+                }
+            }
+        }
+
         binding.lifecycleOwner?.let { lifecycleOwner ->
             myPageViewModel.responseSignOut.observe(lifecycleOwner) {
 //                binding.loadingBar.isVisible = false
@@ -103,25 +116,22 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
         }
     }
 
-    private fun initViews() = with(binding) {
-        launch(coroutineContext) {
-            myPageViewModel.setResponseGetMyPage()
-        }
-    }
-
-    private fun bindButtons() = with(binding){
+    private fun bindButtons() = with(binding) {
         myAccountLayout.setOnClickListener {
+            fragmentViewModel.setBeforeFragment("myPage")
             fragmentViewModel.setFragmentState("myAccount")
         }
         termsAndPolicyLayout.setOnClickListener {
+            fragmentViewModel.setBeforeFragment("myPage")
             fragmentViewModel.setFragmentState("terms")
         }
         myCommentLayout.setOnClickListener {
+            fragmentViewModel.setBeforeFragment("myPage")
             fragmentViewModel.setFragmentState("sendedCommentList")
         }
     }
 
-    private fun setTemperatureBar() = with(binding){
+    private fun setTemperatureBar() = with(binding) {
         //dp값 구하기
 //        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R){
 //            display = requireActivity().display!!
@@ -134,17 +144,21 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
 //        val dpi = displayMetrics.densityDpi
 //        val density = displayMetrics.density
         //값이 없거나 0.0인 경우 0dp로 들어가서 css,cee parent에 의해 꽉차게 되는 것을 1.0으로 방지
-        var temperature = myPageViewModel.temperature.value?: 1.0
-        if(temperature==0.0){
-            temperature=1.0
+        var temperature = myPageViewModel.temperature.value ?: 1.0
+        if (temperature == 0.0) {
+            temperature = 1.0
         }
+
         //뷰의 maxWidthPx
-        val maxWidthPx = temperatureBar.width
-        val temperatureRateForPx = (maxWidthPx * (temperature/100.0))
+        if(temperatureBarMaxWidthPx==0){
+            temperatureBarMaxWidthPx = temperatureBar.width
+        }
+        val temperatureRateForPx = (temperatureBarMaxWidthPx * (temperature / 100.0))
         //temperatureBar의 상위 viewgroup에서 마진 설정 가능
-        val layoutParams : ConstraintLayout.LayoutParams = temperatureBar.layoutParams as ConstraintLayout.LayoutParams
+        val layoutParams: ConstraintLayout.LayoutParams =
+            temperatureBar.layoutParams as ConstraintLayout.LayoutParams
         //6dp = 18px, 해상도별로 다름
-        layoutParams.setMargins(17,10,17,10)
+        layoutParams.setMargins(17, 10, 17, 10)
         layoutParams.width = temperatureRateForPx.toInt()
         layoutParams.height = 17
         temperatureBar.layoutParams = layoutParams
@@ -153,7 +167,13 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
         temperatureBar.isVisible = true
 
 //        Log.d(TAG, "setTemperatureBar: ${displayMetrics.densityDpi} ${displayMetrics.density}")
-        Log.d(TAG, "setTemperatureBar: ${temperatureBar.width} ${temperatureBar.layoutParams.width}")
-        Log.d(TAG, "setTemperatureBar: ${temperatureBar.height} ${temperatureBar.layoutParams.height}")
+        Log.d(
+            TAG,
+            "setTemperatureBar: ${temperatureBar.width} ${temperatureBar.layoutParams.width}"
+        )
+        Log.d(
+            TAG,
+            "setTemperatureBar: ${temperatureBar.height} ${temperatureBar.layoutParams.height}"
+        )
     }
 }

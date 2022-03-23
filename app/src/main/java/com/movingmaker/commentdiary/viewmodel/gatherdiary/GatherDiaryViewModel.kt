@@ -11,6 +11,7 @@ import com.movingmaker.commentdiary.model.entity.Diary
 import com.movingmaker.commentdiary.model.entity.DiaryId
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
+import com.movingmaker.commentdiary.model.remote.request.ReportCommentRequest
 import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.model.remote.response.DiaryListResponse
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
@@ -29,6 +30,9 @@ class GatherDiaryViewModel : ViewModel() {
     private var _selectedMonth = MutableLiveData<String>()
     private var _responseGetMonthDiary = MutableLiveData<Response<DiaryListResponse>>()
     private var _responseGetAllDiary = MutableLiveData<Response<DiaryListResponse>>()
+    private var _responseLikeComment = MutableLiveData<Response<IsSuccessResponse>>()
+    private var _responseReportComment = MutableLiveData<Response<IsSuccessResponse>>()
+
 
     val diaryList: LiveData<List<Diary>>
         get() = _diaryList
@@ -42,6 +46,11 @@ class GatherDiaryViewModel : ViewModel() {
     val responseGetAllDiary: LiveData<Response<DiaryListResponse>>
         get() = _responseGetAllDiary
 
+    val responseLikeComment: LiveData<Response<IsSuccessResponse>>
+        get() = _responseLikeComment
+
+    val responseReportComment: LiveData<Response<IsSuccessResponse>>
+        get() = _responseReportComment
 
     init {
         _diaryList.value = emptyList()
@@ -70,5 +79,18 @@ class GatherDiaryViewModel : ViewModel() {
         }
     }
 
+    suspend fun setResponseReportComment(reportCommentRequest: ReportCommentRequest) {
+        Log.d("gatherdiary", "setResponseReportComment  ")
+        withContext(viewModelScope.coroutineContext) {
+            _responseReportComment.value = GatherDiaryRepository.INSTANCE.reportComment( reportCommentRequest )
+        }
+    }
+
+    suspend fun setResponseLikeComment(commentId: Long) {
+        Log.d("gatherdiary", "setResponseLikeComment  ")
+        withContext(viewModelScope.coroutineContext) {
+            _responseLikeComment.value = GatherDiaryRepository.INSTANCE.likeComment(commentId)
+        }
+    }
 
 }

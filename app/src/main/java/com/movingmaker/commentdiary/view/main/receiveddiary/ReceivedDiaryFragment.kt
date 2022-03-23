@@ -13,10 +13,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
@@ -24,8 +22,6 @@ import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentReceiveddiaryBinding
 import com.movingmaker.commentdiary.model.entity.ReceivedDiary
-import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
-import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.receiveddiary.ReceivedDiaryViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -72,6 +68,19 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
 
     @SuppressLint("ResourceAsColor")
     private fun observeDatas() {
+
+        fragmentViewModel.fragmentState.observe(viewLifecycleOwner){ fragment->
+            if(fragment=="receivedDiary"){
+                Log.d(TAG, "observeDatas: 갱신갱")
+                //받은 일기 조회
+                launch(coroutineContext) {
+                    launch(Dispatchers.IO) {
+                        receivedDiaryViewModel.setResponseGetReceivedDiary()
+                    }
+                }
+            }
+        }
+
         receivedDiaryViewModel.responseGetReceivedDiary.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
                 Log.d(TAG, "observeDatas: ${it.body()!!.result}")
@@ -91,12 +100,8 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
                         binding.sendCommentButton.text = getString(R.string.diary_send_complete)
                         binding.sendCommentButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.text_brown))
                         binding.sendCommentButton.isEnabled = false
-//                        if(response.result.myComment.isEmpty()){
-//                            binding.commentEditTextView.setText("")
-//                        }
-//                        else {
-                            binding.commentEditTextView.setText(response.result.myComment[0].content)
-//                        }
+
+                        binding.commentEditTextView.setText(response.result.myComment[0].content)
                         binding.commentEditTextView.isEnabled = false
                     } else {
                         binding.sendCommentButton.background = ContextCompat.getDrawable(
@@ -124,7 +129,12 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
 
             if (response.isSuccessful) {
                 Toast.makeText(requireContext(), "코멘트가 전송되었습니다.", Toast.LENGTH_SHORT).show()
-                initViews()
+                //화면 갱신
+                launch(coroutineContext) {
+                    launch(Dispatchers.IO) {
+                        receivedDiaryViewModel.setResponseGetReceivedDiary()
+                    }
+                }
             }
             //todo 일기 전송 실패 처리
             else {
@@ -134,16 +144,12 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
 
         receivedDiaryViewModel.responseReportDiary.observe(viewLifecycleOwner){ response ->
             if(response.isSuccessful){
-                receivedDiaryViewModel.setReceivedDiary(ReceivedDiary(
-                    null,
-                    "",
-                    "",
-                    "",
-                    ' ',
-                    ' ',
-                    null
-                ))
-                initViews()
+                //화면 갱신
+                launch(coroutineContext) {
+                    launch(Dispatchers.IO) {
+                        receivedDiaryViewModel.setResponseGetReceivedDiary()
+                    }
+                }
                 Toast.makeText(requireContext(), "신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
             }
             //todo 신고 실패 처리
@@ -155,12 +161,6 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
     }
 
     private fun initViews() = with(binding) {
-        //받은 일기 조회
-        launch(coroutineContext) {
-            launch(Dispatchers.IO) {
-                receivedDiaryViewModel.setResponseGetReceivedDiary()
-            }
-        }
 
         commentEditTextView.addTextChangedListener {
             receivedDiaryViewModel.setCommentTextCount(

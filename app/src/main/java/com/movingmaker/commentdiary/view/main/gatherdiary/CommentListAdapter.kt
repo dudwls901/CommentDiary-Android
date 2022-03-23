@@ -1,22 +1,23 @@
-package com.movingmaker.commentdiary.view.main.mydiary
+package com.movingmaker.commentdiary.view.main.gatherdiary
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.RvItemMydiaryCommentBinding
 import com.movingmaker.commentdiary.model.entity.Comment
-import com.prolificinteractive.materialcalendarview.CalendarDay
 
-class CommentListAdapter: ListAdapter<Comment,CommentListAdapter.ItemViewHolder>(diffUtil) {
+class CommentListAdapter(val onCommentSelectListener: OnCommentSelectListener): ListAdapter<Comment, CommentListAdapter.ItemViewHolder>(
+    diffUtil
+) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): CommentListAdapter.ItemViewHolder = ItemViewHolder(RvItemMydiaryCommentBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+    ): ItemViewHolder = ItemViewHolder(RvItemMydiaryCommentBinding.inflate(LayoutInflater.from(parent.context),parent,false))
 
-    override fun onBindViewHolder(holder: CommentListAdapter.ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bind(currentList[position])
     }
 
@@ -31,7 +32,13 @@ class CommentListAdapter: ListAdapter<Comment,CommentListAdapter.ItemViewHolder>
         fun bind(comment : Comment){
             binding.comment = comment
             binding.commentHeartImageView.setOnClickListener {
-
+                if(!comment.like) {
+                    onCommentSelectListener.onHeartClickListener(comment.id)
+//                    binding.commentHeartImageView.setImageResource(R.drawable.ic_heart_fill)
+                }
+            }
+            binding.commentReportTextView.setOnClickListener {
+                onCommentSelectListener.onReportClickListener(comment.id)
             }
         }
     }

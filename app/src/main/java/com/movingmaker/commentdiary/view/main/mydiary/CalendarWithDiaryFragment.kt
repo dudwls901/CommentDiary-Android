@@ -6,8 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMydiaryWithCalendarBinding
@@ -28,9 +30,6 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-//todo fragment show됐을 때 캘린더 리프레쉬 시키기
-// 일기 작성하고 다시 메인 왔을 때 갱신이 안됨
-//일기 삭제했을 때 닷이 안 없어짐
 //todo 작성하기로 가는 탭이 없음
 //todo 이전날짜도 마찬가지고 전체보기 누르면 작성하기
 //todo 멘트도 바꿔주기
@@ -77,40 +76,62 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         super.onViewCreated(view, savedInstanceState)
         binding.myDiaryviewModel = myDiaryViewModel
         Log.d(TAG, "onCreateView: oncreateview  $view")
-//        Log.d(TAG, "dataSelected : ${myDiaryViewModel.selectedDate.value}")
-//        Log.d(TAG, "dataSelected : ${myDiaryViewModel.selectedDate.value == null} ${myDiaryViewModel.selectedDate.value == ""}")
-//
-//        launch(coroutineContext) {
-//            binding.loadingBar.isVisible = true
-//            withContext(Dispatchers.IO) {
-//                localDiaryViewModel.getAll()
-//            }
-//            binding.loadingBar.isVisible = false
-//
-//        }
+
         initSwipeRefresh()
         initViews()
         initButtons()
         observeData()
+        refreshViews()
     }
 
     override fun onResume() {
         super.onResume()
 
     }
+    private fun refreshViews(){
+        //현재 클릭된 날짜는 그대로, but 내용만 최신화됨
+        val curDate = myDiaryViewModel.selectedDate.value
+        //선택해 놓은 날짜가 있을 시
+        if(curDate!=null && curDate!=""){
+            try {
+                val dateYM = curDate.substring(0,7)
+                Log.d(TAG, "refreshViews: $dateYM")
+                launch(coroutineContext) {
+                    myDiaryViewModel.setResponseGetMonthDiary(dateYM)
+                }
+            }
+            catch (e: Exception){
+                Log.d(TAG, "refreshViews: 캘린더 갱신 오류")
+            }
+        }
+    }
+    
 
     private fun observeData() {
+//        myDiaryViewModel.responseGetDayComment.observe(viewLifecycleOwner){ response ->
+//            //하루 코멘트 가져오기
+//            if(response.isSuccessful){
+//
+//                myDiaryViewModel.setHaveDayMyComment(response.body()!!.result.isNotEmpty())
+//                Log.d(TAG, "observeData: haveComment date : ${myDiaryViewModel.selectedDiary.value!!.date} response : ${response.body()!!.result}  haveComment : ${ myDiaryViewModel.haveDayMyComment.value}")
+//                val date =myDiaryViewModel.selectedDate.value!!
+//                Log.d(TAG, "observeData: havecomment date ${.date}")
+//                //코멘트가 있다면
+//                if(diary.commentList == null || diary.commentList.size == 0){
+//
+//                }
+//                else{
+//                    val (y,m,d) = diary.date.split('.').map{it.toInt()}
+//                    checkInSelectedDate(CalendarDay.from(y,m-1,d))
+//                }
+//            }
+//            //
+//            else{
+//            }
+//        }
+
         myDiaryViewModel.responseGetMonthDiary.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
-//                Log.d(TAG, (it.body()?.code ?: 0).toString())
-//                Log.d(TAG, it.body()?.message ?: "FAIL")
-//                Log.d(TAG, it.body()?.result?.size.toString())
-//                Log.d(TAG, it.body()?.result?.get(0)?.content ?: null)
-//                Log.d(TAG, (it.body()?.result?.get(0)?.id ?: 0).toString())
-//                Log.d(TAG, it.body()?.result?.get(0)?.title ?: "no")
-//                Log.d(TAG, it.body()?.result?.get(0)?.date ?: "no")
-//                Log.d(TAG, (it.body()?.result?.get(0)?.deliveryYN ?: " "))
-//                Log.d(TAG, it.body()?.result?.get(0)?.commentList?.isEmpty().toString())
                 myDiaryViewModel.setMonthDiaries(it.body()!!.result)
                 Log.d(TAG, "observeData: ${myDiaryViewModel.selectedDate.value}")
                 //다른 달로 이동했을 때
@@ -130,21 +151,31 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 //                Toast.makeText(requireContext(), "한 달 일기 불러오기 실패", Toast.LENGTH_SHORT).show()
             }
         }
-        myDiaryViewModel.aloneDiary.observe(viewLifecycleOwner) {
-            binding.materialCalendarView.addDecorator(
-                AloneDotDecorator(requireContext(), myDiaryViewModel.aloneDiary.value!!)
+        myDiaryViewModel.monthDiaries.observe(viewLifecycleOwner){
+            Log.e(TAG, "observeData: ${it.size}", )
+            binding.materialCalendarView.removeDecorators()
+//            binding.materialCalendarView.addDecorator(
+//                CommentDotDecorator(requireContext(), myDiaryViewModel.commentDiary.value!!)
+//            )
+            binding.materialCalendarView.addDecorators(
+                AloneDotDecorator(requireContext(), myDiaryViewModel.aloneDiary.value!!),
+                CommentDotDecorator(requireContext(), myDiaryViewModel.commentDiary.value!!),
+                SelectedDateDecorator(requireContext())
             )
         }
-        myDiaryViewModel.commentDiary.observe(viewLifecycleOwner) {
-            binding.materialCalendarView.addDecorator(
-                CommentDotDecorator(requireContext(), myDiaryViewModel.commentDiary.value!!)
-            )
+
+        fragmentViewModel.fragmentState.observe(viewLifecycleOwner){ fragment->
+            //현재 화면으로 온 경우!
+            if(fragment=="myDiary"){
+                refreshViews()
+            }
         }
     }
 
     private fun initButtons() = with(binding) {
         //일기가 없는 경우 writeDiary
         writeDiaryLayout.setOnClickListener {
+            fragmentViewModel.setBeforeFragment("myDiary")
             fragmentViewModel.setFragmentState("writeDiary")
             Log.d(TAG, "replace before ${fragmentViewModel.fragmentState.value}")
         }
@@ -156,34 +187,48 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
             //서버에 저장된 코멘트 일기인 경우
             if(myDiaryViewModel.selectedDiary.value!!.tempYN =='N' && myDiaryViewModel.selectedDiary.value!!.deliveryYN=='Y') {
                 Log.d(TAG, "initButtons: 여기여기여기${myDiaryViewModel.selectedDiary.value!!.tempYN}")
+                fragmentViewModel.setBeforeFragment("myDiary")
                 fragmentViewModel.setFragmentState("commentDiaryDetail")
             }
             //임시저장(코멘트일기)인 경우, 혼자쓴 일기인 경우
             else{
                 Log.d(TAG, "initButtons: 여기안와? ${fragmentViewModel.fragmentState}")
+                fragmentViewModel.setBeforeFragment("myDiary")
                 fragmentViewModel.setFragmentState("writeDiary")
             }
         }
     }
 
     private fun initSwipeRefresh() = with(binding) {
-        //Todo swipe 이벤트 처리
         swipeRefreshLayout.setOnRefreshListener {
+            val codaToday = DateConverter.ymdFormat(DateConverter.getCodaToday())
+            //1안 화면 현재 월, 날짜 그대로, 데이터만 갱신하여 줌
+            //2안 화면 현재 월 그대로, 날짜 없애기
+//            myDiaryViewModel.setSelectedDate(null)
+
+            val (y, m, d) = codaToday.split('.').map { it.toInt() }
+            materialCalendarView.currentDate = CalendarDay.from(y,m-1,d)
+            myDiaryViewModel.setSelectedDate(codaToday)
+            checkSelectedDate(CalendarDay.from(y, m - 1, d))
+//            checkSelectedDate(null)
+            //3안 호마녀 오늘 날짜로 초기화, 달력 움직여야함..
+//            refreshViews()
             //위의 동작 완료시 리프레쉬 종료
             swipeRefreshLayout.isRefreshing = false
         }
     }
 
     private fun initViews() = with(binding){
+        //리스너, 날짜 바뀌었을 시
         materialCalendarView.setOnDateChangedListener { widget, date, selected ->
-            Log.d(TAG, "setOndateChangedListener: ${date} ")
             checkSelectedDate(date)
         }
 
+
+        //리스너, 월 바뀌었을 시
         materialCalendarView.setOnMonthChangedListener { widget, date ->
             //선택된 일기 없애주기
             myDiaryViewModel.setSelectedDiary(Diary(null,"","","",' ',' ', null))
-
             val requestDate = LocalDate.of(date.year, date.month+1, date.day)
                 .format(DateTimeFormatter.ofPattern("yyyy.MM"))
             Log.d(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@setOnMonthChangedListener: $requestDate")
@@ -226,7 +271,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         //캘린더 현재 달로 일기 초기화
 //        setMonthCalendarDiaries(codaToday.format(DateTimeFormatter.ofPattern("yyyy.MM")))
 
-        val selectedDate = myDiaryViewModel.selectedDiary.value!!.date
+//        val selectedDate = myDiaryViewModel.selectedDiary.value!!.date
         //선택한 날짜 있으면 선택한 날짜로 캘린더 닷 설정
 //        if (selectedDate != "") {
 //            val (y, m, d) = selectedDate.split('.').map { it.toInt() }
@@ -244,12 +289,14 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
     }
 
+
     private fun setMonthCalendarDiaries(yearMonth: String) {
         Log.d(TAG, "calendar: yearmonth : $yearMonth ")
-        //월 변경 시 포커스 x
+        //처음 진입했을 때는 오늘로 설정
         if (myDiaryViewModel.selectedDate.value == "") {
             myDiaryViewModel.setSelectedDate(DateConverter.ymdFormat(DateConverter.getCodaToday()))
         }
+        //월 변경 시 포커스 x
         else{
             myDiaryViewModel.setSelectedDate(null)
         }
@@ -261,23 +308,72 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         }
     }
 
+
+//    private fun checkSelectedDate(date: CalendarDay?) = with(binding){
+//        //        Log.d(TAG, "checkSelectedDate: date ${date}")
+//        //calendar date는 month가 0부터 시작하기 때문에 이를 다시 localDate로 바꿀 땐 +1
+//        if(date!=null) {
+//
+//            var selectedDate = LocalDate.of(date.year, date.month + 1, date.day)
+//            val dateToString = selectedDate.toString().replace('-', '.')
+//            var nextDate = LocalDate.of(date.year, date.month + 1, date.day)
+//            Log.d(TAG, "observeDatas: detail 0 ${myDiaryViewModel.selectedDate.value}: ")
+//            nextDate = nextDate.plusDays(1)
+//
+//            val nextDateToString = nextDate.toString().replace('-', '.')
+//
+//            myDiaryViewModel.setSelectedDate(dateToString)
+//
+////        Log.d(TAG, "checkSelectedDate: 여기  내일 $nextDateToString")
+////        Log.d(TAG, "checkSelectedDate: 여기 오늘 ${dateToString}")
+//            //오늘 내가 코멘트를 받은 경우 어제 일기를 선택했을 때 오늘 내가 코멘트를 쓴 상태인지 확인 -> Day+1
+//            launch(Dispatchers.IO) {
+//                myDiaryViewModel.setResponseGetDayComment(nextDateToString)
+//            }
+//        }
+//    }
+
+
     @SuppressLint("ResourceAsColor")
     private fun checkSelectedDate(date: CalendarDay?) = with(binding) {
+
         Log.d(TAG, "checkSElectedDate: $date ")
         Log.d(TAG, "checkSelectedDate: ${myDiaryViewModel.selectedDiary.value}")
+
 //        materialCalendarView.currentDate = date
             materialCalendarView.selectedDate = date
         //달 이동한 경우 포커스 해제 or 냅두기?
         if (date == null) {
             readDiaryLayout.isVisible = false
             writeDiaryWrapLayout.isVisible = false
+            noCommentTextView.isVisible = false
             return
         }
-        val codaToday = DateConverter.getCodaToday()
-        //calendar date는 month가 0부터 시작하기 때문에 이를 다시 localDate로 바꿀 땐 +1
-        val selectedDate = LocalDate.of(date.year, date.month+1, date.day)
+        //아래 부분은 날짜를 캘린더에서 선택한 경우
 
-//        Log.d(TAG, "myDiary selectedDate: ${codaToday} ${selectedDate}")
+//        Log.d(TAG, "checkSelectedDate: date ${date}")
+        //calendar date는 month가 0부터 시작하기 때문에 이를 다시 localDate로 바꿀 땐 +1
+        var selectedDate =LocalDate.of(date.year, date.month+1, date.day)
+        val dateToString = selectedDate.toString().replace('-','.')
+        var nextDate = LocalDate.of(date.year, date.month+1, date.day)
+        Log.d(TAG, "observeDatas: detail 0 ${myDiaryViewModel.selectedDate.value}: ")
+        nextDate = nextDate.plusDays(1)
+
+        val nextDateToString = nextDate.toString().replace('-','.')
+
+
+        myDiaryViewModel.setSelectedDate(dateToString)
+
+
+//        Log.d(TAG, "checkSelectedDate: 여기  내일 $nextDateToString")
+//        Log.d(TAG, "checkSelectedDate: 여기 오늘 ${dateToString}")
+        //오늘 내가 코멘트를 받은 경우 어제 일기를 선택했을 때 오늘 내가 코멘트를 쓴 상태인지 확인 -> Day+1
+        launch (Dispatchers.IO) {
+            myDiaryViewModel.setResponseGetDayComment(nextDateToString)
+        }
+
+        val codaToday = DateConverter.getCodaToday()
+//        Log.d(TAG, "checkSelectedDate: 머야 $codaToday $selectedDate")
 
         //미래 날짜면 일기 작성 불가, 조회 불가
         if (selectedDate > codaToday) {
@@ -316,9 +412,10 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
                         //todo
                         //todo 서버에서 빈 코멘트올 때 무슨 값인지 확인
+                        Log.d(TAG, "checkSelectedDate:  서버에서 빈 코멘트올 때 무슨 값인지 확인 ${diary.commentList}")
                         if (diary.commentList == null || diary.commentList.size == 0) {
                             //코멘트가 도착하지 않았는데 이틀 지난 경우
-                            Log.d(TAG, "checkSelectedDate: ${DateConverter.ymdToDate(diary.date) } ${selectedDate.minusDays(2)}")
+                            Log.d(TAG, "checkSelectedDate: minus2 ${DateConverter.ymdToDate(diary.date) } ${selectedDate.minusDays(2)}")
                             if(DateConverter.ymdToDate(diary.date)<=codaToday.minusDays(2)){
                                 sendDiaryBeforeAfterTextView.isVisible = false
                                 noCommentTextView.isVisible = diary.tempYN=='N'
@@ -326,14 +423,14 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                             //아직 코멘트 기다리는 경우
                             else {
                                 //임시저장인 경우
-                                sendDiaryBeforeAfterTextView.setTextColor(R.color.text_dark_brown)
                                 noCommentTextView.isVisible = false
                                 if(diary.tempYN=='Y'){
-                                    sendDiaryBeforeAfterTextView.text = getString(R.string.upload_yet_comment_diary)
+                                    sendDiaryBeforeAfterTextView.setTextColor(ContextCompat.getColor(requireContext(),R.color.text_black))
+                                    sendDiaryBeforeAfterTextView.text = getString(R.string.upload_temp_comment_please)
                                     sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_brand_orange_radius_bottom_10)
                                 }
                                 else{
-                                    sendDiaryBeforeAfterTextView.setTextColor(R.color.text_brown)
+                                    sendDiaryBeforeAfterTextView.setTextColor(ContextCompat.getColor(requireContext(),R.color.text_brown))
                                     sendDiaryBeforeAfterTextView.text = getString(R.string.calendar_with_diary_comment_soon)
                                     sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_light_brown_radius_bottom_10)
                                 }
@@ -341,9 +438,21 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                         }
                         //코멘트 있는 경우
                         else {
+                            Log.d(TAG, "checkSelectedDate: ddddddddd ${DateConverter.ymdToDate(diary.date)} ${codaToday.minusDays(2)}")
+                            val codaToday = DateConverter.getCodaToday()
+                            //이틀이 지났는데 코멘트 작성 안 한  경우만 안 보이게
+                            binding.sendDiaryBeforeAfterTextView.isVisible =true
+//                                DateConverter.ymdToDate(diary.date) > codaToday.minusDays(2)
+
+//                            if(DateConverter.ymdToDate(diary.date)<=codaToday.minusDays(2) && !myDiaryViewModel.haveDayMyComment.value!!){
+//                                binding.sendDiaryBeforeAfterTextView.isVisible = false
+//                            }
+//                            else{
+//                                binding.sendDiaryBeforeAfterTextView.isVisible = true
+//                            }
                             sendDiaryBeforeAfterTextView.text = getString(R.string.arrived_comment)
                             sendDiaryBeforeAfterTextView.setBackgroundResource(R.drawable.background_pure_green_radius_bottom_10)
-                            sendDiaryBeforeAfterTextView.setTextColor(R.color.text_dark_brown)
+                            sendDiaryBeforeAfterTextView.setTextColor(ContextCompat.getColor(requireContext(),R.color.background_ivory))
                             noCommentTextView.isVisible = false
                         }
                     }

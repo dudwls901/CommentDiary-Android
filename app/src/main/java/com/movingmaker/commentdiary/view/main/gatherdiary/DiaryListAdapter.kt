@@ -10,7 +10,7 @@ import com.movingmaker.commentdiary.databinding.RvItemGatherdiaryDiaryBinding
 import com.movingmaker.commentdiary.model.entity.Diary
 import com.movingmaker.commentdiary.util.CustomTag.ATAG
 
-class DiaryListAdapter(val diaryList: List<Diary>,val onDiarySelectListener: OnDiarySelectListener): ListAdapter<Diary,DiaryListAdapter.ItemViewHolder>(diffUtil) {
+class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener): ListAdapter<Diary,DiaryListAdapter.ItemViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -40,7 +40,7 @@ class DiaryListAdapter(val diaryList: List<Diary>,val onDiarySelectListener: OnD
     companion object{
         val diffUtil = object: DiffUtil.ItemCallback<Diary>(){
             override fun areItemsTheSame(oldItem: Diary, newItem: Diary): Boolean {
-                return oldItem == newItem
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: Diary, newItem: Diary): Boolean {

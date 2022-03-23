@@ -10,5 +10,5 @@ data class Comment(
     @SerializedName(value ="date")
     val date: String,
     @SerializedName(value = "like")
-    val like: Boolean
+    var like: Boolean
 )

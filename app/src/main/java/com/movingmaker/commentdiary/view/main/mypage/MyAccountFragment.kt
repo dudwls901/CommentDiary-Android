@@ -58,23 +58,6 @@ class MyAccountFragment: BaseFragment(), CoroutineScope {
     }
 
     private fun observeDatas(){
-//        binding.lifecycleOwner?.let { lifecycleOwner ->
-//            myPageViewModel.responseSignOut.observe(lifecycleOwner) {
-////                binding.loadingBar.isVisible = false
-//                if (it.isSuccessful) {
-//                    Log.d(TAG, it.isSuccessful.toString())
-//                    Log.d(TAG, it.body()?.code.toString())
-//                    Log.d(TAG, it.body()?.message.toString())
-//                    logOut()
-//                } else {
-//                    Log.d(TAG, it.isSuccessful.toString())
-//                    Log.d(TAG, it.body()?.code.toString())
-//                    Log.d(TAG, it.body()?.message.toString())
-////                    Toast.makeText(requireContext(), "회원 탈퇴 실패", Toast.LENGTH_SHORT).show()
-//                }
-//
-//            }
-//        }
 
         binding.lifecycleOwner?.let { lifecycleOwner ->
             myPageViewModel.responseLogOut.observe(lifecycleOwner) {
@@ -94,43 +77,20 @@ class MyAccountFragment: BaseFragment(), CoroutineScope {
             }
         }
 
-//        binding.lifecycleOwner?.let { lifecycleOwner ->
-//            myPageViewModel.responseChangePassword.observe(lifecycleOwner) {
-////                binding.loadingBar.isVisible = false
-//                //todo 비밀번호 생성 규칙 처리
-//                if (it.isSuccessful) {
-//                    Log.d(TAG, it.isSuccessful.toString())
-//                    Log.d(TAG, it.body()?.code.toString())
-//                    Log.d(TAG, it.body()?.message.toString())
-////                    Toast.makeText(requireContext(), "비밀번호 변경 성공!!!!!", Toast.LENGTH_SHORT).show()
-//                } else {
-//                    Log.d(TAG, it.isSuccessful.toString())
-//                    Log.d(TAG, it.body()?.code.toString())
-//                    Log.d(TAG, it.body()?.message.toString())
-////                    Toast.makeText(requireContext(), "비밀번호 변경 실패", Toast.LENGTH_SHORT).show()
-//                }
-//
-//            }
-//        }
-
-
     }
 
     private fun initViews() = with(binding){
-//        signOutButton.setOnClickListener {
-//            launch(coroutineContext) {
-//                myPageViewModel.setResponseSignOut()
-//            }
-//        }
         logoutLayout.setOnClickListener {
             launch(coroutineContext) {
                 myPageViewModel.setResponseLogOut()
             }
         }
         signOutLayout.setOnClickListener {
+            fragmentViewModel.setBeforeFragment("myAccount")
             fragmentViewModel.setFragmentState("signOut")
         }
         changePasswordLayout.setOnClickListener {
+            fragmentViewModel.setBeforeFragment("myAccount")
             fragmentViewModel.setFragmentState("changePassword")
         }
         backButton.setOnClickListener {
