@@ -31,6 +31,8 @@
                 android:background="@drawable/mydiary_calendar_green_radius"
                 android:paddingHorizontal="10dp"
                 android:paddingTop="22dp"
+                android:paddingBottom="18dp"
+                app:mcv_tileSize="45dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

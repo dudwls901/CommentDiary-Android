@@ -251,7 +251,9 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                 .append("월")
             calendarHeaderBuilder.toString()
         }
-
+//        materialCalendarView.topbarVisible=false
+//        materialCalendarView.setWeekDayTextAppearance()
+        materialCalendarView.isDynamicHeightEnabled = true
         materialCalendarView.state().edit()
             .setFirstDayOfWeek(Calendar.SUNDAY)
             .setMinimumDate(CalendarDay.from(2021, 0, 1))//캘린더 시작 날짜
