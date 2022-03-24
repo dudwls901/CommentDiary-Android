@@ -57,7 +57,6 @@ class SelectDiaryTypeBottomSheet(private val selectDiaryTypeListener: SelectDiar
         }
 
         submitButton.setOnClickListener {
-            Log.d(TAG, "initViews: ${myDiaryViewModel.deliveryYN.value}")
             if(myDiaryViewModel.selectedDiary.value!!.deliveryYN!=' '){
                 dismiss()
             }

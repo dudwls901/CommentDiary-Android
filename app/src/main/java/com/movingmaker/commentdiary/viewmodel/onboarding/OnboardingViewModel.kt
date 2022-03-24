@@ -113,7 +113,6 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
             }
             "passwordCheck" -> {
                 _passwordCheckCorrect.value = isCorrect
-                Log.d(TAG, "setIsCorrect: ${passwordCheckCorrect.value}")
             }
         }
     }
@@ -192,7 +191,6 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
 
     suspend fun setResponseFindPassword(){
         withContext(viewModelScope.coroutineContext){
-            Log.d(TAG, "setResponseFindPassword: ${findPasswordEmail.value}")
             _responseFindPassword.value = ForSignUpRespository.INSTANCE.findPassword(findPasswordEmail.value!!)
         }
     }

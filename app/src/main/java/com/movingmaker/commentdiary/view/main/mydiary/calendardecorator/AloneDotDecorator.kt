@@ -14,9 +14,6 @@ class AloneDotDecorator(context: Context, private val dates: List<CalendarDay>) 
     val color = ContextCompat.getColor(context, R.color.dot_red)
     override fun shouldDecorate(day: CalendarDay?): Boolean {
         //뭘로 받아올까?
-        if(dates.contains(day)){
-            Log.e(ContentValues.TAG, "shouldDecorate: $day ${dates.contains(day)}" )
-        }
         return dates.contains(day)
     }
 

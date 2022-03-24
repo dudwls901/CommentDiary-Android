@@ -15,6 +15,7 @@ import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
 import com.movingmaker.commentdiary.databinding.FragmentMypageChangePasswordBinding
 import com.movingmaker.commentdiary.databinding.FragmentMypageMyaccountBinding
 import com.movingmaker.commentdiary.databinding.FragmentMypageSignoutBinding
+import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
@@ -68,12 +69,9 @@ class ChangePasswordFragment : BaseFragment(), CoroutineScope {
             myPageViewModel.responseChangePassword.observe(lifecycleOwner) {
                 //todo 비밀번호 생성 규칙 처리
                 if (it.isSuccessful) {
-                    Log.d(TAG, it.isSuccessful.toString())
-                    Log.d(TAG, it.body()?.code.toString())
-                    Log.d(TAG, it.body()?.message.toString())
-                    Toast.makeText(requireContext(), "비밀번호를 변경하였습니다.", Toast.LENGTH_SHORT).show()
+                    CodaSnackBar.make(binding.root,"비밀번호를 변경하였습니다.").show()
                 } else {
-                    Toast.makeText(requireContext(), "비밀번호 변경에 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                    CodaSnackBar.make(binding.root,"비밀번호 변경에 실패하였습니다.").show()
                 }
                 fragmentViewModel.setFragmentState("myPage")
             }

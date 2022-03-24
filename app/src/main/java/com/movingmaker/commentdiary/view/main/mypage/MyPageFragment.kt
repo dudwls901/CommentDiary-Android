@@ -16,6 +16,7 @@ import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
+import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
@@ -87,13 +88,7 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
             myPageViewModel.responseSignOut.observe(lifecycleOwner) {
 //                binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
-                    Log.d(TAG, it.isSuccessful.toString())
-                    Log.d(TAG, it.body()?.code.toString())
-                    Log.d(TAG, it.body()?.message.toString())
                 } else {
-                    Log.d(TAG, it.isSuccessful.toString())
-                    Log.d(TAG, it.body()?.code.toString())
-                    Log.d(TAG, it.body()?.message.toString())
 //                    Toast.makeText(requireContext(), "회원 탈퇴 실패", Toast.LENGTH_SHORT).show()
                 }
 
@@ -109,8 +104,7 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
                 }
                 //마이 페이지 불러오기 실패
                 else {
-                    Toast.makeText(requireContext(), "내 정보를 불러오는 데 실패하였습니다.", Toast.LENGTH_SHORT)
-                        .show()
+                    CodaSnackBar.make(binding.root,"내 정보를 불러오는 데 실패하였습니다.").show()
                 }
             }
         }
@@ -167,13 +161,5 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
         temperatureBar.isVisible = true
 
 //        Log.d(TAG, "setTemperatureBar: ${displayMetrics.densityDpi} ${displayMetrics.density}")
-        Log.d(
-            TAG,
-            "setTemperatureBar: ${temperatureBar.width} ${temperatureBar.layoutParams.width}"
-        )
-        Log.d(
-            TAG,
-            "setTemperatureBar: ${temperatureBar.height} ${temperatureBar.layoutParams.height}"
-        )
     }
 }

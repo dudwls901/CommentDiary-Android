@@ -13,7 +13,6 @@ class ReIssueTokenRepository {
     }
 
     suspend fun reIssueToken(): Response<LogInResponse> {
-        Log.d(TAG, "reIssueToken: 불린겨 뭐여?????????????")
         return RetrofitClient.reIssueTokenApiService.reIssueToken()
     }
 }

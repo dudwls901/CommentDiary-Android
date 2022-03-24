@@ -14,17 +14,14 @@ class ReceivedDiaryRepository {
     }
 
     suspend fun getReceivedDiary(date: String): Response<ReceivedDiaryResponse>{
-        Log.d(TAG, "getReceived: 불린겨 뭐여?????????????")
         return RetrofitClient.receivedDiaryApiService.getReceivedDiary(date)
     }
 
     suspend fun saveComment(saveCommentRequest: SaveCommentRequest): Response<IsSuccessResponse>{
-        Log.d(TAG, "saveComment: 불린겨 뭐여?????????????")
         return RetrofitClient.receivedDiaryApiService.saveComment(saveCommentRequest)
     }
 
     suspend fun reportDiary(reportDiaryRequest: ReportDiaryRequest): Response<IsSuccessResponse>{
-        Log.d(TAG, "reportDiary: 불린겨 뭐여?????????????")
         return RetrofitClient.receivedDiaryApiService.reportDiary(reportDiaryRequest)
     }
 

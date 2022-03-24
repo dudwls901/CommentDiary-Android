@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseActivity
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
+import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.util.Extension.toPx
 import com.movingmaker.commentdiary.view.main.gatherdiary.DiaryListFragment
 import com.movingmaker.commentdiary.view.main.gatherdiary.CommentDiaryDetailFragment
@@ -54,7 +55,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         super.onCreate(savedInstanceState)
         binding.lifecycleOwner = this
         binding.fragmentviewModel = fragmentViewModel
-        Log.d(TAG, "onCreate:  ${fragmentViewModel.hasBottomNavi}")
         fragmentState.clear()
 
         setFragments()
@@ -87,7 +87,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
 
     private fun observerFragments() {
         fragmentViewModel.fragmentState.observe(this) { fragment ->
-            Log.d(TAG, "observerFragments: $fragment")
             if (fragment != null) {
                 replaceFragment(fragment)
             }
@@ -116,7 +115,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         bottomNavigationView.itemTextColor = null
         //클릭시 퍼지는 색상 변경
 //        bottomNavigationView.itemRippleColor = null
-        Log.d(TAG, "initBottomNavigationView:")
 
         bottomNavigationView.setOnItemSelectedListener { menu ->
             when (menu.itemId) {
@@ -140,8 +138,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
 
         supportFragmentManager.beginTransaction().apply {
             //R.id.fragmentContainer
-            Log.d(TAG, "replaceFragment: show $showFragment")
-            Log.d(TAG, "replaceFragment: show map ${fragmentState[showFragment]}")
             //처음 들어간 프래그먼트 추가
             if (fragmentState[showFragment] == null) {
                 fragmentState[showFragment] = fragmentMap[showFragment]!!
@@ -157,7 +153,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             for (fragment in fragmentState) {
                 if (fragmentMap[showFragment] == fragment.value) {
                     show(fragment.value)
-                    Log.d(TAG, "replaceFragment: show ${showFragment} ${fragment} ")
                 } else {
                     hide(fragment.value)
                 }
@@ -204,12 +199,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             }
             //메인으로갈 때마다 초기화
 //            supportFragmentManager.clearBackStack()
-            Log.d(TAG, "replaceFragment: $showFragment")
-            Log.d(
-                TAG,
-                "replaceFragment: ${supportFragmentManager.findFragmentById(R.id.fragmentContainer)}"
-            )
-            Log.d(TAG, "replaceFragment: ${supportFragmentManager.backStackEntryCount}")
             commit()
         }
     }
@@ -237,11 +226,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             }
             else{
                 backButtonTime = currentTime
-                Toast.makeText(
-                    this,
-                    "뒤로가기 버튼을 한번 더 누르면 종료됩니다.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                CodaSnackBar.make(binding.root, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.").show()
             }
         }
          else {

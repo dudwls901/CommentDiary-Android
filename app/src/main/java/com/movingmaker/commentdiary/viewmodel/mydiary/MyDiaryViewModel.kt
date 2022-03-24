@@ -108,17 +108,14 @@ class MyDiaryViewModel : ViewModel() {
     }
 
     private fun setAloneDiary(list: List<CalendarDay>) {
-        Log.d("mydiaryviewmodel", "setAloneDiary: ${list.size}")
         _aloneDiary.value = list
     }
 
     private fun setCommentDiary(list: List<CalendarDay>) {
-        Log.d("mydiaryviewmodel", "setCommentDiary: ${list.size}")
         _commentDiary.value = list
     }
 
     fun setMonthDiaries(list: List<Diary>) {
-        Log.e("mydiaryviewmodel", "setMonthDiaries: ${list.size}", )
 
         val aloneDiary = ArrayList<CalendarDay>()
         val commentDiary = ArrayList<CalendarDay>()
@@ -146,13 +143,11 @@ class MyDiaryViewModel : ViewModel() {
     fun setSelectedDiary(diary: Diary){
         _selectedDiary.value = diary
         _commentList.value = diary.commentList?: emptyList()
-        Log.d("report", "observeDatas: before report ${selectedDiary.value}")
     }
 
     fun setDeliveryYN(type: Char){
 //        _deliveryYN.value = type
         _selectedDiary.value!!.deliveryYN = type
-        Log.d("abcabcab", "setDeliveryYN: ${selectedDiary.value!!.deliveryYN}")
     }
 
     fun setSelectedDate(date: String?){
@@ -185,11 +180,8 @@ class MyDiaryViewModel : ViewModel() {
     }
 
     fun deleteLocalReportedComment(commentId: Long){
-        Log.d("report", "observeDatas: report ${selectedDiary.value}")
         //신고한 코멘트 삭
-        Log.d("report", "deleteLocalReportedComment: commentList size :  ${_selectedDiary.value!!.commentList!!.size}")
         for(idx in _selectedDiary.value!!.commentList!!.indices){
-            Log.d("report", "deleteLocalReportedComment: idx :  ${idx} reporetedId : ${commentId}")
             val comment = selectedDiary.value!!.commentList!![idx]
             if(comment.id == commentId){
                 _selectedDiary.value!!.commentList!!.removeAt(idx)
@@ -199,11 +191,8 @@ class MyDiaryViewModel : ViewModel() {
     }
 
     fun likeLocalComment(commentId: Long){
-        Log.d("like", "observeDatas: like ${selectedDiary.value}")
         //신고한 코멘트 삭
-        Log.d("like", "likeLocalComment: commentList size :  ${_selectedDiary.value!!.commentList!!.size}")
         for(idx in _selectedDiary.value!!.commentList!!.indices){
-            Log.d("report", "likeLocalComment: idx :  ${idx} likedId : ${commentId}")
             val comment = selectedDiary.value!!.commentList!![idx]
             if(comment.id == commentId){
                 _selectedDiary.value!!.commentList!![idx].like=true
@@ -214,7 +203,6 @@ class MyDiaryViewModel : ViewModel() {
 
 
     suspend fun setResponseGetMonthDiary(date: String) {
-        Log.d("calendarwithdiary", "setResponseGetMonthDiary $date ")
         withContext(viewModelScope.coroutineContext) {
             _responseGetMonthDiary.value = MyDiaryRepository.INSTANCE.getMonthDiary(date)
         }

@@ -21,6 +21,7 @@ import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentReceiveddiaryBinding
+import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.entity.ReceivedDiary
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.receiveddiary.ReceivedDiaryViewModel
@@ -71,7 +72,6 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
 
         fragmentViewModel.fragmentState.observe(viewLifecycleOwner){ fragment->
             if(fragment=="receivedDiary"){
-                Log.d(TAG, "observeDatas: 갱신갱")
                 //받은 일기 조회
                 launch(coroutineContext) {
                     launch(Dispatchers.IO) {
@@ -83,16 +83,14 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
 
         receivedDiaryViewModel.responseGetReceivedDiary.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
-                Log.d(TAG, "observeDatas: ${it.body()!!.result}")
                 it.body()?.let { response ->
                     receivedDiaryViewModel.setReceivedDiary(response.result)
-                    Log.d(TAG, "ob receivedDiary ${receivedDiaryViewModel.receivedDiary.value}")
                     binding.commentLayout.isVisible = true
                     binding.diaryLayout.isVisible = true
                     binding.noReceivedDiaryYet.isVisible = false
                     //내가 쓴 코멘트가 있는 경우
-                    Log.d(TAG, "ob receivedDIarajiremioar ${response.result.myComment!!.isEmpty()}")
-                    if (response.result.myComment.isNotEmpty()) {
+//                    Log.d(TAG, "ob receivedDIarajiremioar ${response.result.myComment!!.isEmpty()}")
+                    if (response.result.myComment?.isNotEmpty() == true) {
                         binding.sendCommentButton.background = ContextCompat.getDrawable(
                             requireContext(),
                             R.drawable.background_ivory_radius_15_border_brown_1
@@ -122,14 +120,13 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
                 binding.commentLayout.isVisible = false
                 binding.diaryLayout.isVisible = false
                 binding.noReceivedDiaryYet.isVisible = true
-                Log.d(TAG, "observeDatas: receivecd diary 실패")
             }
         }
 
         receivedDiaryViewModel.responseSaveComment.observe(viewLifecycleOwner) { response ->
 
             if (response.isSuccessful) {
-                Toast.makeText(requireContext(), "코멘트가 전송되었습니다.", Toast.LENGTH_SHORT).show()
+                CodaSnackBar.make(binding.root,"코멘트가 전송되었습니다.").show()
                 //화면 갱신
                 launch(coroutineContext) {
                     launch(Dispatchers.IO) {
@@ -137,9 +134,8 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
                     }
                 }
             }
-            //todo 일기 전송 실패 처리
             else {
-                Toast.makeText(requireContext(), "코멘트가 전송되지 않았습니다.", Toast.LENGTH_SHORT).show()
+                CodaSnackBar.make(binding.root,"코멘트가 전송되지 않았습니다.").show()
             }
         }
 
@@ -151,11 +147,10 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
                         receivedDiaryViewModel.setResponseGetReceivedDiary()
                     }
                 }
-                Toast.makeText(requireContext(), "신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
+                CodaSnackBar.make(binding.root,"신고가 접수되었습니다.").show()
             }
-            //todo 신고 실패 처리
             else{
-                Toast.makeText(requireContext(), "신고가 접수되지 않았습니다.", Toast.LENGTH_SHORT).show()
+                CodaSnackBar.make(binding.root,"신고가 접수되지 않았습니다.").show()
             }
         }
 
@@ -223,7 +218,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
         submitButton.setOnClickListener {
             val reportContent = reportContentEditText.text.toString()
             if(reportContent.isEmpty()){
-                Toast.makeText(requireContext(), "내용 입력해라잉", Toast.LENGTH_SHORT).show()
+                CodaSnackBar.make(binding.root,"내용을 입력해 주세요.").show()
             }
             //한 글자 이상 입력했으면
             else{

@@ -88,10 +88,8 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
         }
 
         myPageViewModel.responseGetAllComment.observe(viewLifecycleOwner) {
-            Log.d(TAG, "observeDatas: ????? ${it}")
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
-                Log.d(TAG, "observeDatas: ${it.body()!!.result}")
                 it.body()?.result?.let { commentList -> myPageViewModel.setCommentList(commentList) }
             } else {
                 //todo 에러 처리
@@ -189,7 +187,6 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
         numberPicker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            Log.d(TAG, "setNumberPickerStyle: downversion")
             val count = numberPicker.childCount
             for (i in 0..count) {
                 val child = numberPicker.getChildAt(i)
@@ -217,7 +214,6 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
                         (selectionDividerField.get(numberPicker) as Paint).typeface = typeface
                         numberPicker.invalidate()
                     } catch (exception: Exception) {
-                        Log.d("test", "exception $exception")
                     }
                 }
             }
@@ -236,7 +232,6 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
                         numberPicker.invalidate()
                     }
                 } catch (exception: Exception) {
-                    Log.d("test", "exception $exception")
                 }
 
                 numberPicker.invalidate()

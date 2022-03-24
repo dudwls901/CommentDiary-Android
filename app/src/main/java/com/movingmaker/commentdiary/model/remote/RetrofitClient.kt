@@ -148,7 +148,6 @@ object RetrofitClient {
                 CodaApplication.getInstance().getDataStore().accessToken.first()
             }
             val newRequest = chain.request().newBuilder().addHeader("X-AUTH-TOKEN", accessToken).build()
-            Log.d("logout REQUEST",  newRequest.toString())
             return chain.proceed(newRequest)
         }
     }
@@ -171,14 +170,10 @@ object RetrofitClient {
             var accessToken = ""
 
             if(accessTokenExpiresIn <= System.currentTimeMillis()){
-                Log.d(TAG, "intercept: accessToken 만료됨 ")
                 accessToken = runBlocking {
                     //토큰 갱신 api 호출
                     val response = ReIssueTokenRepository.INSTANCE.reIssueToken()
                     val errorResponse = response.errorBody()?.let { getErrorResponse(it) }
-                    Log.d("ERRORBODYCONVERT", errorResponse?.code?:"no Error")
-                    Log.d("ERRORBODYCONVERT", errorResponse?.message?:"no Error")
-                    Log.d("ERRORBODYCONVERT", errorResponse?.status.toString())
                     //refreshToken  만료된 경우
                     if(errorResponse?.status in 401 .. 404){
                         CodaApplication.getInstance().logOut()
@@ -189,10 +184,7 @@ object RetrofitClient {
                                 response.body()!!.result.refreshToken,
                                 response.body()!!.result.accessTokenExpiresIn
                             )
-                            Log.d(TAG, "갱신 api 성공: ${response.body()!!.result.accessToken} ")
                         } catch (e: Exception) {
-                            Log.d(TAG, e.toString())
-                            Log.d(TAG, "갱신한 토큰을 데이터스토어에 저장하는 데 실패하였습니다. ")
                         }
                     }
                     response.body()?.result?.accessToken?: "Empty Token"
@@ -203,10 +195,9 @@ object RetrofitClient {
                     CodaApplication.getInstance().getDataStore().accessToken.first()
                 }
             }
-            Log.d("뭔데",  accessToken)
             val newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer ${accessToken}")
                 .build()
-            Log.d("REQUEST@@@@@@@@@@@@@@@@@@@@@@@@",  newRequest.toString())
+
             return chain.proceed(newRequest)
         }
     }
@@ -228,7 +219,7 @@ object RetrofitClient {
 
             val newRequest = chain.request().newBuilder().addHeader("X-AUTH-TOKEN", accessToken).addHeader("REFRESH-TOKEN", refreshToken)
                 .build()
-            Log.d("reIssue REQUEST@@@@@@@@@@@@@@@@@@@@@@@@",  newRequest.toString())
+
             return chain.proceed(newRequest)
         }
     }

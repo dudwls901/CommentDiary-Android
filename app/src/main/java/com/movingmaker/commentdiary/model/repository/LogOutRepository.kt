@@ -13,7 +13,6 @@ class LogOutRepository {
         val TAG = "레트로핏 로그"
     }
     suspend fun logOut(): Response<IsSuccessResponse> {
-        Log.d(TAG, "logOut: 불린겨 뭐여?????????????")
         return RetrofitClient.logOutApiService.logOut()
     }
 }

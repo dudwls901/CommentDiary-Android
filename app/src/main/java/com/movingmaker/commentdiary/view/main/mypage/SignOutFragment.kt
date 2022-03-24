@@ -63,14 +63,8 @@ class SignOutFragment: BaseFragment(), CoroutineScope {
             myPageViewModel.responseSignOut.observe(lifecycleOwner) {
 //                binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
-                    Log.d(TAG, it.isSuccessful.toString())
-                    Log.d(TAG, it.body()?.code.toString())
-                    Log.d(TAG, it.body()?.message.toString())
                     logOut()
                 } else {
-                    Log.d(TAG, it.isSuccessful.toString())
-                    Log.d(TAG, it.body()?.code.toString())
-                    Log.d(TAG, it.body()?.message.toString())
 //                    Toast.makeText(requireContext(), "회원 탈퇴 실패", Toast.LENGTH_SHORT).show()
                 }
 
@@ -81,14 +75,8 @@ class SignOutFragment: BaseFragment(), CoroutineScope {
             myPageViewModel.responseLogOut.observe(lifecycleOwner) {
 //                binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
-                    Log.d(TAG, it.isSuccessful.toString())
-                    Log.d(TAG, it.body()?.code.toString())
-                    Log.d(TAG, it.body()?.message.toString())
                     logOut()
                 } else {
-                    Log.d(TAG, it.isSuccessful.toString())
-                    Log.d(TAG, it.body()?.code.toString())
-                    Log.d(TAG, it.body()?.message.toString())
 //                    Toast.makeText(requireContext(), "로그아웃 실패", Toast.LENGTH_SHORT).show()
                 }
 
@@ -129,7 +117,6 @@ class SignOutFragment: BaseFragment(), CoroutineScope {
     }
 
     private fun logOut(){
-        Log.d(TAG, "logOut: datastore 토큰 삭제 완료")
         CodaApplication.getInstance().logOut()
     }
 

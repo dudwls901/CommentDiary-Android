@@ -85,11 +85,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
 
         //저장은 혼자 쓴 일기, 코멘트 일기 둘 다 가능
         myDiaryViewModel.responseSaveDiary.observe(viewLifecycleOwner){
-            Log.d(TAG, "observeDatas: replaceobserve ${it.body()}")
-            Log.d(TAG, "observeDatas: replaceobserve ${it}")
             if(it.isSuccessful){
-                Log.d(TAG, "observeDatas: 일기 저장 성공")
-                Log.d(TAG, "observeDatas: 여기가 before ${myDiaryViewModel.selectedDiary.value!!.tempYN}")
                 //다이어리 셋팅
                 myDiaryViewModel.setSelectedDiary(
                     Diary(
@@ -123,19 +119,16 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 //코멘트 일기면 화면 이동
                 else{
 //                    parentFragmentManager.popBackStack()
-                    Log.d(TAG, "observeDatas responsesave: replace 여기가 불린다고? ${myDiaryViewModel.selectedDiary.value!!.tempYN}")
                     fragmentViewModel.setFragmentState("commentDiaryDetail")
                 }
             }
             else{
-                Log.d(TAG, "observeDatas: 일기 저장 실패")
             }
         }
 
         //혼자쓴 일기, 임시 저장 일기 수정
         myDiaryViewModel.responseEditDiary.observe(viewLifecycleOwner){
             if(it.isSuccessful){
-                Log.d(TAG, "observeDatas: 일기 수정 성공")
                 //다이어리 셋팅
                 myDiaryViewModel.setSelectedDiary(
                     Diary(
@@ -148,7 +141,6 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                         commentList = myDiaryViewModel.selectedDiary.value!!.commentList
                     )
                 )
-                Log.d(TAG, "observeDatas responseedit: replace 여기가 불린다고?")
 
                 //임시 저장 수정이면
                 if(myDiaryViewModel.selectedDiary.value!!.tempYN=='Y'){
@@ -177,7 +169,6 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 }
             }
             else{
-                Log.d(TAG, "observeDatas: 일기 수정 실패")
             }
         }
 
@@ -265,14 +256,13 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
         }
 
         saveButton.setOnClickListener {
-            Log.d(TAG, "changeButtonEvent: ${myDiaryViewModel.saveOrEdit.value} ${myDiaryViewModel.selectedDiary.value!!.deliveryYN}")
             //제목,내용 벨리데이션 체크
             if(diaryHeadEditText.text.isEmpty()){
                 CodaSnackBar.make(binding.root, "제목을 입력해 주세요.").show()
                 return@setOnClickListener
             }
             else if(diaryContentEditText.text.isEmpty()){
-                CodaSnackBar.make(binding.root, "제목을 입력해 주세요.").show()
+                CodaSnackBar.make(binding.root, "내용을 입력해 주세요.").show()
                 return@setOnClickListener
             }
             when(myDiaryViewModel.saveOrEdit.value){
@@ -335,9 +325,6 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
 
     private fun initViews() = with(binding) {
 
-        Log.d("writeDiaryActivity", "initViews: myDiarViewModel.SaveOrEdit.value ${myDiaryViewModel.saveOrEdit.value}")
-        Log.d(TAG, "writediaryactivity initview: ${myDiaryViewModel.selectedDiary.value!!.date} ${myDiaryViewModel.selectedDate.value} ${myDiaryViewModel.selectedDiary.value!!.id} ${myDiaryViewModel.selectedDiary.value!!.content}")
-        Log.d(TAG, "initViews: ${DateConverter.getCodaToday()} ${DateConverter.ymdToDate(myDiaryViewModel.selectedDiary.value!!.date)}")
         //임시저장도 아니고 글이 아에 없는 경우만
         if (myDiaryViewModel.selectedDiary.value!!.id ==null && myDiaryViewModel.selectedDiary.value!!.content=="") {
             //오늘 날짜면 바텀시트로 선택
@@ -415,7 +402,6 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                     )
 
                 }
-                Log.d(TAG, "임시저장성공")
             }
             else{
                 //수정
@@ -431,7 +417,6 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                         )
                     }
                 }
-                Log.d(TAG, "임시저장수정성공")
             }
             deleteButton.isVisible = true
             editButton.isVisible = true
@@ -449,7 +434,6 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
             //버튼동작을 수정 api로
             myDiaryViewModel.setSaveOrEdit("edit")
 
-            Log.d(TAG, "initToolbar: 여기 ${myDiaryViewModel.selectedDiary.value}")
             binding.deleteButton.isVisible = false
             binding.editButton.isVisible = false
             binding.saveButton.isVisible = true
@@ -512,7 +496,6 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 noticeTextView.text = getString(R.string.diary_delete_warning)
             }
         }
-        Log.d(TAG, "showDialog ${myDiaryViewModel.selectedDiary.value!!.tempYN}")
         submitButton.setOnClickListener {
             when(deleteOrSave){
                 "save"->{
@@ -557,7 +540,6 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 }
                 "delete"->{
                     //임시 저장 일기 삭제
-                    Log.d(TAG, "showDialog: $deleteOrSave ${myDiaryViewModel.selectedDiary.value!!.deliveryYN}")
                     launch(coroutineContext) {
                         myDiaryViewModel.selectedDiary.value!!.id?.let {
                             myDiaryViewModel.setResponseDeleteDiary(it)

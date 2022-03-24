@@ -89,7 +89,6 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
         gatherDiaryViewModel.responseGetAllDiary.observe(viewLifecycleOwner) {
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
-                Log.d(TAG, "observeDatas: ${it.body()!!.result}")
                 it.body()?.result?.let { diaryList -> gatherDiaryViewModel.setDiaryList(diaryList) }
             } else {
                 //todo 에러 처리
@@ -111,7 +110,6 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
     }
 
     private fun setDiaries() {
-        Log.d(TAG, "setDiaries: ${searchPeriod}")
         launch(coroutineContext) {
             binding.loadingBar.isVisible = true
             launch(Dispatchers.IO) {
@@ -194,13 +192,11 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
         myDiaryViewModel.setSelectedDiary(diary)
         val nextDate = DateConverter.ymdToDate(diary.date)
         val nextDateToString = nextDate.plusDays(1).toString().replace('-','.')
-        Log.d(TAG, "onDiarySelectListener: nextdate $nextDateToString")
         launch(coroutineContext) {
             myDiaryViewModel.setResponseGetDayComment(nextDateToString)
         }
 //        myDiaryViewModel.setSelectedDate(diary.date)
         fragmentViewModel.setBeforeFragment("gatherDiary")
-        Log.d(TAG, "initToolBar: ${fragmentViewModel.beforeFragment.value}")
         fragmentViewModel.setFragmentState("commentDiaryDetail")
     }
 
@@ -211,7 +207,6 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
         numberPicker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            Log.d(TAG, "setNumberPickerStyle: downversion")
             val count = numberPicker.childCount
             for (i in 0..count) {
                 val child = numberPicker.getChildAt(i)
@@ -239,12 +234,10 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
                         (selectionDividerField.get(numberPicker) as Paint).typeface = typeface
                         numberPicker.invalidate()
                     } catch (exception: Exception) {
-                        Log.d("test", "exception $exception")
                     }
                 }
             }
         } else {
-            Log.d(TAG, "setNumberPickerStyle: upversion")
             numberPicker.textColor = color
             val count = numberPicker.childCount
             for (i in 0..count) {
@@ -258,7 +251,6 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
                         numberPicker.invalidate()
                     }
                 } catch (exception: Exception) {
-                    Log.d("test", "exception $exception")
                 }
 
                 numberPicker.invalidate()

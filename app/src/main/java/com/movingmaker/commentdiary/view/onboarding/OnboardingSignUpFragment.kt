@@ -79,9 +79,6 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
 //                binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
                 } else {
-                    Log.d(TAG, it.isSuccessful.toString())
-                    Log.d(TAG, it.body()?.code.toString())
-                    Log.d(TAG, it.body()?.message.toString())
 //                    Toast.makeText(requireContext(), "인증번호 전송 실패", Toast.LENGTH_SHORT).show()
                 }
 
@@ -176,9 +173,6 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
 
         binding.lifecycleOwner?.let { lifecycleOwner ->
             onboardingViewModel.responseIsSuccessCheck.observe(lifecycleOwner){
-                Log.d(TAG, it.isSuccessful.toString())
-                Log.d(TAG, (it.body()?.code ?: 1111).toString())
-                Log.d(TAG, it.body()?.message ?: "FAIL")
                 if(it.isSuccessful){
                     //인증 완료
                     binding.sendAuthButton.text = getString(R.string.onboarding_complete_auth)

@@ -22,6 +22,7 @@ import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseActivity
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingLoginBinding
+import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.view.main.MainActivity
 import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -85,11 +86,6 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         onboardingViewModel.responseLogin.observe(this){
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
-                Log.d(TAG, it.body()?.message ?: "FAIL")
-                Log.d(TAG, it.body()?.result?.grantType ?: "no")
-                Log.d(TAG, it.body()?.result?.accessToken ?: "no")
-                Log.d(TAG, it.body()?.result?.refreshToken ?: "no")
-                Log.d(TAG, it.body()?.result?.accessTokenExpiresIn.toString())
 //                Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
 
                 val accessToken = it.body()?.result?.accessToken
@@ -120,12 +116,10 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
             val code = it.body()?.code.toString()
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
-                Log.d("성공",message + " " + code)
 //                Toast.makeText(this, "회원가입 성공" + it.body(), Toast.LENGTH_SHORT).show()
                 onboardingViewModel.setCurrentFragment("signUpSuccess")
 
             } else {
-                Log.d("실패",message + " " + code)
 //                Toast.makeText(this, "회원가입 실패", Toast.LENGTH_SHORT).show()
             }
         }
@@ -206,7 +200,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                         return@setOnClickListener
                     }
                     else{
-                        Toast.makeText(this, "이메일 인증 먼저 하세요", Toast.LENGTH_SHORT).show()
+                        CodaSnackBar.make(binding.root,"이메일 인증 먼저 하세요" ).show()
                     }
 
                 }
@@ -266,7 +260,6 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         val currentTime = System.currentTimeMillis()
         val gapTime = currentTime - backButtonTime
         val curFragment = onboardingViewModel.currentFragment.value
-        Log.d(TAG, "onBackPressed: ${curFragment}")
         if(curFragment!="signUp" && curFragment != "findPW") {
             if (gapTime in 0..2000) {
                 // 2초 안에 두번 뒤로가기 누를 시 앱 종료
@@ -275,11 +268,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
             }
             else{
                 backButtonTime = currentTime
-                Toast.makeText(
-                    this,
-                    "뒤로가기 버튼을 한번 더 누르면 종료됩니다.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                CodaSnackBar.make(binding.root, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.").show()
             }
         }
         else {

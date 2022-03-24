@@ -75,7 +75,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.myDiaryviewModel = myDiaryViewModel
-        Log.d(TAG, "onCreateView: oncreateview  $view")
 
         initSwipeRefresh()
         initViews()
@@ -95,13 +94,11 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         if(curDate!=null && curDate!=""){
             try {
                 val dateYM = curDate.substring(0,7)
-                Log.d(TAG, "refreshViews: $dateYM")
                 launch(coroutineContext) {
                     myDiaryViewModel.setResponseGetMonthDiary(dateYM)
                 }
             }
             catch (e: Exception){
-                Log.d(TAG, "refreshViews: 캘린더 갱신 오류")
             }
         }
     }
@@ -133,7 +130,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         myDiaryViewModel.responseGetMonthDiary.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
                 myDiaryViewModel.setMonthDiaries(it.body()!!.result)
-                Log.d(TAG, "observeData: ${myDiaryViewModel.selectedDate.value}")
                 //다른 달로 이동했을 때
                 if(myDiaryViewModel.selectedDate.value == null){
                     checkSelectedDate(null)
@@ -141,10 +137,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                 else {
                     val (y, m, d) = myDiaryViewModel.selectedDate.value!!.split('.').map { it.toInt() }
                     checkSelectedDate(CalendarDay.from(y, m - 1, d))
-                    Log.d(TAG, "observeData: $y ${m-1} $d")
                 }
-
-                Log.d(TAG, "observeData: responeGetMonthDiary")
 
 //                Toast.makeText(requireContext(), "로그인 성공", Toast.LENGTH_SHORT).show()
             } else {
@@ -152,7 +145,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
             }
         }
         myDiaryViewModel.monthDiaries.observe(viewLifecycleOwner){
-            Log.e(TAG, "observeData: ${it.size}", )
             binding.materialCalendarView.removeDecorators()
 //            binding.materialCalendarView.addDecorator(
 //                CommentDotDecorator(requireContext(), myDiaryViewModel.commentDiary.value!!)
@@ -177,22 +169,17 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         writeDiaryLayout.setOnClickListener {
             fragmentViewModel.setBeforeFragment("myDiary")
             fragmentViewModel.setFragmentState("writeDiary")
-            Log.d(TAG, "replace before ${fragmentViewModel.fragmentState.value}")
         }
         //일기가 있는 경우
         diaryDetailLayout.setOnClickListener {
             //임시저장 상태면 writeDiary로, 이미 저장된 상태면 commentDiaryDetail
-            Log.d(TAG, "initButtons: ${myDiaryViewModel.selectedDiary.value!!.id}")
-            Log.d(TAG, "initButtons: ${fragmentViewModel.fragmentState}")
             //서버에 저장된 코멘트 일기인 경우
             if(myDiaryViewModel.selectedDiary.value!!.tempYN =='N' && myDiaryViewModel.selectedDiary.value!!.deliveryYN=='Y') {
-                Log.d(TAG, "initButtons: 여기여기여기${myDiaryViewModel.selectedDiary.value!!.tempYN}")
                 fragmentViewModel.setBeforeFragment("myDiary")
                 fragmentViewModel.setFragmentState("commentDiaryDetail")
             }
             //임시저장(코멘트일기)인 경우, 혼자쓴 일기인 경우
             else{
-                Log.d(TAG, "initButtons: 여기안와? ${fragmentViewModel.fragmentState}")
                 fragmentViewModel.setBeforeFragment("myDiary")
                 fragmentViewModel.setFragmentState("writeDiary")
             }
@@ -231,7 +218,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
             myDiaryViewModel.setSelectedDiary(Diary(null,"","","",' ',' ', null))
             val requestDate = LocalDate.of(date.year, date.month+1, date.day)
                 .format(DateTimeFormatter.ofPattern("yyyy.MM"))
-            Log.d(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@setOnMonthChangedListener: $requestDate")
             setMonthCalendarDiaries(requestDate)
         }
         initCalendar()
@@ -283,7 +269,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 //        }
 //        //선택한 날짜 없으면 오늘 날짜로 캘린더 닷 설정
 //        else {
-            Log.d(TAG, "calendarday ${calendarDay}")
 //            materialCalendarView.currentDate = calendarDay
 //            materialCalendarView.selectedDate = calendarDay
 //            checkSelectedDate(calendarDay)
@@ -293,7 +278,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
 
     private fun setMonthCalendarDiaries(yearMonth: String) {
-        Log.d(TAG, "calendar: yearmonth : $yearMonth ")
         //처음 진입했을 때는 오늘로 설정
         if (myDiaryViewModel.selectedDate.value == "") {
             myDiaryViewModel.setSelectedDate(DateConverter.ymdFormat(DateConverter.getCodaToday()))
@@ -338,10 +322,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
     @SuppressLint("ResourceAsColor")
     private fun checkSelectedDate(date: CalendarDay?) = with(binding) {
-
-        Log.d(TAG, "checkSElectedDate: $date ")
-        Log.d(TAG, "checkSelectedDate: ${myDiaryViewModel.selectedDiary.value}")
-
 //        materialCalendarView.currentDate = date
             materialCalendarView.selectedDate = date
         //달 이동한 경우 포커스 해제 or 냅두기?
@@ -358,7 +338,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         var selectedDate =LocalDate.of(date.year, date.month+1, date.day)
         val dateToString = selectedDate.toString().replace('-','.')
         var nextDate = LocalDate.of(date.year, date.month+1, date.day)
-        Log.d(TAG, "observeDatas: detail 0 ${myDiaryViewModel.selectedDate.value}: ")
         nextDate = nextDate.plusDays(1)
 
         val nextDateToString = nextDate.toString().replace('-','.')
@@ -399,7 +378,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                 if (diary.date == selectedDate.toString().replace('-', '.')) {
                     //viewmodel로 넘기기
                     myDiaryViewModel.setSelectedDiary(diary)
-                    Log.d(TAG, "checkSelectedDate: 일기 있음${myDiaryViewModel.selectedDiary.value}")
 
                     //혼자 일기인 경우
                     if(diary.deliveryYN=='N'){
@@ -414,10 +392,8 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
                         //todo
                         //todo 서버에서 빈 코멘트올 때 무슨 값인지 확인
-                        Log.d(TAG, "checkSelectedDate:  서버에서 빈 코멘트올 때 무슨 값인지 확인 ${diary.commentList}")
                         if (diary.commentList == null || diary.commentList.size == 0) {
                             //코멘트가 도착하지 않았는데 이틀 지난 경우
-                            Log.d(TAG, "checkSelectedDate: minus2 ${DateConverter.ymdToDate(diary.date) } ${selectedDate.minusDays(2)}")
                             if(DateConverter.ymdToDate(diary.date)<=codaToday.minusDays(2)){
                                 sendDiaryBeforeAfterTextView.isVisible = false
                                 noCommentTextView.isVisible = diary.tempYN=='N'
@@ -440,7 +416,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                         }
                         //코멘트 있는 경우
                         else {
-                            Log.d(TAG, "checkSelectedDate: ddddddddd ${DateConverter.ymdToDate(diary.date)} ${codaToday.minusDays(2)}")
                             val codaToday = DateConverter.getCodaToday()
                             //이틀이 지났는데 코멘트 작성 안 한  경우만 안 보이게
                             binding.sendDiaryBeforeAfterTextView.isVisible =true
@@ -475,7 +450,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
             ' ',
             null)
         )
-        Log.d(TAG, "checkSelectedDate: 일기 없음${myDiaryViewModel.selectedDiary.value}")
         writeDiaryWrapLayout.isVisible = true
         writeDiaryLayout.isVisible = true
         lineDecorationTextView.text = getString(R.string.mydiary_text_decoration)

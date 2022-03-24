@@ -66,28 +66,24 @@ class GatherDiaryViewModel : ViewModel() {
     }
 
     suspend fun setResponseGetMonthDiary(date: String) {
-        Log.d("gatherdiary", "setResponseGetMonthDiary $date ")
         withContext(viewModelScope.coroutineContext) {
             _responseGetMonthDiary.value = GatherDiaryRepository.INSTANCE.getMonthDiary(date)
         }
     }
 
     suspend fun setResponseGetAllDiary() {
-        Log.d("gatherdiary", "setResponseGetAllDiary  ")
         withContext(viewModelScope.coroutineContext) {
             _responseGetAllDiary.value = GatherDiaryRepository.INSTANCE.getAllDiary()
         }
     }
 
     suspend fun setResponseReportComment(reportCommentRequest: ReportCommentRequest) {
-        Log.d("gatherdiary", "setResponseReportComment  ")
         withContext(viewModelScope.coroutineContext) {
             _responseReportComment.value = GatherDiaryRepository.INSTANCE.reportComment( reportCommentRequest )
         }
     }
 
     suspend fun setResponseLikeComment(commentId: Long) {
-        Log.d("gatherdiary", "setResponseLikeComment  ")
         withContext(viewModelScope.coroutineContext) {
             _responseLikeComment.value = GatherDiaryRepository.INSTANCE.likeComment(commentId)
         }

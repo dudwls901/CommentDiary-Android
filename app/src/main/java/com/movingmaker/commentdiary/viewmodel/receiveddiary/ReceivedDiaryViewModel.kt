@@ -61,7 +61,6 @@ class ReceivedDiaryViewModel : ViewModel() {
     //오늘 날짜로 받은 일기 조회
     suspend fun setResponseGetReceivedDiary() {
         val date = DateConverter.ymdFormat(DateConverter.getCodaToday())
-        Log.d("receivedDiary", "setResponseGetReceivedDiary $date ")
         withContext(viewModelScope.coroutineContext) {
             _responseGetReceivedDiary.value = ReceivedDiaryRepository.INSTANCE.getReceivedDiary(date)
         }
@@ -70,8 +69,6 @@ class ReceivedDiaryViewModel : ViewModel() {
     //코멘트 저장
     suspend fun setResponseSaveComment(content: String){
         val date = DateConverter.ymdFormat(DateConverter.getCodaToday())
-        Log.d("saveComment", "setResponseSaveComment $date ")
-        Log.d("saveComment", "setResponseSaveComment:  ${receivedDiary.value!!.id}")
         withContext(viewModelScope.coroutineContext){
             _responseSaveComment.value = ReceivedDiaryRepository.INSTANCE.saveComment(
                 SaveCommentRequest(
@@ -86,7 +83,6 @@ class ReceivedDiaryViewModel : ViewModel() {
     //일기 신고
     suspend fun setResponseReportDiary(content: String) {
         withContext(viewModelScope.coroutineContext) {
-            Log.d("receivedDairy", "ob receivedDiary ${receivedDiary.value}")
             _responseReportDiary.value = ReceivedDiaryRepository.INSTANCE.reportDiary(
                 ReportDiaryRequest(
                     id = receivedDiary.value!!.id!!,

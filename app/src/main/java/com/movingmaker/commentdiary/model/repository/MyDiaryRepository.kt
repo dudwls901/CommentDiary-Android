@@ -17,22 +17,18 @@ class MyDiaryRepository {
     }
 
     suspend fun getMonthDiary(date: String): Response<DiaryListResponse> {
-        Log.d(TAG, "getMonthDiary: 불린겨 뭐여?????????????")
         return RetrofitClient.myDiaryApiService.getMonthDiary(date)
     }
 
     suspend fun saveDiary(saveDiaryRequest: SaveDiaryRequest): Response<SaveDiaryResponse>{
-        Log.d(TAG, "saveDiary: 불린겨 뭐여?????????????")
         return RetrofitClient.myDiaryApiService.saveDiary(saveDiaryRequest)
     }
 
     suspend fun editDiary(diaryId: Long, editDiaryRequest: EditDiaryRequest): Response<IsSuccessResponse>{
-        Log.d(TAG, "editDiary: 불린겨 뭐여?????????????")
         return RetrofitClient.myDiaryApiService.editDiary(diaryId,editDiaryRequest)
     }
 
     suspend fun deleteDiary(diaryId: Long): Response<IsSuccessResponse>{
-        Log.d(TAG, "editDiary: 불린겨 뭐여?????????????")
         return RetrofitClient.myDiaryApiService.deleteDiary(diaryId)
     }
 }

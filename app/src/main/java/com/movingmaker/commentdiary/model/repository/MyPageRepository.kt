@@ -16,26 +16,21 @@ class MyPageRepository {
     }
 
     suspend fun signOut(): Response<IsSuccessResponse> {
-        Log.d(TAG, "signOut: 불린겨 뭐여?????????????")
         return RetrofitClient.myPageApiService.signOut()
     }
 
     suspend fun changePassword(changePasswordRequest: ChangePasswordRequest): Response<IsSuccessResponse>{
-        Log.d(TAG, "changePassword: ")
         return RetrofitClient.myPageApiService.changePassword(changePasswordRequest)
     }
 
     suspend fun getMyPage(): Response<MyPageResponse>{
-        Log.d(TAG, "getMyPage: 불린겨 뭐여?????????????")
         return RetrofitClient.myPageApiService.getMyPage()
     }
     suspend fun getAllComment(): Response<CommentListResponse>{
-        Log.d(TAG, "getAllComment: 불린겨 뭐여?????????????")
         return RetrofitClient.myPageApiService.getAllComment()
     }
 
     suspend fun getMonthComment(date: String): Response<CommentListResponse>{
-        Log.d(TAG, "getMonthComment: 불린겨 뭐여?????????????")
         return RetrofitClient.myPageApiService.getMonthComment(date)
     }
 }

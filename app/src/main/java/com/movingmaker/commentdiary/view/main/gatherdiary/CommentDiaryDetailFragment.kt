@@ -18,6 +18,7 @@ import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryCommentdiaryDetailBinding
+import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.remote.request.ReportCommentRequest
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
@@ -69,16 +70,12 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
 
     @SuppressLint("NotifyDataSetChanged")
     private fun observeDatas() {
-        Log.d(TAG, "initViews: detail ${myDiaryViewModel.selectedDiary.value}")
-
-
 
         myDiaryViewModel.responseGetDayComment.observe(viewLifecycleOwner){ response ->
             //하루 코멘트 가져오기
             if(response.isSuccessful){
 
                 myDiaryViewModel.setHaveDayMyComment(response.body()!!.result.isNotEmpty())
-                Log.d(TAG, "observeData: haveComment date : ${myDiaryViewModel.selectedDiary.value!!.date} response : ${response.body()!!.result}  haveComment : ${ myDiaryViewModel.haveDayMyComment.value}")
             }
             //
             else{
@@ -114,24 +111,20 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
             val diary = myDiaryViewModel.selectedDiary.value!!
             val codaToday = DateConverter.getCodaToday()
             val selectedDate = DateConverter.ymdToDate(diary.date)
-            Log.d(TAG, "observeDatas: detail 5 ${selectedDate} ${codaToday.minusDays(2)}")
 
             //코멘트 없는 경우
             if (diary.commentList?.isEmpty() == true || diary.commentList == null) {
-                Log.d(TAG, "observeDatas: 코멘트 없음")
                 binding.goToWriteCommentButton.isVisible = false
                 binding.goToWriteCommentTextView.isVisible = false
                 binding.noWriteCommentTextView.isVisible = false
                 binding.recyclerView.isVisible = false
                 if (selectedDate <= codaToday.minusDays(2)) {
-                    Log.d(TAG, "observeDatas: 코멘트 없음 이틀이 지나 영영 못받음")
                     //이틀이 지나 영영 코멘트를 받을 수 없음
                     binding.emptyCommentTextView.isVisible = true
                     binding.diaryUploadServerYetTextView.isVisible = false
                     binding.sendCompleteTextView.isVisible = false
                 } else {
                     //아직 코멘트를 받지 못한 경우
-                    Log.d(TAG, "observeDatas: 코멘트 없음 아직 이틀 안 지나서 받을 순 있음")
                     binding.emptyCommentTextView.isVisible = false
                     binding.diaryUploadServerYetTextView.isVisible = true
                     binding.sendCompleteTextView.isVisible = true
@@ -144,7 +137,6 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
                 binding.sendCompleteTextView.isVisible = false
                 //내가 코멘트를 작성 한 경우
                 if (myDiaryViewModel.haveDayMyComment.value == true) {
-                    Log.d(TAG, "observeDatas: 코멘트 있음 나도 코멘트 작성함")
                     binding.recyclerView.isVisible = true
                     binding.goToWriteCommentButton.isVisible = false
                     binding.goToWriteCommentTextView.isVisible = false
@@ -153,12 +145,10 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
                     //내가 코멘트를 작성 안 한 경우
                     //                    Log.d(TAG, "observeDatas: detail 6 ${selectedDate} ${codaToday.minusDays(2)}")
                     if (selectedDate <= codaToday.minusDays(2)) {
-                        Log.d(TAG, "observeDatas: 코멘트 있음 난 코멘트 작성 안 했는데 이틀 지나서 영영 못봄")
                         binding.goToWriteCommentButton.isVisible = false
                         binding.goToWriteCommentTextView.isVisible = false
                         binding.noWriteCommentTextView.isVisible = true
                     } else {
-                        Log.d(TAG, "observeDatas: 코멘트 있음 난 코멘트 작성 안 했는데 이틀 안 지나서 아직 볼 수 있음")
                         binding.goToWriteCommentButton.isVisible = true
                         binding.goToWriteCommentTextView.isVisible = true
                         binding.noWriteCommentTextView.isVisible = false
@@ -182,7 +172,6 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
     private fun initToolBar() = with(binding) {
 
         backButton.setOnClickListener {
-            Log.d(TAG, "inittoolbar backbutton: ${fragmentViewModel.beforeFragment.value}")
 //            parentFragmentManager.popBackStack()
 //            fragmentViewModel.setHasBottomNavi(true)
             if (fragmentViewModel.beforeFragment.value == "writeDiary") {
@@ -196,7 +185,6 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
     }
 
     override fun onHeartClickListener(commentId: Long) {
-        Toast.makeText(requireContext(), "hear", Toast.LENGTH_SHORT).show()
         likedCommentId = commentId
         launch(coroutineContext) {
             gatherDiaryViewModel.setResponseLikeComment(commentId)
@@ -223,7 +211,7 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
         submitButton.setOnClickListener {
             val reportContent = reportContentEditText.text.toString()
             if (reportContent.isEmpty()) {
-                Toast.makeText(requireContext(), "내용 입력해라잉", Toast.LENGTH_SHORT).show()
+                CodaSnackBar.make(binding.root,"내용을 입력해 주세요.").show()
             }
             //한 글자 이상 입력했으면
             else {
