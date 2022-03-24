@@ -100,7 +100,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
                         binding.sendCommentButton.text = getString(R.string.diary_send_complete)
                         binding.sendCommentButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.text_brown))
                         binding.sendCommentButton.isEnabled = false
-
+                        binding.commentLimitTextView.isVisible = false
                         binding.commentEditTextView.setText(response.result.myComment[0].content)
                         binding.commentEditTextView.isEnabled = false
                     } else {
@@ -108,6 +108,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
                             requireContext(),
                             R.drawable.background_pure_green_radius_15
                         )
+                        binding.commentLimitTextView.isVisible =true
                         binding.sendCommentButton.text = getString(R.string.send_text1)
                         binding.sendCommentButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.background_ivory))
                         binding.commentEditTextView.text = null
