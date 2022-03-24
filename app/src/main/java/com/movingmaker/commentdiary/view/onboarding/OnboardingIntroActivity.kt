@@ -33,13 +33,13 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
     override fun onCreate(savedInstanceState: Bundle?) {
         //31버전보다 아래일 시
 //        if(Build.VERSION.SDK_INT< Build.VERSION_CODES.S){
-            setTheme(R.style.Theme_CommentDiary)
+//            setTheme(R.style.Theme_CommentDiary)
 //        }
         super.onCreate(savedInstanceState)
         binding = ActivityOnboardingIntroBinding.inflate(layoutInflater)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.statusBarColor = getColor(R.color.onboarding_background)
+//        window.statusBarColor = getColor(R.color.onboarding_background)
 
 
         launch(coroutineContext) {

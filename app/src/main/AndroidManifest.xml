@@ -7,14 +7,14 @@
     <application
         android:name=".CodaApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CommentDiary"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"
+            android:name="com.movingmaker.commentdiary.view.onboarding.SplashActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -22,10 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.main.MainActivity" />
-        <activity android:name=".view.onboarding.OnboardingLoginActivity" />
-        <activity android:name=".view.main.mydiary.WriteDiaryFragment"/>
-
+        <activity android:name="com.movingmaker.commentdiary.view.main.MainActivity" />
+        <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity" />
+        <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"/>
+<!--        com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity-->
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
