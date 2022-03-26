@@ -2,6 +2,7 @@ package com.movingmaker.commentdiary
 
 import android.app.Application
 import android.content.Intent
+import androidx.appcompat.app.AppCompatDelegate
 import com.movingmaker.commentdiary.model.AuthProvider
 import com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity
 
@@ -20,6 +21,7 @@ class CodaApplication(): Application() {
 
     override fun onCreate() {
         super.onCreate()
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         codaApplication = this
         dataStore = AuthProvider(this)
     }

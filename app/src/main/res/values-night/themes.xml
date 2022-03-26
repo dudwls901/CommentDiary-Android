@@ -15,9 +15,6 @@
         <item name="android:colorBackground">@color/background_ivory</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
-        <!--        android:windowBackground : 이 설정은 window의 배경을 설정하는 것이다. color 또는 drawable 설정이 가능하다. -->
-        <!--        <item name="android:windowBackground">@color/coda_background</item>-->
-        <!--        <item name="android:windowSplashScreenBackground">@color/coda_common_text</item>-->
     </style>
 
     <!--    스플래시 -->
@@ -25,7 +22,7 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:statusBarColor">@color/background_ivory</item>
-        <!--        <item name="android:colorBackground">@color/onboarding_red</item>-->
+        <item name="android:windowBackground">@color/background_ivory</item>
     </style>
 
 

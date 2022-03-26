@@ -36,10 +36,10 @@ class SplashActivity: AppCompatActivity(),CoroutineScope {
             var refreshToken = withContext(Dispatchers.IO) {
                 CodaApplication.getInstance().getDataStore().refreshToken.first()
             }
+            delay(1000L)
             //자동 로그인
             if (refreshToken.isNotEmpty()) {
                 //refresh토큰 갱신하는 api 필요 refreshToken만료됐는지 검사 후 accessToken,refreshToken,expiresIn발급
-                delay(2000L)
 //                finish()
                 startActivity(Intent(this@SplashActivity, MainActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -47,7 +47,7 @@ class SplashActivity: AppCompatActivity(),CoroutineScope {
                 })
 
             } else {
-                startActivity(Intent(this@SplashActivity, OnboardingLoginActivity::class.java).apply {
+                startActivity(Intent(this@SplashActivity, OnboardingIntroActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 })

@@ -39,8 +39,7 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
         binding = ActivityOnboardingIntroBinding.inflate(layoutInflater)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//        window.statusBarColor = getColor(R.color.onboarding_background)
-
+        window.statusBarColor = getColor(R.color.background_ivory)
 
         launch(coroutineContext) {
             var refreshToken = withContext(Dispatchers.IO) {

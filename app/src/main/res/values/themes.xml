@@ -15,21 +15,18 @@
         <item name="android:colorBackground">@color/background_ivory</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
-<!--        android:windowBackground : 이 설정은 window의 배경을 설정하는 것이다. color 또는 drawable 설정이 가능하다. -->
-<!--        <item name="android:windowBackground">@color/coda_background</item>-->
-<!--        <item name="android:windowSplashScreenBackground">@color/coda_common_text</item>-->
     </style>
 
-<!--    스플래시 -->
+    <!--    스플래시 -->
     <style name="SplashTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:statusBarColor">@color/background_ivory</item>
-<!--        <item name="android:colorBackground">@color/onboarding_red</item>-->
+        <item name="android:windowBackground">@color/background_ivory</item>
     </style>
 
 
-<!--    캘린더 -->
+    <!--    캘린더 -->
     <style name="Widget.CalendarView.Custom" parent="android:Widget.CalendarView">
         <item name="android:focusedMonthDateColor">@android:color/holo_blue_light</item>
         <item name="android:weekNumberColor">@android:color/holo_red_light</item>
@@ -48,13 +45,13 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
-<!--    todo 폰트 적용 안됨??-->
+    <!--    todo 폰트 적용 안됨??-->
     <!-- 여기서 요일, 달력 안 숫자들의 폰트 설정을 수행할 수 있다 -->
     <!-- 달력 안의 숫자들에 적용되는 스타일 -->
     <style name="CalendarDateText" parent="Theme.AppCompat">
         <item name="android:textColor">@color/text_black</item>
         <item name="android:textSize" tools:ignore="SpUsage">14dp</item>
-<!--        <item name="font">@font/roboto_medium</item>-->
+        <!--        <item name="font">@font/roboto_medium</item>-->
         <item name="fontFamily">@font/roboto_medium</item>
     </style>
 
@@ -62,8 +59,8 @@
     <style name="CalendarDayOfWeek" parent="Theme.AppCompat">
         <item name="android:textColor">@color/text_black</item>
         <item name="android:textSize" tools:ignore="SpUsage">12dp</item>
-<!--        <item name="background">@drawable/onboarding_dialog_button_left_top_border</item>-->
-<!--        <item name="font">@font/roboto_medium</item>-->
+        <!--        <item name="background">@drawable/onboarding_dialog_button_left_top_border</item>-->
+        <!--        <item name="font">@font/roboto_medium</item>-->
         <item name="fontFamily">@font/roboto_medium</item>
     </style>
 
@@ -76,7 +73,7 @@
     </style>
 
 
-<!--    다이얼로그 -->
+    <!--    다이얼로그 -->
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
@@ -87,7 +84,7 @@
 
 
 
-<!--    폰트-->
+    <!--    폰트-->
     <style name="BLargetitle">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
