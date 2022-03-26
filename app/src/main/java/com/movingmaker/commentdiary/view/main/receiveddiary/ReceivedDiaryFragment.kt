@@ -97,7 +97,6 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
                         )
                         binding.sendCommentButton.text = getString(R.string.diary_send_complete)
                         binding.sendCommentButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.text_brown))
-                        binding.sendCommentButton.isEnabled = false
                         binding.commentLimitTextView.isVisible = false
                         binding.commentEditTextView.setText(response.result.myComment[0].content)
                         binding.commentEditTextView.isEnabled = false
