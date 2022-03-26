@@ -30,10 +30,6 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-//todo 작성하기로 가는 탭이 없음
-//todo 이전날짜도 마찬가지고 전체보기 누르면 작성하기
-//todo 멘트도 바꿔주기
-
 class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     override val TAG: String = CalendarWithDiaryFragment::class.java.simpleName
 
@@ -146,9 +142,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         }
         myDiaryViewModel.monthDiaries.observe(viewLifecycleOwner){
             binding.materialCalendarView.removeDecorators()
-//            binding.materialCalendarView.addDecorator(
-//                CommentDotDecorator(requireContext(), myDiaryViewModel.commentDiary.value!!)
-//            )
             binding.materialCalendarView.addDecorators(
                 AloneDotDecorator(requireContext(), myDiaryViewModel.aloneDiary.value!!),
                 CommentDotDecorator(requireContext(), myDiaryViewModel.commentDiary.value!!),
@@ -198,13 +191,14 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
             myDiaryViewModel.setSelectedDate(codaToday)
             checkSelectedDate(CalendarDay.from(y, m - 1, d))
 //            checkSelectedDate(null)
-            //3안 호마녀 오늘 날짜로 초기화, 달력 움직여야함..
+            //3안 화면 오늘 날짜로 초기화, 달력 움직여야함..
 //            refreshViews()
             //위의 동작 완료시 리프레쉬 종료
             swipeRefreshLayout.isRefreshing = false
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initViews() = with(binding){
         //리스너, 날짜 바뀌었을 시
         materialCalendarView.setOnDateChangedListener { widget, date, selected ->
@@ -214,6 +208,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
         //리스너, 월 바뀌었을 시
         materialCalendarView.setOnMonthChangedListener { widget, date ->
+            binding.calendarHeaderTextView.text = "${date.year}년 ${date.month+1}월"
             //선택된 일기 없애주기
             myDiaryViewModel.setSelectedDiary(Diary(null,"","","",' ',' ', null))
             val requestDate = LocalDate.of(date.year, date.month+1, date.day)
@@ -223,56 +218,47 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         initCalendar()
     }
 
-    @SuppressLint("SimpleDateFormat", "ResourceType")
     private fun initCalendar() = with(binding) {
 
-        materialCalendarView.setTitleFormatter(MonthArrayTitleFormatter(resources.getStringArray(R.array.custom_months)))
-        materialCalendarView.setWeekDayFormatter(ArrayWeekDayFormatter(resources.getStringArray(R.array.custom_weekdays)))
-        materialCalendarView.setTitleFormatter { day -> // CalendarDay라는 클래스는 LocalDate 클래스를 기반으로 만들어진 클래스다
-            // 월, 요일을 한글로 보이게 설정 (MonthArrayTitleFormatter의 작동을 확인하려면 밑의 setTitleFormatter()를 지운다)
-            val calendarHeaderBuilder = StringBuilder()
-            calendarHeaderBuilder.append(day.year)
-                .append("년 ")
-                .append(day.month + 1)
-                .append("월")
-            calendarHeaderBuilder.toString()
-        }
-//        materialCalendarView.topbarVisible=false
-//        materialCalendarView.setWeekDayTextAppearance()
-        materialCalendarView.isDynamicHeightEnabled = true
         materialCalendarView.state().edit()
             .setFirstDayOfWeek(Calendar.SUNDAY)
             .setMinimumDate(CalendarDay.from(2021, 0, 1))//캘린더 시작 날짜
             .setMaximumDate(CalendarDay.from(2022, 11, 31))//캘린더 끝 날짜
             .setCalendarDisplayMode(CalendarMode.MONTHS) // 월 달력, 주 달력
             .commit()
+        materialCalendarView.setWeekDayFormatter(ArrayWeekDayFormatter(resources.getStringArray(R.array.custom_weekdays)))
+//        materialCalendarView.setTitleFormatter(MonthArrayTitleFormatter(resources.getStringArray(R.array.custom_months)))
+//        materialCalendarView.setHeaderTextAppearance(R.style.CalendarViewHeaderCustomText);
+//        materialCalendarView.setWeekDayTextAppearance(R.drawable.background_ivory_radius_15_border_brown_1)
+//        materialCalendarView.setHeaderTextAppearance(R.drawable.background_ivory_radius_15_border_brown_1)
+        //topbar(년월)
+//        materialCalendarView.setTitleFormatter { day -> // CalendarDay라는 클래스는 LocalDate 클래스를 기반으로 만들어진 클래스다
+//            // 월, 요일을 한글로 보이게 설정 (MonthArrayTitleFormatter의 작동을 확인하려면 밑의 setTitleFormatter()를 지운다)
+//            val calendarHeaderBuilder = StringBuilder()
+//            calendarHeaderBuilder.append(day.year)
+//                .append("년 ")
+//                .append(day.month + 1)
+//                .append("월")
+//            calendarHeaderBuilder.toString()
+//        }
+//        materialCalendarView.setWeekDayTextAppearance()
         materialCalendarView.addDecorator(
             SelectedDateDecorator(requireContext())
         )
+        materialCalendarView.isDynamicHeightEnabled = true
 
-        val codaToday = DateConverter.getCodaToday()
-        val calendarDay =
-            CalendarDay.from(codaToday.year, codaToday.monthValue-1 , codaToday.dayOfMonth)
-//        launch(coroutineContext) {
-//            myDiaryViewModel.setResponseGetMonthDiary(codaToday.format(DateTimeFormatter.ofPattern("yyyy.MM")))
+        materialCalendarView.topbarVisible=false
+        leftArrowButton.setOnClickListener {
+            val beforeDate = materialCalendarView.currentDate
+            materialCalendarView.currentDate = CalendarDay.from(beforeDate.year,beforeDate.month-1, beforeDate.day)
+            Log.d("loglog","${materialCalendarView.currentDate}")
+        }
 
-        //캘린더 현재 달로 일기 초기화
-//        setMonthCalendarDiaries(codaToday.format(DateTimeFormatter.ofPattern("yyyy.MM")))
-
-//        val selectedDate = myDiaryViewModel.selectedDiary.value!!.date
-        //선택한 날짜 있으면 선택한 날짜로 캘린더 닷 설정
-//        if (selectedDate != "") {
-//            val (y, m, d) = selectedDate.split('.').map { it.toInt() }
-//            materialCalendarView.currentDate = CalendarDay.from(y, m, d)
-//            materialCalendarView.selectedDate = CalendarDay.from(y, m, d)
-//            checkSelectedDate(CalendarDay.from(y, m, d))
-//        }
-//        //선택한 날짜 없으면 오늘 날짜로 캘린더 닷 설정
-//        else {
-//            materialCalendarView.currentDate = calendarDay
-//            materialCalendarView.selectedDate = calendarDay
-//            checkSelectedDate(calendarDay)
-//        }
+        rightArrowButton.setOnClickListener {
+            val beforeDate = materialCalendarView.currentDate
+            materialCalendarView.currentDate = CalendarDay.from(beforeDate.year,beforeDate.month+1, beforeDate.day)
+            Log.d("loglog","${materialCalendarView.currentDate}")
+        }
 
     }
 

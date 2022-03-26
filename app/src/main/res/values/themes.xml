@@ -45,33 +45,39 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
-    <!--    todo 폰트 적용 안됨??-->
+    <!--    todo 폰트 적용 안됨-->
     <!-- 여기서 요일, 달력 안 숫자들의 폰트 설정을 수행할 수 있다 -->
     <!-- 달력 안의 숫자들에 적용되는 스타일 -->
     <style name="CalendarDateText" parent="Theme.AppCompat">
         <item name="android:textColor">@color/text_black</item>
-        <item name="android:textSize" tools:ignore="SpUsage">14dp</item>
+        <item name="android:textSize" tools:ignore="SpUsage">13dp</item>
         <!--        <item name="font">@font/roboto_medium</item>-->
         <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <!-- 달력 안의 요일들에 적용되는 스타일 -->
     <style name="CalendarDayOfWeek" parent="Theme.AppCompat">
         <item name="android:textColor">@color/text_black</item>
         <item name="android:textSize" tools:ignore="SpUsage">12dp</item>
-        <!--        <item name="background">@drawable/onboarding_dialog_button_left_top_border</item>-->
-        <!--        <item name="font">@font/roboto_medium</item>-->
         <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <!-- 연, 월을 표시하는 헤더에 적용되는 스타일 -->
-    <style name="CalendarViewHeaderCustomText">
-        <item name="android:textSize" tools:ignore="SpUsage">18dp</item>
-        <item name="android:textColor">@color/text_black</item>
-        <item name="font">@font/roboto_bold</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
+<!--    <style name="CalendarViewHeaderCustomText">-->
+<!--        <item name="android:textAppearance">@style/MCaption</item>-->
+<!--        <item name="android:textSize" tools:ignore="SpUsage">18dp</item>-->
+<!--        <item name="android:textColor">@color/text_black</item>-->
+<!--        <item name="font">@font/roboto_bold</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+<!--    </style>-->
+<!--    <style name="CalendarWidgetHeader">-->
+<!--        <item name="android:textAppearance">@style/MCaption3</item>-->
+<!--        <item name="android:textSize">16sp</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+<!--        <item name="android:textColor">@color/dot_red</item>-->
+<!--    </style>-->
 
     <!--    다이얼로그 -->
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
