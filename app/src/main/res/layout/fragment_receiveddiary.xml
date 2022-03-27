@@ -13,199 +13,205 @@
 
     </data>
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
             android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp">
+
+                <TextView
+                    android:id="@+id/arrivedTextView"
+                    style="@style/BHeadline2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/arrived_diary"
+                    android:textColor="@color/text_black"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/diaryLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="23dp"
+                    android:background="@drawable/background_ivory_border_radius_10"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="16dp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/arrivedTextView"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/diaryDateTextView"
+                        style="@style/BHeadline2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{receivedDiaryviewModel.receivedDiary.date}"
+                        android:textColor="@color/pure_orange"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="2022.2.21" />
+
+                    <TextView
+                        android:id="@+id/diaryHeadEditText"
+                        style="@style/BHeadline"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:autoSizeTextType="none"
+                        android:text="@{receivedDiaryviewModel.receivedDiary.title}"
+                        android:textColor="@color/text_black"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/diaryDateTextView"
+                        tools:text="@string/diary_content_dummy_data" />
+
+                    <View
+                        android:id="@+id/line"
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/text_light_brown"
+                        app:layout_constraintBottom_toTopOf="@id/diaryContentEditText"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/diaryHeadEditText" />
+
+                    <TextView
+                        android:id="@+id/diaryContentEditText"
+                        style="@style/RCaption"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="11dp"
+                        android:layout_marginBottom="72dp"
+                        android:text="@{receivedDiaryviewModel.receivedDiary.content}"
+                        android:textColor="@color/text_black"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line"
+                        tools:ignore="SpUsage"
+                        tools:text="dkajfmiodajfiodjaiofjda\niajdfojaidfjioadjfioajiofdjioa" />
+
+                    <TextView
+                        android:id="@+id/reportButton"
+                        style="@style/MCaption3"
+                        android:layout_width="45dp"
+                        android:layout_height="38dp"
+                        android:gravity="center"
+                        android:text="@string/report"
+                        android:textColor="@color/text_brown"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/commentLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginBottom="40dp"
+                    android:background="@drawable/background_ivory_radius_10"
+                    android:minHeight="134dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/diaryLayout"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/commentHeadTextView"
+                        style="@style/BHeadline2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="17dp"
+                        android:text="@string/received_diary_comment_head"
+                        android:textColor="@color/core_pure_green"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/sendCommentButton"
+                        style="@style/RCaption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginEnd="16dp"
+                        android:alpha="@{receivedDiaryviewModel.commentTextCount >= 20 ? 1.0f : 0.4f}"
+                        android:background="@drawable/background_pure_green_radius_15"
+                        android:enabled="@{receivedDiaryviewModel.commentTextCount >= 20 &amp;&amp; receivedDiaryviewModel.receivedDiary.myComment.isEmpty() ? true : false}"
+                        android:paddingHorizontal="9dp"
+                        android:text="@string/send_text1"
+                        android:textColor="@color/background_ivory"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/commentEditTextView"
+                        style="@style/MCaption2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="52dp"
+                        android:background="@null"
+                        android:gravity="start"
+                        android:hint="@string/comment_write_hint"
+                        android:importantForAutofill="no"
+                        android:inputType="textMultiLine"
+                        android:minHeight="30dp"
+                        android:textColor="@color/text_black"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/sendCommentButton" />
+
+                    <TextView
+                        android:id="@+id/commentLimitTextView"
+                        style="@style/MCaption2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="18dp"
+                        android:layout_marginBottom="6dp"
+                        android:text="@{@string/comment_write_limit(receivedDiaryviewModel.commentTextCount)}"
+                        android:textColor="@color/text_brown"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:text="0/20" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/noReceivedDiaryYet"
+            style="@style/MCaption2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp">
-
-            <TextView
-                android:id="@+id/arrivedTextView"
-                style="@style/BHeadline2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/arrived_diary"
-                android:textColor="@color/text_black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/diaryLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="23dp"
-                android:background="@drawable/background_ivory_border_radius_10"
-                android:paddingHorizontal="24dp"
-                android:paddingTop="16dp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/arrivedTextView"
-                tools:visibility="visible">
-
-                <TextView
-                    android:id="@+id/diaryDateTextView"
-                    style="@style/BHeadline2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{receivedDiaryviewModel.receivedDiary.date}"
-                    android:textColor="@color/pure_orange"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="2022.2.21" />
-
-                <TextView
-                    android:id="@+id/diaryHeadEditText"
-                    style="@style/BHeadline"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:autoSizeTextType="none"
-                    android:text="@{receivedDiaryviewModel.receivedDiary.title}"
-                    android:textColor="@color/text_black"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/diaryDateTextView"
-                    tools:text="@string/diary_content_dummy_data" />
-
-                <View
-                    android:id="@+id/line"
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="6dp"
-                    android:background="@color/text_light_brown"
-                    app:layout_constraintBottom_toTopOf="@id/diaryContentEditText"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/diaryHeadEditText" />
-
-                <TextView
-                    android:id="@+id/diaryContentEditText"
-                    style="@style/RCaption"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="11dp"
-                    android:layout_marginBottom="72dp"
-                    android:text="@{receivedDiaryviewModel.receivedDiary.content}"
-                    android:textColor="@color/text_black"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line"
-                    tools:ignore="SpUsage"
-                    tools:text="dkajfmiodajfiodjaiofjda\niajdfojaidfjioadjfioajiofdjioa" />
-
-                <TextView
-                    android:id="@+id/reportButton"
-                    style="@style/MCaption3"
-                    android:layout_width="45dp"
-                    android:layout_height="38dp"
-                    android:gravity="center"
-                    android:text="@string/report"
-                    android:textColor="@color/text_brown"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/commentLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="13dp"
-                android:layout_marginBottom="40dp"
-                android:background="@drawable/background_ivory_radius_10"
-                android:minHeight="134dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/diaryLayout"
-                tools:visibility="visible">
-
-                <TextView
-                    android:id="@+id/commentHeadTextView"
-                    style="@style/BHeadline2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="17dp"
-                    android:text="@string/received_diary_comment_head"
-                    android:textColor="@color/core_pure_green"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/sendCommentButton"
-                    style="@style/RCaption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginEnd="16dp"
-                    android:alpha="@{receivedDiaryviewModel.commentTextCount >= 20 ? 1.0f : 0.4f}"
-                    android:background="@drawable/background_pure_green_radius_15"
-                    android:enabled="@{receivedDiaryviewModel.commentTextCount >= 20 &amp;&amp; receivedDiaryviewModel.receivedDiary.myComment.isEmpty() ? true : false}"
-                    android:paddingHorizontal="9dp"
-                    android:text="@string/send_text1"
-                    android:textColor="@color/background_ivory"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/commentEditTextView"
-                    style="@style/MCaption2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="52dp"
-                    android:background="@null"
-                    android:gravity="start"
-                    android:hint="@string/comment_write_hint"
-                    android:importantForAutofill="no"
-                    android:inputType="textMultiLine"
-                    android:minHeight="30dp"
-                    android:textColor="@color/text_black"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sendCommentButton" />
-
-                <TextView
-                    android:id="@+id/commentLimitTextView"
-                    style="@style/MCaption2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginBottom="6dp"
-                    android:text="@{@string/comment_write_limit(receivedDiaryviewModel.commentTextCount)}"
-                    android:textColor="@color/text_brown"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:text="0/20" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <TextView
-                android:id="@+id/noReceivedDiaryYet"
-                style="@style/MCaption2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="23dp"
-                android:text="@string/no_received_diary_yet"
-                android:textAlignment="center"
-                android:textColor="@color/text_brown"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/arrivedTextView" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+            android:layout_marginTop="72dp"
+            android:text="@string/no_received_diary_yet"
+            android:textAlignment="center"
+            android:textColor="@color/text_brown"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
