@@ -200,7 +200,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                         return@setOnClickListener
                     }
                     else{
-                        CodaSnackBar.make(binding.root,"이메일 인증 먼저 하세요" ).show()
+                        CodaSnackBar.make(binding.root,"이메일을 인증해 주세요.").show()
                     }
 
                 }

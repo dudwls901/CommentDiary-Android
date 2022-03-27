@@ -164,6 +164,7 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
         dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialogView.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialogView.setContentView(R.layout.dialog_onboarding_email_code_send)
+        dialogView.setCancelable(false)
         dialogView.show()
 
         val submitButton = dialogView.findViewById<Button>(R.id.submitButton)
