@@ -14,6 +14,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -208,7 +209,6 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
         dialogView.setContentView(R.layout.dialog_common_report)
         dialogView.setCancelable(false)
         dialogView.show()
-
 
         val submitButton = dialogView.findViewById<Button>(R.id.submitButton)
         val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
