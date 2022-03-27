@@ -12,6 +12,7 @@
             name="myDiaryviewModel"
             type="com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel" />
     </data>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -22,91 +23,87 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-                <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-                    android:id="@+id/materialCalendarView"
-                    android:layout_width="0dp"
+            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                android:id="@+id/materialCalendarView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_ivory_side_bottom_border_green_4"
+                android:paddingHorizontal="10dp"
+                android:paddingBottom="18dp"
+                android:theme="@style/MCaption2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calendarTopLayout"
+                app:mcv_dateTextAppearance="@style/CalendarDateText"
+                app:mcv_selectionColor="@color/pure_orange"
+                app:mcv_tileSize="45dp"
+                app:mcv_weekDayTextAppearance="@style/CalendarDayOfWeek" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/calendarTopLayout"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/background_ivory_top_radius_60_border_green_4"
+                android:clipChildren="false"
+                android:paddingTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/leftArrowButton"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/background_ivory_side_bottom_border_green_4"
-                    android:paddingHorizontal="10dp"
-                    android:paddingBottom="18dp"
-                    android:theme="@style/MCaption2"
+                    android:background="@drawable/ripple_ivory_to_brand_green"
+                    android:src="@drawable/ic_calarrow_left"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/calendarHeaderTextView"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/calendarHeaderTextView"
+                    style="@style/BSubheadline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="@color/text_black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/calendarTopLayout"
-                    app:mcv_dateTextAppearance="@style/CalendarDateText"
-                    app:mcv_selectionColor="@color/pure_orange"
-                    app:mcv_tileSize="45dp"
-                    app:mcv_weekDayTextAppearance="@style/CalendarDayOfWeek" />
+                    tools:text="2022년 3월" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_marginTop="24dp"
-                    android:id="@+id/calendarTopLayout"
-                    android:layout_width="match_parent"
-                    android:paddingTop="10dp"
-                    android:layout_height="60dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:background="@drawable/background_ivory_top_radius_60_border_green_4"
-                    android:clipChildren="false"
-                    >
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/rightArrowButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ripple_ivory_to_green"
+                    android:src="@drawable/ic_calarrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/calendarHeaderTextView"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:id="@+id/leftArrowButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_calarrow_left"
-                        android:background="@drawable/ripple_ivory_to_brand_green"
-                        app:layout_constraintEnd_toStartOf="@id/calendarHeaderTextView"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <TextView
-                        android:id="@+id/calendarHeaderTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        tools:text="2022년 3월"
-                        android:gravity="center"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        style="@style/BSubheadline"
-                        android:textColor="@color/text_black"
-                        />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="6dp"
+                android:background="@color/text_light_brown"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calendarTopLayout" />
 
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:background="@drawable/ripple_ivory_to_green"
-                        android:id="@+id/rightArrowButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_calarrow_right"
-                        app:layout_constraintStart_toEndOf="@id/calendarHeaderTextView"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-                <View
-                    android:layout_marginHorizontal="30dp"
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="6dp"
-                    android:background="@color/text_light_brown"
-                    app:layout_constraintTop_toBottomOf="@id/calendarTopLayout"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    />
-                <View
-                    android:layout_marginHorizontal="30dp"
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="38dp"
-                    android:background="@color/text_light_brown"
-                    app:layout_constraintTop_toBottomOf="@id/calendarTopLayout"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    />
-                <!--                app:mcv_headerTextAppearance="@style/CalendarViewHeaderCustomText"-->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="38dp"
+                android:background="@color/text_light_brown"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calendarTopLayout" />
+            <!--                app:mcv_headerTextAppearance="@style/CalendarViewHeaderCustomText"-->
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -308,8 +305,8 @@
                         android:layout_marginHorizontal="24dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="22dp"
-                        android:scrollbars="vertical"
                         android:nestedScrollingEnabled="true"
+                        android:scrollbars="vertical"
                         android:text="@{myDiaryviewModel.selectedDiary.content}"
                         app:layout_constraintBottom_toTopOf="@id/sendDiaryBeforeAfterTextView"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -347,6 +344,17 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ProgressBar
+                android:id="@+id/loadingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

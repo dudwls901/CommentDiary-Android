@@ -26,6 +26,7 @@ import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
 import com.movingmaker.commentdiary.databinding.FragmentMypageMyaccountBinding
 import com.movingmaker.commentdiary.databinding.FragmentMypageSendedCommentListBinding
+import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.view.main.gatherdiary.DiaryListFragment
@@ -92,7 +93,7 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
             if (it.isSuccessful) {
                 it.body()?.result?.let { commentList -> myPageViewModel.setCommentList(commentList) }
             } else {
-                //todo 에러 처리
+                CodaSnackBar.make(binding.root, "코멘트를 받아오는 데 실패했습니다.")
             }
         }
         myPageViewModel.responseGetMonthComment.observe(viewLifecycleOwner) {
@@ -100,7 +101,7 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
             if (it.isSuccessful) {
                 it.body()?.result?.let { commentList -> myPageViewModel.setCommentList(commentList) }
             } else {
-                //todo 에러 처리
+                CodaSnackBar.make(binding.root, "코멘트를 받아오는 데 실패했습니다.")
             }
         }
     }

@@ -81,6 +81,7 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
         }
 
         gatherDiaryViewModel.responseLikeComment.observe(viewLifecycleOwner){response->
+            binding.loadingBar.isVisible = false
             if(response.isSuccessful){
                 if(likedCommentId!=-1L){
                     myDiaryViewModel.likeLocalComment(likedCommentId)
@@ -90,6 +91,7 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
         }
 
         gatherDiaryViewModel.responseReportComment.observe(viewLifecycleOwner){response->
+            binding.loadingBar.isVisible = false
             //신고 성공한 경우
             if(response.isSuccessful){
                 CodaSnackBar.make(binding.root, "신고가 접수되었습니다.").show()
@@ -174,8 +176,6 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
     private fun initToolBar() = with(binding) {
 
         backButton.setOnClickListener {
-//            parentFragmentManager.popBackStack()
-//            fragmentViewModel.setHasBottomNavi(true)
             if (fragmentViewModel.beforeFragment.value == "writeDiary") {
                 fragmentViewModel.setFragmentState("myDiary")
             } else if (fragmentViewModel.beforeFragment.value == "gatherDiary") {
@@ -189,7 +189,10 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
     override fun onHeartClickListener(commentId: Long) {
         likedCommentId = commentId
         launch(coroutineContext) {
-            gatherDiaryViewModel.setResponseLikeComment(commentId)
+            binding.loadingBar.isVisible = true
+            withContext(Dispatchers.IO) {
+                gatherDiaryViewModel.setResponseLikeComment(commentId)
+            }
         }
     }
 
@@ -221,14 +224,17 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
                 //로컬에서 코멘트 삭제
                 reportedCommentId = commentId
                 launch(coroutineContext) {
-                    gatherDiaryViewModel.setResponseReportComment(
-                        ReportCommentRequest(
-                            id = commentId,
-                            content = reportContent
+                    binding.loadingBar.isVisible = true
+                    withContext(Dispatchers.IO) {
+                        gatherDiaryViewModel.setResponseReportComment(
+                            ReportCommentRequest(
+                                id = commentId,
+                                content = reportContent
+                            )
                         )
-                    )
+                    }
+                    dialogView.dismiss()
                 }
-                dialogView.dismiss()
             }
         }
         cancelButton.setOnClickListener {

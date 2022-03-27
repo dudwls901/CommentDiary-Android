@@ -75,6 +75,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
             if(fragment=="receivedDiary"){
                 //받은 일기 조회
                 launch(coroutineContext) {
+                    binding.loadingBar.isVisible=true
                     launch(Dispatchers.IO) {
                         receivedDiaryViewModel.setResponseGetReceivedDiary()
                     }
@@ -83,6 +84,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
         }
 
         receivedDiaryViewModel.responseGetReceivedDiary.observe(viewLifecycleOwner) {
+            binding.loadingBar.isVisible=false
             if (it.isSuccessful) {
                 it.body()?.let { response ->
                     receivedDiaryViewModel.setReceivedDiary(response.result)
@@ -188,6 +190,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
         submitButton.setOnClickListener {
             //코멘트 전송
             launch(coroutineContext) {
+                binding.loadingBar.isVisible=true
                 launch(Dispatchers.IO) {
                     receivedDiaryViewModel.setResponseSaveComment(
                         binding.commentEditTextView.text.toString()
@@ -223,6 +226,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
             else{
                 //신고
                 launch(coroutineContext) {
+                    binding.loadingBar.isVisible=true
                     launch(Dispatchers.IO) {
                         receivedDiaryViewModel.setResponseReportDiary(reportContent)
                     }

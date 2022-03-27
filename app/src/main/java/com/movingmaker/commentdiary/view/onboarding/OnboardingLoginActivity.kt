@@ -25,10 +25,7 @@ import com.movingmaker.commentdiary.databinding.ActivityOnboardingLoginBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.view.main.MainActivity
 import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), CoroutineScope {
@@ -63,7 +60,8 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         onboardingFindPasswordFragment = OnboardingFindPasswordFragment.newInstance()
         onboardingSignUpSuccessFragment = OnboardingSignUpSuccessFragment.newInstance()
 
-        supportFragmentManager.beginTransaction().add(binding.fragmentContainer.id, onboardingLoginFragment)
+        supportFragmentManager.beginTransaction()
+            .add(binding.fragmentContainer.id, onboardingLoginFragment)
             .commit()
 
         binding.lifecycleOwner = this
@@ -76,27 +74,24 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         addButtonEvent("login")
     }
 
-    private fun observeDatas(){
+    private fun observeDatas() {
 
         onboardingViewModel.responseFindPassword.observe(this) {
             binding.loadingBar.isVisible = false
             sendPasswordDialog(it.isSuccessful)
         }
 
-        onboardingViewModel.responseLogin.observe(this){
+        onboardingViewModel.responseLogin.observe(this) {
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
-//                Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
-
                 val accessToken = it.body()?.result?.accessToken
                 val refreshToken = it.body()?.result?.refreshToken
                 val accessTokenExpiresIn = it.body()?.result?.accessTokenExpiresIn
 
-                if(accessToken == null || refreshToken == null || accessTokenExpiresIn == null){
-//                    Toast.makeText(this, "토큰 저장 실패", Toast.LENGTH_SHORT).show()
-                }
-                else{
-                    CodaApplication.getInstance().getDataStore().insertAuth(accessToken, refreshToken, accessTokenExpiresIn)
+                if (accessToken == null || refreshToken == null || accessTokenExpiresIn == null) {
+                } else {
+                    CodaApplication.getInstance().getDataStore()
+                        .insertAuth(accessToken, refreshToken, accessTokenExpiresIn)
                 }
 
                 startActivity(Intent(this, MainActivity::class.java).apply {
@@ -106,21 +101,19 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 })
             } else {
+                //텍스트 뷰로 로그인 상태 나타냄
                 onboardingViewModel.setLoginCorrect(false)
-//                Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
             }
         }
 
-        onboardingViewModel.responseSignUpComplete.observe(this){
-            val message = it.body()?.message ?: "fail"
-            val code = it.body()?.code.toString()
+        onboardingViewModel.responseSignUpComplete.observe(this) {
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
-//                Toast.makeText(this, "회원가입 성공" + it.body(), Toast.LENGTH_SHORT).show()
+                CodaSnackBar.make(binding.root, "회원가입이 완료되었습니다.").show()
                 onboardingViewModel.setCurrentFragment("signUpSuccess")
 
             } else {
-//                Toast.makeText(this, "회원가입 실패", Toast.LENGTH_SHORT).show()
+                CodaSnackBar.make(binding.root, "회원가입에 실패했습니다.").show()
             }
         }
 
@@ -150,16 +143,18 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                     }
                     onboardingViewModel.canMakeAccount.observe(this, observeButtonState)
                 }
-                "findPW" ->{
+                "findPW" -> {
                     replaceFragment(onboardingFindPasswordFragment)
                     binding.onboardingBottomButton.isEnabled = true
-                    binding.onboardingBottomButton.text = getString(R.string.onboarding_send_password)
+                    binding.onboardingBottomButton.text =
+                        getString(R.string.onboarding_send_password)
                     addButtonEvent(fragment)
                 }
-                "signUpSuccess" ->{
+                "signUpSuccess" -> {
                     replaceFragment(onboardingSignUpSuccessFragment)
                     binding.onboardingBottomButton.isEnabled = true
-                    binding.onboardingBottomButton.text = getString(R.string.onboarding_button_write_start)
+                    binding.onboardingBottomButton.text =
+                        getString(R.string.onboarding_button_write_start)
                     addButtonEvent(fragment)
                 }
             }
@@ -179,45 +174,51 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         when (fragment) {
             "login" -> {
                 binding.onboardingBottomButton.setOnClickListener {
-                    if(onboardingViewModel.email.value!!.isEmpty() || onboardingViewModel.password.value!!.isEmpty()){
+                    if (onboardingViewModel.email.value!!.isEmpty() || onboardingViewModel.password.value!!.isEmpty()) {
                         onboardingViewModel.setLoginCorrect(false)
-                    }
-                    else{
+                    } else {
                         binding.loadingBar.isVisible = true
                         launch(coroutineContext) {
-                            onboardingViewModel.setResponseLogin()
+                            withContext(Dispatchers.IO) {
+                                onboardingViewModel.setResponseLogin()
+                            }
                         }
                     }
                 }
             }
             "signUp" -> {
                 binding.onboardingBottomButton.setOnClickListener {
-                    if(onboardingViewModel.emailCodeCheckComplete.value == true){
-                        //회원가입 api 호출
+                    if (onboardingViewModel.emailCodeCheckComplete.value == true) {
                         launch(coroutineContext) {
-                            onboardingViewModel.setResponseSignUp()
+                            binding.loadingBar.isVisible = true
+                            withContext(Dispatchers.IO) {
+                                onboardingViewModel.setResponseSignUp()
+                            }
                         }
                         return@setOnClickListener
-                    }
-                    else{
-                        CodaSnackBar.make(binding.root,"이메일을 인증해 주세요.").show()
+                    } else {
+                        CodaSnackBar.make(binding.root, "이메일을 인증해 주세요.").show()
                     }
 
                 }
             }
-            "findPW" ->{
+            "findPW" -> {
                 binding.onboardingBottomButton.setOnClickListener {
-                    binding.loadingBar.isVisible = true
                     launch(coroutineContext) {
-                        onboardingViewModel.setResponseFindPassword()
+                        binding.loadingBar.isVisible = true
+                        withContext(Dispatchers.IO) {
+                            onboardingViewModel.setResponseFindPassword()
+                        }
                     }
                 }
             }
-            "signUpSuccess" ->{
+            "signUpSuccess" -> {
                 binding.onboardingBottomButton.setOnClickListener {
                     binding.loadingBar.isVisible = true
                     launch(coroutineContext) {
-                        onboardingViewModel.setResponseLogin()
+                        withContext(Dispatchers.IO) {
+                            onboardingViewModel.setResponseLogin()
+                        }
                     }
                 }
             }
@@ -233,8 +234,10 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
 
         val closeButton = dialogView.findViewById<ImageButton>(R.id.closeButton)
         val okButton = dialogView.findViewById<Button>(R.id.submitButton)
-        val cannotFoundEmailTextView = dialogView.findViewById<TextView>(R.id.cannotFoundEmailTextView)
-        val findPasswordSuccessTextView = dialogView.findViewById<TextView>(R.id.findPasswordSuccessTextView)
+        val cannotFoundEmailTextView =
+            dialogView.findViewById<TextView>(R.id.cannotFoundEmailTextView)
+        val findPasswordSuccessTextView =
+            dialogView.findViewById<TextView>(R.id.findPasswordSuccessTextView)
 
         if (isSuccess) {
             closeButton.isVisible = false
@@ -261,19 +264,17 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         val currentTime = System.currentTimeMillis()
         val gapTime = currentTime - backButtonTime
         val curFragment = onboardingViewModel.currentFragment.value
-        if(curFragment!="signUp" && curFragment != "findPW") {
+        if (curFragment != "signUp" && curFragment != "findPW") {
             if (gapTime in 0..2000) {
                 // 2초 안에 두번 뒤로가기 누를 시 앱 종료
                 finishAndRemoveTask()
                 android.os.Process.killProcess(android.os.Process.myPid())
-            }
-            else{
+            } else {
                 backButtonTime = currentTime
                 CodaSnackBar.make(binding.root, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.").show()
             }
-        }
-        else {
-                onboardingViewModel.setCurrentFragment("login")
+        } else {
+            onboardingViewModel.setCurrentFragment("login")
         }
     }
 }

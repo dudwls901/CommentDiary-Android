@@ -182,43 +182,48 @@
                     android:textColor="@color/background_ivory"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/diaryLayout"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/diaryLayout" />
 
                 <TextView
                     android:id="@+id/goToWriteCommentTextView"
+                    style="@style/MCaption3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/MCaption3"
-                    android:textAlignment="center"
-                    android:textColor="@color/text_brown"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/goToWriteCommentButton"
                     android:layout_marginTop="10dp"
                     android:text="@string/yet_write_comment"
-                    />
+                    android:textAlignment="center"
+                    android:textColor="@color/text_brown"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/goToWriteCommentButton" />
 
                 <TextView
                     android:id="@+id/noWriteCommentTextView"
+                    style="@style/MCaption3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/MCaption3"
-                    android:textAlignment="center"
-                    android:textColor="@color/text_brown"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/diaryLayout"
                     android:layout_marginTop="16dp"
                     android:text="@string/no_write_comment"
-                    />
+                    android:textAlignment="center"
+                    android:textColor="@color/text_brown"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/diaryLayout" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
 
-
+        <ProgressBar
+            android:id="@+id/loadingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

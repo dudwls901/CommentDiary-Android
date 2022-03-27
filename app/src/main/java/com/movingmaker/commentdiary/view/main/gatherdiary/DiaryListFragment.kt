@@ -25,6 +25,7 @@ import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryDiarylistBinding
+import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.entity.Diary
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
@@ -91,7 +92,7 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
             if (it.isSuccessful) {
                 it.body()?.result?.let { diaryList -> gatherDiaryViewModel.setDiaryList(diaryList) }
             } else {
-                //todo 에러 처리
+                CodaSnackBar.make(binding.root,"일기를 불러오지 못했습니다.").show()
             }
         }
         gatherDiaryViewModel.responseGetMonthDiary.observe(viewLifecycleOwner) {
@@ -99,7 +100,7 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
             if (it.isSuccessful) {
                 it.body()?.result?.let { diaryList -> gatherDiaryViewModel.setDiaryList(diaryList) }
             } else {
-                //todo 에러 처리
+                CodaSnackBar.make(binding.root,"일기를 불러오지 못했습니다.").show()
             }
         }
 
@@ -159,8 +160,6 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
         val (y, m) = gatherDiaryViewModel.selectedMonth.value!!.split('.')
         yearPicker.value = y.toInt()
         monthPicker.value = m.toInt()
-//        val assetManager = resources.assets
-//        val typeface = Typeface.createFromAsset(assetManager, "font/robotomedium.ttf")
 
         val typeface = resources.getFont(R.font.robotomedium)
         setNumberPickerStyle(yearPicker, getColor(requireContext(), R.color.text_black), typeface)

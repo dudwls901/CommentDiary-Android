@@ -6,18 +6,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
 import com.movingmaker.commentdiary.databinding.FragmentMypageMyaccountBinding
+import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class MyAccountFragment: BaseFragment(), CoroutineScope {
@@ -61,11 +60,11 @@ class MyAccountFragment: BaseFragment(), CoroutineScope {
 
         binding.lifecycleOwner?.let { lifecycleOwner ->
             myPageViewModel.responseLogOut.observe(lifecycleOwner) {
-//                binding.loadingBar.isVisible = false
+                binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
                     logOut()
                 } else {
-//                    Toast.makeText(requireContext(), "로그아웃 실패", Toast.LENGTH_SHORT).show()
+                    CodaSnackBar.make(binding.root, "로그아웃 실패").show()
                 }
 
             }
@@ -76,7 +75,11 @@ class MyAccountFragment: BaseFragment(), CoroutineScope {
     private fun initViews() = with(binding){
         logoutLayout.setOnClickListener {
             launch(coroutineContext) {
-                myPageViewModel.setResponseLogOut()
+                loadingBar.isVisible = true
+                //datastore 작업은 내부적으로 background thread에서 이루어지지만 추후 리팩토링할 수 있으니 IO
+                withContext(Dispatchers.IO) {
+                    myPageViewModel.setResponseLogOut()
+                }
             }
         }
         signOutLayout.setOnClickListener {

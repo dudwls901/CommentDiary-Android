@@ -67,18 +67,7 @@
             android:textColor="@color/text_brown"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/line1" />
-        <!--        <SeekBar-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginBottom="11dp"-->
-        <!--            android:progress="36"-->
-        <!--            android:max="100"-->
-        <!--            android:progressDrawable="@drawable/seekbar_background"-->
-        <!--            android:thumb="@drawable/seekbar_thumb"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/temperatureLayout" -->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            />-->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/temperatureLayout"
             android:layout_width="0dp"
@@ -267,6 +256,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/termsAndPolicyLayout" />
+
+        <ProgressBar
+            android:id="@+id/loadingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

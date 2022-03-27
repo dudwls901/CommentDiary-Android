@@ -20,10 +20,7 @@ import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class MyPageFragment : BaseFragment(), CoroutineScope {
@@ -78,24 +75,17 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
             fragmentViewModel.fragmentState.observe(lifecycleOwner) { fragment ->
                 if (fragment == "myPage") {
                     launch(coroutineContext) {
-                        myPageViewModel.setResponseGetMyPage()
+                        binding.loadingBar.isVisible = true
+                        withContext(Dispatchers.IO) {
+                            myPageViewModel.setResponseGetMyPage()
+                        }
                     }
                 }
             }
         }
-
-        binding.lifecycleOwner?.let { lifecycleOwner ->
-            myPageViewModel.responseSignOut.observe(lifecycleOwner) {
-//                binding.loadingBar.isVisible = false
-                if (it.isSuccessful) {
-                } else {
-//                    Toast.makeText(requireContext(), "회원 탈퇴 실패", Toast.LENGTH_SHORT).show()
-                }
-
-            }
-        }
         binding.lifecycleOwner?.let { lifecycleOwner ->
             myPageViewModel.responseGetMyPage.observe(lifecycleOwner) { response ->
+                binding.loadingBar.isVisible = false
                 //마이 페이지 불러오기 성공시
                 if (response.isSuccessful) {
                     myPageViewModel.setMyAccount(response.body()!!.result.email)

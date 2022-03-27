@@ -101,29 +101,9 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     
 
     private fun observeData() {
-//        myDiaryViewModel.responseGetDayComment.observe(viewLifecycleOwner){ response ->
-//            //하루 코멘트 가져오기
-//            if(response.isSuccessful){
-//
-//                myDiaryViewModel.setHaveDayMyComment(response.body()!!.result.isNotEmpty())
-//                Log.d(TAG, "observeData: haveComment date : ${myDiaryViewModel.selectedDiary.value!!.date} response : ${response.body()!!.result}  haveComment : ${ myDiaryViewModel.haveDayMyComment.value}")
-//                val date =myDiaryViewModel.selectedDate.value!!
-//                Log.d(TAG, "observeData: havecomment date ${.date}")
-//                //코멘트가 있다면
-//                if(diary.commentList == null || diary.commentList.size == 0){
-//
-//                }
-//                else{
-//                    val (y,m,d) = diary.date.split('.').map{it.toInt()}
-//                    checkInSelectedDate(CalendarDay.from(y,m-1,d))
-//                }
-//            }
-//            //
-//            else{
-//            }
-//        }
 
         myDiaryViewModel.responseGetMonthDiary.observe(viewLifecycleOwner) {
+            binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
                 myDiaryViewModel.setMonthDiaries(it.body()!!.result)
                 //다른 달로 이동했을 때
@@ -207,16 +187,20 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
     }
 
-    @SuppressLint("SetTextI18n")
     private fun initViews() = with(binding){
 
         diaryContentsTextView.movementMethod = ScrollingMovementMethod()
+
+        initCalendar()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun initCalendar() = with(binding) {
 
         //리스너, 날짜 바뀌었을 시
         materialCalendarView.setOnDateChangedListener { widget, date, selected ->
             checkSelectedDate(date)
         }
-
 
         //리스너, 월 바뀌었을 시
         materialCalendarView.setOnMonthChangedListener { widget, date ->
@@ -227,10 +211,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                 .format(DateTimeFormatter.ofPattern("yyyy.MM"))
             setMonthCalendarDiaries(requestDate)
         }
-        initCalendar()
-    }
-
-    private fun initCalendar() = with(binding) {
 
         materialCalendarView.state().edit()
             .setFirstDayOfWeek(Calendar.SUNDAY)
@@ -263,13 +243,11 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         leftArrowButton.setOnClickListener {
             val beforeDate = materialCalendarView.currentDate
             materialCalendarView.currentDate = CalendarDay.from(beforeDate.year,beforeDate.month-1, beforeDate.day)
-            Log.d("loglog","${materialCalendarView.currentDate}")
         }
 
         rightArrowButton.setOnClickListener {
             val beforeDate = materialCalendarView.currentDate
             materialCalendarView.currentDate = CalendarDay.from(beforeDate.year,beforeDate.month+1, beforeDate.day)
-            Log.d("loglog","${materialCalendarView.currentDate}")
         }
 
     }
@@ -288,7 +266,10 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         //월 변경 시 해당 월의 일기 셋팅
 
         launch(coroutineContext) {
-            myDiaryViewModel.setResponseGetMonthDiary(yearMonth)
+            binding.loadingBar.isVisible = true
+            withContext(Dispatchers.IO) {
+                myDiaryViewModel.setResponseGetMonthDiary(yearMonth)
+            }
         }
     }
 
@@ -322,7 +303,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     private fun checkSelectedDate(date: CalendarDay?) = with(binding) {
 //        materialCalendarView.currentDate = date
             materialCalendarView.selectedDate = date
-        //달 이동한 경우 포커스 해제 or 냅두기?
+        //달 이동한 경우 포커스 해제
         if (date == null) {
             readDiaryLayout.isVisible = false
             writeDiaryWrapLayout.isVisible = false
@@ -331,7 +312,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         }
         //아래 부분은 날짜를 캘린더에서 선택한 경우
 
-//        Log.d(TAG, "checkSelectedDate: date ${date}")
         //calendar date는 month가 0부터 시작하기 때문에 이를 다시 localDate로 바꿀 땐 +1
         var selectedDate =LocalDate.of(date.year, date.month+1, date.day)
         val dateToString = selectedDate.toString().replace('-','.')
@@ -388,8 +368,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                         //혼자쓰는일기면 가리고 코멘트 일기면 보이기
                         //코멘트가 아직 도착하지 않은 경우 or 삭제된 경우 or서버에서 빈 값 내려올 땐 null?
 
-                        //todo
-                        //todo 서버에서 빈 코멘트올 때 무슨 값인지 확인
                         if (diary.commentList == null || diary.commentList.size == 0) {
                             //코멘트가 도착하지 않았는데 이틀 지난 경우
                             if(DateConverter.ymdToDate(diary.date)<=codaToday.minusDays(2)){

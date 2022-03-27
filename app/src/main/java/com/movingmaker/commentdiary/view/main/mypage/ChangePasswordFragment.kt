@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.CodaApplication
@@ -19,10 +20,7 @@ import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class ChangePasswordFragment : BaseFragment(), CoroutineScope {
@@ -67,7 +65,7 @@ class ChangePasswordFragment : BaseFragment(), CoroutineScope {
 
         binding.lifecycleOwner?.let { lifecycleOwner ->
             myPageViewModel.responseChangePassword.observe(lifecycleOwner) {
-                //todo 비밀번호 생성 규칙 처리
+                binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
                     CodaSnackBar.make(binding.root,"비밀번호를 변경하였습니다.").show()
                 } else {
@@ -83,12 +81,15 @@ class ChangePasswordFragment : BaseFragment(), CoroutineScope {
     private fun initViews() = with(binding) {
         changePasswordButton.setOnClickListener {
             launch(coroutineContext) {
-                myPageViewModel.setResponseChangePassword(
-                    ChangePasswordRequest(
-                        password = passwordEditText.text.toString(),
-                        checkPassword = passwordCheckEditText.text.toString()
+                binding.loadingBar.isVisible = true
+                withContext(Dispatchers.IO) {
+                    myPageViewModel.setResponseChangePassword(
+                        ChangePasswordRequest(
+                            password = passwordEditText.text.toString(),
+                            checkPassword = passwordCheckEditText.text.toString()
+                        )
                     )
-                )
+                }
             }
         }
         backButton.setOnClickListener {

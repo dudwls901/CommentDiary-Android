@@ -21,11 +21,9 @@ import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingSignUpBinding
+import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.lang.Exception
 import java.lang.NumberFormatException
 import kotlin.coroutines.CoroutineContext
@@ -74,12 +72,15 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
     }
 
     private fun observeDatas(){
+        //todo 이메일 전송은 로딩바 띄우고 기다렸다가 완료되면 팝업을 띄우는 게 맞을까 완료 여부 상관없이 바로 띄우는 게 맞을까..
         binding.lifecycleOwner?.let { lifecycleOwner ->
             onboardingViewModel.responseEmailSend.observe(lifecycleOwner) {
 //                binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
+//                    sendCodeDialog()
                 } else {
-//                    Toast.makeText(requireContext(), "인증번호 전송 실패", Toast.LENGTH_SHORT).show()
+                    //todo Errorresponse로 이미 가입되어있는 이메일 처리
+                    CodaSnackBar.make(binding.root, "인증번호 전송에 실패했습니다.").show()
                 }
 
             }
@@ -152,10 +153,12 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
 
         sendAuthButton.setOnClickListener {
 
-//            binding.loadingBar.isVisible = true
             sendCodeDialog()
             launch(coroutineContext) {
-                onboardingViewModel.setResponseEmailSend(emailEditText.text.toString())
+//                binding.loadingBar.isVisible = true
+                withContext(Dispatchers.IO) {
+                    onboardingViewModel.setResponseEmailSend(emailEditText.text.toString())
+                }
             }
         }
     }
@@ -195,10 +198,12 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
                 val password = codeEditText.text.toString().toInt()
                 if(codeEditText.text.toString().isNotEmpty()) {
                     launch(coroutineContext) {
-                        onboardingViewModel.setResponseEmailCodeCheck(
-                            email = binding.emailEditText.text.toString(),
-                            code = password
-                        )
+                        withContext(Dispatchers.IO) {
+                            onboardingViewModel.setResponseEmailCodeCheck(
+                                email = binding.emailEditText.text.toString(),
+                                code = password
+                            )
+                        }
                     }
                 }
                 else{

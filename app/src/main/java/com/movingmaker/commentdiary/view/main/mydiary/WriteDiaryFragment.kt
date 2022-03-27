@@ -85,6 +85,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
 
         //삭제한 경우
         myDiaryViewModel.responseDeleteDiary.observe(viewLifecycleOwner){ response ->
+            binding.loadingBar.isVisible = false
             if(response.isSuccessful){
                 //todo 전환 or popback
 //                        parentFragmentManager.popBackStack()
@@ -99,6 +100,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
 
         //저장은 혼자 쓴 일기, 코멘트 일기 둘 다 가능
         myDiaryViewModel.responseSaveDiary.observe(viewLifecycleOwner){
+            binding.loadingBar.isVisible = false
             if(it.isSuccessful){
                 CodaSnackBar.make(binding.root, "일기가 저장되었습니다.").show()
                 //다이어리 셋팅
@@ -144,6 +146,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
 
         //혼자쓴 일기, 임시 저장 일기 수정
         myDiaryViewModel.responseEditDiary.observe(viewLifecycleOwner){
+            binding.loadingBar.isVisible = false
             if(it.isSuccessful){
                 CodaSnackBar.make(binding.root, "일기가 수정되었습니다.").show()
                 //다이어리 셋팅
@@ -294,20 +297,23 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                         //혼자 일기는 그냥 전송
                         'N'-> {
                             //정상 저장(api 호출)
+                            binding.loadingBar.isVisible = true
                             launch(coroutineContext) {
-                                myDiaryViewModel.setResponseSaveDiary(
-                                    SaveDiaryRequest(
-                                        title = diaryHeadEditText.text.toString(),
-                                        content = diaryContentEditText.text.toString(),
-                                        date = myDiaryViewModel.selectedDiary.value!!.date,
-                                        deliveryYN = myDiaryViewModel.selectedDiary.value!!.deliveryYN,
-                                        tempYN = 'N'
+                                withContext(Dispatchers.IO) {
+                                    myDiaryViewModel.setResponseSaveDiary(
+                                        SaveDiaryRequest(
+                                            title = diaryHeadEditText.text.toString(),
+                                            content = diaryContentEditText.text.toString(),
+                                            date = myDiaryViewModel.selectedDiary.value!!.date,
+                                            deliveryYN = myDiaryViewModel.selectedDiary.value!!.deliveryYN,
+                                            tempYN = 'N'
+                                        )
                                     )
-                                )
+                                }
+                                saveButton.isVisible = false
+                                editButton.isVisible = true
+                                deleteButton.isVisible = true
                             }
-                            saveButton.isVisible = false
-                            editButton.isVisible = true
-                            deleteButton.isVisible = true
                         }
                     }
                 }
@@ -323,15 +329,18 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                             //edit api실행
                             //성공한 경우 observer에서 view, myviewmodel.selecteddiary 변경
                             launch(coroutineContext) {
-                                myDiaryViewModel.selectedDiary.value!!.id?.let { id ->
-                                    myDiaryViewModel.setResponseEditDiary(
-                                        diaryId = id,
-                                        editDiaryRequest = EditDiaryRequest(
-                                            diaryHeadEditText.text.toString(),
-                                            diaryContentEditText.text.toString(),
-                                            'N'
+                                binding.loadingBar.isVisible = true
+                                withContext(Dispatchers.IO) {
+                                    myDiaryViewModel.selectedDiary.value!!.id?.let { id ->
+                                        myDiaryViewModel.setResponseEditDiary(
+                                            diaryId = id,
+                                            editDiaryRequest = EditDiaryRequest(
+                                                diaryHeadEditText.text.toString(),
+                                                diaryContentEditText.text.toString(),
+                                                'N'
+                                            )
                                         )
-                                    )
+                                    }
                                 }
                             }
                         }
@@ -403,36 +412,39 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 CodaSnackBar.make(binding.root, "내용을 입력해 주세요.").show()
                 return@setOnClickListener
             }
-
+            binding.loadingBar.isVisible = true
             //insert 충돌 설정값 때문에 수정은 없애도 될 거 같기도?
             if(myDiaryViewModel.selectedDiary.value!!.title==""){
                 //저장
                 myDiaryViewModel.selectedDiary.value!!.tempYN = 'Y'
                 launch(coroutineContext) {
-                    myDiaryViewModel.setResponseSaveDiary(
-                        SaveDiaryRequest(
-                            title = diaryHeadEditText.text.toString(),
-                            content = diaryContentEditText.text.toString(),
-                            date = myDiaryViewModel.selectedDiary.value!!.date,
-                            deliveryYN = myDiaryViewModel.selectedDiary.value!!.deliveryYN,
-                            tempYN = 'Y'
+                    withContext(Dispatchers.IO) {
+                        myDiaryViewModel.setResponseSaveDiary(
+                            SaveDiaryRequest(
+                                title = diaryHeadEditText.text.toString(),
+                                content = diaryContentEditText.text.toString(),
+                                date = myDiaryViewModel.selectedDiary.value!!.date,
+                                deliveryYN = myDiaryViewModel.selectedDiary.value!!.deliveryYN,
+                                tempYN = 'Y'
+                            )
                         )
-                    )
-
+                    }
                 }
             }
             else{
                 //수정
                 launch(coroutineContext) {
-                    myDiaryViewModel.selectedDiary.value!!.id?.let { id ->
-                        myDiaryViewModel.setResponseEditDiary(
-                            diaryId = id,
-                            editDiaryRequest = EditDiaryRequest(
-                                diaryHeadEditText.text.toString(),
-                                diaryContentEditText.text.toString(),
-                                myDiaryViewModel.selectedDiary.value!!.tempYN
+                    withContext(Dispatchers.IO) {
+                        myDiaryViewModel.selectedDiary.value!!.id?.let { id ->
+                            myDiaryViewModel.setResponseEditDiary(
+                                diaryId = id,
+                                editDiaryRequest = EditDiaryRequest(
+                                    diaryHeadEditText.text.toString(),
+                                    diaryContentEditText.text.toString(),
+                                    myDiaryViewModel.selectedDiary.value!!.tempYN
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
@@ -526,41 +538,45 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                     // 무조건 전송인 경우임, 동글뱅이 다이얼로그 하나 더 띄우고 저장 api호출 후 딜레이2초 후 동글뱅이 다이얼로그 종료
 
                     launch(coroutineContext) {
-                        //임시저장이 아닌 경우는 create
-                        if(myDiaryViewModel.selectedDiary.value!!.tempYN=='N' || myDiaryViewModel.selectedDiary.value!!.tempYN==' '){
-                            myDiaryViewModel.setResponseSaveDiary(
-                                SaveDiaryRequest(
-                                    title = binding.diaryHeadEditText.text.toString(),
-                                    content = binding.diaryContentEditText.text.toString(),
-                                    date = myDiaryViewModel.selectedDiary.value!!.date,
-                                    deliveryYN = myDiaryViewModel.selectedDiary.value!!.deliveryYN,
-                                    tempYN = 'N'
-                                )
-                            )
-                        }
-                        else{
-                            myDiaryViewModel.selectedDiary.value!!.tempYN = 'N'
-                            myDiaryViewModel.selectedDiary.value!!.id?.let { id ->
-                                myDiaryViewModel.setResponseEditDiary(
-                                    diaryId = id,
-                                    editDiaryRequest = EditDiaryRequest(
-                                        binding.diaryHeadEditText.text.toString(),
-                                        binding.diaryContentEditText.text.toString(),
-                                        //무조건 N이긴 함
-                                        'N'
+                        withContext(Dispatchers.IO) {
+                            //임시저장이 아닌 경우는 create
+                            if (myDiaryViewModel.selectedDiary.value!!.tempYN == 'N' || myDiaryViewModel.selectedDiary.value!!.tempYN == ' ') {
+                                myDiaryViewModel.setResponseSaveDiary(
+                                    SaveDiaryRequest(
+                                        title = binding.diaryHeadEditText.text.toString(),
+                                        content = binding.diaryContentEditText.text.toString(),
+                                        date = myDiaryViewModel.selectedDiary.value!!.date,
+                                        deliveryYN = myDiaryViewModel.selectedDiary.value!!.deliveryYN,
+                                        tempYN = 'N'
                                     )
                                 )
+                            } else {
+                                myDiaryViewModel.selectedDiary.value!!.tempYN = 'N'
+                                myDiaryViewModel.selectedDiary.value!!.id?.let { id ->
+                                    myDiaryViewModel.setResponseEditDiary(
+                                        diaryId = id,
+                                        editDiaryRequest = EditDiaryRequest(
+                                            binding.diaryHeadEditText.text.toString(),
+                                            binding.diaryContentEditText.text.toString(),
+                                            //무조건 N이긴 함
+                                            'N'
+                                        )
+                                    )
+                                }
                             }
+                            dialogView.dismiss()
+                            showCircleDialog()
                         }
-                        dialogView.dismiss()
-                        showCircleDialog()
                     }
                 }
                 "delete"->{
                     //임시 저장 일기 삭제
                     launch(coroutineContext) {
-                        myDiaryViewModel.selectedDiary.value!!.id?.let {
-                            myDiaryViewModel.setResponseDeleteDiary(it)
+                        binding.loadingBar.isVisible = true
+                        withContext(Dispatchers.IO) {
+                            myDiaryViewModel.selectedDiary.value!!.id?.let {
+                                myDiaryViewModel.setResponseDeleteDiary(it)
+                            }
                         }
                         dialogView.dismiss()
                     }
