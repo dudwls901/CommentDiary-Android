@@ -249,6 +249,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
         }
 
         okButton.setOnClickListener {
+            onboardingViewModel.setCurrentFragment("login")
             dialogView.dismiss()
         }
         closeButton.setOnClickListener {
