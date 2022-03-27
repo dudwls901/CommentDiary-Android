@@ -2,6 +2,7 @@ package com.movingmaker.commentdiary.view.main.mydiary
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +10,10 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMydiaryWithCalendarBinding
+import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.entity.Diary
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.view.main.mydiary.calendardecorator.AloneDotDecorator
@@ -23,7 +24,6 @@ import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
-import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter
 import kotlinx.coroutines.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -137,6 +137,9 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
 //                Toast.makeText(requireContext(), "로그인 성공", Toast.LENGTH_SHORT).show()
             } else {
+                //todo refreshToken 만료시 재 로그인 멘트, errorbody에 jwt만료인 경우만 띄우는 걸로 해야함
+//                Log.d(TAG, "observeData: ${it.errorBody()}")
+//                CodaSnackBar.make(binding.root, "다시 로그인해 주세요.").show()
 //                Toast.makeText(requireContext(), "한 달 일기 불러오기 실패", Toast.LENGTH_SHORT).show()
             }
         }
@@ -196,10 +199,19 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
             //위의 동작 완료시 리프레쉬 종료
             swipeRefreshLayout.isRefreshing = false
         }
+
+        //스크롤이 최상단에 위치했을때만 스와이프 레이아웃의 리프레쉬가 트리거되기 위함
+//        diaryContentsTextView.viewTreeObserver.addOnScrollChangedListener {
+//            swipeRefreshLayout.isEnabled = diaryContentsTextView.scrollY==0
+//        }
+
     }
 
     @SuppressLint("SetTextI18n")
     private fun initViews() = with(binding){
+
+        diaryContentsTextView.movementMethod = ScrollingMovementMethod()
+
         //리스너, 날짜 바뀌었을 시
         materialCalendarView.setOnDateChangedListener { widget, date, selected ->
             checkSelectedDate(date)
