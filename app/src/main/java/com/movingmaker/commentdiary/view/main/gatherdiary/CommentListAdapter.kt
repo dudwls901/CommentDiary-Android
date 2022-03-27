@@ -26,7 +26,7 @@ class CommentListAdapter(val onCommentSelectListener: OnCommentSelectListener): 
     }
 
     override fun getItemId(position: Int): Long {
-        return position.toLong()
+        return currentList[position].id
     }
     inner class ItemViewHolder(private val binding: RvItemMydiaryCommentBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(comment : Comment){

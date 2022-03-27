@@ -1,5 +1,6 @@
 package com.movingmaker.commentdiary.view.main.mypage
 
+import android.util.Log
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,8 @@ object MyCommentListBindAdapter {
             recyclerView.adapter = adapter
         }
         val diaryListAdapter = recyclerView.adapter as MyCommentListAdapter
-        diaryListAdapter.submitList(items.value)
+            diaryListAdapter.submitList(items.value)
+
+//        Log.d("setcomment","${diaryListAdapter.itemCount}")
     }
 }

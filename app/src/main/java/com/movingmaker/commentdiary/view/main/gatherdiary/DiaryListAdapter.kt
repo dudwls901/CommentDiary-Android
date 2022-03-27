@@ -26,7 +26,7 @@ class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener): ListAd
     }
 
     override fun getItemId(position: Int): Long {
-        return position.toLong()
+        return currentList[position].id!!
     }
     inner class ItemViewHolder(private val binding: RvItemGatherdiaryDiaryBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(diary : Diary){

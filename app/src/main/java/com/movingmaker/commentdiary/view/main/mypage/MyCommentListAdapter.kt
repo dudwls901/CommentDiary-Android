@@ -24,7 +24,7 @@ class MyCommentListAdapter(): ListAdapter<Comment,MyCommentListAdapter.ItemViewH
     }
 
     override fun getItemId(position: Int): Long {
-        return position.toLong()
+        return currentList[position].id
     }
     inner class ItemViewHolder(private val binding: RvItemMypageCommentBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(comment : Comment){
