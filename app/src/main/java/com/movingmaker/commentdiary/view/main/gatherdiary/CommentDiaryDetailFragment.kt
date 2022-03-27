@@ -61,7 +61,6 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
     ): View {
         binding.myDiaryviewModel = myDiaryViewModel
         binding.lifecycleOwner = viewLifecycleOwner
-//        Log.d(TAG, "onCreateView saveOrEdit: ${myDiaryViewModel.saveOrEdit.value}")
         observeDatas()
         initViews()
         initToolBar()
@@ -74,11 +73,10 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
         myDiaryViewModel.responseGetDayComment.observe(viewLifecycleOwner){ response ->
             //하루 코멘트 가져오기
             if(response.isSuccessful){
-
                 myDiaryViewModel.setHaveDayMyComment(response.body()!!.result.isNotEmpty())
             }
-            //
             else{
+                CodaSnackBar.make(binding.root, "코멘트를 읽는 데 실패하였습니다.").show()
             }
         }
 
@@ -94,12 +92,16 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
         gatherDiaryViewModel.responseReportComment.observe(viewLifecycleOwner){response->
             //신고 성공한 경우
             if(response.isSuccessful){
+                CodaSnackBar.make(binding.root, "신고가 접수되었습니다.").show()
                 //신고한 코멘트 삭제해서 갱신
                 //어댑터 갱신
                 if(reportedCommentId!=-1L){
                     myDiaryViewModel.deleteLocalReportedComment(reportedCommentId)
                     commentListAdapter.notifyDataSetChanged()
                 }
+            }
+            else{
+                CodaSnackBar.make(binding.root, "신고가 접수되지 않았습니다.").show()
             }
         }
 

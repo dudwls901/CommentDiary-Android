@@ -67,7 +67,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
         binding.lifecycleOwner = viewLifecycleOwner
         fragmentViewModel.setHasBottomNavi(false)
 
-        //initview에 고정적인 것들ㅇ 넣고
+        //initview에 고정적인 것들 넣고
         //changeview에 새로운 것들 넣자
 //        initViews()
         observeDatas()
@@ -83,9 +83,24 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
             }
         }
 
+        //삭제한 경우
+        myDiaryViewModel.responseDeleteDiary.observe(viewLifecycleOwner){ response ->
+            if(response.isSuccessful){
+                //todo 전환 or popback
+//                        parentFragmentManager.popBackStack()
+                fragmentViewModel.setFragmentState("myDiary")
+                CodaSnackBar.make(binding.root, "일기가 삭제되었습니다.").show()
+            }
+            else{
+                CodaSnackBar.make(binding.root, "일기 삭제에 실패하였습니다.").show()
+            }
+
+        }
+
         //저장은 혼자 쓴 일기, 코멘트 일기 둘 다 가능
         myDiaryViewModel.responseSaveDiary.observe(viewLifecycleOwner){
             if(it.isSuccessful){
+                CodaSnackBar.make(binding.root, "일기가 저장되었습니다.").show()
                 //다이어리 셋팅
                 myDiaryViewModel.setSelectedDiary(
                     Diary(
@@ -123,12 +138,14 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 }
             }
             else{
+                CodaSnackBar.make(binding.root, "일기 저장에 실패하였습니다.").show()
             }
         }
 
         //혼자쓴 일기, 임시 저장 일기 수정
         myDiaryViewModel.responseEditDiary.observe(viewLifecycleOwner){
             if(it.isSuccessful){
+                CodaSnackBar.make(binding.root, "일기가 수정되었습니다.").show()
                 //다이어리 셋팅
                 myDiaryViewModel.setSelectedDiary(
                     Diary(
@@ -169,6 +186,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 }
             }
             else{
+                CodaSnackBar.make(binding.root, "일기 수정에 실패하였습니다.").show()
             }
         }
 
@@ -545,9 +563,6 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                             myDiaryViewModel.setResponseDeleteDiary(it)
                         }
                         dialogView.dismiss()
-                        //todo 전환 or popback
-//                        parentFragmentManager.popBackStack()
-                        fragmentViewModel.setFragmentState("myDiary")
                     }
                 }
             }
