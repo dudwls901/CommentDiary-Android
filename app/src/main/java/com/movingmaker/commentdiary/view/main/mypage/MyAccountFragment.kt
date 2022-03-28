@@ -13,6 +13,7 @@ import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
 import com.movingmaker.commentdiary.databinding.FragmentMypageMyaccountBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
+import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
@@ -64,7 +65,16 @@ class MyAccountFragment: BaseFragment(), CoroutineScope {
                 if (it.isSuccessful) {
                     logOut()
                 } else {
-                    CodaSnackBar.make(binding.root, "로그아웃 실패").show()
+                    it.errorBody()?.let{ errorBody->
+                        RetrofitClient.getErrorResponse(errorBody)?.let{
+                            if(it.status==404){
+                                logOut()
+                            }
+                            else {
+                                CodaSnackBar.make(binding.root, it.message).show()
+                            }
+                        }
+                    }
                 }
 
             }
