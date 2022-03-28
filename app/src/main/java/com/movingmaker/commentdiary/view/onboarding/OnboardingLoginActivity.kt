@@ -23,6 +23,7 @@ import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseActivity
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingLoginBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
+import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.view.main.MainActivity
 import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 import kotlinx.coroutines.*
@@ -101,8 +102,24 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 })
             } else {
-                //텍스트 뷰로 로그인 상태 나타냄
-                onboardingViewModel.setLoginCorrect(false)
+                it.errorBody()?.let{ errorBody->
+                    val error = RetrofitClient.getErrorResponse(errorBody)
+                    if(error!=null){
+                        //신고 누적으로 차단된 계정
+                        if(error.status==403) {
+                            CodaSnackBar.make(binding.root, error.message).show()
+                            onboardingViewModel.setLoginCorrect(true)
+                        }
+                        else{
+                            //텍스트 뷰로 로그인 상태 나타냄
+                            onboardingViewModel.setLoginCorrect(false)
+                        }
+                    }
+                    else{
+                        //텍스트 뷰로 로그인 상태 나타냄
+                        onboardingViewModel.setLoginCorrect(false)
+                    }
+                }
             }
         }
 
