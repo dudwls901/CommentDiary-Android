@@ -51,10 +51,6 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
         binding = FragmentOnboardingSignUpBinding.inflate(layoutInflater)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -75,9 +71,9 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
         //todo 이메일 전송은 로딩바 띄우고 기다렸다가 완료되면 팝업을 띄우는 게 맞을까 완료 여부 상관없이 바로 띄우는 게 맞을까..
         binding.lifecycleOwner?.let { lifecycleOwner ->
             onboardingViewModel.responseEmailSend.observe(lifecycleOwner) {
-//                binding.loadingBar.isVisible = false
+                binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
-//                    sendCodeDialog()
+                    sendCodeDialog()
                 } else {
                     //todo Errorresponse로 이미 가입되어있는 이메일 처리
                     CodaSnackBar.make(binding.root, "인증번호 전송에 실패했습니다.").show()
@@ -153,9 +149,9 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
 
         sendAuthButton.setOnClickListener {
 
-            sendCodeDialog()
+//            sendCodeDialog()
             launch(coroutineContext) {
-//                binding.loadingBar.isVisible = true
+                binding.loadingBar.isVisible = true
                 withContext(Dispatchers.IO) {
                     onboardingViewModel.setResponseEmailSend(emailEditText.text.toString())
                 }

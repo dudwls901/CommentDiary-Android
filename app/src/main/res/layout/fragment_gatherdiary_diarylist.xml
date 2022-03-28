@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="gatherDiaryviewModel"
             type="com.movingmaker.commentdiary.viewmodel.gatherdiary.GatherDiaryViewModel" />
@@ -35,16 +37,16 @@
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
-<!--                android:text="@{@string/comment_diary_text_limit(myDiaryviewModel.commentDiaryTextCount)}"-->
+                <!--                android:text="@{@string/comment_diary_text_limit(myDiaryviewModel.commentDiaryTextCount)}"-->
                 <TextView
-                    style="@style/RCaption"
                     android:id="@+id/selectDateTextView"
+                    style="@style/RCaption"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_marginStart="14dp"
-                    android:textColor="@color/text_black"
-                    android:text="@string/show_all" />
+                    android:gravity="center"
+                    android:text="@string/show_all"
+                    android:textColor="@color/text_black" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -56,37 +58,37 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:visibility="gone"
-            tools:visibility="visible"
             android:id="@+id/noDiaryTextView"
             style="@style/MCaption2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/gatherdiary_nodiary"
             android:textColor="@color/text_brown"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topLayout"
+            tools:visibility="visible" />
+        <!--app:items="@{gatherDiaryviewModel.diaryList}"-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/diaryListRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/topLayout" />
-<!--app:items="@{gatherDiaryviewModel.diaryList}"-->
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginHorizontal="16dp"
-            android:visibility="visible"
-            android:layout_marginTop="16dp"
-            android:id="@+id/diaryListRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/topLayout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
 
         <ProgressBar
             android:id="@+id/loadingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:indeterminateTint="@color/core_pure_green"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

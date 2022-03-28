@@ -91,11 +91,11 @@
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginHorizontal="16dp"
                 android:id="@+id/diaryListRecyclerView"
                 items="@{mypageviewmodel.commentList}"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
                 android:visibility="@{mypageviewmodel.commentList.empty ? View.GONE : View.VISIBLE }"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -106,10 +106,10 @@
 
             <TextView
                 android:id="@+id/noCommentTextView"
+                style="@style/MCaption2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_comment_write"
-                style="@style/MCaption2"
                 android:textAlignment="center"
                 android:textColor="@color/text_brown"
                 android:visibility="@{mypageviewmodel.commentList.empty ? View.VISIBLE : View.GONE }"
@@ -125,6 +125,7 @@
             android:id="@+id/loadingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:indeterminateTint="@color/core_pure_green"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

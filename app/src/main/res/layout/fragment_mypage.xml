@@ -204,32 +204,32 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/myCommentLayout" />
-<!--todo 푸시알림-->
-<!--        <LinearLayout-->
-<!--            android:id="@+id/pushAlarmLayout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="56dp"-->
-<!--            android:gravity="center_vertical"-->
-<!--            android:orientation="vertical"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/line4">-->
+        <!--todo 푸시알림-->
+        <!--        <LinearLayout-->
+        <!--            android:id="@+id/pushAlarmLayout"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="56dp"-->
+        <!--            android:gravity="center_vertical"-->
+        <!--            android:orientation="vertical"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/line4">-->
 
-<!--            <TextView-->
-<!--                style="@style/RCaption"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="26dp"-->
-<!--                android:text="@string/push_alarm"-->
-<!--                android:textColor="@color/text_black" />-->
-<!--        </LinearLayout>-->
+        <!--            <TextView-->
+        <!--                style="@style/RCaption"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginStart="26dp"-->
+        <!--                android:text="@string/push_alarm"-->
+        <!--                android:textColor="@color/text_black" />-->
+        <!--        </LinearLayout>-->
 
-<!--        <View-->
-<!--            android:id="@+id/line5"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="1dp"-->
-<!--            android:background="@color/text_light_brown"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/pushAlarmLayout" />-->
+        <!--        <View-->
+        <!--            android:id="@+id/line5"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="1dp"-->
+        <!--            android:background="@color/text_light_brown"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/pushAlarmLayout" />-->
 
         <LinearLayout
             android:id="@+id/termsAndPolicyLayout"
@@ -261,6 +261,7 @@
             android:id="@+id/loadingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:indeterminateTint="@color/core_pure_green"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -36,6 +36,7 @@
             app:itemIconSize="20dp"
             app:itemTextAppearanceActive="@dimen/design_bottom_navigation_active_text_size"
             app:itemTextAppearanceInactive="@dimen/design_bottom_navigation_text_size"
+            app:itemRippleColor="@null"
             app:itemTextColor="@drawable/bottom_text_color"
             app:labelVisibilityMode="labeled"
             android:theme="@style/RCaption3"
