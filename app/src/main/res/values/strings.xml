@@ -79,7 +79,7 @@
     <string name="arrived_comment">코멘트가 도착했어요. 확인해 주세요!</string>
     <string name="write_diary_yet">아직 일기를 쓸 날이 오지 않았어요!</string>
     <string name="no_comment">아쉽게도 코멘트가 도착하지 않았어요.\n그래도 오늘의 기록은 내일의 기억이 될 거예요 :)</string>
-    <string name="gatherdiary_nodiary">아직 작성된 일기가 없어요! 일기를 작성해주세요 :)</string>
+    <string name="gatherdiary_nodiary">작성해둔 일기가 없어요!</string>
     <string name="binding_date_format">%s년 %월</string>
     <string name="look_period">기간별 보기</string>
     <string name="choice_date_text">날짜 선택</string>
@@ -106,7 +106,7 @@
     <string name="do_signout">탈퇴하기</string>
     <string name="policy">개인정보 처리 방침</string>
     <string name="terms">이용 약관</string>
-    <string name="no_comment_write">아직 보낸 코멘트가 없어요.\n코멘트를 작성해주세요.</string>
+    <string name="no_comment_write">보낸 코멘트가 없어요.</string>
     <string name="change_password">비밀번호 변경</string>
     <string name="change">변경하기</string>
     <string name="write_comment">코멘트 작성하기</string>
