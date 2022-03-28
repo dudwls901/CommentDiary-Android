@@ -224,7 +224,7 @@ object RetrofitClient {
         }
     }
 
-    private fun getErrorResponse(errorBody: ResponseBody): ErrorResponse? {
+    fun getErrorResponse(errorBody: ResponseBody): ErrorResponse? {
 //      errorBody로그로 찍고 그 담에 errorBody변수 사용하면 null값 들어옴.. 버근가?  Log.d("errorbody뭐들어오는데", errorBody.string())
         return getRetrofit(RetrofitHeaderCondition.TWO_HEADER).responseBodyConverter<ErrorResponse>(
             ErrorResponse::class.java,

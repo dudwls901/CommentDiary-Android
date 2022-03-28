@@ -22,6 +22,7 @@ import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingSignUpBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
+import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 import kotlinx.coroutines.*
 import java.lang.Exception
@@ -68,15 +69,17 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
     }
 
     private fun observeDatas(){
-        //todo 이메일 전송은 로딩바 띄우고 기다렸다가 완료되면 팝업을 띄우는 게 맞을까 완료 여부 상관없이 바로 띄우는 게 맞을까..
         binding.lifecycleOwner?.let { lifecycleOwner ->
             onboardingViewModel.responseEmailSend.observe(lifecycleOwner) {
                 binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
                     sendCodeDialog()
                 } else {
-                    //todo Errorresponse로 이미 가입되어있는 이메일 처리
-                    CodaSnackBar.make(binding.root, "인증번호 전송에 실패했습니다.").show()
+                    it.errorBody()?.let{ errorBody->
+                        RetrofitClient.getErrorResponse(errorBody)?.let{
+                            CodaSnackBar.make(binding.root, it.message).show()
+                        }
+                    }
                 }
 
             }
