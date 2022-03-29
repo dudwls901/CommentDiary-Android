@@ -28,8 +28,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_ivory_side_bottom_border_green_4"
-                android:paddingHorizontal="10dp"
-                android:paddingBottom="18dp"
+                android:paddingBottom="22dp"
                 android:theme="@style/MCaption2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -85,6 +84,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
+                android:id="@+id/calendarLine1"
                 android:layout_width="0dp"
                 android:layout_height="2dp"
                 android:layout_marginHorizontal="30dp"
@@ -95,6 +95,7 @@
                 app:layout_constraintTop_toBottomOf="@id/calendarTopLayout" />
 
             <View
+                android:id="@+id/calendarLine2"
                 android:layout_width="0dp"
                 android:layout_height="2dp"
                 android:layout_marginHorizontal="30dp"
@@ -304,9 +305,8 @@
                         android:layout_height="0dp"
                         android:layout_marginHorizontal="24dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginBottom="22dp"
-                        android:nestedScrollingEnabled="true"
-                        android:scrollbars="vertical"
+                        android:layout_marginBottom="16dp"
+                        android:enabled="false"
                         android:text="@{myDiaryviewModel.selectedDiary.content}"
                         app:layout_constraintBottom_toTopOf="@id/sendDiaryBeforeAfterTextView"
                         app:layout_constraintEnd_toEndOf="parent"

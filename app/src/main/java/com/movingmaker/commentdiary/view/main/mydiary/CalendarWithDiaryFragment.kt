@@ -1,21 +1,33 @@
 package com.movingmaker.commentdiary.view.main.mydiary
 
 import android.annotation.SuppressLint
+import android.graphics.Point
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.Display
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.view.marginEnd
+import androidx.core.view.marginTop
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMydiaryWithCalendarBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.entity.Diary
+import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.util.DateConverter
+import com.movingmaker.commentdiary.util.Extension
+import com.movingmaker.commentdiary.util.Extension.toDp
+import com.movingmaker.commentdiary.util.Extension.toPx
 import com.movingmaker.commentdiary.view.main.mydiary.calendardecorator.AloneDotDecorator
 import com.movingmaker.commentdiary.view.main.mydiary.calendardecorator.CommentDotDecorator
 import com.movingmaker.commentdiary.view.main.mydiary.calendardecorator.SelectedDateDecorator
@@ -29,6 +41,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.coroutines.CoroutineContext
+import kotlin.math.roundToInt
 
 class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     override val TAG: String = CalendarWithDiaryFragment::class.java.simpleName
@@ -105,18 +118,26 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         myDiaryViewModel.responseGetMonthDiary.observe(viewLifecycleOwner) {
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
-                myDiaryViewModel.setMonthDiaries(it.body()!!.result)
-                //다른 달로 이동했을 때
-                if(myDiaryViewModel.selectedDate.value == null){
-                    checkSelectedDate(null)
+                try {
+                    myDiaryViewModel.setMonthDiaries(it.body()!!.result)
+                    //다른 달로 이동했을 때
+                    if (myDiaryViewModel.selectedDate.value == null) {
+                        checkSelectedDate(null)
+                    } else {
+                        val (y, m, d) = myDiaryViewModel.selectedDate.value!!.split('.')
+                            .map { it.toInt() }
+                        checkSelectedDate(CalendarDay.from(y, m - 1, d))
+                    }
+                }catch(e: Exception){
+                    Log.e(TAG, "observeData: ${e.stackTrace}", )
                 }
-                else {
-                    val (y, m, d) = myDiaryViewModel.selectedDate.value!!.split('.').map { it.toInt() }
-                    checkSelectedDate(CalendarDay.from(y, m - 1, d))
-                }
-
 //                Toast.makeText(requireContext(), "로그인 성공", Toast.LENGTH_SHORT).show()
             } else {
+//                it.errorBody()?.let{ errorBody->
+//                    RetrofitClient.getErrorResponse(errorBody)?.let{
+//                        CodaSnackBar.make(binding.root, it.message).show()
+//                    }
+//                }
                 //todo refreshToken 만료시 재 로그인 멘트, errorbody에 jwt만료인 경우만 띄우는 걸로 해야함
 //                Log.d(TAG, "observeData: ${it.errorBody()}")
 //                CodaSnackBar.make(binding.root, "다시 로그인해 주세요.").show()
@@ -194,9 +215,40 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         initCalendar()
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "ResourceType")
     private fun initCalendar() = with(binding) {
 
+        //휴대폰 디스클레이 사이즈 구하기
+        var display: Display
+        val size = Point()
+        Log.d(TAG, "initCalendar: width : ${size.x} ${size.y}")
+//        Toast.makeText(requireContext(), "width: ${size.x} height : ${size.y}", Toast.LENGTH_LONG).show()
+        if(size.x<=1080){
+            val density :Float = calendarLine1.resources.displayMetrics.density
+
+            materialCalendarView.apply {
+                setTileSizeDp(40)
+                setPadding(0,0,0,30.toPx())
+            }
+            val layoutParams1: ConstraintLayout.LayoutParams = calendarLine1.layoutParams as ConstraintLayout.LayoutParams
+            val layoutParams2: ConstraintLayout.LayoutParams = calendarLine2.layoutParams as ConstraintLayout.LayoutParams
+            layoutParams1.setMargins((calendarLine1.marginEnd.toDp() * density).roundToInt(),((calendarLine1.marginTop.toDp()-2)*density).roundToInt(),(calendarLine1.marginEnd.toDp() * density).roundToInt(),0)
+            layoutParams2.setMargins((calendarLine1.marginEnd.toDp() * density).roundToInt(),((calendarLine2.marginTop.toDp()-4)*density).roundToInt(),(calendarLine1.marginEnd.toDp() * density).roundToInt(),0)
+//            Log.d(TAG, "initCalendar: ${calendarLine1.marginTop} ${calendarLine1.marginTop.toDp()}")
+//            Log.d(TAG, "initCalendar: ${calendarLine2.marginTop} ${calendarLine2.marginTop.toDp()}")
+//            Toast.makeText(requireContext(), "initCalendar: ${calendarLine1.marginTop} ${calendarLine1.marginTop.toDp()}\n initCalendar: ${calendarLine2.marginTop} ${calendarLine2.marginTop.toDp()}", Toast.LENGTH_SHORT).show()
+//            val size : Int=  (30 * density).roundToInt()
+//            float scale = view.getResources().getDisplayMetrics().density;
+
+//            Log.d(TAG, "initCalendar: ${calendarLine1.marginEnd} ${}")
+        }
+//        val width = size.x
+//        val height = size.y
+
+        //nexus 720 1280
+        //pixel2 1080 1920
+        //갤럭시s21 1080 2400
+        //note9 1440 2960
         //리스너, 날짜 바뀌었을 시
         materialCalendarView.setOnDateChangedListener { widget, date, selected ->
             checkSelectedDate(date)
