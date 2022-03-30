@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -216,7 +218,8 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
         submitButton.setOnClickListener {
             val reportContent = reportContentEditText.text.toString()
             if (reportContent.isEmpty()) {
-                CodaSnackBar.make(binding.root,"내용을 입력해 주세요.").show()
+                val shake : Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
+                reportContentEditText.startAnimation(shake)
             }
             //한 글자 이상 입력했으면
             else {
