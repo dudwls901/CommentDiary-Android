@@ -11,9 +11,6 @@ import com.movingmaker.commentdiary.databinding.SnackbarCodaBinding
 
 class CodaSnackBar(view: View, private val message: String) {
 
-
-    // use
-    //SampleSnackBar.make(binding.root,"welcome hihihihihihihihi").show()
     companion object {
 
         fun make(view: View, message: String) = CodaSnackBar(view, message)
