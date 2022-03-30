@@ -134,6 +134,21 @@
         <item name="android:textSize" >13dp</item>
         <item name="android:lineSpacingExtra">7dp</item>
     </style>
+
+    <style name="BCaption2">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:lineSpacingExtra">8dp</item>
+    </style>
+
+    <style name="BCaption3">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">11dp</item>
+        <item name="android:lineSpacingExtra">9dp</item>
+    </style>
+
     <style name="MCaption2" >
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
