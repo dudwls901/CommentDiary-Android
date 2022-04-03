@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseActivity
@@ -113,13 +114,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     private fun initBottomNavigationView() = with(binding) {
         bottomNavigationView.itemIconTintList = null
         bottomNavigationView.itemTextColor = null
+//        val a =bottomNavigationView.menu[1].icon
         //클릭시 퍼지는 색상 변경
 //        bottomNavigationView.itemRippleColor = null
+        //todo mydiaryviewmodel에서
 
         bottomNavigationView.setOnItemSelectedListener { menu ->
             when (menu.itemId) {
                 R.id.myDiary -> fragmentViewModel.setFragmentState("myDiary")
                 R.id.receivedDiary -> {
+                    //todo 일기 도착했는데 코멘트 안 쓴 경우는 notice 이미지 처리
                     if(fragmentViewModel.beforeFragment.value!="commentDiaryDetail") {
                         fragmentViewModel.setFragmentState("receivedDiary")
                     }
