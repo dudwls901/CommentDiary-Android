@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-kapt'
     // 직렬
     id 'kotlin-parcelize'
+    //firebase
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -92,4 +94,10 @@ dependencies {
 
     //Preferences Datastore
     implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    //Firebase- bom을 이용해 애널리틱스 fcm 등 버전 자동 호환
+    implementation platform('com.google.firebase:firebase-bom:29.2.1')
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
 }

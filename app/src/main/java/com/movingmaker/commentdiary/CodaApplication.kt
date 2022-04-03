@@ -2,7 +2,9 @@ package com.movingmaker.commentdiary
 
 import android.app.Application
 import android.content.Intent
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.firebase.messaging.FirebaseMessaging
 import com.movingmaker.commentdiary.model.AuthProvider
 import com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity
 
@@ -24,6 +26,13 @@ class CodaApplication(): Application() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         codaApplication = this
         dataStore = AuthProvider(this)
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task->
+            if(task.isSuccessful){
+                val token = task.result
+                Log.d("token", "firebaseToken: ${task.result}")
+            }
+        }
     }
 
     fun logOut(){
