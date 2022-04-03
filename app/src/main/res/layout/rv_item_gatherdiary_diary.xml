@@ -5,9 +5,12 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <variable
             name="diary"
             type="com.movingmaker.commentdiary.model.entity.Diary" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,8 +23,8 @@
         android:paddingTop="9dp"
         android:paddingBottom="32dp"
         tools:ignore="RtlSymmetry">
-
         <LinearLayout
+            android:visibility="@{diary.deliveryYN =='Y' ? View.VISIBLE : View.GONE}"
             android:id="@+id/countBallonView"
             android:layout_width="24dp"
             android:layout_height="24dp"
