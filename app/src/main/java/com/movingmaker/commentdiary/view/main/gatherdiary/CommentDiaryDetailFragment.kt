@@ -168,6 +168,7 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
     private fun initViews() = with(binding) {
 
         binding.goToWriteCommentButton.setOnClickListener {
+            fragmentViewModel.setBeforeFragment("commentDiaryDetail")
             fragmentViewModel.setFragmentState("receivedDiary")
         }
         commentListAdapter = CommentListAdapter(this@CommentDiaryDetailFragment)

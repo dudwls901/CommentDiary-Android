@@ -120,9 +120,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             when (menu.itemId) {
                 R.id.myDiary -> fragmentViewModel.setFragmentState("myDiary")
                 R.id.receivedDiary -> {
-                    if(fragmentViewModel.fragmentState.value!="receivedDiary")
-                    replaceFragment("receivedDiary")
-                    fragmentViewModel.setFragmentState("receivedDiary")
+                    if(fragmentViewModel.beforeFragment.value!="commentDiaryDetail") {
+                        fragmentViewModel.setFragmentState("receivedDiary")
+                    }
                 }
                 R.id.collection -> fragmentViewModel.setFragmentState("gatherDiary")
                 R.id.myPage -> fragmentViewModel.setFragmentState("myPage")
@@ -157,6 +157,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
                     hide(fragment.value)
                 }
             }
+            Log.d(TAG, "replaceFragment: ${fragmentViewModel.beforeFragment.value}")
             when (showFragment) {
                 "myDiary" -> {
                     fragmentViewModel.setHasBottomNavi(true)
@@ -166,6 +167,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
                     when(fragmentViewModel.beforeFragment.value){
                         "commentDiaryDetail"->{
                             binding.bottomNavigationView.selectedItemId = R.id.receivedDiary
+                            fragmentViewModel.setBeforeFragment("receivedDiary")
                         }
                     }
                 }
