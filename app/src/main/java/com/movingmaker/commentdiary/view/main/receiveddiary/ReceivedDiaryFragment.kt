@@ -128,7 +128,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
         }
 
         receivedDiaryViewModel.responseSaveComment.observe(viewLifecycleOwner) { response ->
-
+            binding.loadingBar.isVisible=false
             if (response.isSuccessful) {
                 CodaSnackBar.make(binding.root,"코멘트가 전송되었습니다.").show()
                 //화면 갱신
@@ -144,6 +144,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
         }
 
         receivedDiaryViewModel.responseReportDiary.observe(viewLifecycleOwner){ response ->
+            binding.loadingBar.isVisible=false
             if(response.isSuccessful){
                 //화면 갱신
                 launch(coroutineContext) {
