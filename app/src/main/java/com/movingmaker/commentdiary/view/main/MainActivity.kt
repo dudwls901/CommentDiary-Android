@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseActivity
@@ -22,6 +23,7 @@ import com.movingmaker.commentdiary.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import com.movingmaker.commentdiary.viewmodel.receiveddiary.ReceivedDiaryViewModel
+import com.prolificinteractive.materialcalendarview.CalendarDay
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -50,17 +52,35 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         val fragmentState = HashMap<String, Fragment>()
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.lifecycleOwner = this
         binding.fragmentviewModel = fragmentViewModel
         fragmentState.clear()
+        val intent = intent
+        val pushDate = intent.getStringExtra("pushDate")
+        Log.d(TAG, "onCreate: pushDate : $pushDate")
 
         setFragments()
         replaceFragment("myDiary")
         initViews()
         observerFragments()
+
+        //푸시로 들어온 경우 바로 코멘트 화면으로
+        if(pushDate!=null){
+//            fragmentMap["myDiary"] = CalendarWithDiaryFragment.newInstance()
+//            launch(coroutineContext) {
+//                withContext(Dispatchers.IO) {
+////                    myDiaryViewModel.setResponseGetMonthDiary(pushDate.substring(0,7))
+//                    delay(1000L)
+//                }
+                myDiaryViewModel.setPushDate(pushDate)
+//                val (y,m,d) = pushDate.split('.').map{it.toInt()}
+//                CalendarWithDiaryFragment.newInstance().checkSelectedDate(CalendarDay.from(y, m - 1, d))
+//                fragmentViewModel.setBeforeFragment("myDiary")
+//                fragmentViewModel.setFragmentState("myDiary")
+//            }
+        }
     }
 
     private fun setFragments() {
@@ -154,6 +174,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             //현재 프래그먼트만 보여주고 나머진 다 hide
             for (fragment in fragmentState) {
                 if (fragmentMap[showFragment] == fragment.value) {
+                    Log.d(TAG, "replaceFragment: calendarWith ${fragmentMap[showFragment]} ${fragment.value}")
                     show(fragment.value)
                 } else {
                     hide(fragment.value)

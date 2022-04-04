@@ -36,7 +36,7 @@ class MyDiaryViewModel : ViewModel() {
     private var _selectedDate = MutableLiveData<String>()
     private var _commentList = MutableLiveData<List<Comment>>()
     private var _haveDayMyComment = MutableLiveData<Boolean>()
-
+    private var _pushDate = MutableLiveData<String>()
     //api response
     private var _responseGetMonthDiary = MutableLiveData<Response<DiaryListResponse>>()
     private var _responseSaveDiary = MutableLiveData<Response<SaveDiaryResponse>>()
@@ -77,6 +77,8 @@ class MyDiaryViewModel : ViewModel() {
     val haveDayMyComment: LiveData<Boolean>
         get() = _haveDayMyComment
 
+    val pushDate: LiveData<String>
+        get() = _pushDate
 
     val responseGetMonthDiary: LiveData<Response<DiaryListResponse>>
         get() = _responseGetMonthDiary
@@ -154,11 +156,9 @@ class MyDiaryViewModel : ViewModel() {
         _selectedDate.value = date ?: null
 //        _selectedDiary.value!!.date = date
     }
-    fun setDiaryTitle(title: String){
-        _selectedDiary.value!!.title = title
-    }
-    fun setDiaryContent(content: String){
-        _selectedDiary.value!!.content = content
+    fun setPushDate(date: String){
+        _pushDate.value = date
+        Log.d("aaaaaaaaaaaaaaaa", "setPushDate: $date")
     }
 
 
