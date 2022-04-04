@@ -82,6 +82,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         fragmentMap["terms"] = TermsFragment.newInstance()
         fragmentMap["sendedCommentList"] = SendedCommentListFragment.newInstance()
         fragmentMap["changePassword"] = ChangePasswordFragment.newInstance()
+        fragmentMap["pushAlarmOnOff"] = PushAlarmOnOffFragment.newInstance()
     }
 
 
@@ -96,7 +97,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
                     fragment == "signOut"||
                     fragment == "terms"||
                     fragment =="sendedCommentList"||
-                    fragment =="changePassword"
+                    fragment =="changePassword"||
+                    fragment =="pushAlarmOnOff"
             ){
                 window.statusBarColor = getColor(R.color.background_ivory)
             }
@@ -194,6 +196,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
                     fragmentViewModel.setHasBottomNavi(false)
                 }
                 "changePassword" -> {
+                    fragmentViewModel.setHasBottomNavi(false)
+                }
+                "pushAlarmOnOff" -> {
                     fragmentViewModel.setHasBottomNavi(false)
                 }
             }

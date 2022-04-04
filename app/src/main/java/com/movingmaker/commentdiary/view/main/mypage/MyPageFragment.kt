@@ -109,6 +109,10 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
             fragmentViewModel.setBeforeFragment("myPage")
             fragmentViewModel.setFragmentState("terms")
         }
+        pushAlarmLayout.setOnClickListener {
+            fragmentViewModel.setBeforeFragment("myPage")
+            fragmentViewModel.setFragmentState("pushAlarmOnOff")
+        }
         myCommentLayout.setOnClickListener {
             fragmentViewModel.setBeforeFragment("myPage")
             fragmentViewModel.setFragmentState("sendedCommentList")

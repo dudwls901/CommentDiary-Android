@@ -70,6 +70,7 @@ object RetrofitClient {
 //    }
 
      private fun getRetrofit(headerCondition: String): Retrofit {
+//         var gson = GsonBuilder().setLenient().create()
         return Retrofit.Builder()
             .baseUrl(Url.BASE_URL)
             .client(buildHeaderOkHttpClient(headerCondition))
@@ -77,6 +78,7 @@ object RetrofitClient {
                 GsonConverterFactory.create(
                     GsonBuilder()
                         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                        .setLenient()
                         .create()
                 )
             )
@@ -148,6 +150,7 @@ object RetrofitClient {
                 CodaApplication.getInstance().getDataStore().accessToken.first()
             }
             val newRequest = chain.request().newBuilder().addHeader("X-AUTH-TOKEN", accessToken).build()
+            Log.d(TAG, "intercept: $newRequest")
             return chain.proceed(newRequest)
         }
     }
@@ -197,7 +200,7 @@ object RetrofitClient {
             }
             val newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer ${accessToken}")
                 .build()
-
+            Log.d(TAG, "intercept: $newRequest")
             return chain.proceed(newRequest)
         }
     }
@@ -219,7 +222,7 @@ object RetrofitClient {
 
             val newRequest = chain.request().newBuilder().addHeader("X-AUTH-TOKEN", accessToken).addHeader("REFRESH-TOKEN", refreshToken)
                 .build()
-
+            Log.d(TAG, "intercept: $newRequest")
             return chain.proceed(newRequest)
         }
     }
