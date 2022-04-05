@@ -156,7 +156,7 @@
                 android:text="@{@string/comment_diary_text_limit(myDiaryviewModel.commentDiaryTextCount)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:text="0/100" />
+                tools:text="0/100자 이상 작성" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

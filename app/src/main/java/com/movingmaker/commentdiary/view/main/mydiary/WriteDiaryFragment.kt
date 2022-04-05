@@ -13,6 +13,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
@@ -87,8 +88,6 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
         myDiaryViewModel.responseDeleteDiary.observe(viewLifecycleOwner){ response ->
             binding.loadingBar.isVisible = false
             if(response.isSuccessful){
-                //todo 전환 or popback
-//                        parentFragmentManager.popBackStack()
                 fragmentViewModel.setFragmentState("myDiary")
                 CodaSnackBar.make(binding.root, "일기가 삭제되었습니다.").show()
             }
@@ -116,7 +115,6 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                     )
                 )
 
-//                parentFragmentManager.popBackStack()
                 //혼자 쓴 일기인 경우
                 if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='N'){
                     //수정,삭제 활성화, 전송 없애기, 텍스트 수정 불가
@@ -170,6 +168,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                     editButton.isVisible = true
                     diaryHeadEditText.isEnabled = false
                     diaryContentEditText.isEnabled = false
+                    diaryContentEditText.hint = getString(R.string.write_diary_content_100_hint)
                 }
                 else{
                     //혼자 일기 수정이면
@@ -180,6 +179,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                         editButton.isVisible = true
                         diaryHeadEditText.isEnabled = false
                         diaryContentEditText.isEnabled = false
+                        diaryContentEditText.hint = getString(R.string.write_diary_content_hint)
                     }
                     //임시 저장 전송(edit api)이면
                     else{
@@ -198,6 +198,8 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
 
     @SuppressLint("ResourceAsColor")
     private fun changeViews() = with(binding){
+        Log.d(TAG, "changeViews: ${myDiaryViewModel.selectedDiary.value!!.tempYN}")
+        saveButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.background_ivory))
         //혼자쓴 일기가 있는 경우
         if(myDiaryViewModel.selectedDiary.value!!.tempYN=='N'){
             //수정이면 저장하기 버튼 활성화
@@ -241,12 +243,11 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                     diaryUploadServerYetTextView.text = getString(R.string.already_pass_diary_send_time)
                     editButton.isVisible = false
                     saveButton.setBackgroundResource(R.drawable.background_light_brown_radius_30)
-                    saveButton.setTextColor(R.color.text_brown)
+                    saveButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.text_brown))
                     saveButton.isEnabled = false
                 }
                 else{
                     diaryUploadServerYetTextView.text = getString(R.string.upload_temp_time_comment_diary)
-                    saveButton.setTextColor(R.color.background_ivory)
                     saveButton.isEnabled = true
                 }
             }
@@ -265,6 +266,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                     saveButton.text = getString(R.string.store_text)
                     writeCommentDiaryTextLimitTextView.isVisible = false
                     diaryUploadServerYetTextView.isVisible = false
+                    diaryContentEditText.hint = getString(R.string.write_diary_content_hint)
                 }
                 //코멘트 일기 작성 화면
                 else{
@@ -272,6 +274,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                     saveButton.text = getString(R.string.send_text)
                     writeCommentDiaryTextLimitTextView.isVisible = true
                     diaryUploadServerYetTextView.isVisible = true
+                    diaryContentEditText.hint = getString(R.string.write_diary_content_100_hint)
                 }
             }
         }
@@ -352,6 +355,9 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
 
     private fun initViews() = with(binding) {
 
+        //현재 글자수 바로 보여주기
+        myDiaryViewModel.setCommentDiaryTextCount(diaryContentEditText.text.length)
+
         //임시저장도 아니고 글이 아에 없는 경우만
         if (myDiaryViewModel.selectedDiary.value!!.id ==null && myDiaryViewModel.selectedDiary.value!!.content=="") {
             //오늘 날짜면 바텀시트로 선택
@@ -390,14 +396,6 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
             else{
                 fragmentViewModel.setFragmentState("myDiary")
             }
-//            parentFragmentManager.popBackStack()
-//            MainActivity.fragmentState.remove("writeDiary")
-//            val fragment = parentFragmentManager.findFragmentByTag("writeDiary")
-//            Log.d(TAG, "initToolbar: $fragment")
-//            parentFragmentManager.beginTransaction().apply{
-//                Log.d(TAG, "initToolbar: remove $fragment")
-//                fragment?.let { it -> remove(it) }
-//            }.commit()
 
         }
 

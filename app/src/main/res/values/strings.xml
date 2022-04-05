@@ -42,8 +42,9 @@
     <string name="diary_test_head">배가 고프다</string>
     <string name="calendar_with_diary_button_write_text">오늘의 일기 쓰기</string>
     <string name="calendar_with_diary_button_text">오늘은 어떤 하루였나요?</string>
-    <string name="write_diary_head_hint">제목을 입력해 주세요.</string>
-    <string name="write_diary_content_hint">내용을 입력해 주세요.</string>
+    <string name="write_diary_head_hint">제목을 작성해 주세요.</string>
+    <string name="write_diary_content_hint">내용을 작성해 주세요.</string>
+    <string name="write_diary_content_100_hint">내용을 100자 이상 작성해 주세요.</string>
     <string name="mydiary_text_decoration">오늘은 기록이 없어요. 기록을 하고 코멘트를 받아봐요 :)</string>
     <string name="write_text">작성하기</string>
     <string name="store_text">저장하기</string>
@@ -59,7 +60,7 @@
     <string name="deleteButton">deleteButton</string>
     <string name="editButton">editButton</string>
     <string name="write_comment_diary_notice">코멘트를 받기 위해서는 100자 이상 작성해야 해요.</string>
-    <string name="comment_diary_text_limit">%s/100</string>
+    <string name="comment_diary_text_limit">%s/100자 이상 작성</string>
     <string name="upload_temp_time_comment_diary">일기 전송은 다가오는 오전 7시에 종료돼요.</string>
     <string name="upload_temp_comment_please">임시 저장된 일기예요. 일기를 전송해주세요.</string>
     <string name="diary_delete_warning">정말 삭제하시나요?\n삭제된 일기는 복구할 수 없어요.</string>
@@ -89,9 +90,9 @@
     <string name="send_text1">보내기</string>
     <string name="comment_write_hint">일기를 읽고, 따뜻한 코멘트를 달아주세요</string>
     <string name="no_received_diary_yet">매일 아침 7시에 누군가의 일기가 도착합니다.\n 도착한 일기를 읽고 따뜻한 코멘트를 남겨주세요 :)</string>
-    <string name="comment_write_limit">%s/20</string>
+    <string name="comment_write_limit">%s/20자 이상 작성</string>
     <string name="send_comment_notice">코멘트를 전송합니다.\n 전송 후에는 수정 및 삭제가 어렵습니다.\n 전송하시겠어요?</string>
-    <string name="report_content">신고 사유를 자세히 작성해주세요.\n사실과 다를 경우 이용 제재를\n받을 수 있습니다.</string>
+    <string name="report_content">신고 사유를 자세히 작성해 주세요.\n사실과 다를 경우 이용 제재를\n받을 수 있습니다.</string>
     <string name="mypage">마이페이지</string>
     <string name="my_temperature">나의 온도</string>
     <string name="temperature_notice">보낸 코멘트가 \'좋아요\'를 받을 때 온도가 채워집니다.</string>
