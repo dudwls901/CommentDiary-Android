@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="142dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/background_ivory_radius_10"
         android:paddingStart="24dp"
         android:paddingTop="19dp"
