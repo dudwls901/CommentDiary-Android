@@ -7,4 +7,6 @@ data class MyInfo(
     val email: String,
     @SerializedName(value = "temperature")
     val temperature: Double,
+    @SerializedName(value = "pushYn")
+    val pushYN: Char
 )

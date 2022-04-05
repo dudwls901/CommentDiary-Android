@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.model.entity.Comment
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.model.remote.response.CommentListResponse
+import com.movingmaker.commentdiary.model.remote.response.CommentPushStateResponse
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.model.remote.response.MyPageResponse
 import com.movingmaker.commentdiary.model.repository.LogOutRepository
@@ -26,6 +27,7 @@ class MyPageViewModel (application: Application) : AndroidViewModel(application)
     private var _passwordCorrect = MutableLiveData<Boolean>()
     private var _passwordCheckCorrect = MutableLiveData<Boolean>()
     private var _canChangePassword = MutableLiveData<Boolean>()
+    private var _pushYN = MutableLiveData<Char>()
     //api response
     private var _responseSignOut = MutableLiveData<Response<IsSuccessResponse>>()
     private var _responseLogOut = MutableLiveData<Response<IsSuccessResponse>>()
@@ -33,7 +35,7 @@ class MyPageViewModel (application: Application) : AndroidViewModel(application)
     private var _responseGetMyPage = MutableLiveData<Response<MyPageResponse>>()
     private var _responseGetMonthComment = MutableLiveData<Response<CommentListResponse>>()
     private var _responseGetAllComment = MutableLiveData<Response<CommentListResponse>>()
-
+    private var _responsePatchCommentPushState = MutableLiveData<Response<CommentPushStateResponse>>()
 
     val myAccount: LiveData<String>
         get() = _myAccount
@@ -56,6 +58,9 @@ class MyPageViewModel (application: Application) : AndroidViewModel(application)
     val canChangePassword: LiveData<Boolean>
         get() = _canChangePassword
 
+    val pushYN: LiveData<Char>
+        get() = _pushYN
+
     val responseSignOut: LiveData<Response<IsSuccessResponse>>
         get() = _responseSignOut
 
@@ -73,6 +78,9 @@ class MyPageViewModel (application: Application) : AndroidViewModel(application)
 
     val responseGetAllComment: LiveData<Response<CommentListResponse>>
         get() = _responseGetAllComment
+
+    val responsePatchCommentPushState: LiveData<Response<CommentPushStateResponse>>
+        get() = _responsePatchCommentPushState
 
     init{
         _selectedMonth.value = DateConverter.ymFormat(DateConverter.getCodaToday())
@@ -105,6 +113,10 @@ class MyPageViewModel (application: Application) : AndroidViewModel(application)
     fun setPasswordCheckCorrect(isCorrect: Boolean){
         _passwordCheckCorrect.value = isCorrect
         _canChangePassword.value = passwordCorrect.value!! && passwordCheckCorrect.value!!
+    }
+
+    fun setPushYN(yn: Char){
+        _pushYN.value = yn
     }
 
     suspend fun setResponseSignOut() {
@@ -142,4 +154,11 @@ class MyPageViewModel (application: Application) : AndroidViewModel(application)
             _responseGetMonthComment.value = MyPageRepository.INSTANCE.getMonthComment(date)
         }
     }
+
+    suspend fun setResponsePatchCommentPushState(){
+        withContext(viewModelScope.coroutineContext){
+            _responsePatchCommentPushState.value = MyPageRepository.INSTANCE.patchCommentPushState()
+        }
+    }
+
 }

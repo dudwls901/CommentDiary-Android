@@ -3,6 +3,7 @@ package com.movingmaker.commentdiary.model.remote.api
 import com.movingmaker.commentdiary.model.remote.Url
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.model.remote.response.CommentListResponse
+import com.movingmaker.commentdiary.model.remote.response.CommentPushStateResponse
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.model.remote.response.MyPageResponse
 import retrofit2.Response
@@ -25,4 +26,7 @@ interface MyPageApiService {
     //날짜 조회 코멘트
     @GET(Url.COMMENT)
     suspend fun getMonthComment(@Query("date") date: String): Response<CommentListResponse>
+
+    @PATCH(Url.MEMBERS+Url.PUSH)
+    suspend fun patchCommentPushState(): Response<CommentPushStateResponse>
 }

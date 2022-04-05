@@ -90,6 +90,7 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
                 if (response.isSuccessful) {
                     myPageViewModel.setMyAccount(response.body()!!.result.email)
                     myPageViewModel.setTemperature(response.body()!!.result.temperature)
+                    myPageViewModel.setPushYN(response.body()!!.result.pushYN)
                     setTemperatureBar()
                 }
                 //마이 페이지 불러오기 실패

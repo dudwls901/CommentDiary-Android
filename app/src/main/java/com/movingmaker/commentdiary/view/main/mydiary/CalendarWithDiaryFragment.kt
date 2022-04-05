@@ -96,7 +96,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         initViews()
         initButtons()
         observeData()
-        refreshViews()
     }
 
     override fun onResume() {
@@ -105,6 +104,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     }
 
     private fun refreshViews() {
+        Log.d(TAG, "observedatas refreshViews: ")
         //현재 클릭된 날짜는 그대로, but 내용만 최신화됨
         val curDate = myDiaryViewModel.selectedDate.value
         //선택해 놓은 날짜가 있을 시
@@ -128,12 +128,13 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
             val (y, m, d) = date.split('.').map { it.toInt() }
             checkSelectedDate(CalendarDay.from(y, m - 1, d))
             myDiaryViewModel.setSelectedDate(date)
+            refreshViews()
             fragmentViewModel.setBeforeFragment("myDiary")
             fragmentViewModel.setFragmentState("commentDiaryDetail")
         }
 
         myDiaryViewModel.responseGetMonthDiary.observe(viewLifecycleOwner) {
-            Log.d(TAG, "observeData: ${it.isSuccessful}")
+            Log.d(TAG, "observeData: ${it.body()!!.message}")
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
                 try {
@@ -286,6 +287,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
         //리스너, 월 바뀌었을 시
         materialCalendarView.setOnMonthChangedListener { widget, date ->
+            Log.d(TAG, "observedata setOnMonth: ")
             binding.calendarHeaderTextView.text = "${date.year}년 ${date.month + 1}월"
             //선택된 일기 없애주기
             myDiaryViewModel.setSelectedDiary(Diary(null, "", "", "", ' ', ' ', null))

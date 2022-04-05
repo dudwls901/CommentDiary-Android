@@ -4,6 +4,7 @@ import android.util.Log
 import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.model.remote.response.CommentListResponse
+import com.movingmaker.commentdiary.model.remote.response.CommentPushStateResponse
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.model.remote.response.MyPageResponse
 import retrofit2.Response
@@ -32,5 +33,9 @@ class MyPageRepository {
 
     suspend fun getMonthComment(date: String): Response<CommentListResponse>{
         return RetrofitClient.myPageApiService.getMonthComment(date)
+    }
+
+    suspend fun patchCommentPushState(): Response<CommentPushStateResponse>{
+        return RetrofitClient.myPageApiService.patchCommentPushState()
     }
 }

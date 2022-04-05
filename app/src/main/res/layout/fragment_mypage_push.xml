@@ -2,6 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="mypageviewmodel"
+            type="com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,37 +48,36 @@
             app:layout_constraintTop_toBottomOf="@id/myAccountTextView" />
 
 
-            <TextView
-                style="@style/RCaption"
-                android:layout_width="wrap_content"
-                android:layout_height="56dp"
-                android:layout_marginStart="26dp"
-                android:text="@string/push_arrived_comment"
-                android:textColor="@color/text_black"
-                app:layout_constraintTop_toBottomOf="@id/line1"
-                app:layout_constraintStart_toStartOf="parent"
-                android:gravity="center"
-                />
+        <TextView
+            style="@style/RCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:layout_marginStart="26dp"
+            android:gravity="center"
+            android:text="@string/push_arrived_comment"
+            android:textColor="@color/text_black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line1" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/pushSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                app:layout_constraintTop_toBottomOf="@id/line1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/line2"
-                android:layout_marginEnd="24dp"
-                />
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/pushSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="24dp"
+            android:checked="@{mypageviewmodel.pushYN =='Y' ? true : false}"
+            app:layout_constraintBottom_toTopOf="@id/line2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line1" />
 
         <View
             android:id="@+id/line2"
             android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginTop="56dp"
             android:background="@color/text_light_brown"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line1"
-            android:layout_marginTop="56dp"/>
+            app:layout_constraintTop_toBottomOf="@id/line1" />
 
         <ProgressBar
             android:id="@+id/loadingBar"

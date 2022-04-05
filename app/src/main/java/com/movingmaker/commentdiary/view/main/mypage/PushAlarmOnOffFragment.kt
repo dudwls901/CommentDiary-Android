@@ -52,6 +52,7 @@ class PushAlarmOnOffFragment: BaseFragment(), CoroutineScope {
         savedInstanceState: Bundle?
     ): View {
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.mypageviewmodel = myPageViewModel
         initViews()
         observeDatas()
 
@@ -61,18 +62,14 @@ class PushAlarmOnOffFragment: BaseFragment(), CoroutineScope {
     private fun observeDatas(){
 
         binding.lifecycleOwner?.let { lifecycleOwner ->
-            myPageViewModel.responseLogOut.observe(lifecycleOwner) {
+            myPageViewModel.responsePatchCommentPushState.observe(lifecycleOwner) {
                 binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
+                    it.body()!!.result["pushYn"]?.let { yn -> myPageViewModel.setPushYN(yn) }
                 } else {
                     it.errorBody()?.let{ errorBody->
                         RetrofitClient.getErrorResponse(errorBody)?.let{
-                            if(it.status==404){
-
-                            }
-                            else {
-                                CodaSnackBar.make(binding.root, it.message).show()
-                            }
+                            CodaSnackBar.make(binding.root, it.message).show()
                         }
                     }
                 }
@@ -90,6 +87,14 @@ class PushAlarmOnOffFragment: BaseFragment(), CoroutineScope {
         //todo 마이페이지 api에서 뿌려준 pushYN으로
         pushSwitch.setOnCheckedChangeListener { button, state ->
             Log.d(TAG, "initViews: $button $state")
+        }
+        pushSwitch.setOnClickListener {
+            launch(coroutineContext) {
+                binding.loadingBar.isVisible = true
+                withContext(Dispatchers.IO) {
+                    myPageViewModel.setResponsePatchCommentPushState()
+                }
+            }
         }
     }
 
