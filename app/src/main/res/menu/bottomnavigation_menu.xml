@@ -9,7 +9,7 @@
         />
     <item
         android:id="@+id/receivedDiary"
-        android:icon="@drawable/bottom_ic_received_notice"
+        android:icon="@drawable/bottom_ic_received"
         android:title="@string/bottomnavigation_title_receiveddiary"
         />
     <item
