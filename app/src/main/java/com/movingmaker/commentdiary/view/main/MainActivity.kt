@@ -1,11 +1,14 @@
 package com.movingmaker.commentdiary.view.main
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.movingmaker.commentdiary.R
@@ -80,6 +83,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         if(pushDate!=null){
                 myDiaryViewModel.setPushDate(pushDate!!)
         }
+        observerDatas()
     }
 
     private fun setFragments() {
@@ -104,6 +108,27 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         fragmentMap["pushAlarmOnOff"] = PushAlarmOnOffFragment.newInstance()
     }
 
+    private fun observerDatas(){
+        receivedDiaryViewModel.responseGetReceivedDiary.observe(this){
+            if (it.isSuccessful) {
+                it.body()?.let { response ->
+                    receivedDiaryViewModel.setReceivedDiary(response.result)
+
+                    //코멘트가 있다면
+                    if (response.result.myComment?.isNotEmpty() == true) {
+                        binding.bottomNavigationView.menu[1].icon= ContextCompat.getDrawable(this,R.drawable.bottom_ic_received)
+                    } else {
+                    //코멘트가 없다면
+                        binding.bottomNavigationView.menu[1].icon= ContextCompat.getDrawable(this,R.drawable.bottom_ic_received_notice)
+                    }
+                }
+            }
+            //전달된 일기가 없는경우 404
+            else {
+                binding.bottomNavigationView.menu[1].icon= ContextCompat.getDrawable(this,R.drawable.bottom_ic_received_notice)
+            }
+        }
+    }
 
     private fun observerFragments() {
         fragmentViewModel.fragmentState.observe(this) { fragment ->
@@ -132,6 +157,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     }
 
     private fun initBottomNavigationView() = with(binding) {
+
+        launch(coroutineContext) {
+            launch(Dispatchers.IO) {
+                receivedDiaryViewModel.setResponseGetReceivedDiary()
+            }
+        }
+
+
         bottomNavigationView.itemIconTintList = null
         bottomNavigationView.itemTextColor = null
         //클릭시 퍼지는 색상 변경
@@ -141,7 +174,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             when (menu.itemId) {
                 R.id.myDiary -> fragmentViewModel.setFragmentState("myDiary")
                 R.id.receivedDiary -> {
-                    //todo 일기 도착했는데 코멘트 안 쓴 경우는 notice 이미지 처리
                     if(fragmentViewModel.beforeFragment.value!="commentDiaryDetail") {
                         fragmentViewModel.setFragmentState("receivedDiary")
                     }
