@@ -30,17 +30,21 @@ class CodaSnackBar(view: View, private val message: String) {
 
     private fun initView() {
         with(snackbarLayout) {
-            snackbar.animationMode = ANIMATION_MODE_SLIDE
+//            snackbar.animationMode = ANIMATION_MODE_SLIDE
+            snackbar.animationMode = Snackbar.ANIMATION_MODE_FADE
             setPadding(0, 0, 0, 0)
             setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
             snackbar.setBackgroundTint(ContextCompat.getColor(context, android.R.color.transparent))
             addView(snackbarBinding.root, 0)
         }
+
+        snackbarBinding.root.setOnClickListener {
+            snackbar.dismiss()
+        }
     }
 
     private fun initData() {
         snackbarBinding.tvSample.text = message
-
     }
 
     fun show() {
