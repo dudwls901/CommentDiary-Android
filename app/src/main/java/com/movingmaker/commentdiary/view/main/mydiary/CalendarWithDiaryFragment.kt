@@ -59,16 +59,16 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     companion object {
         const val TAG: String = "로그"
 
-        //        fun newInstance(): CalendarWithDiaryFragment{
-//            return CalendarWithDiaryFragment()
-//        }
-        var INSTANCE: CalendarWithDiaryFragment? = null
-        fun newInstance(): CalendarWithDiaryFragment {
-            if (INSTANCE == null) {
-                INSTANCE = CalendarWithDiaryFragment()
-            }
-            return INSTANCE!!
+        fun newInstance(): CalendarWithDiaryFragment{
+            return CalendarWithDiaryFragment()
         }
+//        var INSTANCE: CalendarWithDiaryFragment? = null
+//        fun newInstance(): CalendarWithDiaryFragment {
+//            if (INSTANCE == null) {
+//                INSTANCE = CalendarWithDiaryFragment()
+//            }
+//            return INSTANCE!!
+//        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -133,6 +133,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         }
 
         myDiaryViewModel.responseGetMonthDiary.observe(viewLifecycleOwner) {
+            Log.d(TAG, "observeData: ${it.isSuccessful}")
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
                 try {
@@ -384,6 +385,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
     @SuppressLint("ResourceAsColor")
     fun checkSelectedDate(date: CalendarDay?) = with(binding) {
+        Log.d(TAG, "checkSelectedDate: push ${myDiaryViewModel.pushDate.value}")
 //        materialCalendarView.currentDate = date
         materialCalendarView.selectedDate = date
         //달 이동한 경우 포커스 해제

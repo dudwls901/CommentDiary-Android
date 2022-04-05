@@ -1,5 +1,6 @@
 package com.movingmaker.commentdiary.view.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -48,8 +49,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
 
     private val fragmentMap = HashMap<String, Fragment>()
 
+    private var pushDate: String? = null
+
     companion object {
         val fragmentState = HashMap<String, Fragment>()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        pushDate = intent?.getStringExtra("pushDate")
+        Log.d("MainActivity", "onNewIntent: push $pushDate")
+        if(pushDate!=null){
+            myDiaryViewModel.setPushDate(pushDate!!)
+
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,29 +70,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         binding.lifecycleOwner = this
         binding.fragmentviewModel = fragmentViewModel
         fragmentState.clear()
-        val intent = intent
-        val pushDate = intent.getStringExtra("pushDate")
-        Log.d(TAG, "onCreate: pushDate : $pushDate")
-
         setFragments()
         replaceFragment("myDiary")
         initViews()
         observerFragments()
 
+        pushDate = intent.getStringExtra("pushDate")
         //푸시로 들어온 경우 바로 코멘트 화면으로
         if(pushDate!=null){
-//            fragmentMap["myDiary"] = CalendarWithDiaryFragment.newInstance()
-//            launch(coroutineContext) {
-//                withContext(Dispatchers.IO) {
-////                    myDiaryViewModel.setResponseGetMonthDiary(pushDate.substring(0,7))
-//                    delay(1000L)
-//                }
-                myDiaryViewModel.setPushDate(pushDate)
-//                val (y,m,d) = pushDate.split('.').map{it.toInt()}
-//                CalendarWithDiaryFragment.newInstance().checkSelectedDate(CalendarDay.from(y, m - 1, d))
-//                fragmentViewModel.setBeforeFragment("myDiary")
-//                fragmentViewModel.setFragmentState("myDiary")
-//            }
+                myDiaryViewModel.setPushDate(pushDate!!)
         }
     }
 

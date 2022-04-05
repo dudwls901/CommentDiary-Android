@@ -14,13 +14,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.PowerManager
 import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.view.main.MainActivity
 import com.movingmaker.commentdiary.view.onboarding.SplashActivity
 
 
-// MyFirebaseMessagingService.class
+
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     //    var baseToken = BaseToken()
@@ -28,9 +29,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        Log.d("response!!", "Refreshed token: $token")
+        //토큰 갱신
+        CodaApplication.deviceToken = token
     }
 
+    //애초에 onMessageReceived는 백그라운드일 때는 호출이 안 됨
+    //background인 경우 자동으로 서버에서 보낸 noti의 title,body를 자동으로 푸시 알람을 만들어줌
+    //이 데이터를 액티비티에서 가져다 쓰려면 intent?.extras !=null 로 확인
     //onMessageReceived : 받은 메시지에서 title과 body를 추출
     @SuppressLint("InvalidWakeLockTag")
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -42,16 +47,18 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         wakeLock.acquire(3000)
 
 
+//        Log.d(TAG, "onMessageReceived: $remoteMessage")
+
         // Data 항목이 있을때.
         // background 처리시
-        if (remoteMessage.data.isNotEmpty()) {
-            val data = remoteMessage.data
-            val messageTitle = data["title"]
-            val messageBody = data["body"]
-            Log.d("fcm_response", "data 알림 메시지: $messageTitle $messageBody")
-            sendMessage(messageTitle!!, messageBody!!, "background")
-        }
-        // foreground 처리시
+//        if (remoteMessage.data.isNotEmpty()) {
+//            val data = remoteMessage.data
+//            val messageTitle = data["title"]
+//            val messageBody = data["body"]
+//            Log.d("fcm_response", "data 알림 메시지: $messageTitle $messageBody")
+//            sendMessage("Adfadfa", "DAfdafad", "background")
+//        }
+
         if (remoteMessage.notification != null) {
             val messageBody = remoteMessage.notification!!.body
             val messageTitle = remoteMessage.notification!!.title
@@ -68,20 +75,20 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 //        intent.putExtra("alarm", true)
 //        baseToken.setAlarm(this, true)
 
-        var intent = Intent()
+        Log.d(TAG, "sendMessage:push  $state")
         //백그라운드일 때
-        if(state=="background"){
-            intent = Intent(this, SplashActivity::class.java)
-        }
+//        if(state=="background"){
+//            intent = Intent(this, SplashActivity::class.java)
+//        }
         //포그라운드일 때
-        else if(state=="foreground"){
-            val yesterDay = DateConverter.getCodaToday().minusDays(1)
-            Log.d(TAG, "sendMessage: push $yesterDay")
-            intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("pushDate",DateConverter.ymdFormat(yesterDay))
-        }
+//        if(state=="foreground"){
+//            Log.d(TAG, "sendMessage: push $yesterDay") //
+//        }
 
-//        val intent = Intent(this, SplashActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
+        val yesterDay = DateConverter.getCodaToday().minusDays(1)
+        intent.putExtra("pushDate",DateConverter.ymdFormat(yesterDay))
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
         val pendingIntent =
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)

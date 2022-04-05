@@ -5,6 +5,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.messaging.FirebaseMessaging
+import com.movingmaker.commentdiary.global.MyFirebaseMessagingService
 import com.movingmaker.commentdiary.model.AuthProvider
 import com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity
 
@@ -31,7 +32,6 @@ class CodaApplication(): Application() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task->
             if(task.isSuccessful){
                 deviceToken = task.result
-                Log.d("token", "firebaseToken: ${deviceToken}")
             }
         }
     }
