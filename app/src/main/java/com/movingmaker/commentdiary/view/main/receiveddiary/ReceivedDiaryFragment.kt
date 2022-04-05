@@ -139,6 +139,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
                 }
             }
             else {
+                Log.d(TAG, "observeDatas: ${response.errorBody()}")
                 CodaSnackBar.make(binding.root,"코멘트가 전송되지 않았습니다.").show()
             }
         }

@@ -26,6 +26,12 @@
         <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity" />
         <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"/>
 <!--        com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity-->
+        <service android:name="com.movingmaker.commentdiary.global.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

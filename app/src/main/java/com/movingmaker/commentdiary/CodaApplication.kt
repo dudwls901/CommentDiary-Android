@@ -5,6 +5,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.messaging.FirebaseMessaging
+import com.movingmaker.commentdiary.global.MyFirebaseMessagingService
 import com.movingmaker.commentdiary.model.AuthProvider
 import com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity
 
@@ -19,6 +20,7 @@ class CodaApplication(): Application() {
         fun getInstance() : CodaApplication = codaApplication
         const val termsUrl =  "https://glittery-silk-987.notion.site/fb0c6c765a7a411c9362dc8d102c95e0"
         const val policyUrl = "https://www.notion.so/59a704f6702f4382b9398fa3b4a0d780"
+        lateinit var deviceToken: String
     }
 
     override fun onCreate() {
@@ -29,8 +31,7 @@ class CodaApplication(): Application() {
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task->
             if(task.isSuccessful){
-                val token = task.result
-                Log.d("token", "firebaseToken: ${task.result}")
+                deviceToken = task.result
             }
         }
     }

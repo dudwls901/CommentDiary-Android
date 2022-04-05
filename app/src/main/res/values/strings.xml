@@ -114,6 +114,7 @@
     <string name="yet_write_comment">‘도착한 일기’의 코멘트를 작성해야\n내게 온 코멘트를 확인할 수 있어요.</string>
     <string name="no_write_comment">‘도착한 일기’의 코멘트를 작성하지 않아서\n코멘트를 놓쳤어요. 다음에는 꼭 작성해주세요.</string>
     <string name="logo">로고</string>
+    <string name="push_arrived_comment">코멘트 도착</string>
     <string-array name="custom_weekdays">
         <item>일</item>
         <item>월</item>

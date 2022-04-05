@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.model.remote.request.EmailCodeCheckRequest
 import com.movingmaker.commentdiary.model.remote.request.LogInRequest
 import com.movingmaker.commentdiary.model.remote.request.SignUpRequest
@@ -180,10 +181,12 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
 
     suspend fun setResponseLogin(){
         withContext(viewModelScope.coroutineContext){
+            Log.d(TAG, "setResponseLogin: ${CodaApplication.deviceToken}")
             _responseLogin.value = ForSignUpRespository.INSTANCE.logIn(
                 LogInRequest(
                     email = email.value!!,
-                    password = password.value!!
+                    password = password.value!!,
+                    CodaApplication.deviceToken
                 )
             )
         }

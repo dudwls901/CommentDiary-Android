@@ -564,9 +564,9 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                                     )
                                 }
                             }
-                            dialogView.dismiss()
-                            showCircleDialog()
                         }
+                        dialogView.dismiss()
+                        showCircleDialog()
                     }
                 }
                 "delete"->{

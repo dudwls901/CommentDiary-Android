@@ -1,11 +1,12 @@
 package com.movingmaker.commentdiary.view.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseActivity
@@ -47,10 +48,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
 
     private val fragmentMap = HashMap<String, Fragment>()
 
+    private var pushDate: String? = null
+
     companion object {
         val fragmentState = HashMap<String, Fragment>()
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        pushDate = intent?.getStringExtra("pushDate")
+        Log.d("MainActivity", "onNewIntent: push $pushDate")
+        if(pushDate!=null){
+            myDiaryViewModel.setPushDate(pushDate!!)
+
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +74,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         replaceFragment("myDiary")
         initViews()
         observerFragments()
+
+        pushDate = intent.getStringExtra("pushDate")
+        //푸시로 들어온 경우 바로 코멘트 화면으로
+        if(pushDate!=null){
+                myDiaryViewModel.setPushDate(pushDate!!)
+        }
     }
 
     private fun setFragments() {
@@ -83,6 +101,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         fragmentMap["terms"] = TermsFragment.newInstance()
         fragmentMap["sendedCommentList"] = SendedCommentListFragment.newInstance()
         fragmentMap["changePassword"] = ChangePasswordFragment.newInstance()
+        fragmentMap["pushAlarmOnOff"] = PushAlarmOnOffFragment.newInstance()
     }
 
 
@@ -97,7 +116,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
                     fragment == "signOut"||
                     fragment == "terms"||
                     fragment =="sendedCommentList"||
-                    fragment =="changePassword"
+                    fragment =="changePassword"||
+                    fragment =="pushAlarmOnOff"
             ){
                 window.statusBarColor = getColor(R.color.background_ivory)
             }
@@ -114,10 +134,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     private fun initBottomNavigationView() = with(binding) {
         bottomNavigationView.itemIconTintList = null
         bottomNavigationView.itemTextColor = null
-//        val a =bottomNavigationView.menu[1].icon
         //클릭시 퍼지는 색상 변경
 //        bottomNavigationView.itemRippleColor = null
-        //todo mydiaryviewmodel에서
 
         bottomNavigationView.setOnItemSelectedListener { menu ->
             when (menu.itemId) {
@@ -161,7 +179,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
                     hide(fragment.value)
                 }
             }
-            Log.d(TAG, "replaceFragment: ${fragmentViewModel.beforeFragment.value}")
             when (showFragment) {
                 "myDiary" -> {
                     fragmentViewModel.setHasBottomNavi(true)
@@ -200,6 +217,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
                     fragmentViewModel.setHasBottomNavi(false)
                 }
                 "changePassword" -> {
+                    fragmentViewModel.setHasBottomNavi(false)
+                }
+                "pushAlarmOnOff" -> {
                     fragmentViewModel.setHasBottomNavi(false)
                 }
             }
