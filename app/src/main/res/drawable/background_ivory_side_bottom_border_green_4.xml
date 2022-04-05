@@ -7,6 +7,8 @@
                 android:width="4dp"
                 android:color="@color/core_pure_green" />
             <solid android:color="@color/background_ivory"/>
+            <corners android:bottomRightRadius="8dp"
+                android:bottomLeftRadius="8dp"/>
         </shape>
     </item>
 
