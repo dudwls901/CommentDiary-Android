@@ -125,7 +125,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             }
             //전달된 일기가 없는경우 404
             else {
-                binding.bottomNavigationView.menu[1].icon= ContextCompat.getDrawable(this,R.drawable.bottom_ic_received_notice)
+                 binding.bottomNavigationView.menu[1].icon= ContextCompat.getDrawable(this,R.drawable.bottom_ic_received)
             }
         }
     }
