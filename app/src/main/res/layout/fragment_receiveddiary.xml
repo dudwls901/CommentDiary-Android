@@ -154,7 +154,7 @@
                         android:layout_marginEnd="16dp"
                         android:alpha="@{receivedDiaryviewModel.commentTextCount >= 20 ? 1.0f : 0.4f}"
                         android:background="@drawable/background_pure_green_radius_15"
-                        android:enabled="@{receivedDiaryviewModel.commentTextCount >= 20 &amp;&amp; receivedDiaryviewModel.receivedDiary.myComment.isEmpty() ? true : true}"
+                        android:enabled="@{receivedDiaryviewModel.commentTextCount >= 20 &amp;&amp; receivedDiaryviewModel.receivedDiary.myComment.isEmpty() ? true : false}"
                         android:paddingHorizontal="9dp"
                         android:text="@string/send_text1"
                         android:textColor="@color/background_ivory"
