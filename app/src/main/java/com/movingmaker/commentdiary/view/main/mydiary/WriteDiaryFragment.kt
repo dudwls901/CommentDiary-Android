@@ -101,7 +101,9 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
         myDiaryViewModel.responseSaveDiary.observe(viewLifecycleOwner){
             binding.loadingBar.isVisible = false
             if(it.isSuccessful){
-                CodaSnackBar.make(binding.root, "일기가 저장되었습니다.").show()
+                //혼자 쓴 일기 저장할 때만 스낵바
+                if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='N')
+                    CodaSnackBar.make(binding.root, "일기가 저장되었습니다.").show()
                 //다이어리 셋팅
                 myDiaryViewModel.setSelectedDiary(
                     Diary(
@@ -263,21 +265,21 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 editButton.isVisible = false
                 deleteButton.isVisible = false
                 //혼자 일기 작성 화면
-//                if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='N'){
-//                    saveLocalButton.isVisible = false
-//                    saveButton.text = getString(R.string.store_text)
-//                    writeCommentDiaryTextLimitTextView.isVisible = false
-//                    diaryUploadServerYetTextView.isVisible = false
-//                    diaryContentEditText.hint = getString(R.string.write_diary_content_hint)
-//                }
+                if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='N'){
+                    saveLocalButton.isVisible = false
+                    saveButton.text = getString(R.string.store_text)
+                    writeCommentDiaryTextLimitTextView.isVisible = false
+                    diaryUploadServerYetTextView.isVisible = false
+                    diaryContentEditText.hint = getString(R.string.write_diary_content_hint)
+                }
                 //코멘트 일기 작성 화면
-//                else{
+                else{
                     saveLocalButton.isVisible = true
                     saveButton.text = getString(R.string.send_text)
-//                    writeCommentDiaryTextLimitTextView.isVisible = true
+                    writeCommentDiaryTextLimitTextView.isVisible = true
                     diaryUploadServerYetTextView.isVisible = true
                     diaryContentEditText.hint = getString(R.string.write_diary_content_100_hint)
-//                }
+                }
             }
         }
 
