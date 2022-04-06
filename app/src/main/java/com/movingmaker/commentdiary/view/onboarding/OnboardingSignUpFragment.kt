@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.util.Linkify
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
+import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingSignUpBinding
@@ -27,9 +29,10 @@ import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 import kotlinx.coroutines.*
 import java.lang.Exception
 import java.lang.NumberFormatException
+import java.util.regex.Pattern
 import kotlin.coroutines.CoroutineContext
 
-class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
+class OnboardingSignUpFragment : BaseFragment(), CoroutineScope {
     override val TAG: String = OnboardingSignUpFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels<OnboardingViewModel>()
@@ -65,18 +68,28 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
         initViews()
         observeDatas()
 
+
+        val mTransform: Linkify.TransformFilter = Linkify.TransformFilter { matcher, s ->
+            ""
+        }
+        val pattern1 = Pattern.compile("개인정보 취급 방침")
+        val pattern2 = Pattern.compile("이용 약관")
+        Linkify.addLinks(binding.signUpAgreeNoticeTextView,pattern1,CodaApplication.policyUrl, null, mTransform )
+        Linkify.addLinks(binding.signUpAgreeNoticeTextView,pattern2,CodaApplication.termsUrl, null, mTransform )
+
+
         return binding.root
     }
 
-    private fun observeDatas(){
+    private fun observeDatas() {
         binding.lifecycleOwner?.let { lifecycleOwner ->
             onboardingViewModel.responseEmailSend.observe(lifecycleOwner) {
                 binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
                     sendCodeDialog()
                 } else {
-                    it.errorBody()?.let{ errorBody->
-                        RetrofitClient.getErrorResponse(errorBody)?.let{
+                    it.errorBody()?.let { errorBody ->
+                        RetrofitClient.getErrorResponse(errorBody)?.let {
                             CodaSnackBar.make(binding.root, it.message).show()
                         }
                     }
@@ -96,11 +109,10 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
                     (emailEditText.text.indexOf('@') != -1 &&
                             emailEditText.text.substring(emailEditText.text.indexOf('@'))
                                 .indexOf('.') == -1))
-            if(!isEmailCorrect || emailEditText.text.isEmpty()){
+            if (!isEmailCorrect || emailEditText.text.isEmpty()) {
                 sendAuthButton.isEnabled = false
                 sendAuthButton.alpha = 0.4f
-            }
-            else{
+            } else {
                 sendAuthButton.isEnabled = true
                 sendAuthButton.alpha = 1.0f
             }
@@ -123,7 +135,7 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
                 }
             }
             val isPasswordCorrect =
-                !(passwordEditText.text.isNotEmpty() && (passwordEditText.text.length < 8 || !hasLetter || !hasNum || !hasSign || passwordEditText.text.length>16))
+                !(passwordEditText.text.isNotEmpty() && (passwordEditText.text.length < 8 || !hasLetter || !hasNum || !hasSign || passwordEditText.text.length > 16))
             val isPasswordCheckCorrect =
                 !(passwordCheckEditText.text.isNotEmpty() && (passwordEditText.text.toString() != passwordCheckEditText.text.toString()))
 
@@ -161,6 +173,7 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
             }
         }
     }
+
     private fun sendCodeDialog() {
         val dialogView = Dialog(requireContext())
         dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -175,16 +188,15 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
         val codeIncorrectTextView = dialogView.findViewById<TextView>(R.id.codeInCorrectTextView)
 
         binding.lifecycleOwner?.let { lifecycleOwner ->
-            onboardingViewModel.responseIsSuccessCheck.observe(lifecycleOwner){
-                if(it.isSuccessful){
+            onboardingViewModel.responseIsSuccessCheck.observe(lifecycleOwner) {
+                if (it.isSuccessful) {
                     //인증 완료
                     binding.sendAuthButton.text = getString(R.string.onboarding_complete_auth)
                     binding.sendAuthButton.alpha = 0.4f
                     binding.sendAuthButton.isEnabled = false
                     onboardingViewModel.setEmailCodeCheckComplete(true)
                     dialogView.dismiss()
-                }
-                else{
+                } else {
                     codeIncorrectTextView.isVisible = true
                     onboardingViewModel.setEmailCodeCheckComplete(false)
                 }
@@ -195,7 +207,7 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
             codeIncorrectTextView.isVisible = false
             try {
                 val password = codeEditText.text.toString().toInt()
-                if(codeEditText.text.toString().isNotEmpty()) {
+                if (codeEditText.text.toString().isNotEmpty()) {
                     launch(coroutineContext) {
                         withContext(Dispatchers.IO) {
                             onboardingViewModel.setResponseEmailCodeCheck(
@@ -204,13 +216,11 @@ class OnboardingSignUpFragment : BaseFragment(),CoroutineScope {
                             )
                         }
                     }
-                }
-                else{
+                } else {
                     codeIncorrectTextView.isVisible = true
                     onboardingViewModel.setEmailCodeCheckComplete(false)
                 }
-            }
-            catch (e: NumberFormatException){
+            } catch (e: NumberFormatException) {
                 codeIncorrectTextView.isVisible = true
                 onboardingViewModel.setEmailCodeCheckComplete(false)
             }

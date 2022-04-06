@@ -115,6 +115,12 @@
     <string name="no_write_comment">‘도착한 일기’의 코멘트를 작성하지 않아서\n코멘트를 놓쳤어요. 다음에는 꼭 작성해주세요.</string>
     <string name="logo">로고</string>
     <string name="push_arrived_comment">코멘트 도착</string>
+<!--        <string name="onboarding_sign_up_agree_notice">
+        회원가입 시 코다의
+        <a href="https://glittery-silk-987.notion.site/fb0c6c765a7a411c9362dc8d102c95e0" target="_top">개인정보 취급 방침</a>
+        및
+        <a href="https://www.notion.so/59a704f6702f4382b9398fa3b4a0d780" target="_top">이용 약관</a>에 동의합니다.
+    </string>-->
     <string-array name="custom_weekdays">
         <item>일</item>
         <item>월</item>
