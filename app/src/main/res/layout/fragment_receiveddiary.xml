@@ -113,6 +113,19 @@
                         android:gravity="center"
                         android:text="@string/report"
                         android:textColor="@color/text_brown"
+                        android:layout_marginEnd="15dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/blockButton" />
+
+                    <TextView
+                        android:id="@+id/blockButton"
+                        style="@style/MCaption3"
+                        android:layout_width="45dp"
+                        android:layout_height="22dp"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center"
+                        android:text="@string/block"
+                        android:textColor="@color/text_brown"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
 

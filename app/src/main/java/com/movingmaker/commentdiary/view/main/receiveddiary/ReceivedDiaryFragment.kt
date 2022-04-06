@@ -73,11 +73,11 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
     @SuppressLint("ResourceAsColor")
     private fun observeDatas() {
 
-        fragmentViewModel.fragmentState.observe(viewLifecycleOwner){ fragment->
-            if(fragment=="receivedDiary"){
+        fragmentViewModel.fragmentState.observe(viewLifecycleOwner) { fragment ->
+            if (fragment == "receivedDiary") {
                 //받은 일기 조회
                 launch(coroutineContext) {
-                    binding.loadingBar.isVisible=true
+                    binding.loadingBar.isVisible = true
                     launch(Dispatchers.IO) {
                         receivedDiaryViewModel.setResponseGetReceivedDiary()
                     }
@@ -86,7 +86,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
         }
 
         receivedDiaryViewModel.responseGetReceivedDiary.observe(viewLifecycleOwner) {
-            binding.loadingBar.isVisible=false
+            binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
                 it.body()?.let { response ->
                     receivedDiaryViewModel.setReceivedDiary(response.result)
@@ -101,7 +101,12 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
                             R.drawable.background_ivory_radius_15_border_brown_1
                         )
                         binding.sendCommentButton.text = getString(R.string.diary_send_complete)
-                        binding.sendCommentButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.text_brown))
+                        binding.sendCommentButton.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.text_brown
+                            )
+                        )
                         binding.commentLimitTextView.isVisible = false
                         binding.commentEditTextView.setText(response.result.myComment[0].content)
                         binding.commentEditTextView.isEnabled = false
@@ -110,9 +115,14 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
                             requireContext(),
                             R.drawable.background_pure_green_radius_15
                         )
-                        binding.commentLimitTextView.isVisible =true
+                        binding.commentLimitTextView.isVisible = true
                         binding.sendCommentButton.text = getString(R.string.send_text1)
-                        binding.sendCommentButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.background_ivory))
+                        binding.sendCommentButton.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.background_ivory
+                            )
+                        )
                         binding.commentEditTextView.text = null
                         binding.commentEditTextView.isEnabled = true
 
@@ -128,35 +138,32 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
         }
 
         receivedDiaryViewModel.responseSaveComment.observe(viewLifecycleOwner) { response ->
-            binding.loadingBar.isVisible=false
+            binding.loadingBar.isVisible = false
             if (response.isSuccessful) {
-                CodaSnackBar.make(binding.root,"코멘트가 전송되었습니다.").show()
+                CodaSnackBar.make(binding.root, "코멘트가 전송되었습니다.").show()
                 //화면 갱신
                 launch(coroutineContext) {
                     launch(Dispatchers.IO) {
                         receivedDiaryViewModel.setResponseGetReceivedDiary()
                     }
                 }
-            }
-            else {
+            } else {
                 Log.d(TAG, "observeDatas: ${response.errorBody()}")
-                CodaSnackBar.make(binding.root,"코멘트가 전송되지 않았습니다.").show()
+                CodaSnackBar.make(binding.root, "코멘트가 전송되지 않았습니다.").show()
             }
         }
 
-        receivedDiaryViewModel.responseReportDiary.observe(viewLifecycleOwner){ response ->
-            binding.loadingBar.isVisible=false
-            if(response.isSuccessful){
+        receivedDiaryViewModel.responseReportDiary.observe(viewLifecycleOwner) { response ->
+            binding.loadingBar.isVisible = false
+            if (response.isSuccessful) {
                 //화면 갱신
                 launch(coroutineContext) {
                     launch(Dispatchers.IO) {
                         receivedDiaryViewModel.setResponseGetReceivedDiary()
                     }
                 }
-                CodaSnackBar.make(binding.root,"신고가 접수되었습니다.").show()
-            }
-            else{
-                CodaSnackBar.make(binding.root,"신고가 접수되지 않았습니다.").show()
+            } else {
+                CodaSnackBar.make(binding.root, "차단/신고가 접수되지 않았습니다.").show()
             }
         }
 
@@ -177,6 +184,9 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
         reportButton.setOnClickListener {
             showReportDialog()
         }
+        blockButton.setOnClickListener {
+            showBlockDialog()
+        }
     }
 
     private fun showSendDialog() {
@@ -194,7 +204,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
         submitButton.setOnClickListener {
             //코멘트 전송
             launch(coroutineContext) {
-                binding.loadingBar.isVisible=true
+                binding.loadingBar.isVisible = true
                 launch(Dispatchers.IO) {
                     receivedDiaryViewModel.setResponseSaveComment(
                         binding.commentEditTextView.text.toString()
@@ -223,16 +233,16 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
 
         submitButton.setOnClickListener {
             val reportContent = reportContentEditText.text.toString()
-            if(reportContent.isEmpty()){
+            if (reportContent.isEmpty()) {
                 //내용 입력 안 하면 흔들흔들~
-                val shake : Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
+                val shake: Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
                 reportContentEditText.startAnimation(shake)
             }
             //한 글자 이상 입력했으면
-            else{
+            else {
                 //신고
                 launch(coroutineContext) {
-                    binding.loadingBar.isVisible=true
+                    binding.loadingBar.isVisible = true
                     launch(Dispatchers.IO) {
                         receivedDiaryViewModel.setResponseReportDiary(reportContent)
                     }
@@ -244,4 +254,31 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
             dialogView.dismiss()
         }
     }
+
+    private fun showBlockDialog() {
+        val dialogView = Dialog(requireContext())
+        dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogView.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialogView.setContentView(R.layout.dialog_common_block)
+        dialogView.setCancelable(false)
+        dialogView.show()
+
+        val submitButton = dialogView.findViewById<Button>(R.id.submitButton)
+        val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+
+        submitButton.setOnClickListener {
+            //차단 (신고 api에 빈 값으로 호출)
+            launch(coroutineContext) {
+                binding.loadingBar.isVisible = true
+                launch(Dispatchers.IO) {
+                    receivedDiaryViewModel.setResponseReportDiary("")
+                }
+            }
+            dialogView.dismiss()
+        }
+        cancelButton.setOnClickListener {
+            dialogView.dismiss()
+        }
+    }
+
 }

@@ -31,6 +31,7 @@ class CommentListAdapter(val onCommentSelectListener: OnCommentSelectListener): 
     inner class ItemViewHolder(private val binding: RvItemMydiaryCommentBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(comment : Comment){
             binding.comment = comment
+            //todo 하트 애니메이션
             binding.commentHeartImageView.setOnClickListener {
                 if(!comment.like) {
                     onCommentSelectListener.onHeartClickListener(comment.id)
@@ -39,6 +40,9 @@ class CommentListAdapter(val onCommentSelectListener: OnCommentSelectListener): 
             }
             binding.commentReportTextView.setOnClickListener {
                 onCommentSelectListener.onReportClickListener(comment.id)
+            }
+            binding.commentBlockTextView.setOnClickListener {
+                onCommentSelectListener.onBlockClickLinstener(comment.id)
             }
         }
     }

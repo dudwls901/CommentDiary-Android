@@ -72,40 +72,38 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
     @SuppressLint("NotifyDataSetChanged")
     private fun observeDatas() {
 
-        myDiaryViewModel.responseGetDayComment.observe(viewLifecycleOwner){ response ->
+        myDiaryViewModel.responseGetDayComment.observe(viewLifecycleOwner) { response ->
             //하루 코멘트 가져오기
-            if(response.isSuccessful){
+            if (response.isSuccessful) {
                 myDiaryViewModel.setHaveDayMyComment(response.body()!!.result.isNotEmpty())
-            }
-            else{
+            } else {
                 CodaSnackBar.make(binding.root, "코멘트를 읽는 데 실패하였습니다.").show()
             }
         }
 
-        gatherDiaryViewModel.responseLikeComment.observe(viewLifecycleOwner){response->
+        gatherDiaryViewModel.responseLikeComment.observe(viewLifecycleOwner) { response ->
             binding.loadingBar.isVisible = false
-            if(response.isSuccessful){
-                if(likedCommentId!=-1L){
+            if (response.isSuccessful) {
+                if (likedCommentId != -1L) {
                     myDiaryViewModel.likeLocalComment(likedCommentId)
                     commentListAdapter.notifyDataSetChanged()
                 }
             }
         }
 
-        gatherDiaryViewModel.responseReportComment.observe(viewLifecycleOwner){response->
+        gatherDiaryViewModel.responseReportComment.observe(viewLifecycleOwner) { response ->
             binding.loadingBar.isVisible = false
             //신고 성공한 경우
-            if(response.isSuccessful){
-                CodaSnackBar.make(binding.root, "신고가 접수되었습니다.").show()
+            if (response.isSuccessful) {
+//                CodaSnackBar.make(binding.root, "신고가 접수되었습니다.").show()
                 //신고한 코멘트 삭제해서 갱신
                 //어댑터 갱신
-                if(reportedCommentId!=-1L){
+                if (reportedCommentId != -1L) {
                     myDiaryViewModel.deleteLocalReportedComment(reportedCommentId)
                     commentListAdapter.notifyDataSetChanged()
                 }
-            }
-            else{
-                CodaSnackBar.make(binding.root, "신고가 접수되지 않았습니다.").show()
+            } else {
+                CodaSnackBar.make(binding.root, "차단/신고가 접수되지 않았습니다.").show()
             }
         }
 
@@ -203,6 +201,42 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
         showReportDialog(commentId)
     }
 
+    override fun onBlockClickLinstener(commentId: Long) {
+        showBlockDialog(commentId)
+    }
+
+    private fun showBlockDialog(commentId: Long) {
+        val dialogView = Dialog(requireContext())
+        dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogView.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialogView.setContentView(R.layout.dialog_common_block)
+        dialogView.setCancelable(false)
+        dialogView.show()
+
+        val submitButton = dialogView.findViewById<Button>(R.id.submitButton)
+        val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+
+        submitButton.setOnClickListener {
+            //차단, 신고하기 api에 내용 널로 올리기
+            reportedCommentId = commentId
+            launch(coroutineContext) {
+                binding.loadingBar.isVisible = true
+                withContext(Dispatchers.IO) {
+                    gatherDiaryViewModel.setResponseReportComment(
+                        ReportCommentRequest(
+                            id = commentId,
+                            ""
+                        )
+                    )
+                }
+                dialogView.dismiss()
+            }
+        }
+        cancelButton.setOnClickListener {
+            dialogView.dismiss()
+        }
+    }
+
     private fun showReportDialog(commentId: Long) {
         val dialogView = Dialog(requireContext())
         dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -219,7 +253,7 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
         submitButton.setOnClickListener {
             val reportContent = reportContentEditText.text.toString()
             if (reportContent.isEmpty()) {
-                val shake : Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
+                val shake: Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
                 reportContentEditText.startAnimation(shake)
             }
             //한 글자 이상 입력했으면
