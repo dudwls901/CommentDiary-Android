@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_ivory_radius_10">
 
-<!--    todo 넘버피커 폰트-->
     <TextView
         android:id="@+id/headTextView"
         style="@style/BSubheadline"
@@ -16,37 +15,36 @@
         android:text="@string/look_period"
         android:textAlignment="center"
         android:textColor="@color/text_black"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/monthPicker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <NumberPicker
-        android:theme="@style/customNumberPicker"
-        android:layout_marginStart="68dp"
         android:id="@+id/yearPicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
         android:layout_marginEnd="40dp"
+        android:theme="@style/customNumberPicker"
+        app:layout_constraintBottom_toTopOf="@id/allPeriodButton"
         app:layout_constraintEnd_toStartOf="@id/monthPicker"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headTextView"
-        app:layout_constraintBottom_toTopOf="@id/allPeriodButton"
-        app:layout_constraintVertical_chainStyle="packed"
-        />
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <NumberPicker
-        android:theme="@style/customNumberPicker"
         android:id="@+id/monthPicker"
-        android:descendantFocusability="blocksDescendants"
-        android:layout_marginEnd="69dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="69dp"
+        android:descendantFocusability="blocksDescendants"
+        android:theme="@style/customNumberPicker"
+        app:layout_constraintBottom_toBottomOf="@id/yearPicker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/yearPicker"
-        app:layout_constraintBottom_toBottomOf="@id/yearPicker"
         app:layout_constraintTop_toTopOf="@id/yearPicker" />
 
     <androidx.appcompat.widget.AppCompatButton

@@ -84,7 +84,6 @@ class PushAlarmOnOffFragment: BaseFragment(), CoroutineScope {
             fragmentViewModel.setFragmentState("myPage")
         }
         pushSwitch.isChecked
-        //todo 마이페이지 api에서 뿌려준 pushYN으로
         pushSwitch.setOnCheckedChangeListener { button, state ->
             Log.d(TAG, "initViews: $button $state")
         }

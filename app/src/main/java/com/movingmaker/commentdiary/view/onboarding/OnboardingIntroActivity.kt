@@ -128,7 +128,6 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
         indicator.createIndicators(3, 0)
 
 
-        //todo 요건 뭐더라 스플래쉬 관련
         binding.introViewPager.registerOnPageChangeCallback(object :
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {

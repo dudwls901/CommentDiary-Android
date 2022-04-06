@@ -158,7 +158,6 @@ class MyDiaryViewModel : ViewModel() {
     }
     fun setPushDate(date: String){
         _pushDate.value = date
-        Log.d("aaaaaaaaaaaaaaaa", "setPushDate: $date")
     }
 
 
