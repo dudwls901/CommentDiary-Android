@@ -221,12 +221,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
             }
             "findPW" -> {
                 binding.onboardingBottomButton.setOnClickListener {
-                    launch(coroutineContext) {
-                        binding.loadingBar.isVisible = true
-                        withContext(Dispatchers.IO) {
-                            onboardingViewModel.setResponseFindPassword()
-                        }
-                    }
+                    showPasswordNoticeDialog()
                 }
             }
             "signUpSuccess" -> {
@@ -239,6 +234,31 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                     }
                 }
             }
+        }
+    }
+
+    private fun showPasswordNoticeDialog() {
+        val dialogView = Dialog(this)
+        dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogView.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialogView.setContentView(R.layout.dialog_onboarding_find_password)
+        dialogView.setCancelable(false)
+        dialogView.show()
+
+        val submitButton = dialogView.findViewById<Button>(R.id.submitButton)
+        val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+
+        submitButton.setOnClickListener {
+            launch(coroutineContext) {
+                binding.loadingBar.isVisible = true
+                withContext(Dispatchers.IO) {
+                    onboardingViewModel.setResponseFindPassword()
+                }
+            }
+            dialogView.dismiss()
+        }
+        cancelButton.setOnClickListener {
+            dialogView.dismiss()
         }
     }
 
