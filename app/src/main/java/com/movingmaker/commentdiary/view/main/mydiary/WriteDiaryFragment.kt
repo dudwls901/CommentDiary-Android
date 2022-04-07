@@ -88,7 +88,12 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
         myDiaryViewModel.responseDeleteDiary.observe(viewLifecycleOwner){ response ->
             binding.loadingBar.isVisible = false
             if(response.isSuccessful){
-                fragmentViewModel.setFragmentState("myDiary")
+                if(fragmentViewModel.beforeFragment.value=="gatherDiary"){
+                    fragmentViewModel.setFragmentState("gatherDiary")
+                }
+                else{
+                    fragmentViewModel.setFragmentState("myDiary")
+                }
                 CodaSnackBar.make(binding.root, "일기가 삭제되었습니다.").show()
             }
             else{
@@ -202,87 +207,97 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
     private fun changeViews() = with(binding){
         Log.d(TAG, "changeViews: ${myDiaryViewModel.selectedDiary.value!!}")
         Log.d(TAG, "changeViews: ${myDiaryViewModel.selectedDiary.value!!.tempYN}")
+        Log.d(TAG, "changeViews: ${myDiaryViewModel.saveOrEdit.value}")
         saveButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.background_ivory))
-        //혼자쓴 일기가 있는 경우
-        if(myDiaryViewModel.selectedDiary.value!!.tempYN=='N'){
-            //수정이면 저장하기 버튼 활성화
-            if(myDiaryViewModel.saveOrEdit.value=="edit"){
-                saveButton.setBackgroundResource(R.drawable.background_pure_green_radius_30)
-                saveButton.isVisible = true
-                editButton.isVisible = false
-                deleteButton.isVisible = false
-                diaryContentEditText.isEnabled = true
-                diaryHeadEditText.isEnabled = true
-            }
-            //그냥 보는 화면
-            else{
-                saveButton.isVisible = false
-                editButton.isVisible = true
-                deleteButton.isVisible = true
-                diaryContentEditText.isEnabled = false
-                diaryHeadEditText.isEnabled = false
-            }
-            saveLocalButton.isVisible = false
-            diaryUploadServerYetTextView.isVisible = false
-            writeCommentDiaryTextLimitTextView.isVisible = false
-
-        }
-        //임시저장일기인 경우
-        else{
-            myDiaryViewModel.setSaveOrEdit("save")
-            writeCommentDiaryTextLimitTextView.isVisible = true
-            if(myDiaryViewModel.selectedDiary.value!!.content!=""){
-                saveButton.text = getString(R.string.send_text)
-                saveButton.isVisible = true
-                saveButton.setBackgroundResource(R.drawable.background_pure_green_radius_30)
-                editButton.isVisible = true
-                deleteButton.isVisible = true
-                saveLocalButton.isVisible = false
-                diaryUploadServerYetTextView.isVisible = true
-                diaryContentEditText.isEnabled = false
-                diaryHeadEditText.isEnabled = false
-                //이틀 지난 경우
-                if(DateConverter.ymdToDate(myDiaryViewModel.selectedDiary.value!!.date) <=
-                    DateConverter.getCodaToday().minusDays(2)){
-                    diaryUploadServerYetTextView.text = getString(R.string.already_pass_diary_send_time)
+        //일기가 있는 경우
+        if(myDiaryViewModel.selectedDiary.value!!.id!=null) {
+            //혼자쓴 일기가 있는 경우
+            if (myDiaryViewModel.selectedDiary.value!!.deliveryYN == 'N') {
+                //수정이면 저장하기 버튼 활성화
+                if (myDiaryViewModel.saveOrEdit.value == "edit") {
+                    saveButton.setBackgroundResource(R.drawable.background_pure_green_radius_30)
+                    saveButton.isVisible = true
                     editButton.isVisible = false
-                    saveButton.setBackgroundResource(R.drawable.background_light_brown_radius_30)
-                    saveButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.text_brown))
-                    saveButton.isEnabled = false
+                    deleteButton.isVisible = false
+                    diaryContentEditText.isEnabled = true
+                    diaryHeadEditText.isEnabled = true
                 }
-                else{
-                    diaryUploadServerYetTextView.text = getString(R.string.upload_temp_time_comment_diary)
-                    saveButton.isEnabled = true
+                //그냥 보는 화면
+                else {
+                    saveButton.isVisible = false
+                    editButton.isVisible = true
+                    deleteButton.isVisible = true
+                    diaryContentEditText.isEnabled = false
+                    diaryHeadEditText.isEnabled = false
                 }
+                saveLocalButton.isVisible = false
+                diaryUploadServerYetTextView.isVisible = false
+                writeCommentDiaryTextLimitTextView.isVisible = false
+
             }
-            //일기가 없는 경우
-            else{
-                diaryContentEditText.isEnabled = true
-                diaryHeadEditText.isEnabled = true
-                saveButton.isVisible = true
-                saveButton.setBackgroundResource(R.drawable.background_pure_green_radius_30)
-                saveButton.isEnabled = true
-                editButton.isVisible = false
-                deleteButton.isVisible = false
-                //혼자 일기 작성 화면
-                if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='N'){
-                    saveLocalButton.isVisible = false
-                    saveButton.text = getString(R.string.store_text)
-                    writeCommentDiaryTextLimitTextView.isVisible = false
-                    diaryUploadServerYetTextView.isVisible = false
-                    diaryContentEditText.hint = getString(R.string.write_diary_content_hint)
-                }
-                //코멘트 일기 작성 화면
-                else{
-                    saveLocalButton.isVisible = true
+            //임시저장일기인 경우
+            else {
+                myDiaryViewModel.setSaveOrEdit("save")
+                writeCommentDiaryTextLimitTextView.isVisible = true
+                if (myDiaryViewModel.selectedDiary.value!!.content != "") {
                     saveButton.text = getString(R.string.send_text)
-                    writeCommentDiaryTextLimitTextView.isVisible = true
+                    saveButton.isVisible = true
+                    saveButton.setBackgroundResource(R.drawable.background_pure_green_radius_30)
+                    editButton.isVisible = true
+                    deleteButton.isVisible = true
+                    saveLocalButton.isVisible = false
                     diaryUploadServerYetTextView.isVisible = true
-                    diaryContentEditText.hint = getString(R.string.write_diary_content_100_hint)
+                    diaryContentEditText.isEnabled = false
+                    diaryHeadEditText.isEnabled = false
+                    //이틀 지난 경우
+                    if (DateConverter.ymdToDate(myDiaryViewModel.selectedDiary.value!!.date) <=
+                        DateConverter.getCodaToday().minusDays(2)
+                    ) {
+                        diaryUploadServerYetTextView.text =
+                            getString(R.string.already_pass_diary_send_time)
+                        editButton.isVisible = false
+                        saveButton.setBackgroundResource(R.drawable.background_light_brown_radius_30)
+                        saveButton.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.text_brown
+                            )
+                        )
+                        saveButton.isEnabled = false
+                    } else {
+                        diaryUploadServerYetTextView.text =
+                            getString(R.string.upload_temp_time_comment_diary)
+                        saveButton.isEnabled = true
+                    }
                 }
             }
         }
-
+        //일기가 없는 경우
+        else{
+            diaryContentEditText.isEnabled = true
+            diaryHeadEditText.isEnabled = true
+            saveButton.isVisible = true
+            saveButton.setBackgroundResource(R.drawable.background_pure_green_radius_30)
+            saveButton.isEnabled = true
+            editButton.isVisible = false
+            deleteButton.isVisible = false
+            //혼자 일기 작성 화면
+            if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='N'){
+                saveLocalButton.isVisible = false
+                saveButton.text = getString(R.string.store_text)
+                writeCommentDiaryTextLimitTextView.isVisible = false
+                diaryUploadServerYetTextView.isVisible = false
+                diaryContentEditText.hint = getString(R.string.write_diary_content_hint)
+            }
+            //코멘트 일기 작성 화면
+            else{
+                saveLocalButton.isVisible = true
+                saveButton.text = getString(R.string.send_text)
+                writeCommentDiaryTextLimitTextView.isVisible = true
+                diaryUploadServerYetTextView.isVisible = true
+                diaryContentEditText.hint = getString(R.string.write_diary_content_100_hint)
+            }
+        }
         saveButton.setOnClickListener {
             //제목,내용 벨리데이션 체크
             if(diaryHeadEditText.text.isEmpty()){
@@ -398,7 +413,12 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 showBackDialog()
             }
             else{
-                fragmentViewModel.setFragmentState("myDiary")
+                if(fragmentViewModel.beforeFragment.value=="gatherDiary"){
+                    fragmentViewModel.setFragmentState("gatherDiary")
+                }
+                else {
+                    fragmentViewModel.setFragmentState("myDiary")
+                }
             }
 
         }

@@ -187,16 +187,23 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
     }
 
     override fun onDiarySelectListener(diary: Diary) {
-
+        Log.d(TAG, "onDiarySelectListener: $diary")
         myDiaryViewModel.setSelectedDiary(diary)
-        val nextDate = DateConverter.ymdToDate(diary.date)
-        val nextDateToString = nextDate.plusDays(1).toString().replace('-','.')
-        launch(coroutineContext) {
-            myDiaryViewModel.setResponseGetDayComment(nextDateToString)
+        //혼자 쓰는 일기, 코멘트 일기 분기 처리
+
+        if(diary.deliveryYN=='N'){
+            fragmentViewModel.setBeforeFragment("gatherDiary")
+            fragmentViewModel.setFragmentState("writeDiary")
         }
-//        myDiaryViewModel.setSelectedDate(diary.date)
-        fragmentViewModel.setBeforeFragment("gatherDiary")
-        fragmentViewModel.setFragmentState("commentDiaryDetail")
+        else{
+            val nextDate = DateConverter.ymdToDate(diary.date)
+            val nextDateToString = nextDate.plusDays(1).toString().replace('-','.')
+            launch(coroutineContext) {
+                myDiaryViewModel.setResponseGetDayComment(nextDateToString)
+            }
+            fragmentViewModel.setBeforeFragment("gatherDiary")
+            fragmentViewModel.setFragmentState("commentDiaryDetail")
+        }
     }
 
     // 넘버 픽커 텍스트 색깔 설정하는 함수
