@@ -171,6 +171,7 @@ object RetrofitClient {
             }
             var accessToken = ""
 
+            //todo 억세스토큰으로 인해 오류뜨는 경우 다 로그아웃 시키기.. 401인가 402
             if(accessTokenExpiresIn <= System.currentTimeMillis()){
                 accessToken = runBlocking {
                     //토큰 갱신 api 호출
