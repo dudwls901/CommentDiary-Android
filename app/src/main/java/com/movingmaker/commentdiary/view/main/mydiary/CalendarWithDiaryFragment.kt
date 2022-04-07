@@ -134,7 +134,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         }
 
         myDiaryViewModel.responseGetMonthDiary.observe(viewLifecycleOwner) {
-            Log.d(TAG, "observeData: ${it.body()!!.message}")
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
                 try {
