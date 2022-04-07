@@ -47,12 +47,14 @@ class SelectDiaryTypeBottomSheet(private val selectDiaryTypeListener: SelectDiar
             binding.selectAloneDiaryButton.background = ContextCompat.getDrawable(requireContext(),R.color.brand_bright_green)
             binding.selectCommentDiaryButton.background = ContextCompat.getDrawable(requireContext(),R.color.background_ivory)
             myDiaryViewModel.selectedDiary.value!!.deliveryYN='N'
+            myDiaryViewModel.setSaveOrEdit("save")
             selectDiaryTypeListener.onSelectDiaryTypeListener('N')
         }
         selectCommentDiaryButton.setOnClickListener {
             binding.selectAloneDiaryButton.background = ContextCompat.getDrawable(requireContext(),R.color.background_ivory)
             binding.selectCommentDiaryButton.background = ContextCompat.getDrawable(requireContext(),R.color.brand_bright_green)
             myDiaryViewModel.selectedDiary.value!!.deliveryYN='Y'
+            myDiaryViewModel.setSaveOrEdit("save")
             selectDiaryTypeListener.onSelectDiaryTypeListener('Y')
         }
 
