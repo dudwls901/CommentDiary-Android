@@ -16,7 +16,7 @@ android {
         applicationId "com.movingmaker.commentdiary"
         minSdk 26
         targetSdk 32
-        versionCode 3
+        versionCode 13
         versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -24,8 +24,11 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+//            프로가드 미사용
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //디버그 테스트할 때  사용
+//            debuggable true
         }
     }
     compileOptions {
