@@ -185,7 +185,8 @@ object RetrofitClient {
                             CodaApplication.getInstance().getDataStore().insertAuth(
                                 response.body()!!.result.accessToken,
                                 response.body()!!.result.refreshToken,
-                                response.body()!!.result.accessTokenExpiresIn
+                                CodaApplication.customExpire
+//                                response.body()!!.result.accessTokenExpiresIn
                             )
                         } catch (e: Exception) {
                         }

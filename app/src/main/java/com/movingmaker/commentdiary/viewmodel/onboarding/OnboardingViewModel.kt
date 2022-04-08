@@ -181,7 +181,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
 
     suspend fun setResponseLogin(){
         withContext(viewModelScope.coroutineContext){
-            Log.d(TAG, "setResponseLogin: ${CodaApplication.deviceToken}")
+//            Log.d(TAG, "setResponseLogin: ${CodaApplication.deviceToken}")
             _responseLogin.value = ForSignUpRespository.INSTANCE.logIn(
                 LogInRequest(
                     email = email.value!!,

@@ -92,7 +92,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                 if (accessToken == null || refreshToken == null || accessTokenExpiresIn == null) {
                 } else {
                     CodaApplication.getInstance().getDataStore()
-                        .insertAuth(accessToken, refreshToken, accessTokenExpiresIn)
+                        .insertAuth(accessToken, refreshToken, CodaApplication.customExpire)
                 }
 
                 startActivity(Intent(this, MainActivity::class.java).apply {

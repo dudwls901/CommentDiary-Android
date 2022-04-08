@@ -60,19 +60,19 @@ class AuthProvider(private val context : Context) {
             preferences[accessTokenExpiresInKey] ?: 0L
         }
 
-    suspend fun setAccessToken(token : String){
+    private suspend fun setAccessToken(token : String){
         context.dataStore.edit { preferences ->
             preferences[accessTokenKey] = token
         }
     }
 
-    suspend fun setRefreshToken(token : String){
+    private suspend fun setRefreshToken(token : String){
         context.dataStore.edit { preferences ->
             preferences[refreshTokenKey] = token
         }
     }
 
-    suspend fun setAccessTokenExpiresIn(time : Long){
+    private suspend fun setAccessTokenExpiresIn(time : Long){
         context.dataStore.edit { preferences ->
             preferences[accessTokenExpiresInKey] = time
         }
