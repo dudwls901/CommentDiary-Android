@@ -134,10 +134,10 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
             fragmentViewModel.setFragmentState("commentDiaryDetail")
         }
 
+        try {
         myDiaryViewModel.responseGetMonthDiary.observe(viewLifecycleOwner) {
             binding.loadingBar.isVisible = false
             if (it.isSuccessful) {
-                try {
                     myDiaryViewModel.setMonthDiaries(it.body()!!.result)
                     //다른 달로 이동했을 때
                     if (myDiaryViewModel.selectedDate.value == null) {
@@ -147,9 +147,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                             .map { it.toInt() }
                         checkSelectedDate(CalendarDay.from(y, m - 1, d))
                     }
-                } catch (e: Exception) {
-                    Log.e(TAG, "observeData: ${e.stackTrace}")
-                }
 //                Toast.makeText(requireContext(), "로그인 성공", Toast.LENGTH_SHORT).show()
             } else {
                 it.errorBody()?.let { errorBody ->
@@ -163,6 +160,9 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                     }
                 }
             }
+        }
+        } catch (e: Exception) {
+            Log.e(TAG, "observeData: ${e.stackTrace}")
         }
         myDiaryViewModel.monthDiaries.observe(viewLifecycleOwner) {
             binding.materialCalendarView.removeDecorators()
