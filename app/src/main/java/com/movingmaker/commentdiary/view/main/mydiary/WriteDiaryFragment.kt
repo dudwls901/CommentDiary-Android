@@ -331,6 +331,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
             }
         }
         saveButton.setOnClickListener {
+            Log.d(TAG, "changeViews: savebuttonclick ${myDiaryViewModel.saveOrEdit.value}")
             //제목,내용 벨리데이션 체크
             if(diaryHeadEditText.text.isEmpty()){
                 CodaSnackBar.make(binding.root, "제목을 입력해 주세요.").show()

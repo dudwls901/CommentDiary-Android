@@ -212,6 +212,7 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
 
         if(diary.deliveryYN=='N'){
             fragmentViewModel.setBeforeFragment("gatherDiary")
+            myDiaryViewModel.setSaveOrEdit("save")
             fragmentViewModel.setFragmentState("writeDiary")
         }
         else{
