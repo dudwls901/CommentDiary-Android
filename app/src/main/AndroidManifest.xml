@@ -22,12 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.movingmaker.commentdiary.view.main.MainActivity" />
-        <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity" />
+        <activity android:name="com.movingmaker.commentdiary.view.main.MainActivity"
+            android:exported="true"/>
+        <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity"
+            android:exported="true"/>
         <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"/>
 <!--        com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity-->
         <service android:name="com.movingmaker.commentdiary.global.MyFirebaseMessagingService"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

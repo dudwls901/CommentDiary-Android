@@ -91,7 +91,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
         val pendingIntent =
-            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
+            } else {
+                PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT)
+            }
         val channelId = "Alarm"
 
         val defaultSoundUri: Uri =  RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL)

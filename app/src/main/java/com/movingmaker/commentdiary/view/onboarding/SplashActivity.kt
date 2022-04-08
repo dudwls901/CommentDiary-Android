@@ -46,10 +46,12 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
 
         if (intent?.extras != null) {
             for (key: String in intent!!.extras!!.keySet()) {
-                val yesterDay = DateConverter.getCodaToday().minusDays(1)
-                pushDate = DateConverter.ymdFormat(yesterDay)
                 val value = intent!!.extras!!.get(key)
-                Log.d("aaaaaaaaaaaaaa", "Key: ," + key + " Value: " + value);
+                if(value.toString().contains("코멘트가 도착하였습니다.")) {
+                    Log.d("pushaaaaaa", "$value Key: " + key + "           Value: " + value);
+                    val yesterDay = DateConverter.getCodaToday().minusDays(1)
+                    pushDate = DateConverter.ymdFormat(yesterDay)
+                }
             }
         }
 

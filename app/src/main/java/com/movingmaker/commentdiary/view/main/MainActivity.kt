@@ -82,6 +82,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
 
         pushDate = intent.getStringExtra("pushDate")
         //푸시로 들어온 경우 바로 코멘트 화면으로
+        Log.d("MainActivity", "oncreate: push $pushDate")
         if(pushDate!=null){
                 myDiaryViewModel.setPushDate(pushDate!!)
         }
