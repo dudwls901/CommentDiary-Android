@@ -133,7 +133,8 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
                                 .show()
                             CodaApplication.getInstance().logOut()
                         } else {
-                            CodaSnackBar.make(binding.root, "차단/신고가 접수되지 않았습니다.").show()                        }
+                            CodaSnackBar.make(binding.root, "차단/신고가 접수되지 않았습니다.").show()
+                        }
                     }
                 }
             }
@@ -145,7 +146,9 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
 
         myDiaryViewModel.haveDayMyComment.observe(viewLifecycleOwner) {
             val diary = myDiaryViewModel.selectedDiary.value!!
+            if(diary.id==null) return@observe
             val codaToday = DateConverter.getCodaToday()
+//            Log.d(TAG, "observeDatas:converter before $diary ${diary.date}")
             val selectedDate = DateConverter.ymdToDate(diary.date)
 
             //코멘트 없는 경우
