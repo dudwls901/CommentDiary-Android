@@ -17,11 +17,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
+import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMydiaryWritediaryBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.entity.Diary
+import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.util.DateConverter
@@ -97,7 +99,17 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 CodaSnackBar.make(binding.root, "일기가 삭제되었습니다.").show()
             }
             else{
-                CodaSnackBar.make(binding.root, "일기 삭제에 실패하였습니다.").show()
+                response.errorBody()?.let{ errorBody->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
+                                .show()
+                            CodaApplication.getInstance().logOut()
+                        } else {
+                            CodaSnackBar.make(binding.root, "일기 삭제에 실패하였습니다.").show()
+                        }
+                    }
+                }
             }
 
         }
@@ -145,7 +157,17 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 }
             }
             else{
-                CodaSnackBar.make(binding.root, "일기 저장에 실패하였습니다.").show()
+                it.errorBody()?.let{ errorBody->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
+                                .show()
+                            CodaApplication.getInstance().logOut()
+                        } else {
+                            CodaSnackBar.make(binding.root, "일기 저장에 실패하였습니다.").show()
+                        }
+                    }
+                }
             }
         }
 
@@ -196,7 +218,17 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 }
             }
             else{
-                CodaSnackBar.make(binding.root, "일기 수정에 실패하였습니다.").show()
+                it.errorBody()?.let{ errorBody->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
+                                .show()
+                            CodaApplication.getInstance().logOut()
+                        } else {
+                            CodaSnackBar.make(binding.root, "일기 수정에 실패하였습니다.").show()
+                        }
+                    }
+                }
             }
         }
 

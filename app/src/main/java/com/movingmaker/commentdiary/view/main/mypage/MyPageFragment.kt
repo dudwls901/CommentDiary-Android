@@ -17,6 +17,7 @@ import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
+import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
@@ -95,7 +96,19 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
                 }
                 //마이 페이지 불러오기 실패
                 else {
-                    CodaSnackBar.make(binding.root,"내 정보를 불러오는 데 실패하였습니다.").show()
+                    response.errorBody()?.let{ errorBody->
+                        RetrofitClient.getErrorResponse(errorBody)?.let{
+                            if (it.status == 401) {
+//                            if(it.code=="EXPIRED_TOKEN")
+                                //억세스 토큰 오류난 경우 로그아웃 시켜버리기
+                                Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT).show()
+                                CodaApplication.getInstance().logOut()
+                            }
+                            else {
+                                CodaSnackBar.make(binding.root,"내 정보를 불러오는 데 실패하였습니다.").show()
+                            }
+                        }
+                    }
                 }
             }
         }

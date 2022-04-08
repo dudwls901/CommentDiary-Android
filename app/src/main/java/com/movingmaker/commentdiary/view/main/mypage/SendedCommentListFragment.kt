@@ -17,6 +17,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.NumberPicker
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -27,6 +28,7 @@ import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
 import com.movingmaker.commentdiary.databinding.FragmentMypageMyaccountBinding
 import com.movingmaker.commentdiary.databinding.FragmentMypageSendedCommentListBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
+import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.view.main.gatherdiary.DiaryListFragment
@@ -93,7 +95,17 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
             if (it.isSuccessful) {
                 it.body()?.result?.let { commentList -> myPageViewModel.setCommentList(commentList) }
             } else {
-                CodaSnackBar.make(binding.root, "코멘트를 받아오는 데 실패했습니다.")
+                it.errorBody()?.let{ errorBody->
+                    RetrofitClient.getErrorResponse(errorBody)?.let{
+                        if(it.status==401){
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT).show()
+                            CodaApplication.getInstance().logOut()
+                        }
+                        else {
+                            CodaSnackBar.make(binding.root, "코멘트를 받아오는 데 실패했습니다.")
+                        }
+                    }
+                }
             }
         }
         myPageViewModel.responseGetMonthComment.observe(viewLifecycleOwner) {
@@ -101,7 +113,17 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
             if (it.isSuccessful) {
                 it.body()?.result?.let { commentList -> myPageViewModel.setCommentList(commentList) }
             } else {
-                CodaSnackBar.make(binding.root, "코멘트를 받아오는 데 실패했습니다.")
+                it.errorBody()?.let{ errorBody->
+                    RetrofitClient.getErrorResponse(errorBody)?.let{
+                        if(it.status==404 || it.status==401){
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT).show()
+                            CodaApplication.getInstance().logOut()
+                        }
+                        else {
+                            CodaSnackBar.make(binding.root, "코멘트를 받아오는 데 실패했습니다.")
+                        }
+                    }
+                }
             }
         }
     }

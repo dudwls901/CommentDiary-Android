@@ -11,10 +11,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseActivity
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
+import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.util.Extension.toPx
 import com.movingmaker.commentdiary.view.main.gatherdiary.DiaryListFragment
 import com.movingmaker.commentdiary.view.main.gatherdiary.CommentDiaryDetailFragment
@@ -125,6 +127,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             }
             //전달된 일기가 없는경우 404
             else {
+                it.errorBody()?.let{ errorBody->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            Toast.makeText(this, "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
+                                .show()
+                            CodaApplication.getInstance().logOut()
+                        }
+                    }
+                }
                  binding.bottomNavigationView.menu[1].icon= ContextCompat.getDrawable(this,R.drawable.bottom_ic_received)
             }
         }

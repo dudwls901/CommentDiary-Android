@@ -14,19 +14,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.Button
-import android.widget.EditText
-import android.widget.NumberPicker
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryDiarylistBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.entity.Diary
+import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.gatherdiary.GatherDiaryViewModel
@@ -92,7 +91,17 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
             if (it.isSuccessful) {
                 it.body()?.result?.let { diaryList -> gatherDiaryViewModel.setDiaryList(diaryList) }
             } else {
-                CodaSnackBar.make(binding.root,"일기를 불러오지 못했습니다.").show()
+                it.errorBody()?.let{ errorBody->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
+                                .show()
+                            CodaApplication.getInstance().logOut()
+                        } else {
+                            CodaSnackBar.make(binding.root,"일기를 불러오지 못했습니다.").show()
+                        }
+                    }
+                }
             }
         }
         gatherDiaryViewModel.responseGetMonthDiary.observe(viewLifecycleOwner) {
@@ -100,7 +109,17 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
             if (it.isSuccessful) {
                 it.body()?.result?.let { diaryList -> gatherDiaryViewModel.setDiaryList(diaryList) }
             } else {
-                CodaSnackBar.make(binding.root,"일기를 불러오지 못했습니다.").show()
+                it.errorBody()?.let{ errorBody->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
+                                .show()
+                            CodaApplication.getInstance().logOut()
+                        } else {
+                            CodaSnackBar.make(binding.root,"일기를 불러오지 못했습니다.").show()
+                        }
+                    }
+                }
             }
         }
 

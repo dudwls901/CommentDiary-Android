@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.CodaApplication
@@ -14,6 +15,7 @@ import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
 import com.movingmaker.commentdiary.databinding.FragmentMypageMyaccountBinding
 import com.movingmaker.commentdiary.databinding.FragmentMypageSignoutBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
+import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
@@ -64,7 +66,17 @@ class SignOutFragment : BaseFragment(), CoroutineScope {
                 if (it.isSuccessful) {
                     logOut()
                 } else {
-                    CodaSnackBar.make(binding.root, "회원 탈퇴에 실패하였습니다.").show()
+                    it.errorBody()?.let{ errorBody->
+                        RetrofitClient.getErrorResponse(errorBody)?.let {
+                            if (it.status == 401) {
+                                Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
+                                    .show()
+                                CodaApplication.getInstance().logOut()
+                            } else {
+                                CodaSnackBar.make(binding.root, "회원 탈퇴에 실패하였습니다.").show()
+                            }
+                        }
+                    }
                 }
 
             }

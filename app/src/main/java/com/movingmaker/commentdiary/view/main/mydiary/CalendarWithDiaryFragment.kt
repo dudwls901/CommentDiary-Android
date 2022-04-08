@@ -18,6 +18,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.marginEnd
 import androidx.core.view.marginTop
 import androidx.fragment.app.activityViewModels
+import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMydiaryWithCalendarBinding
@@ -59,7 +60,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     companion object {
         const val TAG: String = "로그"
 
-        fun newInstance(): CalendarWithDiaryFragment{
+        fun newInstance(): CalendarWithDiaryFragment {
             return CalendarWithDiaryFragment()
         }
 //        var INSTANCE: CalendarWithDiaryFragment? = null
@@ -141,7 +142,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                     //다른 달로 이동했을 때
                     if (myDiaryViewModel.selectedDate.value == null) {
                         checkSelectedDate(null)
-                    }else {
+                    } else {
                         val (y, m, d) = myDiaryViewModel.selectedDate.value!!.split('.')
                             .map { it.toInt() }
                         checkSelectedDate(CalendarDay.from(y, m - 1, d))
@@ -151,15 +152,16 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
                 }
 //                Toast.makeText(requireContext(), "로그인 성공", Toast.LENGTH_SHORT).show()
             } else {
-//                it.errorBody()?.let{ errorBody->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let{
-//                        CodaSnackBar.make(binding.root, it.message).show()
-//                    }
-//                }
-                //todo refreshToken 만료시 재 로그인 멘트, errorbody에 jwt만료인 경우만 띄우는 걸로 해야함
-//                Log.d(TAG, "observeData: ${it.errorBody()}")
-//                CodaSnackBar.make(binding.root, "다시 로그인해 주세요.").show()
-//                Toast.makeText(requireContext(), "한 달 일기 불러오기 실패", Toast.LENGTH_SHORT).show()
+                it.errorBody()?.let { errorBody ->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+//                            if(it.code=="EXPIRED_TOKEN")
+                            //억세스 토큰 오류난 경우 로그아웃 시켜버리기
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT).show()
+                            CodaApplication.getInstance().logOut()
+                        }
+                    }
+                }
             }
         }
         myDiaryViewModel.monthDiaries.observe(viewLifecycleOwner) {

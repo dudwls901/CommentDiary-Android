@@ -80,6 +80,7 @@ class AuthProvider(private val context : Context) {
 
     fun insertAuth(accessToken: String, refreshToken: String, accessTokenExpiresIn: Long){
         CoroutineScope(Dispatchers.IO).launch {
+//            CodaApplication.getInstance().getDataStore().setAccessToken("abc")
             CodaApplication.getInstance().getDataStore().setAccessToken(accessToken)
             CodaApplication.getInstance().getDataStore().setRefreshToken(refreshToken)
             CodaApplication.getInstance().getDataStore().setAccessTokenExpiresIn(accessTokenExpiresIn)

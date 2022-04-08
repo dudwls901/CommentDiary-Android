@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.CodaApplication
@@ -67,8 +68,9 @@ class MyAccountFragment: BaseFragment(), CoroutineScope {
                 } else {
                     it.errorBody()?.let{ errorBody->
                         RetrofitClient.getErrorResponse(errorBody)?.let{
-                            if(it.status==404){
-                                logOut()
+                            if(it.status==404 || it.status==401){
+                                Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT).show()
+                                CodaApplication.getInstance().logOut()
                             }
                             else {
                                 CodaSnackBar.make(binding.root, it.message).show()

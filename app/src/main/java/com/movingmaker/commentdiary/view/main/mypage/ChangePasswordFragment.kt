@@ -17,6 +17,7 @@ import com.movingmaker.commentdiary.databinding.FragmentMypageChangePasswordBind
 import com.movingmaker.commentdiary.databinding.FragmentMypageMyaccountBinding
 import com.movingmaker.commentdiary.databinding.FragmentMypageSignoutBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
+import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
@@ -68,10 +69,20 @@ class ChangePasswordFragment : BaseFragment(), CoroutineScope {
                 binding.loadingBar.isVisible = false
                 if (it.isSuccessful) {
                     CodaSnackBar.make(binding.root,"비밀번호를 변경하였습니다.").show()
+                    fragmentViewModel.setFragmentState("myPage")
                 } else {
-                    CodaSnackBar.make(binding.root,"비밀번호 변경에 실패하였습니다.").show()
+                    it.errorBody()?.let{ errorBody->
+                        RetrofitClient.getErrorResponse(errorBody)?.let{
+                            if(it.status==404 || it.status==401){
+                                Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT).show()
+                                CodaApplication.getInstance().logOut()
+                            }
+                            else {
+                                CodaSnackBar.make(binding.root,"비밀번호 변경에 실패하였습니다.").show()
+                            }
+                        }
+                    }
                 }
-                fragmentViewModel.setFragmentState("myPage")
             }
         }
 

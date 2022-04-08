@@ -17,10 +17,12 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryCommentdiaryDetailBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
+import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.model.remote.request.ReportCommentRequest
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
@@ -77,7 +79,17 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
             if (response.isSuccessful) {
                 myDiaryViewModel.setHaveDayMyComment(response.body()!!.result.isNotEmpty())
             } else {
-                CodaSnackBar.make(binding.root, "코멘트를 읽는 데 실패하였습니다.").show()
+                response.errorBody()?.let{ errorBody->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
+                                .show()
+                            CodaApplication.getInstance().logOut()
+                        } else {
+                            CodaSnackBar.make(binding.root, "코멘트를 읽는 데 실패하였습니다.").show()
+                        }
+                    }
+                }
             }
         }
 
@@ -87,6 +99,17 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
                 if (likedCommentId != -1L) {
                     myDiaryViewModel.likeLocalComment(likedCommentId)
                     commentListAdapter.notifyDataSetChanged()
+                }
+            }
+            else{
+                response.errorBody()?.let{ errorBody->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
+                                .show()
+                            CodaApplication.getInstance().logOut()
+                        }
+                    }
                 }
             }
         }
@@ -103,7 +126,16 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
                     commentListAdapter.notifyDataSetChanged()
                 }
             } else {
-                CodaSnackBar.make(binding.root, "차단/신고가 접수되지 않았습니다.").show()
+                response.errorBody()?.let{ errorBody->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
+                                .show()
+                            CodaApplication.getInstance().logOut()
+                        } else {
+                            CodaSnackBar.make(binding.root, "차단/신고가 접수되지 않았습니다.").show()                        }
+                    }
+                }
             }
         }
 

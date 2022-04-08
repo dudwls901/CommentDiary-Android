@@ -21,11 +21,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
+import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentReceiveddiaryBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.model.entity.ReceivedDiary
+import com.movingmaker.commentdiary.model.remote.RetrofitClient
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.receiveddiary.ReceivedDiaryViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -131,6 +133,17 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
             }
             //전달된 일기가 없는경우 404
             else {
+                it.errorBody()?.let { errorBody ->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+//                            if(it.code=="EXPIRED_TOKEN")
+                            //억세스 토큰 오류난 경우 로그아웃 시켜버리기
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
+                                .show()
+                            CodaApplication.getInstance().logOut()
+                        }
+                    }
+                }
                 binding.commentLayout.isVisible = false
                 binding.diaryLayout.isVisible = false
                 binding.noReceivedDiaryYet.isVisible = true
@@ -149,7 +162,17 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
                 }
             } else {
                 Log.d(TAG, "observeDatas: ${response.errorBody()}")
-                CodaSnackBar.make(binding.root, "코멘트가 전송되지 않았습니다.").show()
+                response.errorBody()?.let { errorBody ->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
+                                .show()
+                            CodaApplication.getInstance().logOut()
+                        } else {
+                            CodaSnackBar.make(binding.root, "코멘트가 전송되지 않았습니다.").show()
+                        }
+                    }
+                }
             }
         }
 
@@ -163,7 +186,17 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
                     }
                 }
             } else {
-                CodaSnackBar.make(binding.root, "차단/신고가 접수되지 않았습니다.").show()
+                response.errorBody()?.let { errorBody ->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
+                                .show()
+                            CodaApplication.getInstance().logOut()
+                        } else {
+                            CodaSnackBar.make(binding.root, "차단/신고가 접수되지 않았습니다.").show()
+                        }
+                    }
+                }
             }
         }
 
