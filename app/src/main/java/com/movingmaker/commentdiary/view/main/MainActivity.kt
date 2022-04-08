@@ -127,15 +127,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             }
             //전달된 일기가 없는경우 404
             else {
-                it.errorBody()?.let{ errorBody->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            Toast.makeText(this, "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
-                                .show()
-                            CodaApplication.getInstance().logOut()
-                        }
-                    }
-                }
                  binding.bottomNavigationView.menu[1].icon= ContextCompat.getDrawable(this,R.drawable.bottom_ic_received)
             }
         }
