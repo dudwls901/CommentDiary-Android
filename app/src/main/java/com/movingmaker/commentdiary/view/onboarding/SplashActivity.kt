@@ -34,6 +34,7 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
 
     companion object{
         const val REQUEST_CODE_UPDATE = 999
+        const val TAG = "SplashActivity"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +43,7 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
         setContentView(binding.root)
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
-//        updateVersion()
+        updateVersion()
 
         if (intent?.extras != null) {
             for (key: String in intent!!.extras!!.keySet()) {
@@ -89,39 +90,42 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
     }
 
 //    //업데이트 확인 + 수락하면 업데이트
-//    private fun updateVersion() {
-//        val appUpdateManager = AppUpdateManagerFactory.create(this)
-//
-//// Returns an intent object that you use to check for an update.
-//        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
-//
-//// Checks that the platform will allow the specified type of update.
-//        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-//            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-//                // This example applies an immediate update. To apply a flexible update
-//                // instead, pass in AppUpdateType.FLEXIBLEΩ
-//                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
-//            ) {
-//                Log.d("updateeeeee", " in if updateVersion: ${appUpdateInfo}")
-//                appUpdateManager.startUpdateFlowForResult(
-//                    appUpdateInfo,
-//                    AppUpdateType.IMMEDIATE,
-//                    this@SplashActivity,
-//                    0
-//                )
-//            }
-//        }
-//    }
-//
-//    //업데이트 취소시
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        Log.d("updateeeeeee", "onActivityResult: $requestCode $resultCode $data ")
-//        if(requestCode== REQUEST_CODE_UPDATE){
-//            if(resultCode != Activity.RESULT_OK){
-//                CodaSnackBar.make(binding.root, "업데이트가 취소 되었습니다.").show()
-//            }
-//        }
-//    }
+    private fun updateVersion() {
+        val appUpdateManager = AppUpdateManagerFactory.create(this)
+
+// Returns an intent object that you use to check for an update.
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+    
+
+// Checks that the platform will allow the specified type of update.
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            Log.d(TAG, "updateVersion: $appUpdateInfo")
+            Log.d(TAG, "updateVersion: ${UpdateAvailability.UPDATE_AVAILABLE}")
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                // This example applies an immediate update. To apply a flexible update
+                // instead, pass in AppUpdateType.FLEXIBLEΩ
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+            ) {
+                Log.d(TAG, " in if updateVersion: ${appUpdateInfo}")
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    AppUpdateType.IMMEDIATE,
+                    this@SplashActivity,
+                    REQUEST_CODE_UPDATE
+                )
+            }
+        }
+    }
+
+    //업데이트 취소시
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d("updateeeeeee", "onActivityResult: $requestCode $resultCode $data ")
+        if(requestCode== REQUEST_CODE_UPDATE){
+            if(resultCode != Activity.RESULT_OK){
+                CodaSnackBar.make(binding.root, "업데이트가 취소 되었습니다.").show()
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 
 }
