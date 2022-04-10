@@ -188,7 +188,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
             fragmentViewModel.setFragmentState("writeDiary")
         }
         //일기가 있는 경우
-        diaryDetailLayout.setOnClickListener {
+        readDiaryLayout.setOnClickListener {
             //임시저장 상태면 writeDiary로, 이미 저장된 상태면 commentDiaryDetail
             //서버에 저장된 코멘트 일기인 경우
             if (myDiaryViewModel.selectedDiary.value!!.tempYN == 'N' && myDiaryViewModel.selectedDiary.value!!.deliveryYN == 'Y') {
@@ -229,8 +229,6 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
     }
 
     private fun initViews() = with(binding) {
-
-        diaryContentsTextView.movementMethod = ScrollingMovementMethod()
 
         initCalendar()
     }
