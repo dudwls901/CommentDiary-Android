@@ -27,6 +27,7 @@ class CodaApplication : Application() {
         const val policyUrl = "https://www.notion.so/59a704f6702f4382b9398fa3b4a0d780"
         lateinit var deviceToken: String
         val customExpire = System.currentTimeMillis()+(60*60*1000)
+        const val TAG = "start app CodaApplication"
     }
 
     override fun onCreate() {
