@@ -7,6 +7,7 @@ plugins {
     //firebase
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -81,15 +82,8 @@ dependencies {
     //Retrofit2
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    //okhttp3 로깅 인터셉터
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.2")
-    /*
-    클라이언트인 레트로핏에서 서버로 api통신을 할 때 logging으로 중간에서 인터셉트한다.
-    1.기본 매개변수, 사용자의 휴대폰 기종, 안드로이드, 아이폰인지 등을 서버로 보내는데 인터셉트에서 기본 파라미터에
-    인터셉트를 추가해서 전송
-    2.로깅확인 : 레트로핏에서 api통신할 때 데이터들에 대한 로그를 확인 여러가지 옵션으로 ,header, body 등을 볼 수 있다,
-    log창에서 http응답을 좀 더편하게 볼 수 있는 방법
-     */
+    //okhttp3
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
 
     //Room
     def roomVersion = "2.4.1"
@@ -105,4 +99,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
+
+    //Navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
+
 }
