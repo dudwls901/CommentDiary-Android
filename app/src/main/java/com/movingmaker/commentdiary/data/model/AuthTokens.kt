@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.data.entity
+package com.movingmaker.commentdiary.data.model
 
 import com.google.gson.annotations.SerializedName
 

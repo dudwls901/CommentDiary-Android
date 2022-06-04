@@ -1,14 +1,14 @@
-package com.movingmaker.commentdiary.data.entity
+package com.movingmaker.commentdiary.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Comment(
-    @SerializedName(value = "id")
+data class ReceivedComment(
+    @SerializedName(value = "commentId")
     val id: Long,
     @SerializedName(value = "content")
     val content: String,
     @SerializedName(value ="date")
     val date: String,
     @SerializedName(value = "like")
-    var like: Boolean
+    val like: Boolean
 )
