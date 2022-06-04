@@ -1,11 +1,15 @@
 package com.movingmaker.commentdiary.model.remote.api
 
-import com.movingmaker.commentdiary.model.remote.Url
 import com.movingmaker.commentdiary.model.remote.request.EmailCodeCheckRequest
 import com.movingmaker.commentdiary.model.remote.request.LogInRequest
 import com.movingmaker.commentdiary.model.remote.request.SignUpRequest
 import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.model.remote.response.LogInResponse
+import com.movingmaker.commentdiary.util.Url.EMAIL_CODE_CHECK
+import com.movingmaker.commentdiary.util.Url.FIND_PW
+import com.movingmaker.commentdiary.util.Url.LOG_IN
+import com.movingmaker.commentdiary.util.Url.SEND_EMAIL_CODE
+import com.movingmaker.commentdiary.util.Url.SIGNUP
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -16,18 +20,18 @@ interface OnboardingApiService {
 //    @GET(Url.SEND_EMAIL)
 //    fun sendEmail(@Query("email") email: String) : Call<SendEmailCodeResponse>
 
-    @GET(Url.SEND_EMAIL_CODE)
+    @GET(SEND_EMAIL_CODE)
     suspend fun sendEmailCode(@Query("email") email: String) : Response<IsSuccessResponse>
 
-    @POST(Url.EMAIL_CODE_CHECK)
+    @POST(EMAIL_CODE_CHECK)
     suspend fun emailCodeCheck(@Body emailCodeCheckRequest: EmailCodeCheckRequest): Response<IsSuccessResponse>
 
-    @POST(Url.SIGNUP)
+    @POST(SIGNUP)
     suspend fun signUp(@Body signUpRequest: SignUpRequest): Response<IsSuccessResponse>
 
-    @POST(Url.LOG_IN)
+    @POST(LOG_IN)
     suspend fun logIn(@Body logInRequest: LogInRequest): Response<LogInResponse>
 
-    @GET(Url.FIND_PW)
+    @GET(FIND_PW)
     suspend fun findPassword(@Query("email") email: String) : Response<IsSuccessResponse>
 }
