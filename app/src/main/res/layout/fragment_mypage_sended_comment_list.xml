@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="android.view.View" />
 
         <variable
-            name="mypageviewmodel"
+            name="vm"
             type="com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel" />
 
     </data>
@@ -92,13 +93,14 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/diaryListRecyclerView"
-                items="@{mypageviewmodel.commentList}"
+                items="@{vm.commentList}"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:visibility="@{mypageviewmodel.commentList.empty ? View.GONE : View.VISIBLE }"
+                android:visibility="@{vm.commentList.empty ? View.GONE : View.VISIBLE }"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/rv_item_mypage_comment"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -112,7 +114,7 @@
                 android:text="@string/no_comment_write"
                 android:textAlignment="center"
                 android:textColor="@color/text_brown"
-                android:visibility="@{mypageviewmodel.commentList.empty ? View.VISIBLE : View.GONE }"
+                android:visibility="@{vm.commentList.empty ? View.VISIBLE : View.GONE }"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

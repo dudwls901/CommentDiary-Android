@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="mypageviewmodel"
+            name="vm"
             type="com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel" />
 
     </data>
@@ -38,7 +38,7 @@
             android:gravity="center"
             android:paddingHorizontal="14dp"
             android:paddingVertical="0dp"
-            android:text="@{mypageviewmodel.myAccount}"
+            android:text="@{vm.myAccount}"
             android:textAlignment="center"
             android:textColor="@color/text_black"
             app:layout_constraintEnd_toEndOf="parent"
@@ -97,7 +97,7 @@
                     style="@style/MCaption3"
                     android:layout_width="wrap_content"
                     android:layout_height="16dp"
-                    android:text="@{mypageviewmodel.temperature.toString()}"
+                    android:text="@{vm.temperature.toString()}"
                     android:textColor="@color/text_brown"
                     app:layout_constraintBottom_toTopOf="@id/seekBarThumb"
                     app:layout_constraintEnd_toEndOf="@id/seekBarThumb"

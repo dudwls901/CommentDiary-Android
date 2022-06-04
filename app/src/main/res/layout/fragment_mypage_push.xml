@@ -4,7 +4,7 @@
 
     <data>
         <variable
-            name="mypageviewmodel"
+            name="vm"
             type="com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel" />
     </data>
 
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="24dp"
-            android:checked="@{mypageviewmodel.pushYN =='Y' ? true : false}"
+            android:checked="@{vm.pushYN =='Y' ? true : false}"
             app:layout_constraintBottom_toTopOf="@id/line2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/line1" />
