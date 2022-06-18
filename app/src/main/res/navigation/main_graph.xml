@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/calendarWithDiaryFragment">
+
+    <fragment
+        android:id="@+id/calendarWithDiaryFragment"
+        android:name="com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment"
+        android:label="CalendarWithDiaryFragment"
+        tools:layout="@layout/fragment_mydiary_with_calendar">
+        <action
+            android:id="@+id/action_calendarWithDiaryFragment_to_writeDiaryFragment"
+            app:destination="@id/writeDiaryFragment" />
+        <action
+            android:id="@+id/action_calendarWithDiaryFragment_to_commentDiaryDetailFragment"
+            app:destination="@id/commentDiaryDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/receivedDiaryFragment"
+        android:name="com.movingmaker.commentdiary.view.main.receiveddiary.ReceivedDiaryFragment"
+        android:label="ReceivedDiaryFragment"
+        tools:layout="@layout/fragment_receiveddiary" />
+    <fragment
+        android:id="@+id/diaryListFragment"
+        android:name="com.movingmaker.commentdiary.view.main.gatherdiary.DiaryListFragment"
+        android:label="DiaryListFragment"
+        tools:layout="@layout/fragment_gatherdiary_diarylist">
+        <action
+            android:id="@+id/action_diaryListFragment_to_writeDiaryFragment"
+            app:destination="@id/writeDiaryFragment" />
+        <action
+            android:id="@+id/action_diaryListFragment_to_commentDiaryDetailFragment"
+            app:destination="@id/commentDiaryDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myPageFragment"
+        android:name="com.movingmaker.commentdiary.view.main.mypage.MyPageFragment"
+        android:label="MyPageFragment"
+        tools:layout="@layout/fragment_mypage">
+        <action
+            android:id="@+id/action_myPageFragment_to_myAccountFragment"
+            app:destination="@id/myAccountFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_sendedCommentListFragment"
+            app:destination="@id/sendedCommentListFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_pushAlarmOnOffFragment"
+            app:destination="@id/pushAlarmOnOffFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_termsFragment"
+            app:destination="@id/termsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/writeDiaryFragment"
+        android:name="com.movingmaker.commentdiary.view.main.mydiary.WriteDiaryFragment"
+        android:label="WriteDiaryFragment"
+        tools:layout="@layout/fragment_mydiary_writediary" >
+        <action
+            android:id="@+id/action_writeDiaryFragment_to_commentDiaryDetailFragment"
+            app:destination="@id/commentDiaryDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/commentDiaryDetailFragment"
+        android:name="com.movingmaker.commentdiary.view.main.gatherdiary.CommentDiaryDetailFragment"
+        android:label="CommentDiaryDetailFragment"
+        tools:layout="@layout/fragment_gatherdiary_commentdiary_detail" >
+        <action
+            android:id="@+id/action_commentDiaryDetailFragment_to_receivedDiaryFragment"
+            app:destination="@id/receivedDiaryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myAccountFragment"
+        android:name="com.movingmaker.commentdiary.view.main.mypage.MyAccountFragment"
+        android:label="MyAccountFragment"
+        tools:layout="@layout/fragment_mypage_myaccount">
+        <action
+            android:id="@+id/action_myAccountFragment_to_signOutFragment"
+            app:destination="@id/signOutFragment" />
+        <action
+            android:id="@+id/action_myAccountFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/termsFragment"
+        android:name="com.movingmaker.commentdiary.view.main.mypage.TermsFragment"
+        android:label="TermsFragment"
+        tools:layout="@layout/fragment_mypage_terms" />
+    <fragment
+        android:id="@+id/pushAlarmOnOffFragment"
+        android:name="com.movingmaker.commentdiary.view.main.mypage.PushAlarmOnOffFragment"
+        android:label="PushAlarmOnOffFragment"
+        tools:layout="@layout/fragment_mypage_push" />
+    <fragment
+        android:id="@+id/sendedCommentListFragment"
+        android:name="com.movingmaker.commentdiary.view.main.mypage.SendedCommentListFragment"
+        android:label="SendedCommentListFragment"
+        tools:layout="@layout/fragment_mypage_sended_comment_list" />
+    <fragment
+        android:id="@+id/signOutFragment"
+        android:name="com.movingmaker.commentdiary.view.main.mypage.SignOutFragment"
+        android:label="SignOutFragment"
+        tools:layout="@layout/fragment_mypage_signout" />
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.movingmaker.commentdiary.view.main.mypage.ChangePasswordFragment"
+        android:label="ChangePasswordFragment"
+        tools:layout="@layout/fragment_mypage_change_password" >
+        <action
+            android:id="@+id/action_changePasswordFragment_to_myPageFragment"
+            app:destination="@id/myPageFragment" />
+    </fragment>
+</navigation>

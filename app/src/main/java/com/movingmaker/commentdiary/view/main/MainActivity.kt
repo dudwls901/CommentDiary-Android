@@ -1,29 +1,20 @@
 package com.movingmaker.commentdiary.view.main
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
-import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import com.movingmaker.commentdiary.CodaApplication
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.base.BaseActivity
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
-import com.movingmaker.commentdiary.model.remote.RetrofitClient
-import com.movingmaker.commentdiary.util.Extension.toPx
-import com.movingmaker.commentdiary.view.main.gatherdiary.DiaryListFragment
-import com.movingmaker.commentdiary.view.main.gatherdiary.CommentDiaryDetailFragment
-import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment
-import com.movingmaker.commentdiary.view.main.mydiary.WriteDiaryFragment
-import com.movingmaker.commentdiary.view.main.mypage.*
-import com.movingmaker.commentdiary.view.main.receiveddiary.ReceivedDiaryFragment
+import com.movingmaker.commentdiary.util.DateConverter
+import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
@@ -42,6 +33,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
 
     private val job = Job()
 
+    private var deferredJob: Deferred<Job>? = null
+
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
@@ -51,19 +44,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     private val gatherDiaryViewModel: GatherDiaryViewModel by viewModels()
     private val receivedDiaryViewModel: ReceivedDiaryViewModel by viewModels()
 
-    private val fragmentMap = HashMap<String, Fragment>()
-
     private var pushDate: String? = null
 
+    private lateinit var navController: NavController
+
     companion object {
-        val fragmentState = HashMap<String, Fragment>()
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         pushDate = intent?.getStringExtra("pushDate")
         Log.d("MainActivity", "onNewIntent: push $pushDate")
-        if(pushDate!=null){
+        if (pushDate != null) {
             myDiaryViewModel.setPushDate(pushDate!!)
 
         }
@@ -73,226 +65,113 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
         super.onCreate(savedInstanceState)
         binding.lifecycleOwner = this
         binding.fragmentviewModel = fragmentViewModel
-        fragmentState.clear()
-
-        setFragments()
-        replaceFragment("myDiary")
+        Log.d(TAG, "onCreate: -->")
         initViews()
+//            replaceFragment("myDiary")
         observerFragments()
+        observerDatas()
+        deferredJob = async(start = CoroutineStart.LAZY) {
+            myDiaryViewModel.setResponseGetMonthDiary(
+                DateConverter.ymFormat(DateConverter.getCodaToday()),
+                "onCreate"
+            )
+        }
+        receivedDiaryViewModel.setResponseGetReceivedDiary()
 
         pushDate = intent.getStringExtra("pushDate")
         //푸시로 들어온 경우 바로 코멘트 화면으로
         Log.d("MainActivity", "oncreate: push $pushDate")
-        if(pushDate!=null){
-                myDiaryViewModel.setPushDate(pushDate!!)
+        if (pushDate != null) {
+            myDiaryViewModel.setPushDate(pushDate!!)
         }
-        observerDatas()
     }
 
-    private fun setFragments() {
-//        calendarWithDiaryFragment = CalendarWithDiaryFragment.newInstance()
-//        fragment2 = Fragment2.newInstance()
-//        diaryListFragment = DiaryListFragment.newInstance()
-//        tempMyPageFragment = TempMyPageFragment.newInstance()
-//        writeDiaryFragment = WriteDiaryFragment.newInstance()
-//        commentDiaryDetailFragment = CommentDiaryDetailFragment.newInstance()
+    private fun observerDatas() {
 
-        fragmentMap["myDiary"] = CalendarWithDiaryFragment.newInstance()
-        fragmentMap["receivedDiary"] = ReceivedDiaryFragment.newInstance()
-        fragmentMap["gatherDiary"] = DiaryListFragment.newInstance()
-        fragmentMap["myPage"] = MyPageFragment.newInstance()
-        fragmentMap["writeDiary"] = WriteDiaryFragment.newInstance()
-        fragmentMap["commentDiaryDetail"] = CommentDiaryDetailFragment.newInstance()
-        fragmentMap["myAccount"] = MyAccountFragment.newInstance()
-        fragmentMap["signOut"] = SignOutFragment.newInstance()
-        fragmentMap["terms"] = TermsFragment.newInstance()
-        fragmentMap["sendedCommentList"] = SendedCommentListFragment.newInstance()
-        fragmentMap["changePassword"] = ChangePasswordFragment.newInstance()
-        fragmentMap["pushAlarmOnOff"] = PushAlarmOnOffFragment.newInstance()
-    }
-
-    private fun observerDatas(){
-        receivedDiaryViewModel.responseGetReceivedDiary.observe(this){
-            if (it.isSuccessful) {
-                it.body()?.let { response ->
-                    receivedDiaryViewModel.setReceivedDiary(response.result)
-
-                    //코멘트가 있다면
-                    if (response.result.myComment?.isNotEmpty() == true) {
-                        binding.bottomNavigationView.menu[1].icon= ContextCompat.getDrawable(this,R.drawable.bottom_ic_received)
-                    } else {
+        receivedDiaryViewModel.initReceivedDiary.observe(this) {
+            launch {
+                Log.d(TAG, "observerDatas: $deferredJob --> 실행")
+                deferredJob?.await()
+            }
+            Log.d(TAG, "observerDatas: --> receivedDiary: ${it}")
+            if (it != null) {
+                if (it?.myComment?.isNotEmpty() == true) {
+                    binding.bottomNavigationView.menu[1].icon =
+//                    ContextCompat.getDrawable(this, R.drawable.bottom_ic_received_notice)
+                        ContextCompat.getDrawable(this, R.drawable.bottom_ic_received)
+                } else {
                     //코멘트가 없다면
-                        binding.bottomNavigationView.menu[1].icon= ContextCompat.getDrawable(this,R.drawable.bottom_ic_received_notice)
-                    }
+                    binding.bottomNavigationView.menu[1].icon =
+//                    ContextCompat.getDrawable(this, R.drawable.bottom_ic_received)
+                        ContextCompat.getDrawable(this, R.drawable.bottom_ic_received_notice)
                 }
+            } else {
+                //도착한 일기가 없다면
+                ContextCompat.getDrawable(this, R.drawable.bottom_ic_received)
             }
-            //전달된 일기가 없는경우 404
-            else {
-                 binding.bottomNavigationView.menu[1].icon= ContextCompat.getDrawable(this,R.drawable.bottom_ic_received)
-            }
+
         }
     }
 
     private fun observerFragments() {
-        fragmentViewModel.fragmentState.observe(this) { fragment ->
-            if (fragment != null) {
-                replaceFragment(fragment)
-            }
+        fragmentViewModel.curFragment.observe(this) { fragment ->
+            Log.d(TAG, "observerFragments: nav ${navController.currentDestination?.label}")
+            Log.d(TAG, "observerFragments: frag $fragment")
             //마이페이지만 스테이터스바 흰색
-            if(fragment=="myPage"||
-                    fragment == "myAccount"||
-                    fragment == "signOut"||
-                    fragment == "terms"||
-                    fragment =="sendedCommentList"||
-                    fragment =="changePassword"||
-                    fragment =="pushAlarmOnOff"
-            ){
+            if (fragment == FRAGMENT_NAME.MY_PAGE ||
+                fragment == FRAGMENT_NAME.MY_ACCOUNT ||
+                fragment == FRAGMENT_NAME.SIGN_OUT ||
+                fragment == FRAGMENT_NAME.TERMS ||
+                fragment == FRAGMENT_NAME.SENDED_COMMENT_LIST ||
+                fragment == FRAGMENT_NAME.CHANGE_PASSWORD ||
+                fragment == FRAGMENT_NAME.PUSHALARM_ONOFF
+            ) {
                 window.statusBarColor = getColor(R.color.background_ivory)
-            }
-            else{
+            } else {
                 window.statusBarColor = getColor(R.color.core_beige)
             }
         }
     }
 
     private fun initViews() {
+
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.main_nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController)
+
         initBottomNavigationView()
     }
 
     private fun initBottomNavigationView() = with(binding) {
 
-        launch(coroutineContext) {
-            launch(Dispatchers.IO) {
-                receivedDiaryViewModel.setResponseGetReceivedDiary()
-            }
-        }
-
-
         bottomNavigationView.itemIconTintList = null
         bottomNavigationView.itemTextColor = null
         //클릭시 퍼지는 색상 변경
 //        bottomNavigationView.itemRippleColor = null
-
-        bottomNavigationView.setOnItemSelectedListener { menu ->
-            when (menu.itemId) {
-                R.id.myDiary -> fragmentViewModel.setFragmentState("myDiary")
-                R.id.receivedDiary -> {
-                    if(fragmentViewModel.beforeFragment.value!="commentDiaryDetail") {
-                        fragmentViewModel.setFragmentState("receivedDiary")
-                    }
-                }
-                R.id.collection -> fragmentViewModel.setFragmentState("gatherDiary")
-                R.id.myPage -> fragmentViewModel.setFragmentState("myPage")
-            }
-            true
-        }
-
     }
-
-    private fun replaceFragment(showFragment: String) {
-        //액티비티에는 서포트프래그먼트매니저가 있다. 각각 액티비티에 attach되어있는 프래그먼트를 관리
-        //트랜잭션 : 이 작업이 시작함을 알리고 커밋까지는 요 작업만 하게끔
-
-        supportFragmentManager.beginTransaction().apply {
-            //R.id.fragmentContainer
-            //처음 들어간 프래그먼트 추가
-            if (fragmentState[showFragment] == null) {
-                fragmentState[showFragment] = fragmentMap[showFragment]!!
-                //writeDiary는 태그 넣기
-//                if(showFragment=="writeDiary"){
-//                    add(binding.fragmentContainer.id,fragmentMap[showFragment]!!, showFragment)
-//                }
-//                else{
-                add(binding.fragmentContainer.id, fragmentMap[showFragment]!!)
-//                }
-            }
-            //현재 프래그먼트만 보여주고 나머진 다 hide
-            for (fragment in fragmentState) {
-                if (fragmentMap[showFragment] == fragment.value) {
-                    show(fragment.value)
-                } else {
-                    hide(fragment.value)
-                }
-            }
-            when (showFragment) {
-                "myDiary" -> {
-                    fragmentViewModel.setHasBottomNavi(true)
-                }
-                "receivedDiary" -> {
-                    fragmentViewModel.setHasBottomNavi(true)
-                    when(fragmentViewModel.beforeFragment.value){
-                        "commentDiaryDetail"->{
-                            binding.bottomNavigationView.selectedItemId = R.id.receivedDiary
-                            fragmentViewModel.setBeforeFragment("receivedDiary")
-                        }
-                    }
-                }
-                "gatherDiary" -> {
-                    fragmentViewModel.setHasBottomNavi(true)
-                }
-                "myPage" -> {
-                    fragmentViewModel.setHasBottomNavi(true)
-                }
-                "writeDiary" -> {
-                    fragmentViewModel.setHasBottomNavi(false)
-                }
-                "commentDiaryDetail" -> {
-                    fragmentViewModel.setHasBottomNavi(false)
-                }
-                "myAccount" -> {
-                    fragmentViewModel.setHasBottomNavi(false)
-                }
-                "signOut" -> {
-                    fragmentViewModel.setHasBottomNavi(false)
-                }
-                "terms" -> {
-                    fragmentViewModel.setHasBottomNavi(false)
-                }
-                "sendedCommentList" -> {
-                    fragmentViewModel.setHasBottomNavi(false)
-                }
-                "changePassword" -> {
-                    fragmentViewModel.setHasBottomNavi(false)
-                }
-                "pushAlarmOnOff" -> {
-                    fragmentViewModel.setHasBottomNavi(false)
-                }
-            }
-            //메인으로갈 때마다 초기화
-//            supportFragmentManager.clearBackStack()
-            commit()
-        }
-    }
-
-//    private fun clearBackStack() {
-//        val fragmentManager: FragmentManager = supportFragmentManager
-//        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-//    }
 
     override fun onBackPressed() {
         val currentTime = System.currentTimeMillis()
         val gapTime = currentTime - backButtonTime
-        val curFragment = fragmentViewModel.fragmentState.value
 
-        if(curFragment=="myDiary"||
-            curFragment=="receivedDiary"||
-            curFragment=="gatherDiary"||
-            curFragment=="myPage") {
-
+        if (navController.currentDestination!!.id == R.id.calendarWithDiaryFragment ||
+            navController.currentDestination!!.id == R.id.receivedDiaryFragment ||
+            navController.currentDestination!!.id == R.id.diaryListFragment ||
+            navController.currentDestination!!.id == R.id.myPageFragment
+        ) {
             if (gapTime in 0..2000) {
                 // 2초 안에 두번 뒤로가기 누를 시 앱 종료
 //                finish()
                 finishAndRemoveTask()
+                //todo 아래 코드 필요?
                 android.os.Process.killProcess(android.os.Process.myPid())
-            }
-            else{
+            } else {
                 backButtonTime = currentTime
                 CodaSnackBar.make(binding.root, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.").show()
             }
-        }
-         else {
-                fragmentViewModel.setFragmentState(fragmentViewModel.beforeFragment.value!!)
-//                supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
         }
     }
 
