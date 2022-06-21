@@ -14,17 +14,15 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.movingmaker.commentdiary.CodaApplication
+import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.base.BaseFragment
+import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryCommentdiaryDetailBinding
-import com.movingmaker.commentdiary.global.CodaSnackBar
-import com.movingmaker.commentdiary.model.remote.RetrofitClient
-import com.movingmaker.commentdiary.model.remote.request.ReportCommentRequest
+import com.movingmaker.commentdiary.data.remote.request.ReportCommentRequest
 import com.movingmaker.commentdiary.util.DateConverter
+import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
@@ -65,6 +63,7 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
     ): View {
         binding.myDiaryviewModel = myDiaryViewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.COMMENT_DIARY_DETAIL)
         observeDatas()
         initViews()
         initToolBar()
@@ -74,74 +73,18 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
     @SuppressLint("NotifyDataSetChanged")
     private fun observeDatas() {
 
-        myDiaryViewModel.responseGetDayComment.observe(viewLifecycleOwner) { response ->
-            //하루 코멘트 가져오기
-            if (response.isSuccessful) {
-                myDiaryViewModel.setHaveDayMyComment(response.body()!!.result.isNotEmpty())
-            } else {
-                response.errorBody()?.let{ errorBody->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
-                                .show()
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            CodaSnackBar.make(binding.root, "코멘트를 읽는 데 실패하였습니다.").show()
-                        }
-                    }
-                }
-            }
-        }
-
-        gatherDiaryViewModel.responseLikeComment.observe(viewLifecycleOwner) { response ->
-            binding.loadingBar.isVisible = false
-            if (response.isSuccessful) {
-                if (likedCommentId != -1L) {
-                    myDiaryViewModel.likeLocalComment(likedCommentId)
-                    commentListAdapter.notifyDataSetChanged()
-                }
+        gatherDiaryViewModel.handleComment.observe(viewLifecycleOwner){
+            if(it.second=="report"){
+                myDiaryViewModel.deleteLocalReportedComment(it.first)
             }
             else{
-                response.errorBody()?.let{ errorBody->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
-                                .show()
-                            CodaApplication.getInstance().logOut()
-                        }
-                    }
-                }
-            }
-        }
-
-        gatherDiaryViewModel.responseReportComment.observe(viewLifecycleOwner) { response ->
-            binding.loadingBar.isVisible = false
-            //신고 성공한 경우
-            if (response.isSuccessful) {
-//                CodaSnackBar.make(binding.root, "신고가 접수되었습니다.").show()
-                //신고한 코멘트 삭제해서 갱신
-                //어댑터 갱신
-                if (reportedCommentId != -1L) {
-                    myDiaryViewModel.deleteLocalReportedComment(reportedCommentId)
-                    commentListAdapter.notifyDataSetChanged()
-                }
-            } else {
-                response.errorBody()?.let{ errorBody->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
-                                .show()
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            CodaSnackBar.make(binding.root, "차단/신고가 접수되지 않았습니다.").show()
-                        }
-                    }
-                }
+                myDiaryViewModel.likeLocalComment(it.first)
             }
         }
 
         myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
-            commentListAdapter.submitList(diary.commentList)
+            Log.d(TAG, "observeDatas: --> $diary ")
+            commentListAdapter.submitList(diary.commentList?.toMutableList())
         }
 
         myDiaryViewModel.haveDayMyComment.observe(viewLifecycleOwner) {
@@ -201,8 +144,7 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
     private fun initViews() = with(binding) {
 
         binding.goToWriteCommentButton.setOnClickListener {
-            fragmentViewModel.setBeforeFragment("commentDiaryDetail")
-            fragmentViewModel.setFragmentState("receivedDiary")
+            findNavController().navigate(CommentDiaryDetailFragmentDirections.actionCommentDiaryDetailFragmentToReceivedDiaryFragment())
         }
         commentListAdapter = CommentListAdapter(this@CommentDiaryDetailFragment)
         commentListAdapter.setHasStableIds(true)
@@ -212,24 +154,22 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
     private fun initToolBar() = with(binding) {
 
         backButton.setOnClickListener {
-            if (fragmentViewModel.beforeFragment.value == "writeDiary") {
-                fragmentViewModel.setFragmentState("myDiary")
-            } else if (fragmentViewModel.beforeFragment.value == "gatherDiary") {
-                fragmentViewModel.setFragmentState("gatherDiary")
-            } else {
-                fragmentViewModel.setFragmentState("myDiary")
-            }
+            findNavController().popBackStack()
+//            if (fragmentViewModel.beforeFragment.value == "writeDiary") {
+//                fragmentViewModel.setFragmentState("myDiary")
+//            } else if (fragmentViewModel.beforeFragment.value == "gatherDiary") {
+//                fragmentViewModel.setFragmentState("gatherDiary")
+//                findNavController().popBackStack()
+//            } else {
+//                fragmentViewModel.setFragmentState("myDiary")
+//                findNavController().popBackStack()
+//            }
         }
     }
 
     override fun onHeartClickListener(commentId: Long) {
         likedCommentId = commentId
-        launch(coroutineContext) {
-            binding.loadingBar.isVisible = true
-            withContext(Dispatchers.IO) {
-                gatherDiaryViewModel.setResponseLikeComment(commentId)
-            }
-        }
+        gatherDiaryViewModel.setResponseLikeComment(commentId)
     }
 
     override fun onReportClickListener(commentId: Long) {
@@ -254,18 +194,14 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
         submitButton.setOnClickListener {
             //차단, 신고하기 api에 내용 널로 올리기
             reportedCommentId = commentId
-            launch(coroutineContext) {
-                binding.loadingBar.isVisible = true
-                withContext(Dispatchers.IO) {
-                    gatherDiaryViewModel.setResponseReportComment(
-                        ReportCommentRequest(
-                            id = commentId,
-                            ""
-                        )
-                    )
-                }
-                dialogView.dismiss()
-            }
+            gatherDiaryViewModel.setResponseReportComment(
+                ReportCommentRequest(
+                    id = commentId,
+                    ""
+                )
+            )
+            dialogView.dismiss()
+
         }
         cancelButton.setOnClickListener {
             dialogView.dismiss()
@@ -295,19 +231,13 @@ class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSele
             else {
                 //신고
                 //로컬에서 코멘트 삭제
-                reportedCommentId = commentId
-                launch(coroutineContext) {
-                    binding.loadingBar.isVisible = true
-                    withContext(Dispatchers.IO) {
-                        gatherDiaryViewModel.setResponseReportComment(
-                            ReportCommentRequest(
-                                id = commentId,
-                                content = reportContent
-                            )
-                        )
-                    }
-                    dialogView.dismiss()
-                }
+                gatherDiaryViewModel.setResponseReportComment(
+                    ReportCommentRequest(
+                        id = commentId,
+                        content = reportContent
+                    )
+                )
+                dialogView.dismiss()
             }
         }
         cancelButton.setOnClickListener {

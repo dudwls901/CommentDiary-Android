@@ -1,12 +1,13 @@
-package com.movingmaker.commentdiary.model
-
+package com.movingmaker.commentdiary.data
+/*
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.movingmaker.commentdiary.CodaApplication
+import com.movingmaker.commentdiary.global.CodaApplication
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -51,6 +52,7 @@ class AuthProvider(private val context : Context) {
     val accessTokenExpiresIn : Flow<Long> = context.dataStore.data
         .catch { exception ->
             if (exception is IOException) {
+                Log.d("-->", "auth initcalendar: $exception ")
                 emit(emptyPreferences())
             } else {
                 throw exception
@@ -88,3 +90,5 @@ class AuthProvider(private val context : Context) {
     }
 
 }
+
+ */

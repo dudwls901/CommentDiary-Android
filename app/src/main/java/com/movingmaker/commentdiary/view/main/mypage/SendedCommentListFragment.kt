@@ -2,14 +2,12 @@ package com.movingmaker.commentdiary.view.main.mypage
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,25 +17,19 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.movingmaker.commentdiary.CodaApplication
+import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
-import com.movingmaker.commentdiary.databinding.FragmentMypageMyaccountBinding
+import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageSendedCommentListBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
-import com.movingmaker.commentdiary.model.remote.RetrofitClient
-import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.util.DateConverter
-import com.movingmaker.commentdiary.view.main.gatherdiary.DiaryListFragment
+import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class SendedCommentListFragment : BaseFragment(), CoroutineScope {
@@ -76,61 +68,27 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
         savedInstanceState: Bundle?
     ): View {
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.mypageviewmodel= myPageViewModel
+        binding.vm= myPageViewModel
+        fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.SENDED_COMMENT_LIST)
+        setComments()
         observeDatas()
         initViews()
         return binding.root
     }
 
     private fun observeDatas() {
-
-        fragmentViewModel.fragmentState.observe(viewLifecycleOwner){ fragment->
-            if(fragment=="sendedCommentList"){
-                setComments()
-            }
+        myPageViewModel.errorMessage.observe(viewLifecycleOwner){
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
 
-        myPageViewModel.responseGetAllComment.observe(viewLifecycleOwner) {
-            binding.loadingBar.isVisible = false
-            if (it.isSuccessful) {
-                it.body()?.result?.let { commentList -> myPageViewModel.setCommentList(commentList) }
-            } else {
-                it.errorBody()?.let{ errorBody->
-                    RetrofitClient.getErrorResponse(errorBody)?.let{
-                        if(it.status==401){
-                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT).show()
-                            CodaApplication.getInstance().logOut()
-                        }
-                        else {
-                            CodaSnackBar.make(binding.root, "코멘트를 받아오는 데 실패했습니다.")
-                        }
-                    }
-                }
-            }
-        }
-        myPageViewModel.responseGetMonthComment.observe(viewLifecycleOwner) {
-            binding.loadingBar.isVisible = false
-            if (it.isSuccessful) {
-                it.body()?.result?.let { commentList -> myPageViewModel.setCommentList(commentList) }
-            } else {
-                it.errorBody()?.let{ errorBody->
-                    RetrofitClient.getErrorResponse(errorBody)?.let{
-                        if(it.status==404 || it.status==401){
-                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT).show()
-                            CodaApplication.getInstance().logOut()
-                        }
-                        else {
-                            CodaSnackBar.make(binding.root, "코멘트를 받아오는 데 실패했습니다.")
-                        }
-                    }
-                }
-            }
+        myPageViewModel.snackMessage.observe(viewLifecycleOwner){
+            CodaSnackBar.make(binding.root, it ).show()
         }
     }
 
     private fun initViews() = with(binding) {
         backButton.setOnClickListener {
-            fragmentViewModel.setFragmentState("myPage")
+            findNavController().popBackStack()
         }
         selectDateLayout.setOnClickListener {
             showDialog()
@@ -138,19 +96,7 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
     }
 
     private fun setComments() {
-        launch(coroutineContext) {
-            binding.loadingBar.isVisible = true
-            launch(Dispatchers.IO) {
-                when (searchPeriod) {
-                    "all" -> {
-                        myPageViewModel.setResponseGetAllComment()
-                    }
-                    else -> {
-                        myPageViewModel.setResponseGetMonthComment(searchPeriod)
-                    }
-                }
-            }
-        }
+        myPageViewModel.getResponseCommentList(searchPeriod)
     }
 
     @SuppressLint("SetTextI18n")
@@ -219,7 +165,7 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
 //                        child.typeface = typeface
                         numberPicker.invalidate()
 //                        Log.d(TAG, "setNumberPickerText: downversion ${child::class.java.simpleName}")
-                        var selectorWheelPaintField =
+                        val selectorWheelPaintField =
                             numberPicker.javaClass.getDeclaredField("mSelectorWheelPaint")
                         var accessible = selectorWheelPaintField.isAccessible
                         selectorWheelPaintField.isAccessible = true
@@ -228,7 +174,7 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
                         (selectorWheelPaintField.get(numberPicker) as Paint).typeface = typeface
 
                         numberPicker.invalidate()
-                        var selectionDividerField =
+                        val selectionDividerField =
                             numberPicker.javaClass.getDeclaredField("mSelectionDivider")
                         accessible = selectionDividerField.isAccessible
                         selectionDividerField.isAccessible = true

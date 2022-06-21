@@ -9,7 +9,7 @@
 
         <variable
             name="diary"
-            type="com.movingmaker.commentdiary.model.entity.Diary" />
+            type="com.movingmaker.commentdiary.data.model.Diary" />
 
     </data>
 

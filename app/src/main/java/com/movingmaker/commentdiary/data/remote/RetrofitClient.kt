@@ -4,7 +4,7 @@ import android.util.Log
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.movingmaker.commentdiary.BuildConfig
-import com.movingmaker.commentdiary.CodaApplication
+import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.data.remote.api.*
 import com.movingmaker.commentdiary.data.remote.response.ErrorResponse
 import com.movingmaker.commentdiary.data.repository.ReIssueTokenRepository

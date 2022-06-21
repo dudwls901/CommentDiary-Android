@@ -7,26 +7,25 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.movingmaker.commentdiary.CodaApplication
+import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.base.BaseActivity
+import com.movingmaker.commentdiary.global.base.BaseActivity
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingLoginBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
-import com.movingmaker.commentdiary.model.remote.RetrofitClient
+import com.movingmaker.commentdiary.data.remote.RetrofitClient
 import com.movingmaker.commentdiary.view.main.MainActivity
 import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 import kotlinx.coroutines.*
+import java.text.SimpleDateFormat
 import kotlin.coroutines.CoroutineContext
 
 class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), CoroutineScope {
@@ -89,17 +88,19 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                 val refreshToken = it.body()?.result?.refreshToken
                 val accessTokenExpiresIn = it.body()?.result?.accessTokenExpiresIn
 
+                Log.d(TAG, "okhttp observeDatas: 로컬에 저장할 토큰들\n$accessToken \n $refreshToken \n ${SimpleDateFormat("YYYY-MM-DD HH:mm:ss.SSS").format(
+                    CodaApplication.getCustomExpire())}")
                 if (accessToken == null || refreshToken == null || accessTokenExpiresIn == null) {
                 } else {
-                    CodaApplication.getInstance().getDataStore()
-                        .insertAuth(accessToken, refreshToken, CodaApplication.customExpire)
+                    Log.d(TAG, "okhttp observeDatas: customExpire ${CodaApplication.getCustomExpire()}")
+                    CodaApplication.getInstance().insertAuth(accessToken,refreshToken,accessTokenExpiresIn)
                 }
 
                 startActivity(Intent(this, MainActivity::class.java).apply {
                     //메인 액티비티 실행하면 현재 화면 필요 없으니 cleartask
                     //메인 액티비티 실행될 때 Signin 종료
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 })
             } else {
                 it.errorBody()?.let{ errorBody->

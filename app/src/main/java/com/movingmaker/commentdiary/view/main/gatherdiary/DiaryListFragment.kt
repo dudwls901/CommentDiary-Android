@@ -2,7 +2,6 @@ package com.movingmaker.commentdiary.view.main.gatherdiary
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.res.AssetManager
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -15,18 +14,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.movingmaker.commentdiary.CodaApplication
+import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryDiarylistBinding
+import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.global.CodaSnackBar
-import com.movingmaker.commentdiary.model.entity.Diary
-import com.movingmaker.commentdiary.model.remote.RetrofitClient
+import com.movingmaker.commentdiary.data.model.Diary
+import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryDiarylistBinding
 import com.movingmaker.commentdiary.util.DateConverter
+import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
@@ -42,7 +40,7 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private lateinit var diaryListAdapter: DiaryListAdapter
 
-    private var searchPeriod="all"
+    private var searchPeriod = "all"
 
     private val job = Job()
 
@@ -71,78 +69,36 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
     ): View {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.gatherDiaryviewModel = gatherDiaryViewModel
+        fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.GATHER_DIARY)
+        setDiaries()
         observeDatas()
         initViews()
-
 
         return binding.root
     }
 
     private fun observeDatas() {
 
-        fragmentViewModel.fragmentState.observe(viewLifecycleOwner){ fragment->
-            if(fragment=="gatherDiary"){
-                setDiaries()
-            }
+        gatherDiaryViewModel.errorMessage.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
-        
-        gatherDiaryViewModel.responseGetAllDiary.observe(viewLifecycleOwner) {
-            binding.loadingBar.isVisible = false
-            if (it.isSuccessful) {
-                it.body()?.result?.let { diaryList -> gatherDiaryViewModel.setDiaryList(diaryList) }
-            } else {
-                it.errorBody()?.let{ errorBody->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
-                                .show()
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            CodaSnackBar.make(binding.root,"일기를 불러오지 못했습니다.").show()
-                        }
-                    }
-                }
-            }
+
+        gatherDiaryViewModel.snackMessage.observe(viewLifecycleOwner) {
+            CodaSnackBar.make(binding.root, it).show()
         }
-        gatherDiaryViewModel.responseGetMonthDiary.observe(viewLifecycleOwner) {
-            binding.loadingBar.isVisible = false
-            if (it.isSuccessful) {
-                it.body()?.result?.let { diaryList -> gatherDiaryViewModel.setDiaryList(diaryList) }
-            } else {
-                it.errorBody()?.let{ errorBody->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
-                                .show()
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            CodaSnackBar.make(binding.root,"일기를 불러오지 못했습니다.").show()
-                        }
-                    }
-                }
-            }
+
+        gatherDiaryViewModel.loading.observe(viewLifecycleOwner) {
+            binding.loadingBar.isVisible = it
         }
 
         gatherDiaryViewModel.diaryList.observe(viewLifecycleOwner) { list ->
             binding.noDiaryTextView.isVisible = list.isEmpty()
-            diaryListAdapter.submitList(list)
+            diaryListAdapter.submitList(list.toMutableList())
         }
     }
 
     private fun setDiaries() {
-        launch(coroutineContext) {
-            binding.loadingBar.isVisible = true
-            launch(Dispatchers.IO) {
-                when (searchPeriod) {
-                    "all" -> {
-                        gatherDiaryViewModel.setResponseGetAllDiary()
-                    }
-                    else -> {
-                        gatherDiaryViewModel.setResponseGetMonthDiary(searchPeriod)
-                    }
-                }
-            }
-        }
+        gatherDiaryViewModel.setResponseGetDiaryList(searchPeriod)
     }
 
     private fun initViews() = with(binding) {
@@ -210,19 +166,19 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
         myDiaryViewModel.setSelectedDiary(diary)
         //혼자 쓰는 일기, 코멘트 일기 분기 처리
 
-        if(diary.deliveryYN=='N'){
-            fragmentViewModel.setBeforeFragment("gatherDiary")
+        if (diary.deliveryYN == 'N') {
             myDiaryViewModel.setSaveOrEdit("save")
-            fragmentViewModel.setFragmentState("writeDiary")
-        }
-        else{
+            val action = DiaryListFragmentDirections.actionDiaryListFragmentToWriteDiaryFragment()
+            findNavController().navigate(action)
+        } else {
             val nextDate = DateConverter.ymdToDate(diary.date)
-            val nextDateToString = nextDate.plusDays(1).toString().replace('-','.')
+            val nextDateToString = nextDate.plusDays(1).toString().replace('-', '.')
             launch(coroutineContext) {
                 myDiaryViewModel.setResponseGetDayComment(nextDateToString)
             }
-            fragmentViewModel.setBeforeFragment("gatherDiary")
-            fragmentViewModel.setFragmentState("commentDiaryDetail")
+            val action =
+                DiaryListFragmentDirections.actionDiaryListFragmentToCommentDiaryDetailFragment()
+            findNavController().navigate(action)
         }
     }
 
@@ -269,7 +225,7 @@ class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener 
             for (i in 0..count) {
                 val child = numberPicker.getChildAt(i)
                 try {
-                    if(child is TextView) {
+                    if (child is TextView) {
 //                        child.typeface = typeface
                         val paint = Paint()
                         paint.typeface = typeface

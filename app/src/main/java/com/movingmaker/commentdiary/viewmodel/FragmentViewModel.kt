@@ -1,48 +1,68 @@
 package com.movingmaker.commentdiary.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
-import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.model.repository.LogOutRepository
-import com.movingmaker.commentdiary.model.repository.MyPageRepository
-import kotlinx.coroutines.withContext
-import retrofit2.Response
+import androidx.lifecycle.ViewModel
+import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 
-class FragmentViewModel (application: Application) : AndroidViewModel(application) {
-    //api response
-    private var _fragmentState = MutableLiveData<String>()
+class FragmentViewModel : ViewModel() {
+    private var _curFragment = MutableLiveData<FRAGMENT_NAME>()
+    val curFragment: LiveData<FRAGMENT_NAME>
+        get() = _curFragment
+
+    fun setCurrentFragment(fragment: FRAGMENT_NAME){
+        _curFragment.value = fragment
+        when (fragment) {
+            FRAGMENT_NAME.CALENDAR_WITH_DIARY -> {
+                setHasBottomNavi(true)
+            }
+            FRAGMENT_NAME.RECEIVED_DIARY -> {
+                setHasBottomNavi(true)
+//                    when (fragmentViewModel.beforeFragment.value) {
+//                        "commentDiaryDetail" -> {
+//                            binding.bottomNavigationView.selectedItemId = R.id.receivedDiaryFragment
+////                            fragmentViewModel.setBeforeFragment("receivedDiary")
+//                        }
+//                    }
+            }
+            FRAGMENT_NAME.GATHER_DIARY -> {
+                setHasBottomNavi(true)
+            }
+            FRAGMENT_NAME.MY_PAGE -> {
+                setHasBottomNavi(true)
+            }
+            FRAGMENT_NAME.WRITE_DIARY -> {
+                setHasBottomNavi(false)
+            }
+            FRAGMENT_NAME.COMMENT_DIARY_DETAIL -> {
+                setHasBottomNavi(false)
+            }
+            FRAGMENT_NAME.MY_ACCOUNT -> {
+                setHasBottomNavi(false)
+            }
+            FRAGMENT_NAME.TERMS -> {
+                setHasBottomNavi(false)
+            }
+            FRAGMENT_NAME.SENDED_COMMENT_LIST -> {
+                setHasBottomNavi(false)
+            }
+            FRAGMENT_NAME.PUSHALARM_ONOFF -> {
+                setHasBottomNavi(false)
+            }
+        }
+
+    }
+
     private var _hasBottomNavi = MutableLiveData<Boolean>()
-    private var _beforeFragment = MutableLiveData<String>()
 
-    val fragmentState: LiveData<String>
-        get() = _fragmentState
 
     val hasBottomNavi: LiveData<Boolean>
         get() = _hasBottomNavi
 
-    val beforeFragment: LiveData<String>
-        get() = _beforeFragment
-
-    init{
-        _fragmentState.value = "myDiary"
-        _hasBottomNavi.value = true
-
-    }
-
-    fun setFragmentState(fragment: String){
-        _fragmentState.value = fragment
-    }
-
-    fun setHasBottomNavi(bool: Boolean){
+    private fun setHasBottomNavi(bool: Boolean){
         _hasBottomNavi.value = bool
     }
 
-    fun setBeforeFragment(fragment: String){
-        _beforeFragment.value = fragment
-    }
 }

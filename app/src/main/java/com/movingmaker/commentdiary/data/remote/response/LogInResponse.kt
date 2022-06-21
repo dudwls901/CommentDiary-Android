@@ -1,7 +1,7 @@
 package com.movingmaker.commentdiary.data.remote.response
 
 import com.google.gson.annotations.SerializedName
-import com.movingmaker.commentdiary.data.entity.AuthTokens
+import com.movingmaker.commentdiary.data.model.AuthTokens
 
 data class LogInResponse(
     @SerializedName(value = "code")

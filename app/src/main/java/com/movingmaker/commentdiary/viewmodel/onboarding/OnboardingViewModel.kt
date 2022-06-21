@@ -1,19 +1,17 @@
 package com.movingmaker.commentdiary.viewmodel.onboarding
 
 import android.app.Application
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.CodaApplication
-import com.movingmaker.commentdiary.model.remote.request.EmailCodeCheckRequest
-import com.movingmaker.commentdiary.model.remote.request.LogInRequest
-import com.movingmaker.commentdiary.model.remote.request.SignUpRequest
-import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.model.remote.response.LogInResponse
-import com.movingmaker.commentdiary.model.repository.ForSignUpRespository
+import com.movingmaker.commentdiary.global.CodaApplication
+import com.movingmaker.commentdiary.data.remote.request.EmailCodeCheckRequest
+import com.movingmaker.commentdiary.data.remote.request.LogInRequest
+import com.movingmaker.commentdiary.data.remote.request.SignUpRequest
+import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
+import com.movingmaker.commentdiary.data.remote.response.LogInResponse
+import com.movingmaker.commentdiary.data.repository.ForSignUpRespository
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 

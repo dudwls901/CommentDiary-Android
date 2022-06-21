@@ -1,14 +1,12 @@
 package com.movingmaker.commentdiary.view.main.gatherdiary
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.movingmaker.commentdiary.databinding.RvItemGatherdiaryDiaryBinding
-import com.movingmaker.commentdiary.model.entity.Diary
-import com.movingmaker.commentdiary.util.CustomTag.ATAG
+import com.movingmaker.commentdiary.data.model.Diary
 
 class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener): ListAdapter<Diary,DiaryListAdapter.ItemViewHolder>(diffUtil) {
     override fun onCreateViewHolder(

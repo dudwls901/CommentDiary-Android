@@ -1,21 +1,16 @@
 package com.movingmaker.commentdiary.view.main.mypage
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.movingmaker.commentdiary.CodaApplication
-import com.movingmaker.commentdiary.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
+import androidx.navigation.fragment.findNavController
+import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageMyaccountBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
-import com.movingmaker.commentdiary.model.remote.RetrofitClient
-import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
+import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.*
@@ -52,6 +47,7 @@ class MyAccountFragment: BaseFragment(), CoroutineScope {
         savedInstanceState: Bundle?
     ): View {
         binding.lifecycleOwner = viewLifecycleOwner
+        fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.MY_ACCOUNT)
         initViews()
         observeDatas()
 
@@ -59,56 +55,31 @@ class MyAccountFragment: BaseFragment(), CoroutineScope {
     }
 
     private fun observeDatas(){
-
-        binding.lifecycleOwner?.let { lifecycleOwner ->
-            myPageViewModel.responseLogOut.observe(lifecycleOwner) {
-                binding.loadingBar.isVisible = false
-                if (it.isSuccessful) {
-                    logOut()
-                } else {
-                    it.errorBody()?.let{ errorBody->
-                        RetrofitClient.getErrorResponse(errorBody)?.let{
-                            if(it.status==404 || it.status==401){
-                                Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT).show()
-                                CodaApplication.getInstance().logOut()
-                            }
-                            else {
-                                CodaSnackBar.make(binding.root, it.message).show()
-                            }
-                        }
-                    }
-                }
-
-            }
+        myPageViewModel.errorMessage.observe(viewLifecycleOwner){
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
 
+        myPageViewModel.snackMessage.observe(viewLifecycleOwner){
+            CodaSnackBar.make(binding.root, it).show()
+        }
     }
 
     private fun initViews() = with(binding){
         logoutLayout.setOnClickListener {
-            launch(coroutineContext) {
-                loadingBar.isVisible = true
-                //datastore 작업은 내부적으로 background thread에서 이루어지지만 추후 리팩토링할 수 있으니 IO
-                withContext(Dispatchers.IO) {
-                    myPageViewModel.setResponseLogOut()
-                }
-            }
+            myPageViewModel.setResponseLogOut()
         }
         signOutLayout.setOnClickListener {
-            fragmentViewModel.setBeforeFragment("myAccount")
-            fragmentViewModel.setFragmentState("signOut")
+            val action = MyAccountFragmentDirections.actionMyAccountFragmentToSignOutFragment()
+            findNavController().navigate(action)
         }
         changePasswordLayout.setOnClickListener {
-            fragmentViewModel.setBeforeFragment("myAccount")
-            fragmentViewModel.setFragmentState("changePassword")
+            val action = MyAccountFragmentDirections.actionMyAccountFragmentToChangePasswordFragment()
+            findNavController().navigate(action)
         }
         backButton.setOnClickListener {
-            fragmentViewModel.setFragmentState("myPage")
+            findNavController().popBackStack()
         }
     }
 
-    private fun logOut(){
-        CodaApplication.getInstance().logOut()
-    }
 
 }

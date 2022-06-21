@@ -1,30 +1,57 @@
 package com.movingmaker.commentdiary.viewmodel.mydiary
 
-import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.model.entity.Comment
-import com.movingmaker.commentdiary.model.entity.Diary
-import com.movingmaker.commentdiary.model.entity.DiaryId
-import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
-import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
-import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
-import com.movingmaker.commentdiary.model.remote.response.CommentListResponse
-import com.movingmaker.commentdiary.model.remote.response.DiaryListResponse
-import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.model.remote.response.SaveDiaryResponse
-import com.movingmaker.commentdiary.model.repository.MyDiaryRepository
-import com.movingmaker.commentdiary.model.repository.MyPageRepository
-import com.movingmaker.commentdiary.util.DateConverter
+import com.movingmaker.commentdiary.global.CodaApplication
+import com.movingmaker.commentdiary.data.model.Comment
+import com.movingmaker.commentdiary.data.model.Diary
+import com.movingmaker.commentdiary.data.remote.RetrofitClient
+import com.movingmaker.commentdiary.data.remote.request.EditDiaryRequest
+import com.movingmaker.commentdiary.data.remote.request.SaveDiaryRequest
+import com.movingmaker.commentdiary.data.remote.response.*
+import com.movingmaker.commentdiary.data.repository.MyDiaryRepository
+import com.movingmaker.commentdiary.data.repository.MyPageRepository
 import com.prolificinteractive.materialcalendarview.CalendarDay
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import retrofit2.Response
 import java.util.*
 
 class MyDiaryViewModel : ViewModel() {
+
+    var job: Job? = null
+
+    private var _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String>
+        get() = _errorMessage
+
+    private var _loading = MutableLiveData<Boolean>()
+    val loading: LiveData<Boolean>
+        get() = _loading
+
+    private var _snackMessage = MutableLiveData<String>()
+    val snackMessage: LiveData<String>
+        get() = _snackMessage
+
+    //코루틴 예외처리 핸들러
+    val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        onError("Exception handled: ${throwable.localizedMessage}")
+    }
+
+    private var _isDeletedDiary = MutableLiveData<Boolean>()
+    val isDeletedDiary: LiveData<Boolean>
+        get() = _isDeletedDiary
+
+    private var _isSavedDiary = MutableLiveData<Boolean>()
+    val isSavedDiary: LiveData<Boolean>
+        get() = _isSavedDiary
+
+    private var _isEditedDiary = MutableLiveData<Boolean>()
+    val isEditedDiary: LiveData<Boolean>
+        get() = _isEditedDiary
+
     private var _aloneDiary = MutableLiveData<List<CalendarDay>>()
     private var _commentDiary = MutableLiveData<List<CalendarDay>>()
     private var _monthDiaries = MutableLiveData<List<Diary>>()
@@ -37,6 +64,7 @@ class MyDiaryViewModel : ViewModel() {
     private var _commentList = MutableLiveData<List<Comment>>()
     private var _haveDayMyComment = MutableLiveData<Boolean>()
     private var _pushDate = MutableLiveData<String>()
+
     //api response
     private var _responseGetMonthDiary = MutableLiveData<Response<DiaryListResponse>>()
     private var _responseSaveDiary = MutableLiveData<Response<SaveDiaryResponse>>()
@@ -100,8 +128,8 @@ class MyDiaryViewModel : ViewModel() {
 //        _aloneDiary.value = emptyList()
 //        _commentDiary.value = emptyList()
 //        _monthDiaries.value = emptyList()
-        _deliveryYN.value =' '
-        _selectedDiary.value = Diary(null,"","","",' ',' ', null)
+        _deliveryYN.value = ' '
+        _selectedDiary.value = Diary(null, "", "", "", ' ', ' ', null)
         _dateDiaryText.value = ""
         _commentDiaryTextCount.value = 0
         _saveOrEdit.value = ""
@@ -119,6 +147,7 @@ class MyDiaryViewModel : ViewModel() {
 
     fun setMonthDiaries(list: List<Diary>) {
 
+        Log.d("observedata", "setMonthDiaries: $list")
         val aloneDiary = ArrayList<CalendarDay>()
         val commentDiary = ArrayList<CalendarDay>()
 
@@ -126,10 +155,10 @@ class MyDiaryViewModel : ViewModel() {
             val ymd = selectedDiary.date
             val (year, month, day) = ymd.split('.').map { it.toInt() }
             if (selectedDiary.deliveryYN == 'Y') {
-                if(selectedDiary.tempYN=='N')
-                commentDiary.add(CalendarDay.from(year, month-1, day))
+                if (selectedDiary.tempYN == 'N')
+                    commentDiary.add(CalendarDay.from(year, month - 1, day))
             } else {
-                aloneDiary.add(CalendarDay.from(year, month-1, day))
+                aloneDiary.add(CalendarDay.from(year, month - 1, day))
             }
 
         }
@@ -142,93 +171,307 @@ class MyDiaryViewModel : ViewModel() {
     }
 
     //for diary data
-    fun setSelectedDiary(diary: Diary){
+    fun setSelectedDiary(diary: Diary) {
         _selectedDiary.value = diary
-        _commentList.value = diary.commentList?: emptyList()
+        _commentList.value = diary.commentList ?: emptyList()
     }
 
-    fun setDeliveryYN(type: Char){
+    fun setDeliveryYN(type: Char) {
 //        _deliveryYN.value = type
         _selectedDiary.value!!.deliveryYN = type
     }
 
-    fun setSelectedDate(date: String?){
+    fun setSelectedDate(date: String?) {
         _selectedDate.value = date ?: null
 //        _selectedDiary.value!!.date = date
     }
-    fun setPushDate(date: String){
+
+    fun setPushDate(date: String) {
         _pushDate.value = date
     }
 
 
     //for view
-    fun setDateDiaryText(text: String){
-        _dateDiaryText.value= text
+    fun setDateDiaryText(text: String) {
+        _dateDiaryText.value = text
     }
 
-    fun setCommentDiaryTextCount(count: Int){
+    fun setCommentDiaryTextCount(count: Int) {
         _commentDiaryTextCount.value = count
     }
 
-    fun setSaveOrEdit(state: String){
+    fun setSaveOrEdit(state: String) {
         _saveOrEdit.value = state
     }
 
-    fun setHaveDayMyComment(isHave: Boolean){
+    fun setHaveDayMyComment(isHave: Boolean) {
         _haveDayMyComment.value = isHave
     }
 
-    fun deleteLocalReportedComment(commentId: Long){
-        //신고한 코멘트 삭
-        for(idx in _selectedDiary.value!!.commentList!!.indices){
+    fun deleteLocalReportedComment(commentId: Long) {
+        //신고/차단 코멘트 삭제
+        val newDiary = Diary(
+            selectedDiary.value!!.id,
+            selectedDiary.value!!.title,
+            selectedDiary.value!!.content,
+            selectedDiary.value!!.date,
+            selectedDiary.value!!.deliveryYN,
+            selectedDiary.value!!.tempYN,
+            selectedDiary.value!!.commentList
+        )
+        for (idx in _selectedDiary.value!!.commentList!!.indices) {
             val comment = selectedDiary.value!!.commentList!![idx]
-            if(comment.id == commentId){
-                _selectedDiary.value!!.commentList!!.removeAt(idx)
+            if (comment.id == commentId) {
+                newDiary.commentList!!.removeAt(idx)
+                setSelectedDiary(newDiary)
                 return
             }
         }
     }
 
-    fun likeLocalComment(commentId: Long){
+    fun likeLocalComment(commentId: Long) {
+        val newDiary = Diary(
+            selectedDiary.value!!.id,
+            selectedDiary.value!!.title,
+            selectedDiary.value!!.content,
+            selectedDiary.value!!.date,
+            selectedDiary.value!!.deliveryYN,
+            selectedDiary.value!!.tempYN,
+            selectedDiary.value!!.commentList
+        )
         //신고한 코멘트 삭
-        for(idx in _selectedDiary.value!!.commentList!!.indices){
+        for (idx in _selectedDiary.value!!.commentList!!.indices) {
             val comment = selectedDiary.value!!.commentList!![idx]
-            if(comment.id == commentId){
-                _selectedDiary.value!!.commentList!![idx].like=true
+            if (comment.id == commentId) {
+                //like -> dislike, dislike -> like
+                val newComment = Comment(
+                    comment.id,
+                    comment.content,
+                    comment.date,
+                    !comment.like
+                )
+                newDiary.commentList!![idx] = newComment
+//                _selectedDiary.value!!.commentList!![idx].like=true
+                setSelectedDiary(newDiary)
                 return
             }
         }
     }
 
+    fun setResponseGetMonthDiary(date: String, where: String) = viewModelScope.launch {
+        _loading.postValue(true)
+        Log.d("-->", "setResponseGetMonthDiary: --> $where")
+        //        _responseGetSolvedProblems.value = SolvedacRepository.INSTANCE.getSolvedProblem(handle)
+        var response: Response<DiaryListResponse>? = null
+        val job = launch(Dispatchers.Main + exceptionHandler) {
+            response = MyDiaryRepository.INSTANCE.getMonthDiary(date)
+        }
+        job.join()
+        _loading.postValue(false)
+        Log.d("viewmodel", "response observedata $response ")
+        response?.let {
+            if (it.isSuccessful) {
+                it.body()?.let { result ->
+                    Log.d("observedata", "setResponseGetMonthDiary: $result")
+//                    Log.d("code", "setResponseGetMonthDiary: code: ${it.code()}")
+                    when (it.code()) {
+                        200 -> {
+                            setMonthDiaries(it.body()!!.result)
+                        }
+                        else -> onError(it.message())
+                    }
+//                    Log.d("viewmodel", "observerDatas: ${solvedProblems.value!!.size}")
+                }
+            } else {
+                it.errorBody()?.let { errorBody ->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        onError(it.message)
+                        Log.d("viewmodel", "observerDatas: $it")
+                    }
+                }
+            }
+        }
+    }
 
-    suspend fun setResponseGetMonthDiary(date: String) {
+    fun setResponseSaveDiary(saveDiaryRequest: SaveDiaryRequest) = viewModelScope.launch{
+        _loading.postValue(true)
+        var response: Response<SaveDiaryResponse>? = null
+        val job = launch(Dispatchers.Main + exceptionHandler) {
+            response = MyDiaryRepository.INSTANCE.saveDiary(saveDiaryRequest)
+        }
+        job.join()
+        _loading.postValue(false)
+        response?.let {
+            if (it.isSuccessful) {
+                it.body()?.let { response ->
+                    Log.d("--> 시발", "setResponseSaveDiary: ${response.result}")
+                    when (it.code()) {
+                        200 -> {
+                            val newDiary = Diary(
+                                response.result.id,
+                                saveDiaryRequest.title,
+                                saveDiaryRequest.content,
+                                saveDiaryRequest.date,
+                                selectedDiary.value!!.deliveryYN,
+                                selectedDiary.value!!.tempYN,
+                                null
+                            )
+                            setSelectedDiary(newDiary)
+                            _isSavedDiary.postValue(true)
+                            //혼자 쓴 일기 저장할 때만 스낵바
+                            if(selectedDiary.value!!.deliveryYN == 'N') {
+                                _snackMessage.postValue("일기가 저장되었습니다.")
+                            }
+                        }
+                        else -> onError(it.message())
+                    }
+                }
+            } else {
+                it.errorBody()?.let { errorBody ->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            onError("다시 로그인해 주세요.")
+                            CodaApplication.getInstance().logOut()
+                        }
+                        else {
+                            _snackMessage.postValue("일기 저장에 실패하였습니다.")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun setResponseEditDiary(diaryId: Long, editDiaryRequest: EditDiaryRequest) = viewModelScope.launch {
+
+        _loading.postValue(true)
+        var response: Response<IsSuccessResponse>? = null
+        val job = launch(Dispatchers.Main + exceptionHandler) {
+            response = MyDiaryRepository.INSTANCE.editDiary(diaryId, editDiaryRequest)
+        }
+        job.join()
+        _loading.postValue(false)
+        response?.let {
+            if (it.isSuccessful) {
+                it.body()?.let { response ->
+                    when (it.code()) {
+                        200 -> {
+                            val newDiary = Diary(
+                                selectedDiary.value!!.id,
+                                editDiaryRequest.title,
+                                editDiaryRequest.content,
+                                selectedDiary.value!!.date,
+                                selectedDiary.value!!.deliveryYN,
+                                selectedDiary.value!!.tempYN,
+                                selectedDiary.value!!.commentList
+                            )
+                            setSelectedDiary(newDiary)
+                            _snackMessage.postValue("일기가 수정되었습니다.")
+                            _isEditedDiary.value = true
+                        }
+                        else -> onError(it.message())
+                    }
+                }
+            } else {
+                it.errorBody()?.let { errorBody ->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            onError("다시 로그인해 주세요.")
+                            CodaApplication.getInstance().logOut()
+                        }
+                        else {
+                            _snackMessage.postValue("일기 저장에 실패하였습니다.")
+                        }
+                    }
+                }
+            }
+        }
+
+
         withContext(viewModelScope.coroutineContext) {
-            _responseGetMonthDiary.value = MyDiaryRepository.INSTANCE.getMonthDiary(date)
+            _responseEditDiary.value =
+                MyDiaryRepository.INSTANCE.editDiary(diaryId, editDiaryRequest)
         }
     }
 
-    suspend fun setResponseSaveDiary(saveDiaryRequest: SaveDiaryRequest) {
-        withContext(viewModelScope.coroutineContext) {
-            _responseSaveDiary.value = MyDiaryRepository.INSTANCE.saveDiary(saveDiaryRequest)
+    fun setResponseDeleteDiary(diaryId: Long) = viewModelScope.launch {
+        _loading.postValue(true)
+        var response: Response<IsSuccessResponse>? = null
+        val job = launch(Dispatchers.Main + exceptionHandler) {
+            response = MyDiaryRepository.INSTANCE.deleteDiary(diaryId)
+        }
+        job.join()
+        _loading.postValue(false)
+        response?.let {
+            if (it.isSuccessful) {
+                it.body()?.let { result ->
+                    when (it.code()) {
+                        200 -> {
+                            _snackMessage.postValue("일기가 삭제되었습니다.")
+                            _isDeletedDiary.postValue(true)
+                        }
+                        else -> onError(it.message())
+                    }
+                }
+            } else {
+                it.errorBody()?.let { errorBody ->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            onError("다시 로그인해 주세요.")
+                            CodaApplication.getInstance().logOut()
+                        }
+                        else {
+                            _snackMessage.postValue("일기 삭제에 실패하였습니다.")
+                        }
+                    }
+                }
+            }
         }
     }
 
-    suspend fun setResponseEditDiary(diaryId: Long,editDiaryRequest: EditDiaryRequest) {
-        withContext(viewModelScope.coroutineContext) {
-            _responseEditDiary.value = MyDiaryRepository.INSTANCE.editDiary(diaryId,editDiaryRequest)
+    fun setResponseGetDayComment(date: String) = viewModelScope.launch {
+        _loading.postValue(true)
+        var response: Response<CommentListResponse>? = null
+        val job = launch(Dispatchers.Main + exceptionHandler) {
+            response = MyPageRepository.INSTANCE.getMonthComment(date)
+        }
+        job.join()
+        _loading.postValue(false)
+        response?.let {
+            if (it.isSuccessful) {
+                it.body()?.let { result ->
+                    when (it.code()) {
+                        200 -> {
+                            setHaveDayMyComment(result.result.isEmpty())
+                        }
+                        else -> onError(it.message())
+                    }
+                }
+            } else {
+                it.errorBody()?.let { errorBody ->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            onError("다시 로그인해 주세요.")
+                            CodaApplication.getInstance().logOut()
+                        }
+                        else {
+                            _snackMessage.postValue("코멘트를 읽는 데 실패하였습니다.")
+                        }
+                    }
+                }
+            }
         }
     }
 
-    suspend fun setResponseDeleteDiary(diaryId: Long){
-        withContext(viewModelScope.coroutineContext){
-            _responseDeleteDiary.value = MyDiaryRepository.INSTANCE.deleteDiary(diaryId)
-        }
+    private fun onError(message: String) {
+        _errorMessage.value = message
+        _loading.value = false
+
     }
 
-    suspend fun setResponseGetDayComment(date: String){
-        withContext(viewModelScope.coroutineContext){
-            _responseGetDayComment.value = MyPageRepository.INSTANCE.getMonthComment(date)
-        }
+    override fun onCleared() {
+        super.onCleared()
+        job?.cancel()
     }
 
 }

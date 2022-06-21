@@ -69,7 +69,7 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.4.1"
 
     // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:D$lifecycle_version"
 
     //paging
     def paging_version = "3.1.0"
@@ -82,6 +82,8 @@ dependencies {
     //Retrofit2
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    //scalars
+    implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
     //okhttp3
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
 
@@ -104,4 +106,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
 
+    //EncryptedSharedPreferences
+    implementation 'androidx.security:security-crypto:1.1.0-alpha03'
 }

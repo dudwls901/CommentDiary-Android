@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.movingmaker.commentdiary.databinding.RvItemMypageCommentBinding
-import com.movingmaker.commentdiary.model.entity.Comment
+import com.movingmaker.commentdiary.data.model.Comment
 
-class MyCommentListAdapter(): ListAdapter<Comment,MyCommentListAdapter.ItemViewHolder>(diffUtil) {
+class MyCommentListAdapter: ListAdapter<Comment,MyCommentListAdapter.ItemViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int

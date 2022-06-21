@@ -2,11 +2,9 @@ package com.movingmaker.commentdiary.view.main.receiveddiary
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,24 +14,20 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
-import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.base.BaseFragment
+import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentReceiveddiaryBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
-import com.movingmaker.commentdiary.model.entity.ReceivedDiary
-import com.movingmaker.commentdiary.model.remote.RetrofitClient
+import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.receiveddiary.ReceivedDiaryViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
@@ -43,12 +37,6 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
-
-    companion object {
-        fun newInstance(): ReceivedDiaryFragment {
-            return ReceivedDiaryFragment()
-        }
-    }
 
     private lateinit var binding: FragmentReceiveddiaryBinding
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
@@ -65,9 +53,11 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
         savedInstanceState: Bundle?
     ): View {
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.receivedDiaryviewModel = receivedDiaryViewModel
+        binding.vm = receivedDiaryViewModel
+        fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.RECEIVED_DIARY)
         initViews()
         observeDatas()
+        receivedDiaryViewModel.setResponseGetReceivedDiary()
         return binding.root
 
     }
@@ -75,129 +65,66 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
     @SuppressLint("ResourceAsColor")
     private fun observeDatas() {
 
-        fragmentViewModel.fragmentState.observe(viewLifecycleOwner) { fragment ->
-            if (fragment == "receivedDiary") {
-                //받은 일기 조회
-                launch(coroutineContext) {
-                    binding.loadingBar.isVisible = true
-                    launch(Dispatchers.IO) {
-                        receivedDiaryViewModel.setResponseGetReceivedDiary()
-                    }
-                }
-            }
-        }
-
-        receivedDiaryViewModel.responseGetReceivedDiary.observe(viewLifecycleOwner) {
-            binding.loadingBar.isVisible = false
-            if (it.isSuccessful) {
-                it.body()?.let { response ->
-                    receivedDiaryViewModel.setReceivedDiary(response.result)
-                    binding.commentLayout.isVisible = true
-                    binding.diaryLayout.isVisible = true
-                    binding.noReceivedDiaryYet.isVisible = false
-                    //내가 쓴 코멘트가 있는 경우
-//                    Log.d(TAG, "ob receivedDIarajiremioar ${response.result.myComment!!.isEmpty()}")
-                    if (response.result.myComment?.isNotEmpty() == true) {
-                        binding.sendCommentButton.background = ContextCompat.getDrawable(
-                            requireContext(),
-                            R.drawable.background_ivory_radius_15_border_brown_1
-                        )
-                        binding.sendCommentButton.text = getString(R.string.diary_send_complete)
-                        binding.sendCommentButton.setTextColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.text_brown
-                            )
-                        )
-                        binding.commentLimitTextView.isVisible = false
-                        binding.commentEditTextView.setText(response.result.myComment[0].content)
-                        binding.commentEditTextView.isEnabled = false
-                    } else {
-                        binding.sendCommentButton.background = ContextCompat.getDrawable(
-                            requireContext(),
-                            R.drawable.background_pure_green_radius_15
-                        )
-                        binding.commentLimitTextView.isVisible = true
-                        binding.sendCommentButton.text = getString(R.string.send_text1)
-                        binding.sendCommentButton.setTextColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.background_ivory
-                            )
-                        )
-                        binding.commentEditTextView.text = null
-                        binding.commentEditTextView.isEnabled = true
-
-                    }
-                }
-            }
-            //전달된 일기가 없는경우 404
-            else {
-                it.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-//                            if(it.code=="EXPIRED_TOKEN")
-                            //억세스 토큰 오류난 경우 로그아웃 시켜버리기
-                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
-                                .show()
-                            CodaApplication.getInstance().logOut()
-                        }
-                    }
-                }
+        receivedDiaryViewModel.receivedDiary.observe(viewLifecycleOwner) { receivedDiary ->
+            //도착한 일기가 없는 경우
+            if (receivedDiary == null) {
                 binding.commentLayout.isVisible = false
                 binding.diaryLayout.isVisible = false
                 binding.noReceivedDiaryYet.isVisible = true
             }
-        }
-
-        receivedDiaryViewModel.responseSaveComment.observe(viewLifecycleOwner) { response ->
-            binding.loadingBar.isVisible = false
-            if (response.isSuccessful) {
-                CodaSnackBar.make(binding.root, "코멘트가 전송되었습니다.").show()
-                //화면 갱신
-                launch(coroutineContext) {
-                    launch(Dispatchers.IO) {
-                        receivedDiaryViewModel.setResponseGetReceivedDiary()
-                    }
-                }
-            } else {
-                Log.d(TAG, "observeDatas: ${response.errorBody()}")
-                response.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
-                                .show()
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            CodaSnackBar.make(binding.root, "코멘트가 전송되지 않았습니다.").show()
-                        }
-                    }
-                }
-            }
-        }
-
-        receivedDiaryViewModel.responseReportDiary.observe(viewLifecycleOwner) { response ->
-            binding.loadingBar.isVisible = false
-            if (response.isSuccessful) {
-                //화면 갱신
-                launch(coroutineContext) {
-                    launch(Dispatchers.IO) {
-                        receivedDiaryViewModel.setResponseGetReceivedDiary()
-                    }
-                }
-            } else {
-                response.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
-                                .show()
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            CodaSnackBar.make(binding.root, "차단/신고가 접수되지 않았습니다.").show()
-                        }
-                    }
+            //도착한 일기가 있는 경우
+            else {
+                binding.commentLayout.isVisible = true
+                binding.diaryLayout.isVisible = true
+                binding.noReceivedDiaryYet.isVisible = false
+                if (receivedDiary.myComment?.isNotEmpty() == true) {
+                    binding.sendCommentButton.background = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.background_ivory_radius_15_border_brown_1
+                    )
+                    binding.sendCommentButton.text = getString(R.string.diary_send_complete)
+                    binding.sendCommentButton.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.text_brown
+                        )
+                    )
+                    binding.commentLimitTextView.isVisible = false
+                    binding.commentEditTextView.setText(receivedDiary.myComment[0].content)
+                    binding.commentEditTextView.isEnabled = false
+                } else {
+                    binding.sendCommentButton.background = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.background_pure_green_radius_15
+                    )
+                    binding.commentLimitTextView.isVisible = true
+                    binding.sendCommentButton.text = getString(R.string.send_text1)
+                    binding.sendCommentButton.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.background_ivory
+                        )
+                    )
+                    binding.commentEditTextView.text = null
+                    binding.commentEditTextView.isEnabled = true
                 }
             }
+        }
+
+        receivedDiaryViewModel.errorMessage.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+        }
+
+//        receivedDiaryViewModel.toastMessage.observe(viewLifecycleOwner){
+//            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+//        }
+
+        receivedDiaryViewModel.snackMessage.observe(viewLifecycleOwner) {
+            CodaSnackBar.make(binding.root, it).show()
+        }
+
+        receivedDiaryViewModel.loading.observe(viewLifecycleOwner) {
+            binding.loadingBar.isVisible = it
         }
 
     }
@@ -236,15 +163,10 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
 
         submitButton.setOnClickListener {
             //코멘트 전송
-            launch(coroutineContext) {
-                binding.loadingBar.isVisible = true
-                launch(Dispatchers.IO) {
-                    receivedDiaryViewModel.setResponseSaveComment(
-                        binding.commentEditTextView.text.toString()
-                    )
-                }
-                dialogView.dismiss()
-            }
+            receivedDiaryViewModel.setResponseSaveComment(
+                binding.commentEditTextView.text.toString()
+            )
+            dialogView.dismiss()
         }
         cancelButton.setOnClickListener {
             dialogView.dismiss()
@@ -274,12 +196,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
             //한 글자 이상 입력했으면
             else {
                 //신고
-                launch(coroutineContext) {
-                    binding.loadingBar.isVisible = true
-                    launch(Dispatchers.IO) {
-                        receivedDiaryViewModel.setResponseReportDiary(reportContent)
-                    }
-                }
+                receivedDiaryViewModel.setResponseReportDiary(reportContent)
                 dialogView.dismiss()
             }
         }
@@ -301,12 +218,7 @@ class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
 
         submitButton.setOnClickListener {
             //차단 (신고 api에 빈 값으로 호출)
-            launch(coroutineContext) {
-                binding.loadingBar.isVisible = true
-                launch(Dispatchers.IO) {
-                    receivedDiaryViewModel.setResponseReportDiary("")
-                }
-            }
+            receivedDiaryViewModel.setResponseReportDiary("")
             dialogView.dismiss()
         }
         cancelButton.setOnClickListener {

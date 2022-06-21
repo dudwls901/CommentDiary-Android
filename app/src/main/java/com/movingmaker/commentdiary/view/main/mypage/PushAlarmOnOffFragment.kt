@@ -1,22 +1,17 @@
 package com.movingmaker.commentdiary.view.main.mypage
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.movingmaker.commentdiary.CodaApplication
-import com.movingmaker.commentdiary.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
-import com.movingmaker.commentdiary.databinding.FragmentMypageMyaccountBinding
+import androidx.navigation.fragment.findNavController
+import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypagePushBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
-import com.movingmaker.commentdiary.model.remote.RetrofitClient
-import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
+import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.*
@@ -53,7 +48,8 @@ class PushAlarmOnOffFragment: BaseFragment(), CoroutineScope {
         savedInstanceState: Bundle?
     ): View {
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.mypageviewmodel = myPageViewModel
+        binding.vm = myPageViewModel
+        fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.PUSHALARM_ONOFF)
         initViews()
         observeDatas()
 
@@ -61,48 +57,26 @@ class PushAlarmOnOffFragment: BaseFragment(), CoroutineScope {
     }
 
     private fun observeDatas(){
-
-        binding.lifecycleOwner?.let { lifecycleOwner ->
-            myPageViewModel.responsePatchCommentPushState.observe(lifecycleOwner) {
-                binding.loadingBar.isVisible = false
-                if (it.isSuccessful) {
-                    it.body()!!.result["pushYn"]?.let { yn -> myPageViewModel.setPushYN(yn) }
-                } else {
-                    it.errorBody()?.let{ errorBody->
-                        RetrofitClient.getErrorResponse(errorBody)?.let{
-                            if (it.status == 401) {
-//                            if(it.code=="EXPIRED_TOKEN")
-                                //억세스 토큰 오류난 경우 로그아웃 시켜버리기
-                                Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT).show()
-                                CodaApplication.getInstance().logOut()
-                            }
-                            else {
-                                CodaSnackBar.make(binding.root, it.message).show()
-                            }
-                        }
-                    }
-                }
-
-            }
+        myPageViewModel.errorMessage.observe(viewLifecycleOwner){
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
 
+        myPageViewModel.snackMessage.observe(viewLifecycleOwner){
+            CodaSnackBar.make(binding.root, it ).show()
+        }
     }
 
     private fun initViews() = with(binding){
         backButton.setOnClickListener {
-            fragmentViewModel.setFragmentState("myPage")
+//            fragmentViewModel.setFragmentState("myPage")
+            findNavController().popBackStack()
         }
         pushSwitch.isChecked
         pushSwitch.setOnCheckedChangeListener { button, state ->
             Log.d(TAG, "initViews: $button $state")
         }
         pushSwitch.setOnClickListener {
-            launch(coroutineContext) {
-                binding.loadingBar.isVisible = true
-                withContext(Dispatchers.IO) {
-                    myPageViewModel.setResponsePatchCommentPushState()
-                }
-            }
+            myPageViewModel.setResponsePatchCommentPushState()
         }
     }
 

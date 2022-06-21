@@ -10,7 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.base.BaseActivity
+import com.movingmaker.commentdiary.global.base.BaseActivity
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.util.DateConverter

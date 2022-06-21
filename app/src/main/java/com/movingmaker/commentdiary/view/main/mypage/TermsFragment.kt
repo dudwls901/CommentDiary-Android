@@ -3,20 +3,20 @@ package com.movingmaker.commentdiary.view.main.mypage
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import com.movingmaker.commentdiary.CodaApplication
-import com.movingmaker.commentdiary.base.BaseFragment
+import androidx.navigation.fragment.findNavController
+import com.movingmaker.commentdiary.global.CodaApplication
+import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageTermsBinding
+import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class TermsFragment: BaseFragment(), CoroutineScope {
@@ -50,7 +50,7 @@ class TermsFragment: BaseFragment(), CoroutineScope {
         savedInstanceState: Bundle?
     ): View {
         initViews()
-
+        fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.TERMS)
         return binding.root
     }
 
@@ -66,7 +66,8 @@ class TermsFragment: BaseFragment(), CoroutineScope {
         }
 
         backButton.setOnClickListener {
-            fragmentViewModel.setFragmentState("myPage")
+            findNavController().popBackStack()
+//            fragmentViewModel.setFragmentState("myPage")
         }
 
     }

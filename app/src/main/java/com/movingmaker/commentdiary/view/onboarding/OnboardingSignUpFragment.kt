@@ -1,13 +1,10 @@
 package com.movingmaker.commentdiary.view.onboarding
 
-import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.util.Linkify
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,19 +12,17 @@ import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
-import com.movingmaker.commentdiary.CodaApplication
+import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.base.BaseFragment
+import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingSignUpBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
-import com.movingmaker.commentdiary.model.remote.RetrofitClient
+import com.movingmaker.commentdiary.data.remote.RetrofitClient
 import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 import kotlinx.coroutines.*
-import java.lang.Exception
 import java.lang.NumberFormatException
 import java.util.regex.Pattern
 import kotlin.coroutines.CoroutineContext
@@ -74,8 +69,10 @@ class OnboardingSignUpFragment : BaseFragment(), CoroutineScope {
         }
         val pattern1 = Pattern.compile("개인정보 취급 방침")
         val pattern2 = Pattern.compile("이용 약관")
-        Linkify.addLinks(binding.signUpAgreeNoticeTextView,pattern1,CodaApplication.policyUrl, null, mTransform )
-        Linkify.addLinks(binding.signUpAgreeNoticeTextView,pattern2,CodaApplication.termsUrl, null, mTransform )
+        Linkify.addLinks(binding.signUpAgreeNoticeTextView,pattern1,
+            CodaApplication.policyUrl, null, mTransform )
+        Linkify.addLinks(binding.signUpAgreeNoticeTextView,pattern2,
+            CodaApplication.termsUrl, null, mTransform )
 
 
         return binding.root

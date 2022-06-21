@@ -3,18 +3,16 @@ package com.movingmaker.commentdiary.view.onboarding
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.movingmaker.commentdiary.CodaApplication
+import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingIntroBinding
 import com.movingmaker.commentdiary.view.main.MainActivity
 import com.movingmaker.commentdiary.viewmodel.onboarding.IntroViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.first
 import me.relex.circleindicator.CircleIndicator3
 import kotlin.coroutines.CoroutineContext
 
@@ -42,9 +40,10 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
         window.statusBarColor = getColor(R.color.background_ivory)
 
         launch(coroutineContext) {
-            var refreshToken = withContext(Dispatchers.IO) {
-                CodaApplication.getInstance().getDataStore().refreshToken.first()
-            }
+            val refreshToken = CodaApplication.getInstance().getRefreshToken()
+//            var refreshToken = withContext(Dispatchers.IO) {
+//                CodaApplication.getInstance().getDataStore().refreshToken.first()
+//            }
             //자동 로그인
             if(refreshToken.isNotEmpty()){
                 //refresh토큰 갱신하는 api 필요 refreshToken만료됐는지 검사 후 accessToken,refreshToken,expiresIn발급

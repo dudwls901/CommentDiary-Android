@@ -2,23 +2,16 @@ package com.movingmaker.commentdiary.view.main.mypage
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Layout
-import android.util.DisplayMetrics
-import android.util.Log
 import android.view.*
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.core.view.marginTop
 import androidx.fragment.app.activityViewModels
-import com.movingmaker.commentdiary.CodaApplication
-import com.movingmaker.commentdiary.base.BaseFragment
+import androidx.navigation.fragment.findNavController
+import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
-import com.movingmaker.commentdiary.model.remote.RetrofitClient
-import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
+import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.*
@@ -61,9 +54,10 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        //붙여야 observer가
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.mypageviewmodel = myPageViewModel
+        binding.vm = myPageViewModel
+        fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.MY_PAGE)
+        myPageViewModel.setResponseGetMyPage()
         bindButtons()
         observeDatas()
 
@@ -72,68 +66,39 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
 
     private fun observeDatas() {
 
-        binding.lifecycleOwner?.let { lifecycleOwner ->
-            fragmentViewModel.fragmentState.observe(lifecycleOwner) { fragment ->
-                if (fragment == "myPage") {
-                    launch(coroutineContext) {
-                        binding.loadingBar.isVisible = true
-                        withContext(Dispatchers.IO) {
-                            myPageViewModel.setResponseGetMyPage()
-                        }
-                    }
-                }
-            }
+        myPageViewModel.errorMessage.observe(viewLifecycleOwner){
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
-        binding.lifecycleOwner?.let { lifecycleOwner ->
-            myPageViewModel.responseGetMyPage.observe(lifecycleOwner) { response ->
-                binding.loadingBar.isVisible = false
-                //마이 페이지 불러오기 성공시
-                if (response.isSuccessful) {
-                    myPageViewModel.setMyAccount(response.body()!!.result.email)
-                    myPageViewModel.setTemperature(response.body()!!.result.temperature)
-                    myPageViewModel.setPushYN(response.body()!!.result.pushYN)
-                    setTemperatureBar()
-                }
-                //마이 페이지 불러오기 실패
-                else {
-                    response.errorBody()?.let{ errorBody->
-                        RetrofitClient.getErrorResponse(errorBody)?.let{
-                            if (it.status == 401) {
-//                            if(it.code=="EXPIRED_TOKEN")
-                                //억세스 토큰 오류난 경우 로그아웃 시켜버리기
-                                Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT).show()
-                                CodaApplication.getInstance().logOut()
-                            }
-                            else {
-                                CodaSnackBar.make(binding.root,"내 정보를 불러오는 데 실패하였습니다.").show()
-                            }
-                        }
-                    }
-                }
-            }
+
+        myPageViewModel.snackMessage.observe(viewLifecycleOwner){
+            CodaSnackBar.make(binding.root, it ).show()
+        }
+
+        myPageViewModel.temperature.observe(viewLifecycleOwner){ temperature ->
+            setTemperatureBar(temperature)
         }
     }
 
     private fun bindButtons() = with(binding) {
         myAccountLayout.setOnClickListener {
-            fragmentViewModel.setBeforeFragment("myPage")
-            fragmentViewModel.setFragmentState("myAccount")
+            val action = MyPageFragmentDirections.actionMyPageFragmentToMyAccountFragment()
+            findNavController().navigate(action)
         }
         termsAndPolicyLayout.setOnClickListener {
-            fragmentViewModel.setBeforeFragment("myPage")
-            fragmentViewModel.setFragmentState("terms")
+            val action = MyPageFragmentDirections.actionMyPageFragmentToTermsFragment()
+            findNavController().navigate(action)
         }
         pushAlarmLayout.setOnClickListener {
-            fragmentViewModel.setBeforeFragment("myPage")
-            fragmentViewModel.setFragmentState("pushAlarmOnOff")
+            val action = MyPageFragmentDirections.actionMyPageFragmentToPushAlarmOnOffFragment()
+            findNavController().navigate(action)
         }
         myCommentLayout.setOnClickListener {
-            fragmentViewModel.setBeforeFragment("myPage")
-            fragmentViewModel.setFragmentState("sendedCommentList")
+            val action = MyPageFragmentDirections.actionMyPageFragmentToSendedCommentListFragment()
+            findNavController().navigate(action)
         }
     }
 
-    private fun setTemperatureBar() = with(binding) {
+    private fun setTemperatureBar(temp: Double) = with(binding) {
         //dp값 구하기
 //        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R){
 //            display = requireActivity().display!!
@@ -146,7 +111,7 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
 //        val dpi = displayMetrics.densityDpi
 //        val density = displayMetrics.density
         //값이 없거나 0.0인 경우 0dp로 들어가서 css,cee parent에 의해 꽉차게 되는 것을 1.0으로 방지
-        var temperature = myPageViewModel.temperature.value ?: 1.0
+        var temperature = temp
         if (temperature == 0.0) {
             temperature = 1.0
         }

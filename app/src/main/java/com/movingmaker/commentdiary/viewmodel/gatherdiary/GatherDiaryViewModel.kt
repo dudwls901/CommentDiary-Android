@@ -1,35 +1,48 @@
 package com.movingmaker.commentdiary.viewmodel.gatherdiary
 
-import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.model.entity.Comment
-import com.movingmaker.commentdiary.model.entity.Diary
-import com.movingmaker.commentdiary.model.entity.DiaryId
-import com.movingmaker.commentdiary.model.remote.request.ChangePasswordRequest
-import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
-import com.movingmaker.commentdiary.model.remote.request.ReportCommentRequest
-import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
-import com.movingmaker.commentdiary.model.remote.response.DiaryListResponse
-import com.movingmaker.commentdiary.model.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.model.remote.response.SaveDiaryResponse
-import com.movingmaker.commentdiary.model.repository.GatherDiaryRepository
-import com.movingmaker.commentdiary.model.repository.MyDiaryRepository
-import com.movingmaker.commentdiary.model.repository.MyPageRepository
+import com.movingmaker.commentdiary.global.CodaApplication
+import com.movingmaker.commentdiary.data.model.Diary
+import com.movingmaker.commentdiary.data.remote.RetrofitClient
+import com.movingmaker.commentdiary.data.remote.request.*
+import com.movingmaker.commentdiary.data.remote.response.DiaryListResponse
+import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
+import com.movingmaker.commentdiary.data.repository.GatherDiaryRepository
 import com.movingmaker.commentdiary.util.DateConverter
-import com.prolificinteractive.materialcalendarview.CalendarDay
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import retrofit2.Response
-import java.util.*
 
 class GatherDiaryViewModel : ViewModel() {
+
+    var job: Job? = null
+
+    private var _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String>
+        get() = _errorMessage
+
+    private var _loading = MutableLiveData<Boolean>()
+    val loading: LiveData<Boolean>
+        get() = _loading
+
+    private var _snackMessage = MutableLiveData<String>()
+    val snackMessage: LiveData<String>
+        get() = _snackMessage
+
+    //코루틴 예외처리 핸들러
+    val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        onError("Exception handled: ${throwable.localizedMessage}")
+    }
+
+    private var _handleComment = MutableLiveData<Pair<Long,String>>()
+        val handleComment: LiveData<Pair<Long,String>>
+            get() = _handleComment
+
     private var _diaryList = MutableLiveData<List<Diary>>()
     private var _selectedMonth = MutableLiveData<String>()
-    private var _responseGetMonthDiary = MutableLiveData<Response<DiaryListResponse>>()
-    private var _responseGetAllDiary = MutableLiveData<Response<DiaryListResponse>>()
     private var _responseLikeComment = MutableLiveData<Response<IsSuccessResponse>>()
     private var _responseReportComment = MutableLiveData<Response<IsSuccessResponse>>()
 
@@ -39,12 +52,6 @@ class GatherDiaryViewModel : ViewModel() {
 
     val selectedMonth: LiveData<String>
         get() = _selectedMonth
-
-    val responseGetMonthDiary: LiveData<Response<DiaryListResponse>>
-        get() = _responseGetMonthDiary
-
-    val responseGetAllDiary: LiveData<Response<DiaryListResponse>>
-        get() = _responseGetAllDiary
 
     val responseLikeComment: LiveData<Response<IsSuccessResponse>>
         get() = _responseLikeComment
@@ -61,32 +68,121 @@ class GatherDiaryViewModel : ViewModel() {
         _diaryList.value = list
     }
 
-    fun setSelectedMonth(date: String){
+    fun setSelectedMonth(date: String) {
         _selectedMonth.value = date
     }
 
-    suspend fun setResponseGetMonthDiary(date: String) {
-        withContext(viewModelScope.coroutineContext) {
-            _responseGetMonthDiary.value = GatherDiaryRepository.INSTANCE.getMonthDiary(date)
+    fun setResponseGetDiaryList(date: String) = viewModelScope.launch {
+        _loading.postValue(true)
+        var response: Response<DiaryListResponse>? = null
+        val job = launch(Dispatchers.Main + exceptionHandler) {
+            response = if (date == "all")
+                GatherDiaryRepository.INSTANCE.getAllDiary()
+            else
+                GatherDiaryRepository.INSTANCE.getMonthDiary(date)
+        }
+        job.join()
+        _loading.postValue(false)
+        response?.let {
+            if (it.isSuccessful) {
+                it.body()?.let { result ->
+                    when (it.code()) {
+                        200 -> {
+                            setDiaryList(result.result)
+                        }
+                        else -> onError(it.message())
+                    }
+                }
+            } else {
+                it.errorBody()?.let { errorBody ->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            onError("다시 로그인해 주세요.")
+                            CodaApplication.getInstance().logOut()
+                        } else {
+                            _snackMessage.postValue("일기를 불러오지 못했습니다.")
+//                            onError(it.message)
+                        }
+                    }
+                }
+            }
         }
     }
 
-    suspend fun setResponseGetAllDiary() {
-        withContext(viewModelScope.coroutineContext) {
-            _responseGetAllDiary.value = GatherDiaryRepository.INSTANCE.getAllDiary()
+    fun setResponseReportComment(reportCommentRequest: ReportCommentRequest) = viewModelScope.launch {
+        _loading.postValue(true)
+        var response: Response<IsSuccessResponse>? = null
+        val job = launch(Dispatchers.Main + exceptionHandler) {
+            response = GatherDiaryRepository.INSTANCE.reportComment(reportCommentRequest)
+        }
+        job.join()
+        _loading.postValue(false)
+        response?.let {
+            if (it.isSuccessful) {
+                it.body()?.let { result ->
+                    when (it.code()) {
+                        200 -> {
+                            _handleComment.postValue(Pair(reportCommentRequest.id, "report"))
+                        }
+                        else -> onError(it.message())
+                    }
+                }
+            } else {
+                it.errorBody()?.let { errorBody ->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            onError("다시 로그인해 주세요.")
+                            CodaApplication.getInstance().logOut()
+                        } else {
+                            onError(it.message)
+                        }
+                    }
+                }
+            }
         }
     }
 
-    suspend fun setResponseReportComment(reportCommentRequest: ReportCommentRequest) {
-        withContext(viewModelScope.coroutineContext) {
-            _responseReportComment.value = GatherDiaryRepository.INSTANCE.reportComment( reportCommentRequest )
+    fun setResponseLikeComment(commentId: Long) = viewModelScope.launch {
+        _loading.postValue(true)
+        var response: Response<IsSuccessResponse>? = null
+        val job = launch(Dispatchers.Main + exceptionHandler) {
+            response = GatherDiaryRepository.INSTANCE.likeComment(commentId)
+        }
+        job.join()
+        _loading.postValue(false)
+        response?.let {
+            if (it.isSuccessful) {
+                it.body()?.let { result ->
+                    Log.d("-->", "setResponseLikeComment: ${result}")
+                    when (it.code()) {
+                        200 -> {
+                            _handleComment.postValue(Pair(commentId, "like"))
+                        }
+                        else -> onError(it.message())
+                    }
+                }
+            } else {
+                it.errorBody()?.let { errorBody ->
+                    RetrofitClient.getErrorResponse(errorBody)?.let {
+                        if (it.status == 401) {
+                            onError("다시 로그인해 주세요.")
+                            CodaApplication.getInstance().logOut()
+                        } else {
+                            onError(it.message)
+                        }
+                    }
+                }
+            }
         }
     }
 
-    suspend fun setResponseLikeComment(commentId: Long) {
-        withContext(viewModelScope.coroutineContext) {
-            _responseLikeComment.value = GatherDiaryRepository.INSTANCE.likeComment(commentId)
-        }
+    private fun onError(message: String) {
+        _errorMessage.value = message
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        job?.cancel()
     }
 
 }

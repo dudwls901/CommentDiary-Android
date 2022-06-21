@@ -1,7 +1,7 @@
 package com.movingmaker.commentdiary.data.remote.response
 
 import com.google.gson.annotations.SerializedName
-import com.movingmaker.commentdiary.data.entity.MyInfo
+import com.movingmaker.commentdiary.data.model.MyInfo
 
 data class MyPageResponse(
     @SerializedName(value = "code")

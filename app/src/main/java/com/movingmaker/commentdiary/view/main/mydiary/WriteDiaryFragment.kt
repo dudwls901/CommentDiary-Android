@@ -17,17 +17,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
-import com.movingmaker.commentdiary.CodaApplication
+import androidx.navigation.fragment.findNavController
+import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.base.BaseFragment
+import com.movingmaker.commentdiary.global.base.BaseFragment
+import com.movingmaker.commentdiary.data.model.Diary
+import com.movingmaker.commentdiary.data.remote.RetrofitClient
 import com.movingmaker.commentdiary.databinding.FragmentMydiaryWritediaryBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
-import com.movingmaker.commentdiary.model.entity.Diary
-import com.movingmaker.commentdiary.model.remote.RetrofitClient
-import com.movingmaker.commentdiary.model.remote.request.EditDiaryRequest
-import com.movingmaker.commentdiary.model.remote.request.SaveDiaryRequest
+import com.movingmaker.commentdiary.data.remote.request.EditDiaryRequest
+import com.movingmaker.commentdiary.data.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.util.DateConverter
-import com.movingmaker.commentdiary.view.main.MainActivity
+import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import kotlinx.coroutines.*
@@ -65,109 +66,67 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
         savedInstanceState: Bundle?
     ): View {
         binding.myDiaryviewModel = myDiaryViewModel
-        //둘 다 안 해도 뷰모델 공유하고 해도 뷰모델 공유함 데이터바인딩은 안되는듯
 //        binding.lifecycleOwner = this
         binding.lifecycleOwner = viewLifecycleOwner
-        fragmentViewModel.setHasBottomNavi(false)
+        fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.WRITE_DIARY)
 
         //initview에 고정적인 것들 넣고
         //changeview에 새로운 것들 넣자
 //        initViews()
+        initViews()
+        initToolbar()
         observeDatas()
         return binding.root
     }
 
     private fun observeDatas() = with(binding) {
 
-        fragmentViewModel.fragmentState.observe(viewLifecycleOwner){ curFragment->
-            if(curFragment=="writeDiary"){
-                initViews()
-                initToolbar()
+        //삭제한 경우 뒤로가기
+        myDiaryViewModel.isDeletedDiary.observe(viewLifecycleOwner){
+            if(it){
+                findNavController().popBackStack()
             }
         }
+        myDiaryViewModel.snackMessage.observe(viewLifecycleOwner){
+            CodaSnackBar.make(binding.root, it).show()
+        }
 
-        //삭제한 경우
-        myDiaryViewModel.responseDeleteDiary.observe(viewLifecycleOwner){ response ->
-            binding.loadingBar.isVisible = false
-            if(response.isSuccessful){
-                if(fragmentViewModel.beforeFragment.value=="gatherDiary"){
-                    fragmentViewModel.setFragmentState("gatherDiary")
-                }
-                else{
-                    fragmentViewModel.setFragmentState("myDiary")
-                }
-                CodaSnackBar.make(binding.root, "일기가 삭제되었습니다.").show()
-            }
-            else{
-                response.errorBody()?.let{ errorBody->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
-                                .show()
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            CodaSnackBar.make(binding.root, "일기 삭제에 실패하였습니다.").show()
-                        }
-                    }
+        myDiaryViewModel.isSavedDiary.observe(viewLifecycleOwner){
+            //코멘트 일기 저장한 경우에 디테일 화면으로 이동
+            if(it){
+                if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='Y' &&
+                    myDiaryViewModel.selectedDiary.value!!.tempYN=='N') {
+                    val action =
+                        WriteDiaryFragmentDirections.actionWriteDiaryFragmentToCommentDiaryDetailFragment()
+                    findNavController().navigate(action)
                 }
             }
-
         }
 
         //저장은 혼자 쓴 일기, 코멘트 일기 둘 다 가능
-        myDiaryViewModel.responseSaveDiary.observe(viewLifecycleOwner){
-            binding.loadingBar.isVisible = false
-            if(it.isSuccessful){
-                //혼자 쓴 일기 저장할 때만 스낵바
-                if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='N')
-                    CodaSnackBar.make(binding.root, "일기가 저장되었습니다.").show()
-                //다이어리 셋팅
-                myDiaryViewModel.setSelectedDiary(
-                    Diary(
-                        id = it.body()!!.result.id,
-                        title = diaryHeadEditText.text.toString(),
-                        content = diaryContentEditText.text.toString(),
-                        date = myDiaryViewModel.selectedDiary.value!!.date,
-                        deliveryYN = myDiaryViewModel.selectedDiary.value!!.deliveryYN,
-                        tempYN = myDiaryViewModel.selectedDiary.value!!.tempYN,
-                        commentList = null
-                    )
-                )
-
-                //혼자 쓴 일기인 경우
-                if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='N'){
-                    //수정,삭제 활성화, 전송 없애기, 텍스트 수정 불가
-                    deleteButton.isVisible = true
-                    editButton.isVisible = true
-                    saveButton.isVisible = false
-                    diaryHeadEditText.isEnabled = false
-                    diaryContentEditText.isEnabled = false
-                }
-                else if(myDiaryViewModel.selectedDiary.value!!.tempYN=='Y'){
-                    deleteButton.isVisible = true
-                    editButton.isVisible = true
-                    saveButton.isVisible = true
-                    diaryHeadEditText.isEnabled = false
-                    diaryContentEditText.isEnabled = false
-                }
-                //코멘트 일기면 화면 이동
-                else{
-//                    parentFragmentManager.popBackStack()
-                    fragmentViewModel.setFragmentState("commentDiaryDetail")
-                }
+        myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner){ diary->
+            //혼자 쓴 일기인 경우
+            if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='N'){
+                //수정,삭제 활성화, 전송 없애기, 텍스트 수정 불가
+                deleteButton.isVisible = true
+                editButton.isVisible = true
+                saveButton.isVisible = false
+                diaryHeadEditText.isEnabled = false
+                diaryContentEditText.isEnabled = false
             }
-            else{
-                it.errorBody()?.let{ errorBody->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            Toast.makeText(requireContext(), "다시 로그인해 주세요.", Toast.LENGTH_SHORT)
-                                .show()
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            CodaSnackBar.make(binding.root, "일기 저장에 실패하였습니다.").show()
-                        }
-                    }
-                }
+            else if(myDiaryViewModel.selectedDiary.value!!.tempYN=='Y'){
+                deleteButton.isVisible = true
+                editButton.isVisible = true
+                saveButton.isVisible = true
+                diaryHeadEditText.isEnabled = false
+                diaryContentEditText.isEnabled = false
+            }
+        }
+
+        //todo 다 selectedDiaryobserve에서 처리?
+        myDiaryViewModel.isEditedDiary.observe(viewLifecycleOwner){
+            if(it){
+
             }
         }
 
@@ -212,8 +171,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                     }
                     //임시 저장 전송(edit api)이면
                     else{
-                        fragmentViewModel.setBeforeFragment("writeDiary")
-                        fragmentViewModel.setFragmentState("commentDiaryDetail")
+                        findNavController().navigate(WriteDiaryFragmentDirections.actionWriteDiaryFragmentToCommentDiaryDetailFragment())
                     }
                 }
             }
@@ -446,12 +404,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 showBackDialog()
             }
             else{
-                if(fragmentViewModel.beforeFragment.value=="gatherDiary"){
-                    fragmentViewModel.setFragmentState("gatherDiary")
-                }
-                else {
-                    fragmentViewModel.setFragmentState("myDiary")
-                }
+                findNavController().popBackStack()
             }
 
         }
@@ -551,7 +504,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
         noticeTextView.text = getString(R.string.write_diary_back)
 
         submitButton.setOnClickListener {
-            fragmentViewModel.setFragmentState("myDiary")
+            findNavController().popBackStack()
             dialogView.dismiss()
         }
 
