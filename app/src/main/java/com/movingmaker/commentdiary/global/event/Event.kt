@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.event
+package com.movingmaker.commentdiary.global.event
 
 import android.util.Log
 

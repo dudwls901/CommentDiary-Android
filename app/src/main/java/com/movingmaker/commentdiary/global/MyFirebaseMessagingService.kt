@@ -14,12 +14,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.PowerManager
 import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-import com.movingmaker.commentdiary.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.view.main.MainActivity
-import com.movingmaker.commentdiary.view.onboarding.SplashActivity
-
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {

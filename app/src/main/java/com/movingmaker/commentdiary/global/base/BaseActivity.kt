@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.base
+package com.movingmaker.commentdiary.global.base
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo

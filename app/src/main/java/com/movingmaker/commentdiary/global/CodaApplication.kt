@@ -1,26 +1,19 @@
-package com.movingmaker.commentdiary
+package com.movingmaker.commentdiary.global
 
 import android.app.Application
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.MutableLiveData
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.google.android.play.core.appupdate.AppUpdateOptions
-import com.google.android.play.core.install.model.AppUpdateType
-import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.messaging.FirebaseMessaging
-import com.movingmaker.commentdiary.global.MyFirebaseMessagingService
-import com.movingmaker.commentdiary.model.AuthProvider
+import com.movingmaker.commentdiary.R
+//import com.movingmaker.commentdiary.data.AuthProvider
 import com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity
 
 class CodaApplication : Application() {
 
-    private lateinit var dataStore: AuthProvider
+//    private lateinit var dataStore: AuthProvider
     private lateinit var sharedPref: SharedPreferences
     private val masterKey: MasterKey by lazy {
         MasterKey.Builder(this, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
@@ -49,9 +42,9 @@ class CodaApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         codaApplication = this
-        dataStore = AuthProvider(this)
+//        dataStore = AuthProvider(this)
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -107,5 +100,5 @@ class CodaApplication : Application() {
         })
     }
 
-    fun getDataStore(): AuthProvider = dataStore
+//    fun getDataStore(): AuthProvider = dataStore
 }
