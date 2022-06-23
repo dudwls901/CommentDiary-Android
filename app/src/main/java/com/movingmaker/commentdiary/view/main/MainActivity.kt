@@ -95,7 +95,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
             }
             Log.d(TAG, "observerDatas: --> receivedDiary: ${it}")
             if (it != null) {
-                if (it?.myComment?.isNotEmpty() == true) {
+                if (it.myComment?.isNotEmpty() == true) {
                     binding.bottomNavigationView.menu[1].icon =
 //                    ContextCompat.getDrawable(this, R.drawable.bottom_ic_received_notice)
                         ContextCompat.getDrawable(this, R.drawable.bottom_ic_received)
@@ -136,7 +136,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     private fun initViews() {
 
         val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.main_nav_host_fragment) as NavHostFragment
+            supportFragmentManager.findFragmentById(R.id.mainNavHostFragment) as NavHostFragment
         navController = navHostFragment.navController
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navController)
 
