@@ -27,3 +27,7 @@ public static int w(...);
 public static int d(...);
 public static int e(...);
 }
+
+#앱 배포 시, 코드 축소, 난독화, 최적화를 하는 경우 kakao SDK 제외
+-keep class com.kakao.sdk.**.model.* { <fields>; }
+-keep class * extends com.google.gson.TypeAdapter

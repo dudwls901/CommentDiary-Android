@@ -72,7 +72,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     val password: LiveData<String>
         get() = _password
 
-    val checkPassword: LiveData<String>
+    private val checkPassword: LiveData<String>
         get() = _checkPassword
 
     val responseLogin: LiveData<Response<LogInResponse>>
@@ -81,7 +81,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     val loginCorrect: LiveData<Boolean>
         get() = _loginCorrect
 
-    val findPasswordEmail: LiveData<String>
+    private val findPasswordEmail: LiveData<String>
         get() = _findPasswordEmail
 
     val responseFindPassword: LiveData<Response<IsSuccessResponse>>
@@ -148,7 +148,6 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     fun setFindPasswordEmail(text: String){
         _findPasswordEmail.value = text
     }
-
 
     suspend fun setResponseEmailSend(email: String) {
             withContext(viewModelScope.coroutineContext) {

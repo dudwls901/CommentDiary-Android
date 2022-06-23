@@ -5,17 +5,24 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.user.UserApiClient
 import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.global.base.BaseActivity
@@ -43,6 +50,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
     private lateinit var onboardingSignUpFragment: OnboardingSignUpFragment
     private lateinit var onboardingFindPasswordFragment: OnboardingFindPasswordFragment
     private lateinit var onboardingSignUpSuccessFragment: OnboardingSignUpSuccessFragment
+    private lateinit var onboardingLoginBeforeFragment: OnboardingLoginBeforeFragment
     private var backButtonTime = 0L
 
     @SuppressLint("ResourceAsColor")
@@ -56,12 +64,13 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
 
 
         onboardingLoginFragment = OnboardingLoginFragment.newInstance()
+        onboardingLoginBeforeFragment = OnboardingLoginBeforeFragment.newInstance()
         onboardingSignUpFragment = OnboardingSignUpFragment.newInstance()
         onboardingFindPasswordFragment = OnboardingFindPasswordFragment.newInstance()
         onboardingSignUpSuccessFragment = OnboardingSignUpSuccessFragment.newInstance()
-
+        onboardingViewModel.setCurrentFragment("loginBefore")
         supportFragmentManager.beginTransaction()
-            .add(binding.fragmentContainer.id, onboardingLoginFragment)
+            .add(binding.fragmentContainer.id, onboardingLoginBeforeFragment)
             .commit()
 
         binding.lifecycleOwner = this
@@ -72,6 +81,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
 
     private fun initViews() = with(binding) {
         addButtonEvent("login")
+        Toast.makeText(this@OnboardingLoginActivity, "${onboardingViewModel.currentFragment.value}", Toast.LENGTH_SHORT).show()
     }
 
     private fun observeDatas() {
@@ -88,12 +98,21 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
                 val refreshToken = it.body()?.result?.refreshToken
                 val accessTokenExpiresIn = it.body()?.result?.accessTokenExpiresIn
 
-                Log.d(TAG, "okhttp observeDatas: 로컬에 저장할 토큰들\n$accessToken \n $refreshToken \n ${SimpleDateFormat("YYYY-MM-DD HH:mm:ss.SSS").format(
-                    CodaApplication.getCustomExpire())}")
+                Log.d(
+                    TAG, "okhttp observeDatas: 로컬에 저장할 토큰들\n$accessToken \n $refreshToken \n ${
+                        SimpleDateFormat("YYYY-MM-DD HH:mm:ss.SSS").format(
+                            CodaApplication.getCustomExpire()
+                        )
+                    }"
+                )
                 if (accessToken == null || refreshToken == null || accessTokenExpiresIn == null) {
                 } else {
-                    Log.d(TAG, "okhttp observeDatas: customExpire ${CodaApplication.getCustomExpire()}")
-                    CodaApplication.getInstance().insertAuth(accessToken,refreshToken,accessTokenExpiresIn)
+                    Log.d(
+                        TAG,
+                        "okhttp observeDatas: customExpire ${CodaApplication.getCustomExpire()}"
+                    )
+                    CodaApplication.getInstance()
+                        .insertAuth(accessToken, refreshToken, accessTokenExpiresIn)
                 }
 
                 startActivity(Intent(this, MainActivity::class.java).apply {
@@ -103,20 +122,18 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
 //                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 })
             } else {
-                it.errorBody()?.let{ errorBody->
+                it.errorBody()?.let { errorBody ->
                     val error = RetrofitClient.getErrorResponse(errorBody)
-                    if(error!=null){
+                    if (error != null) {
                         //신고 누적으로 차단된 계정
-                        if(error.status==403) {
+                        if (error.status == 403) {
                             CodaSnackBar.make(binding.root, error.message).show()
                             onboardingViewModel.setLoginCorrect(true)
-                        }
-                        else{
+                        } else {
                             //텍스트 뷰로 로그인 상태 나타냄
                             onboardingViewModel.setLoginCorrect(false)
                         }
-                    }
-                    else{
+                    } else {
                         //텍스트 뷰로 로그인 상태 나타냄
                         onboardingViewModel.setLoginCorrect(false)
                     }
@@ -137,6 +154,9 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
 
         val observeFragmentState = Observer<String> { fragment ->
             when (fragment) {
+                "loginBefore" -> {
+                    binding.onboardingBottomButton.visibility = View.GONE
+                }
                 "login" -> {
                     replaceFragment(onboardingLoginFragment)
                     binding.onboardingBottomButton.alpha = 1.0f
@@ -189,6 +209,53 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), 
     }
 
     private fun addButtonEvent(fragment: String) {
+
+//        binding.kakaoLoginButton.setOnClickListener {
+//            // 카카오계정으로 로그인 공통 callback 구성
+//            // 카카오톡으로 로그인 할 수 없어 카카오계정으로 로그인할 경우 사용됨
+//            val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+//                if (error != null) {
+//                    Log.e(TAG, "카카오계정으로 로그인 실패", error)
+//                } else if (token != null) {
+//                    Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
+//                }
+//            }
+//
+//            // 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
+//            if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+//                UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
+//                    if (error != null) {
+//                        Log.e(TAG, "카카오톡으로 로그인 실패", error)
+//                        //todo 예외처리
+//                        Log.e(TAG, "${error is ClientError && error.reason == ClientErrorCause.Cancelled}", error)
+//
+//                        // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
+//                        // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+//                        if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+//                            return@loginWithKakaoTalk
+//                        }
+//
+//                        // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
+//                        UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
+//                    } else if (token != null) {
+////                        // 로그아웃
+////                        UserApiClient.instance.logout { error ->
+////                            if (error != null) {
+////                                Log.e(TAG, "로그아웃 실패. SDK에서 토큰 삭제됨", error)
+////                            }
+////                            else {
+////                                Log.i(TAG, "로그아웃 성공. SDK에서 토큰 삭제됨")
+////                            }
+////                        }
+//                        //todo login api호출(카톡 토큰 올려보내기)
+//                        Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
+//                    }
+//                }
+//            } else {
+//                UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
+//            }
+//        }
+
         when (fragment) {
             "login" -> {
                 binding.onboardingBottomButton.setOnClickListener {

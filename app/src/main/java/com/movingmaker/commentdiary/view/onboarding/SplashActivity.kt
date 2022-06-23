@@ -1,15 +1,19 @@
 package com.movingmaker.commentdiary.view.onboarding
 
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.kakao.sdk.auth.AuthApiClient
+import com.kakao.sdk.user.UserApiClient
 import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.databinding.ActivitySplashBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
@@ -52,12 +56,49 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
                 }
             }
         }
+        val loginIntent = Intent(this@SplashActivity, MainActivity::class.java)
+        loginIntent.putExtra("pushDate", pushDate)
 
 //        window.statusBarColor = getColor(R.color.onboarding_background)
 
 
         launch(coroutineContext) {
             val refreshToken = CodaApplication.getInstance().getRefreshToken()
+            //앞선 로그인을 통해 발급 받은 토큰이 있는지 확인
+            //JWT토큰 사용하므로 필요 없음
+            if (AuthApiClient.instance.hasToken()) {
+                UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+                    if (error != null) {
+                        Log.e(ContentValues.TAG, "토큰 정보 보기 실패", error)
+                        Toast.makeText(this@SplashActivity, "login please", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        UserApiClient.instance.me { user, error ->
+                            Toast.makeText(this@SplashActivity, "$user $error", Toast.LENGTH_SHORT)
+                                .show()
+                            if (error != null) {
+                                Log.e(ContentValues.TAG, "사용자 정보 요청 실패", error)
+                            } else if (user != null) {
+
+                                Log.i(
+                                    ContentValues.TAG, "사용자 정보 요청 성공" +
+                                            "\n정보 : ${user.properties}" +
+                                            "\n회원번호: ${user.id}" +
+                                            "\n이메일: ${user.kakaoAccount?.email}" +
+                                            "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
+                                            "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}"
+                                )
+
+//                                startActivity(loginIntent.apply {
+//                                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                                })
+                            }
+
+                        }
+                    }
+                }
+            }
 //            var refreshToken = withContext(Dispatchers.IO) {
 //                CodaApplication.getInstance().getDataStore().refreshToken.first()
 //            }
@@ -66,10 +107,7 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
             if (refreshToken.isNotEmpty()) {
                 //refresh토큰 갱신하는 api 필요 refreshToken만료됐는지 검사 후 accessToken,refreshToken,expiresIn발급
 //                finish()
-                val intent = Intent(this@SplashActivity, MainActivity::class.java)
-                intent.putExtra("pushDate", pushDate)
-
-                startActivity(intent.apply {
+                startActivity(loginIntent.apply {
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 })

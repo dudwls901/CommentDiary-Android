@@ -26,7 +26,14 @@
             android:exported="true"/>
         <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity"
             android:exported="true"/>
-        <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"/>
+        <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"
+            android:exported="true">
+            <intent-filter>
+                <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
+                <data android:host="oauth"
+                    android:scheme="kakao{kakao_app_key]}" />
+            </intent-filter>
+        </activity>
 <!--        com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity-->
         <service android:name="com.movingmaker.commentdiary.global.MyFirebaseMessagingService"
             android:exported="true">
