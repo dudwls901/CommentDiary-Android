@@ -3,13 +3,17 @@ package com.movingmaker.commentdiary.global
 import android.app.Application
 import android.content.Intent
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.google.firebase.messaging.FirebaseMessaging
+import com.kakao.sdk.common.KakaoSdk
 import com.movingmaker.commentdiary.R
 //import com.movingmaker.commentdiary.data.AuthProvider
 import com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity
+import com.kakao.sdk.common.util.Utility
+import com.movingmaker.commentdiary.BuildConfig
 
 class CodaApplication : Application() {
 
@@ -44,8 +48,9 @@ class CodaApplication : Application() {
         super.onCreate()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         codaApplication = this
+        // Kakao SDK 초기화
+        KakaoSdk.init(this, BuildConfig.KAKAO_APP_KEY)
 //        dataStore = AuthProvider(this)
-
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 deviceToken = task.result
@@ -70,12 +75,12 @@ class CodaApplication : Application() {
     }
 
     fun getAccessToken(): String {
-        val accessToken = sharedPref.getString(getString(R.string.accessToken), "Empty Token")
+        val accessToken = sharedPref.getString(getString(R.string.accessToken), "")
         return accessToken ?: "Empty Token"
     }
 
     fun getRefreshToken(): String {
-        val refreshToken = sharedPref.getString(getString(R.string.refreshToken), "Empty Token")
+        val refreshToken = sharedPref.getString(getString(R.string.refreshToken),"")
         return refreshToken ?: "Empty Token"
     }
 
