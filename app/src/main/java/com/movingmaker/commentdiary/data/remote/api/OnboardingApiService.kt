@@ -1,10 +1,12 @@
 package com.movingmaker.commentdiary.data.remote.api
 
 import com.movingmaker.commentdiary.data.remote.request.EmailCodeCheckRequest
+import com.movingmaker.commentdiary.data.remote.request.KakaoLoginRequest
 import com.movingmaker.commentdiary.data.remote.request.LogInRequest
 import com.movingmaker.commentdiary.data.remote.request.SignUpRequest
 import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.data.remote.response.LogInResponse
+import com.movingmaker.commentdiary.util.Url.AUTH_LOG_IN
 import com.movingmaker.commentdiary.util.Url.EMAIL_CODE_CHECK
 import com.movingmaker.commentdiary.util.Url.FIND_PW
 import com.movingmaker.commentdiary.util.Url.LOG_IN
@@ -31,6 +33,9 @@ interface OnboardingApiService {
 
     @POST(LOG_IN)
     suspend fun logIn(@Body logInRequest: LogInRequest): Response<LogInResponse>
+
+    @POST(AUTH_LOG_IN)
+    suspend fun kakaoLogIn(@Body kakaoLoginRequest: KakaoLoginRequest): Response<LogInResponse>
 
     @GET(FIND_PW)
     suspend fun findPassword(@Query("email") email: String) : Response<IsSuccessResponse>

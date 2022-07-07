@@ -2,6 +2,7 @@ package com.movingmaker.commentdiary.data.repository
 
 import com.movingmaker.commentdiary.data.remote.RetrofitClient
 import com.movingmaker.commentdiary.data.remote.request.EmailCodeCheckRequest
+import com.movingmaker.commentdiary.data.remote.request.KakaoLoginRequest
 import com.movingmaker.commentdiary.data.remote.request.LogInRequest
 import com.movingmaker.commentdiary.data.remote.request.SignUpRequest
 import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
@@ -29,6 +30,8 @@ class ForSignUpRespository {
 
     suspend fun logIn(logInRequest: LogInRequest): Response<LogInResponse> =
         RetrofitClient.onboardingApiService.logIn(logInRequest)
+
+    suspend fun kakaoLogin(kakaoLoginRequest: KakaoLoginRequest) : Response<LogInResponse> = RetrofitClient.onboardingApiService.kakaoLogIn(kakaoLoginRequest)
 
     suspend fun findPassword(email: String): Response<IsSuccessResponse> =
         RetrofitClient.onboardingApiService.findPassword(email)
