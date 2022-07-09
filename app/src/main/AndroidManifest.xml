@@ -25,7 +25,9 @@
         <activity android:name="com.movingmaker.commentdiary.view.main.MainActivity"
             android:exported="true"/>
         <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity"
-            android:exported="true"/>
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"
             android:exported="true">
             <intent-filter>
