@@ -117,21 +117,6 @@ object RetrofitClient {
         return OkHttpClient.Builder().build()
     }
 
-
-//    private fun buildOkHttpClient(): OkHttpClient {
-//        val interceptor = HttpLoggingInterceptor()
-//        if (BuildConfig.DEBUG) {
-//            interceptor.level = HttpLoggingInterceptor.Level.BODY
-//        } else {
-//            interceptor.level = HttpLoggingInterceptor.Level.NONE
-//        }
-//
-//        return OkHttpClient.Builder()
-//            .connectTimeout(5, TimeUnit.SECONDS)
-//            .addInterceptor(interceptor)
-//            .build()
-//    }
-
     //우선 로그아웃 api에 사용하는데 만료된 토큰 보내도 에러x
     class OneHeaderInterceptor : Interceptor {
         @Throws(IOException::class)
@@ -175,6 +160,7 @@ object RetrofitClient {
                     } else {
                         try {
                             CodaApplication.getInstance().insertAuth(
+                                CodaApplication.getInstance().getLoginType(),
                                 response.body()!!.result.accessToken,
                                 response.body()!!.result.refreshToken,
                                 CodaApplication.getCustomExpire()
@@ -219,10 +205,17 @@ object RetrofitClient {
 
     fun getErrorResponse(errorBody: ResponseBody): ErrorResponse? {
 //      errorBody로그로 찍고 그 담에 errorBody변수 사용하면 null값 들어옴.. 버근가?  Log.d("errorbody뭐들어오는데", errorBody.string())
-        return getRetrofit(RetrofitHeaderCondition.TWO_HEADER).responseBodyConverter<ErrorResponse>(
-            ErrorResponse::class.java,
-            ErrorResponse::class.java.annotations
-        ).convert(errorBody)
+        try {
+            return getRetrofit(RetrofitHeaderCondition.TWO_HEADER).responseBodyConverter<ErrorResponse>(
+                ErrorResponse::class.java,
+                ErrorResponse::class.java.annotations
+            ).convert(errorBody)
+        }catch (e: Exception){
+            Log.e(TAG, "getErrorResponse: ${e.message}")
+        }
+        finally {
+            return null
+        }
     }
 
     //    class TokenAuthenticator : Authenticator {
@@ -244,7 +237,7 @@ class NullOnEmptyConverterFactory : Converter.Factory() {
         type: Type?,
         annotations: Array<Annotation>?,
         retrofit: Retrofit?
-    ): Converter<ResponseBody, *>? {
+    ): Converter<ResponseBody, *> {
         val delegate = retrofit!!.nextResponseBodyConverter<Any>(this, type!!, annotations!!)
         return Converter<ResponseBody, Any> {
             if (it.contentLength() == 0L) return@Converter String

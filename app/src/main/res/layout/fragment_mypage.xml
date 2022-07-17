@@ -5,6 +5,9 @@
 
     <data>
 
+        <import type="com.movingmaker.commentdiary.util.Constant" />
+        <import type="android.view.View" />
+
         <variable
             name="vm"
             type="com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel" />
@@ -39,6 +42,7 @@
             android:paddingHorizontal="14dp"
             android:paddingVertical="0dp"
             android:text="@{vm.myAccount}"
+            android:visibleEmail="@{vm.loginType}"
             android:textAlignment="center"
             android:textColor="@color/text_black"
             app:layout_constraintEnd_toEndOf="parent"

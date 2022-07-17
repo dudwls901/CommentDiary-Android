@@ -3,12 +3,14 @@ package com.movingmaker.commentdiary.data.model
 import com.google.gson.annotations.SerializedName
 
 data class AuthTokens(
-    @SerializedName(value="grantType")
+    @SerializedName("grantType")
     val grantType: String,
-    @SerializedName(value="accessToken")
+    @SerializedName("accessToken")
     val accessToken: String,
-    @SerializedName(value="refreshToken")
+    @SerializedName("refreshToken")
     val refreshToken: String,
-    @SerializedName(value="accessTokenExpiresIn")
-    val accessTokenExpiresIn: Long
+    @SerializedName("accessTokenExpiresIn")
+    val accessTokenExpiresIn: Long,
+    @SerializedName("newMember")
+    val isNewMember: Boolean?
 )

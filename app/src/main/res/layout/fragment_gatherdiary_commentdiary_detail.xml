@@ -177,7 +177,7 @@
                     android:layout_width="0dp"
                     android:layout_height="53dp"
                     android:layout_marginTop="16dp"
-                    android:background="@drawable/background_pure_green_radius_30"
+                    android:background="@drawable/background_green_radius_10"
                     android:text="@string/write_comment"
                     android:textColor="@color/background_ivory"
                     app:layout_constraintEnd_toEndOf="parent"

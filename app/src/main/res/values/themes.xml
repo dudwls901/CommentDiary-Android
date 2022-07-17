@@ -97,42 +97,49 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize" >28dp</item>
         <item name="android:lineSpacingExtra">12dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
     <style name="BHeadline">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">20dp</item>
         <item name="android:lineSpacingExtra">10dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
     <style name="BSubheadline">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize" >18dp</item>
         <item name="android:lineSpacingExtra">8dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
     <style name="BHeadline2">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize" >15dp</item>
         <item name="android:lineSpacingExtra">10dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
     <style name="MCaption">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize" >15dp</item>
         <item name="android:lineSpacingExtra">10dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
     <style name="RCaption" >
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize" >14dp</item>
         <item name="android:lineSpacingExtra">9dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
     <style name="BCaption" >
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize" >13dp</item>
         <item name="android:lineSpacingExtra">7dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="BCaption2">
@@ -140,6 +147,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">12dp</item>
         <item name="android:lineSpacingExtra">8dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="BCaption3">
@@ -147,6 +155,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">11dp</item>
         <item name="android:lineSpacingExtra">9dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="MCaption2" >
@@ -154,12 +163,14 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textSize" >13dp</item>
         <item name="android:lineSpacingExtra">9dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
     <style name="MCaption3" >
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize" >12dp</item>
         <item name="android:lineSpacingExtra">10dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="RCaption2" >
@@ -167,12 +178,14 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">11dp</item>
         <item name="android:lineSpacingExtra">29dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="RCaption3" >
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">9dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="Onboarding">
@@ -180,6 +193,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">24dp</item>
         <item name="android:lineSpacingExtra">16dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="customNumberPicker" parent="Theme.AppCompat.Light.NoActionBar">

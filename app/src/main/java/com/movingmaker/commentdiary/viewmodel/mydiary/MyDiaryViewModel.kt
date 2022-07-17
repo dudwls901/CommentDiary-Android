@@ -466,7 +466,6 @@ class MyDiaryViewModel : ViewModel() {
     private fun onError(message: String) {
         _errorMessage.value = message
         _loading.value = false
-
     }
 
     override fun onCleared() {

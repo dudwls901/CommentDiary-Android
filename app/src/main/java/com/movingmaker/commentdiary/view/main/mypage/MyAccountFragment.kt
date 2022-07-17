@@ -66,7 +66,7 @@ class MyAccountFragment: BaseFragment(), CoroutineScope {
 
     private fun initViews() = with(binding){
         logoutLayout.setOnClickListener {
-            myPageViewModel.setResponseLogOut()
+            myPageViewModel.logout()
         }
         signOutLayout.setOnClickListener {
             val action = MyAccountFragmentDirections.actionMyAccountFragmentToSignOutFragment()

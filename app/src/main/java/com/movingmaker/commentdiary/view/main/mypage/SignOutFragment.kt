@@ -61,7 +61,7 @@ class SignOutFragment : BaseFragment(), CoroutineScope {
 
     private fun initViews() = with(binding) {
         signOutButton.setOnClickListener {
-            myPageViewModel.setResponseSignOut()
+            myPageViewModel.signOut()
         }
         backButton.setOnClickListener {
             findNavController().popBackStack()

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">코다</string>
     <string name="auth_pref_key">auth</string>
+    <string name="loginType">loginType</string>
     <string name="accessToken">accessToken</string>
     <string name="refreshToken">refreshToken</string>
     <string name="accessTokenExpiresIn">accessTokenExpiresIn</string>
@@ -11,14 +12,20 @@
     <string name="bottomnavigation_title_mydiary">내 일기</string>
     <string name="bottomnavigation_title_my">마이페이지</string>
 
+    <string name="onboarding_go_to_login">로그인하러 가기</string>
+    <string name="onboarding_coda_start">"코다 시작하기"</string>
+    <string name="onboarding_sign_up">"회원가입 하기"</string>
+
     <string name="onboarding_button_next">넘어가기</string>
     <string name="onboarding_button_start">시작하기</string>
+    <string name="onboarding_certify">"인증하기"</string>
     <string name="onboarding_login">로그인</string>
     <string name="onboarding_button_write_start">기록 시작하기</string>
     <string name="onboarding_ment_first">매일 아침 7시,\n누군가의 일기를 받고\n코멘트를 써줄 수 있어요.</string>
     <string name="onboarding_ment_second">누군가 작성해준\n코멘트를\n읽을 수 있어요.</string>
     <string name="onboarding_ment_third">일기와 코멘트를,\n코다에서\n모아볼 수 있어요.</string>
     <string name="onboarding_ment_sign_up_success">회원가입 완료!\n코다에서\n첫번째 일기를\n작성해보세요.</string>
+    <string name="onboarding_password_send">비밀번호를 전송했어요. 이메일을 확인해 주세요.</string>
     <string name="onboarding_email">아이디(이메일)</string>
     <string name="onboarding_password">비밀번호</string>
     <string name="onboarding_noaccount">코다 계정이 없으신가요?</string>
@@ -28,19 +35,18 @@
     <string name="onboarding_find_password">비밀번호 찾기</string>
     <string name="onboarding_email_incorrect">이메일 양식에 맞춰주세요.</string>
     <string name="onboarding_send_auth">인증번호 보내기</string>
-    <string name="onboarding_password_incorrect">작성 양식을 다시 한 번 확인해 주세요.</string>
-    <string name="onboarding_password_check_incorrect">일치하지 않아요!</string>
+    <string name="onboarding_password_incorrect">양식에 맞춰주세요.</string>
+    <string name="onboarding_password_check_incorrect">일치하지 않습니다.</string>
     <string name="onboarding_password_check">비밀번호 확인</string>
     <string name="onboarding_password_condition">영문자, 숫자, 특수문자를 포함해 8~16자 작성해 주세요.</string>
     <string name="onboarding_sign_up_agree_notice">회원가입 시 코다의 개인정보 취급 방침 및 이용 약관에 동의합니다.</string>
     <string name="onboarding_find_password_notice">코다 가입시 사용했던\n아이디(이메일)을 입력해 주세요.</string>
     <string name="onboarding_send_password">비밀번호 전송하기</string>
-    <string name="onboarding_send_email_notice">이메일로 인증번호가\n전송되었습니다.\n확인 후 입력해 주세요.</string>
-    <string name="onboarding_code_incorrect">인증번호가 일치하지 않습니다.</string>
+    <string name="onboarding_send_email_notice">이메일로 인증번호가 전송되었습니다.\n확인 후 입력해 주세요.</string>
+    <string name="onboarding_code_incorrect">인증번호가 일치하지 않아요.</string>
     <string name="onboarding_cannot_found_email">해당 이메일을 가지고 있는\n사용자가 없어요</string>
     <string name="onboarding_complete_auth">인증완료</string>
     <string name="onboarding_send_password_complete">비밀번호 전송 완료!\n이메일을 확인해 주세요.</string>
-    <string name="onboarding_login_incorrect">이메일 혹은 비밀번호가 올바르지 않습니다.</string>
     <string name="diary_test_text">내가 서툴고 불안해 보였나요.\n그건 내가 진심이었단 증거입니다</string>
     <string name="diary_test_date">2022년 02월 21일</string>
     <string name="diary_test_head">배가 고프다</string>
@@ -148,4 +154,13 @@
     </string-array>
     <string name="start_coda">코다\n시작하기</string>
     <string name="login_with_email">이메일로 시작하기</string>
+    <string name="login_with_kakao">카카오로 시작하기</string>
+    <string name="write_code">인증번호를 입력해주세요</string>
+    <string name="accepts_terms">약관 동의</string>
+    <string name="terms_condition">서비스 이용에 꼭 필요한 약관입니다.\n정책 및 약관을 클릭하여 내용을 확인해 주세요.</string>
+    <string name="all_accepts">전체 동의</string>
+    <string name="policy_accept">[필수] 개인 정보 처리 방침</string>
+    <string name="terms_accept">[필수] 서비스 이용 약관</string>
+    <string name="push_accept_condition">동의 시 \'코멘트\' 도착 알림을 받을 수 있어요!</string>
+    <string name="push_accept">[선택] 앱 푸시 알림 수신</string>
 </resources>

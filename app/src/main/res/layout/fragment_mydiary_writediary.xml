@@ -185,7 +185,7 @@
                     android:layout_height="56dp"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@drawable/background_pure_green_radius_30"
+                    android:background="@drawable/background_green_radius_10"
                     android:textColor="@color/background_ivory"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

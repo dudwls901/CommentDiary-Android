@@ -12,8 +12,8 @@ import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageTermsBinding
 import com.movingmaker.commentdiary.util.FRAGMENT_NAME
-import com.movingmaker.commentdiary.util.Url.policyUrl
-import com.movingmaker.commentdiary.util.Url.termsUrl
+import com.movingmaker.commentdiary.util.Url.POLICY_URL
+import com.movingmaker.commentdiary.util.Url.TERMS_URL
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -59,11 +59,11 @@ class TermsFragment: BaseFragment(), CoroutineScope {
     private fun initViews() = with(binding){
 
         policyLayout.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(policyUrl))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(POLICY_URL))
             startActivity(intent)
         }
         termsLayout.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(termsUrl))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(TERMS_URL))
             startActivity(intent)
         }
 

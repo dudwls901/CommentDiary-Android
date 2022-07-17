@@ -18,15 +18,15 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.data.model.Diary
 import com.movingmaker.commentdiary.data.remote.RetrofitClient
+import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMydiaryWritediaryBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.data.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.data.remote.request.SaveDiaryRequest
+import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
@@ -205,7 +205,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
             if (myDiaryViewModel.selectedDiary.value!!.deliveryYN == 'N') {
                 //수정이면 저장하기 버튼 활성화
                 if (myDiaryViewModel.saveOrEdit.value == "edit") {
-                    saveButton.setBackgroundResource(R.drawable.background_pure_green_radius_30)
+                    saveButton.setBackgroundResource(R.drawable.background_green_radius_10)
                     saveButton.isVisible = true
                     editButton.isVisible = false
                     deleteButton.isVisible = false
@@ -232,7 +232,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
                 if (myDiaryViewModel.selectedDiary.value!!.content != "") {
                     saveButton.text = getString(R.string.send_text)
                     saveButton.isVisible = true
-                    saveButton.setBackgroundResource(R.drawable.background_pure_green_radius_30)
+                    saveButton.setBackgroundResource(R.drawable.background_green_radius_10)
                     editButton.isVisible = true
                     deleteButton.isVisible = true
                     saveLocalButton.isVisible = false
@@ -267,7 +267,7 @@ class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListen
             diaryContentEditText.isEnabled = true
             diaryHeadEditText.isEnabled = true
             saveButton.isVisible = true
-            saveButton.setBackgroundResource(R.drawable.background_pure_green_radius_30)
+            saveButton.setBackgroundResource(R.drawable.background_green_radius_10)
             saveButton.isEnabled = true
             editButton.isVisible = false
             deleteButton.isVisible = false

@@ -36,4 +36,7 @@ class ForSignUpRespository {
     suspend fun findPassword(email: String): Response<IsSuccessResponse> =
         RetrofitClient.onboardingApiService.findPassword(email)
 
+    suspend fun signOut(): Response<IsSuccessResponse> {
+        return RetrofitClient.myPageApiService.signOut()
+    }
 }

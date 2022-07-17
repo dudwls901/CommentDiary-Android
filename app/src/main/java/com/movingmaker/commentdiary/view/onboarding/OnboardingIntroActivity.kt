@@ -38,28 +38,8 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
 
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.statusBarColor = getColor(R.color.background_ivory)
-
-        launch(coroutineContext) {
-            val refreshToken = CodaApplication.getInstance().getRefreshToken()
-//            var refreshToken = withContext(Dispatchers.IO) {
-//                CodaApplication.getInstance().getDataStore().refreshToken.first()
-//            }
-            //자동 로그인
-            if(refreshToken.isNotEmpty()){
-                //refresh토큰 갱신하는 api 필요 refreshToken만료됐는지 검사 후 accessToken,refreshToken,expiresIn발급
-                delay(100L)
-//                finish()
-                startActivity(Intent(this@OnboardingIntroActivity, MainActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                })
-
-            }
-            else{
-                setContentView(binding.root)
-                initViews()
-            }
-        }
+        setContentView(binding.root)
+        initViews()
         observeDatas()
     }
 
@@ -95,11 +75,11 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
     @SuppressLint("ResourceAsColor")
     private fun changeButton() {
         if (binding.introViewPager.currentItem == 2) {
-            binding.onboardingButton.setBackgroundResource(R.drawable.background_pure_green_radius_30)
+            binding.onboardingButton.setBackgroundResource(R.drawable.background_green_radius_10)
             binding.onboardingButton.text = getString(R.string.onboarding_button_start)
             binding.onboardingButton.setTextColor(getColor(R.color.background_ivory))
         } else {
-            binding.onboardingButton.setBackgroundResource(R.drawable.background_beige_radius_30)
+            binding.onboardingButton.setBackgroundResource(R.drawable.background_beige_radius_10)
             binding.onboardingButton.text = getString(R.string.onboarding_button_next)
             binding.onboardingButton.setTextColor(getColor(R.color.text_brown))
         }

@@ -13,30 +13,31 @@ import com.movingmaker.commentdiary.R
 //import com.movingmaker.commentdiary.data.AuthProvider
 import com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity
 import com.kakao.sdk.common.util.Utility
+import com.kakao.sdk.user.UserApiClient
 import com.movingmaker.commentdiary.BuildConfig
+import com.movingmaker.commentdiary.util.Constant.KAKAO
+import com.movingmaker.commentdiary.view.main.MainActivity
+import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment
 
 class CodaApplication : Application() {
 
-//    private lateinit var dataStore: AuthProvider
+    //    private lateinit var dataStore: AuthProvider
     private lateinit var sharedPref: SharedPreferences
     private val masterKey: MasterKey by lazy {
         MasterKey.Builder(this, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
     }
 
-//    val database by lazy { CommentDiaryDatabase.getInstance(this) }
+    //    val database by lazy { CommentDiaryDatabase.getInstance(this) }
 //    val repository by lazy { ContactRepository(database!!.contactDao()) }
     companion object {
         private lateinit var codaApplication: CodaApplication
 
         @JvmStatic
         fun getInstance(): CodaApplication = codaApplication
-        const val termsUrl =
-            "https://glittery-silk-987.notion.site/fb0c6c765a7a411c9362dc8d102c95e0"
-        const val policyUrl = "https://www.notion.so/59a704f6702f4382b9398fa3b4a0d780"
         lateinit var deviceToken: String
 
-//        fun getCustomExpire() = System.currentTimeMillis()+(60*60*1000)
+        //        fun getCustomExpire() = System.currentTimeMillis()+(60*60*1000)
 //        fun getCustomExpire() = System.currentTimeMillis()+60*1000L
         fun getCustomExpire() = System.currentTimeMillis() + 10000L
 
@@ -64,10 +65,16 @@ class CodaApplication : Application() {
         )
     }
 
-    fun insertAuth(accessToken: String, refreshToken: String, accessTokenExpiresIn: Long) {
+    fun insertAuth(
+        loginType: String,
+        accessToken: String,
+        refreshToken: String,
+        accessTokenExpiresIn: Long
+    ) {
 
         // 자동 로그인 데이터 저장
         sharedPref.edit().apply {
+            putString("loginType", loginType)
             putString("accessToken", accessToken)
             putString("refreshToken", refreshToken)
             putLong("accessTokenExpiresIn", accessTokenExpiresIn)
@@ -80,7 +87,7 @@ class CodaApplication : Application() {
     }
 
     fun getRefreshToken(): String {
-        val refreshToken = sharedPref.getString(getString(R.string.refreshToken),"")
+        val refreshToken = sharedPref.getString(getString(R.string.refreshToken), "")
         return refreshToken ?: "Empty Token"
     }
 
@@ -89,9 +96,40 @@ class CodaApplication : Application() {
         return accessTokenExpiresIn
     }
 
+    fun getLoginType(): String {
+        val loginType = sharedPref.getString(getString(R.string.loginType), "")
+        return loginType ?: "Empty Type"
+    }
+
+    fun signOut() {
+        if (getLoginType() == KAKAO) {
+            // 연결 끊기
+            UserApiClient.instance.unlink { error ->
+                if (error != null) {
+                    Log.e(CalendarWithDiaryFragment.TAG, "연결 끊기 실패", error)
+                } else {
+                    Log.i(CalendarWithDiaryFragment.TAG, "연결 끊기 성공. SDK에서 토큰 삭제 됨")
+                }
+            }
+        }
+        logOut()
+    }
+
     fun logOut() {
 
+        if (getLoginType() == KAKAO) {
+            // 카카오 로그아웃
+            UserApiClient.instance.logout { error ->
+                if (error != null) {
+                    Log.e(CalendarWithDiaryFragment.TAG, "로그아웃 실패. SDK에서 토큰 삭제됨", error)
+                } else {
+                    Log.i(CalendarWithDiaryFragment.TAG, "로그아웃 성공. SDK에서 토큰 삭제됨")
+                }
+            }
+        }
+
         sharedPref.edit().apply {
+            remove(getString(R.string.loginType))
             remove(getString(R.string.accessToken))
             remove(getString(R.string.refreshToken))
             remove(getString(R.string.accessTokenExpiresIn))

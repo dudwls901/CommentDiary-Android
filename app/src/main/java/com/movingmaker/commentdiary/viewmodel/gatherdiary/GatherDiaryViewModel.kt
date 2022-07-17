@@ -85,6 +85,8 @@ class GatherDiaryViewModel : ViewModel() {
         _loading.postValue(false)
         response?.let {
             if (it.isSuccessful) {
+                //todo 그냥 리스폰스에서 주는 200 말고 우리 서버가 직접 내려주는 1000사용
+                Log.d("code확인", "setResponseGetDiaryList: ${it.code()} ${response!!.body()!!.code}")
                 it.body()?.let { result ->
                     when (it.code()) {
                         200 -> {

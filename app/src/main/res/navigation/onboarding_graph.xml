@@ -15,6 +15,9 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_onboardingLoginBeforeFragment_to_onboardingKakaoTermsFragment"
+            app:destination="@id/onboardingKakaoTermsFragment" />
     </fragment>
     <fragment
         android:id="@+id/onboardingLoginFragment"
@@ -28,8 +31,8 @@
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
         <action
-            android:id="@+id/action_onboardingLoginFragment_to_onboardingSignUpEmailFragment"
-            app:destination="@id/onboardingSignUpEmailFragment"
+            android:id="@+id/action_onboardingLoginFragment_to_onboardingSignUpTermsFragment"
+            app:destination="@id/onboardingSignUpTermsFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
@@ -78,5 +81,21 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/onboardingKakaoTermsFragment"
+        android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingKakaoTermsFragment"
+        android:label="OnboardingKakaoTermsFragment" />
+    <fragment
+        android:id="@+id/onboardingSignUpTermsFragment"
+        android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingSignUpTermsFragment"
+        android:label="OnboardingSignUpTermsFragment" >
+        <action
+            android:id="@+id/action_onboardingSignUpTermsFragment_to_onboardingSignUpEmailFragment"
+            app:destination="@id/onboardingSignUpEmailFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
 </navigation>
