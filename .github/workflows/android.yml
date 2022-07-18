@@ -44,6 +44,13 @@ jobs:
         DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
       run: echo $DATA > /home/runner/work/CommentDiary-AOS/CommentDiary-AOS/app/google-services.json
   
+  #secret 환경 변수 local.properties에 추가
+    - name: Decode Secret Action (local.properties)
+      env:
+        KAKAO_APP_KEY: ${{secrets.KAKAO_APP_KEY}}
+      run: |
+        echo kakao_app_key="$KAKAO_NATIVE_APP_KEY" >> ./local.properties
+  
     - name: Build debug APK
       run: bash ./gradlew assembleDebug --stacktrace
 
