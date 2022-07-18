@@ -1,0 +1,86 @@
+name: Upload apk
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    #services.tar.gpg 복호화 및 파일 복구
+    - name: Decrypt Services
+      run: gpg --quiet --batch --yes --always-trust --decrypt --passphrase="$FIREBASE_SECRET" --output services.tar services.tar.gpg
+      env: 
+        FIREBASE_SECRET: ${{secrets.FIREBASE_SECRET}}
+
+    - name: Unzip Services
+      run: tar xvf services.tar
+  
+  #secret secret 환경 변수 local.properties에 추가
+    - name: Decode Secret Action (local.properties)
+      env:
+        KAKAO_APP_KEY: ${{secrets.KAKAO_APP_KEY}}
+        KAKAO_OAUTH_KEY: ${{secrets.KAKAO_OAUTH_KEY}}
+      run: |
+        echo kakao_app_key="$KAKAO_APP_KEY" >> ./local.properties
+        echo kakao_oauth_key="$KAKAO_OAUTH_KEY" >> ./local.properties
+  
+    - name: Build debug APK
+      run: bash ./gradlew assembleDebug --stacktrace
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: app
+        path: app/build/outputs/apk/debug
+
+    # 슬렉 메시지
+    - name: action-slack
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        author_name: Github Action Test # default: 8398a7@action-slack
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+      if: always() # Pick up events even if the job fails or is canceled.
+
+    # 슬랙 apk 업로드
+    - name: Slack - Upload APK
+      uses: MeilCli/slack-upload-file@v1.0.0
+      with:
+        slack_token: ${{ secrets.SLACK_TOKEN }}
+        channels: ${{ secrets.SLACK_CHANNEL }}
+        initial_comment: 'APK File Upload'
+        file_type: 'apk'
+        file_name: 'app-debug.apk'
+        file_path: './app/build/outputs/apk/debug/app-debug.apk'
