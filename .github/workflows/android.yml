@@ -50,7 +50,7 @@ jobs:
       env:
         KAKAO_APP_KEY: ${{secrets.KAKAO_APP_KEY}}
       run: |
-        echo kakao_app_key="$KAKAO_NATIVE_APP_KEY" >> ./local.properties
+        echo kakao_app_key="$KAKAO_APP_KEY" >> ./local.properties
   
     - name: Build debug APK
       run: bash ./gradlew assembleDebug --stacktrace
