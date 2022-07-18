@@ -83,4 +83,4 @@ jobs:
         initial_comment: 'APK File Upload'
         file_type: 'apk'
         file_name: 'app-debug.apk'
-        file_path: './app/build/intermediates/apk/debug/app-debug.apk'
+        file_path: 'app/build/intermediates/apk/debug/app-debug.apk'
