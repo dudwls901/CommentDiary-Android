@@ -61,7 +61,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: app
-        path: app/build/outputs/apk/debug
+        path: app/build/intermediates/outputs/apk/debug
 
     # 슬렉 메시지
     - name: action-slack
@@ -83,4 +83,4 @@ jobs:
         initial_comment: 'APK File Upload'
         file_type: 'apk'
         file_name: 'app-debug.apk'
-        file_path: './app/build/outputs/apk/debug/app-debug.apk'
+        file_path: './app/build/intermediates/outputs/apk/debug/app-debug.apk'
