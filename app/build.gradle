@@ -8,6 +8,8 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'androidx.navigation.safeargs.kotlin'
+    //Manifest 보안
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 
