@@ -57,12 +57,6 @@ jobs:
     - name: Build debug APK
       run: bash ./gradlew assembleDebug --stacktrace
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v3
-      with:
-        name: app-debug.apk
-        path: app/build/intermediates/apk/debug
-
     # 슬렉 메시지
     - name: action-slack
       uses: 8398a7/action-slack@v3
@@ -84,3 +78,9 @@ jobs:
         file_type: 'apk'
         file_name: 'app-debug.apk'
         file_path: 'app/build/intermediates/apk/debug/app-debug.apk'
+        
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-debug.apk
+        path: app/build/intermediates/apk/debug
