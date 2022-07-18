@@ -60,7 +60,7 @@ jobs:
     - name: Upload APK
       uses: actions/upload-artifact@v3
       with:
-        name: app
+        name: app-debug.apk
         path: app/build/intermediates/apk/debug
 
     # 슬렉 메시지
