@@ -68,6 +68,12 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
       if: always() # Pick up events even if the job fails or is canceled.
 
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-debug.apk
+        path: app/build/outputs/apk/debug
+
     # 슬랙 apk 업로드
     - name: Slack - Upload APK
       uses: MeilCli/slack-upload-file@v1.0.0
@@ -77,10 +83,5 @@ jobs:
         initial_comment: 'APK File Upload'
         file_type: 'apk'
         file_name: 'app-debug.apk'
-        file_path: 'app/build/intermediates/apk/debug/app-debug.apk'
+        file_path: 'app/build/outputs/apk/debug/app-debug.apk'
         
-    - name: Upload APK
-      uses: actions/upload-artifact@v3
-      with:
-        name: app-debug.apk
-        path: app/build/intermediates/apk/debug
