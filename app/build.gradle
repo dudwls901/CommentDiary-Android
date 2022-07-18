@@ -32,9 +32,9 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         //API keys
-        buildConfigField "String", "KAKAO_APP_KEY", properties['kakao_app_key']
+        buildConfigField "String", "KAKAO_APP_KEY", properties["kakao_app_key"]
         //manifest에서 사용할 경우
-        manifestPlaceholders = [KAKAO_APP_KEY: 'kakao_app_key']
+        manifestPlaceholders = [KAKAO_APP_KEY: "kakao_app_key"]
     }
 
     buildTypes {
