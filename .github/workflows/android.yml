@@ -49,8 +49,10 @@ jobs:
     - name: Decode Secret Action (local.properties)
       env:
         KAKAO_APP_KEY: ${{secrets.KAKAO_APP_KEY}}
+        KAKAO_OAUTH_KEY: ${{secrets.KAKAO_OAUTH_KEY}}
       run: |
         echo kakao_app_key="$KAKAO_APP_KEY" >> ./local.properties
+        echo kakao_oauth_key="$KAKAO_OAUTH_KEY" >> ./local.properties
   
     - name: Build debug APK
       run: bash ./gradlew assembleDebug --stacktrace
