@@ -2,9 +2,9 @@ name: Upload apk
 
 on:
   push:
-    branches: [ "devlop" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "devlop" ]
+    branches: [ "main" ]
 
 jobs:
   build:
