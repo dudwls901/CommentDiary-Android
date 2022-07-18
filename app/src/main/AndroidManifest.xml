@@ -28,13 +28,23 @@
             android:exported="true"
             android:windowSoftInputMode="adjustResize"
             />
-        <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
             <intent-filter>
-                <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
-                <data android:host="oauth"
-                    android:scheme="kakao{kakao_app_key]}" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth" -->
+                <data
+                    android:host="oauth"
+                    android:scheme="kakao${kakao_app_key}" />
             </intent-filter>
+        </activity>
+        <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"
+            android:exported="true">
         </activity>
 <!--        com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity-->
         <service android:name="com.movingmaker.commentdiary.global.MyFirebaseMessagingService"
