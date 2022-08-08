@@ -10,7 +10,7 @@
 
 # Java class files
 *.class
-
+openssl base64 -in coda-upload-keystore.jks -out coda-upload-keystore-base64.txt
 # Generated files
 bin/
 gen/
@@ -247,3 +247,4 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudio,java,windows
 /services.tar
 /app/keystore/coda-upload-keystore.jks
+/app/keystore/
