@@ -13,7 +13,6 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.BottomSheetFragmentWritediaryTypeselectBinding
-import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment.Companion.TAG
 import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 
 class SelectDiaryTypeBottomSheet(private val selectDiaryTypeListener: SelectDiaryTypeListener)

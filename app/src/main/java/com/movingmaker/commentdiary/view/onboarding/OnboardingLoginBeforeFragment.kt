@@ -20,7 +20,6 @@ import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingLoginBeforeBinding
 import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.view.main.MainActivity
-import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment.Companion.TAG
 import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +29,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.math.log
 
 class OnboardingLoginBeforeFragment : Fragment(), CoroutineScope {
-
+    private val TAG = OnboardingLoginBeforeFragment::class.java.simpleName
     private lateinit var binding: FragmentOnboardingLoginBeforeBinding
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()

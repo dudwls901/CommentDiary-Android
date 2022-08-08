@@ -50,11 +50,8 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
 
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
-    private var isInitCalendar = true
 
     companion object {
-        const val TAG: String = "로그"
-
         fun newInstance(): CalendarWithDiaryFragment {
             return CalendarWithDiaryFragment()
         }
@@ -110,7 +107,7 @@ class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
         }
 
         myDiaryViewModel.pushDate.observe(viewLifecycleOwner) {
-            Log.d(TAG, "observeData: pushpushpush ${myDiaryViewModel.pushDate.value}")
+            Log.d(TAG, "observeData: push ${myDiaryViewModel.pushDate.value}")
             val date = it
             val (y, m, d) = date.split('.').map { it.toInt() }
             checkSelectedDate(CalendarDay.from(y, m - 1, d))

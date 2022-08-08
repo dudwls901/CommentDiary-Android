@@ -9,10 +9,8 @@ import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.data.remote.response.*
 import com.movingmaker.commentdiary.data.repository.LogOutRepository
 import com.movingmaker.commentdiary.data.repository.MyPageRepository
-import com.movingmaker.commentdiary.util.Constant
 import com.movingmaker.commentdiary.util.Constant.SUCCESS_CODE
 import com.movingmaker.commentdiary.util.DateConverter
-import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment.Companion.TAG
 import kotlinx.coroutines.*
 import retrofit2.Response
 
@@ -102,7 +100,6 @@ class MyPageViewModel : ViewModel() {
 
     private fun setLoginType(type: String) {
         _loginType.value = type
-        Log.d(TAG, "setLoginType: ${loginType.value} ${loginType.value == Constant.KAKAO}")
     }
 
 
@@ -186,7 +183,6 @@ class MyPageViewModel : ViewModel() {
         LogOutRepository.INSTANCE.logOut().apply {
             if (this.isSuccessful) {
                 this.body()?.let { response ->
-                    Log.d(TAG, "logout: $response")
                     when (response.code) {
                         SUCCESS_CODE -> {
                            
@@ -212,7 +208,6 @@ class MyPageViewModel : ViewModel() {
                 it.body()?.let { response ->
                     when (it.code()) {
                         200 -> {
-                            Log.d(TAG, "setResponseGetMyPage: ${response.result}")
                             setMyAccount(response.result.email)
                             setTemperature(response.result.temperature)
                             setPushYN(response.result.pushYN)

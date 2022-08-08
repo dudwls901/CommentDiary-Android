@@ -20,7 +20,6 @@ import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.util.Constant.EMAIL
 import com.movingmaker.commentdiary.util.Constant.KAKAO
-import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment.Companion.TAG
 import com.movingmaker.commentdiary.view.main.mypage.MyCommentListAdapter
 
 object BindingAdapter {

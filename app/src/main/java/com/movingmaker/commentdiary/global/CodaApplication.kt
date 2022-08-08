@@ -106,9 +106,9 @@ class CodaApplication : Application() {
             // 연결 끊기
             UserApiClient.instance.unlink { error ->
                 if (error != null) {
-                    Log.e(CalendarWithDiaryFragment.TAG, "연결 끊기 실패", error)
+                    Log.e("signout", "연결 끊기 실패", error)
                 } else {
-                    Log.i(CalendarWithDiaryFragment.TAG, "연결 끊기 성공. SDK에서 토큰 삭제 됨")
+                    Log.i("signout", "연결 끊기 성공. SDK에서 토큰 삭제 됨")
                 }
             }
         }
@@ -121,9 +121,9 @@ class CodaApplication : Application() {
             // 카카오 로그아웃
             UserApiClient.instance.logout { error ->
                 if (error != null) {
-                    Log.e(CalendarWithDiaryFragment.TAG, "로그아웃 실패. SDK에서 토큰 삭제됨", error)
+                    Log.e("logout", "로그아웃 실패. SDK에서 토큰 삭제됨", error)
                 } else {
-                    Log.i(CalendarWithDiaryFragment.TAG, "로그아웃 성공. SDK에서 토큰 삭제됨")
+                    Log.i("logout", "로그아웃 성공. SDK에서 토큰 삭제됨")
                 }
             }
         }

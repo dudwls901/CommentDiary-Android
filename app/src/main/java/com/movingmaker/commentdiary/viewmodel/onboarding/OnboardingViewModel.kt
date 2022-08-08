@@ -16,7 +16,6 @@ import com.movingmaker.commentdiary.util.Constant.EMAIL
 import com.movingmaker.commentdiary.util.Constant.KAKAO
 import com.movingmaker.commentdiary.util.Constant.SUCCESS_CODE
 import com.movingmaker.commentdiary.util.FRAGMENT_NAME
-import com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment.Companion.TAG
 import kotlinx.coroutines.*
 
 class OnboardingViewModel(application: Application) : AndroidViewModel(application) {
@@ -272,10 +271,6 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
             !(tempPassword.isNotEmpty() && tempPassword != "" && (tempPassword.length < 8 || !hasLetter || !hasNum || !hasSign || tempPassword.length > 16))
         val isPasswordCheckCorrect =
             !(tempCheckPassword.isNotEmpty() && (tempPassword != tempCheckPassword))
-        Log.d(
-            TAG,
-            "validatePassword: ${tempPassword} ${tempCheckPassword} ${isPasswordCheckCorrect} ${!(tempCheckPassword.isNotEmpty() && (tempPassword != tempCheckPassword))} ${tempCheckPassword.isNotEmpty()} ${(tempPassword != tempCheckPassword)}"
-        )
         setValuesIsCorrect(isPasswordCorrect, "password")
         setValuesIsCorrect(isPasswordCheckCorrect, "passwordCheck")
         setCanMakeAccount(
@@ -297,7 +292,6 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     suspend fun emailCodeSend() = viewModelScope.async {
-        Log.d(TAG, "emailCodeSend: ${email.value == null} ${email.value} ${emailCorrect.value}")
         if (email.value == null || email.value == "" || emailCorrect.value != true) {
             offLoading()
             setShakeView(true)
@@ -431,7 +425,6 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     }.await()
 
     suspend fun login() = viewModelScope.async {
-        Log.d(TAG, "login: ${emailCorrect.value}")
         if (emailCorrect.value == false) {
             offLoading()
             setLoginNotice("이메일을 확인해 주세요.")
@@ -474,7 +467,6 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
             } else {
                 this.errorBody()?.let { errorBody ->
                     RetrofitClient.getErrorResponse(errorBody)?.let {
-                        Log.d(TAG, "login: ${it.code}")
                         setLoginNotice(it.message)
                         setShakeView(true)
                     }
@@ -487,7 +479,6 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     suspend fun kakaoLogin(kakaoAccessToken: String) = viewModelScope.async {
         var successLogin = false
         var isNewMember = false
-        Log.d(TAG, "kakaoLogin: ${CodaApplication.deviceToken}")
         ForSignUpRespository.INSTANCE.kakaoLogin(
             KakaoLoginRequest(
                 KAKAO,
@@ -570,7 +561,6 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
                 }
             } else {
                 this.errorBody()?.let { errorBody ->
-                    Log.e(TAG, "signOut: ${errorBody}", )
                 }
             }
         }
