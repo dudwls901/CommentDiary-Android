@@ -34,7 +34,15 @@ android {
         //API keys
         buildConfigField "String", "KAKAO_APP_KEY", properties['kakao_app_key']
         //manifest에서 사용할 경우
-        manifestPlaceholders ["KAKAO_OAUTH_KEY"] = properties['kakao_oauth_key']
+        manifestPlaceholders["KAKAO_OAUTH_KEY"] = properties['kakao_oauth_key']
+    }
+    signingConfigs {
+        release {
+            storeFile file(properties['RELEASE_STORE_FILE'])
+            storePassword properties['RELEASE_STORE_PASSWORD']
+            keyAlias properties['RELEASE_KEY_ALIAS']
+            keyPassword properties['RELEASE_KEY_PASSWORD']
+        }
     }
 
     buildTypes {
@@ -42,8 +50,12 @@ android {
 //            프로가드 미사용
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
             //디버그 테스트할 때  사용
             debuggable false
+        }
+        debug {
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
@@ -54,7 +66,7 @@ android {
         jvmTarget = '1.8'
     }
 
-    dataBinding{
+    dataBinding {
         enabled = true
     }
 }
@@ -127,9 +139,4 @@ dependencies {
     //kakao login
     def kakaoVersion = "2.10.0"
     implementation "com.kakao.sdk:v2-user:$kakaoVersion" // 카카오 로그인
-    implementation "com.kakao.sdk:v2-talk:$kakaoVersion" // 친구, 메시지(카카오톡)
-    implementation "com.kakao.sdk:v2-story:$kakaoVersion" // 카카오스토리
-    implementation "com.kakao.sdk:v2-link:$kakaoVersion" // 메시지(카카오톡 공유)
-    implementation "com.kakao.sdk:v2-navi:$kakaoVersion" // 카카오내비
-    implementation "com.kakao.sdk:v2-friend:$kakaoVersion" // 카카오톡 소셜 피커, 리소스 번들 파일 포함
 }
