@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageTermsBinding
@@ -21,39 +22,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
-class TermsFragment: BaseFragment(), CoroutineScope {
+class TermsFragment: BaseFragment<FragmentMypageTermsBinding>(R.layout.fragment_mypage_terms), CoroutineScope {
     override val TAG: String = TermsFragment::class.java.simpleName
-
     private val job = Job()
-
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private val myPageViewModel: MyPageViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
 
-    companion object{
-        fun newInstance() : TermsFragment {
-            return TermsFragment()
-        }
-    }
-
-    private lateinit var binding: FragmentMypageTermsBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentMypageTermsBinding.inflate(layoutInflater)
-
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initViews()
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.TERMS)
-        return binding.root
     }
 
     private fun initViews() = with(binding){
@@ -69,7 +49,6 @@ class TermsFragment: BaseFragment(), CoroutineScope {
 
         backButton.setOnClickListener {
             findNavController().popBackStack()
-//            fragmentViewModel.setFragmentState("myPage")
         }
 
     }

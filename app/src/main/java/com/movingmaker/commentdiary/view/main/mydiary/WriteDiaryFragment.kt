@@ -34,49 +34,25 @@ import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class WriteDiaryFragment : BaseFragment(), CoroutineScope, SelectDiaryTypeListener {
+class WriteDiaryFragment : BaseFragment<FragmentMydiaryWritediaryBinding>(R.layout.fragment_mydiary_writediary), CoroutineScope, SelectDiaryTypeListener {
 
     override val TAG: String = WriteDiaryFragment::class.java.simpleName
-
-    private lateinit var binding: FragmentMydiaryWritediaryBinding
-    private lateinit var diaryTypeBottomSheet: SelectDiaryTypeBottomSheet
-    private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
-    private val fragmentViewModel: FragmentViewModel by activityViewModels()
-
     private val job = Job()
-
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    companion object{
-        fun newInstance() : WriteDiaryFragment {
-            return WriteDiaryFragment()
-        }
-    }
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentMydiaryWritediaryBinding.inflate(layoutInflater)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    private lateinit var diaryTypeBottomSheet: SelectDiaryTypeBottomSheet
+    private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
+    private val fragmentViewModel: FragmentViewModel by activityViewModels()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.myDiaryviewModel = myDiaryViewModel
-//        binding.lifecycleOwner = this
         binding.lifecycleOwner = viewLifecycleOwner
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.WRITE_DIARY)
 
-        //initview에 고정적인 것들 넣고
-        //changeview에 새로운 것들 넣자
-//        initViews()
         initViews()
         initToolbar()
         observeDatas()
-        return binding.root
     }
 
     private fun observeDatas() = with(binding) {

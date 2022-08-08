@@ -10,17 +10,19 @@ import androidx.viewpager2.widget.ViewPager2
 import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingIntroBinding
+import com.movingmaker.commentdiary.global.base.BaseActivity
 import com.movingmaker.commentdiary.view.main.MainActivity
 import com.movingmaker.commentdiary.viewmodel.onboarding.IntroViewModel
 import kotlinx.coroutines.*
 import me.relex.circleindicator.CircleIndicator3
 import kotlin.coroutines.CoroutineContext
 
-class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
-//    private val TAG: String = OnboardingIntroActivity::class.java.simpleName
+class OnboardingIntroActivity : BaseActivity<ActivityOnboardingIntroBinding>(R.layout.activity_onboarding_intro),CoroutineScope {
+    override val TAG: String = OnboardingIntroActivity::class.java.simpleName
+
+    //    private val TAG: String = OnboardingIntroActivity::class.java.simpleName
     private lateinit var onboardingIntroAdapter: OnboardingIntroAdapter
     private lateinit var indicator: CircleIndicator3
-    private lateinit var binding: ActivityOnboardingIntroBinding
     val introViewModel: IntroViewModel by viewModels()
     private val job = Job()
 
@@ -120,6 +122,4 @@ class OnboardingIntroActivity : AppCompatActivity(),CoroutineScope {
         })
 
     }
-
-
 }

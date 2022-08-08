@@ -16,22 +16,14 @@ import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 
 
-class OnboardingLoginFragment: BaseFragment() {
+class OnboardingLoginFragment: BaseFragment<FragmentOnboardingLoginBinding>(R.layout.fragment_onboarding_login) {
     override val TAG: String = OnboardingLoginFragment::class.java.simpleName
 
-    private lateinit var binding: FragmentOnboardingLoginBinding
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentOnboardingLoginBinding.inflate(layoutInflater)
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
         onboardingViewModel.setShakeView(false)
         onboardingViewModel.setLoginNotice("")
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.LOGIN)
@@ -40,7 +32,6 @@ class OnboardingLoginFragment: BaseFragment() {
 
         initViews()
         observeDatas()
-        return binding.root
     }
 
     private fun observeDatas() {

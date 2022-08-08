@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageChangePasswordBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
@@ -16,7 +17,7 @@ import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class ChangePasswordFragment : BaseFragment(), CoroutineScope {
+class ChangePasswordFragment : BaseFragment<FragmentMypageChangePasswordBinding>(R.layout.fragment_mypage_change_password), CoroutineScope {
     override val TAG: String = ChangePasswordFragment::class.java.simpleName
 
     private val job = Job()
@@ -26,31 +27,12 @@ class ChangePasswordFragment : BaseFragment(), CoroutineScope {
 
     private val myPageViewModel: MyPageViewModel by activityViewModels()
 
-    companion object {
-        fun newInstance(): ChangePasswordFragment {
-            return ChangePasswordFragment()
-        }
-    }
-
-    private lateinit var binding: FragmentMypageChangePasswordBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentMypageChangePasswordBinding.inflate(layoutInflater)
-
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.mypageviewmodel = myPageViewModel
         initViews()
         observeDatas()
-
-        return binding.root
     }
 
     private fun observeDatas() {

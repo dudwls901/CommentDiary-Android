@@ -30,36 +30,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
-class ReceivedDiaryFragment : BaseFragment(), CoroutineScope {
+class ReceivedDiaryFragment : BaseFragment<FragmentReceiveddiaryBinding>(R.layout.fragment_receiveddiary), CoroutineScope {
     override val TAG: String = ReceivedDiaryFragment::class.java.simpleName
-
     private val job = Job()
-
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private lateinit var binding: FragmentReceiveddiaryBinding
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private val receivedDiaryViewModel: ReceivedDiaryViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentReceiveddiaryBinding.inflate(layoutInflater)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = receivedDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.RECEIVED_DIARY)
         initViews()
         observeDatas()
         receivedDiaryViewModel.setResponseGetReceivedDiary()
-        return binding.root
-
     }
 
     @SuppressLint("ResourceAsColor")

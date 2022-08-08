@@ -42,19 +42,14 @@ import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import kotlin.coroutines.CoroutineContext
 
-class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(), CoroutineScope {
+class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(R.layout.activity_onboarding_login), CoroutineScope {
     override val TAG: String = OnboardingLoginActivity::class.java.simpleName
-    override val layoutRes: Int = R.layout.activity_onboarding_login
-
     private val job = Job()
-
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
     private val onboardingViewModel: OnboardingViewModel by viewModels()
-
     private var backButtonTime = 0L
-
     private lateinit var navController: NavController
 
     @SuppressLint("ResourceAsColor")

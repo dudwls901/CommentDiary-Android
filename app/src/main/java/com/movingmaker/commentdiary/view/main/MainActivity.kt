@@ -23,18 +23,10 @@ import com.movingmaker.commentdiary.viewmodel.receiveddiary.ReceivedDiaryViewMod
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
+class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main), CoroutineScope {
     override val TAG: String = MainActivity::class.java.simpleName
-
-    private var backButtonTime = 0L
-
-    //test
-    override val layoutRes: Int = R.layout.activity_main
-
     private val job = Job()
-
     private var deferredJob: Deferred<Job>? = null
-
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
@@ -45,11 +37,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), CoroutineScope {
     private val receivedDiaryViewModel: ReceivedDiaryViewModel by viewModels()
 
     private var pushDate: String? = null
-
     private lateinit var navController: NavController
-
-    companion object {
-    }
+    private var backButtonTime = 0L
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)

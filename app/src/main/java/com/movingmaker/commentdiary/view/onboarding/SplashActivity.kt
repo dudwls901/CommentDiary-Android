@@ -14,19 +14,19 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.user.UserApiClient
+import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.databinding.ActivitySplashBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
+import com.movingmaker.commentdiary.global.base.BaseActivity
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.view.main.MainActivity
 import com.movingmaker.commentdiary.viewmodel.onboarding.IntroViewModel
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class SplashActivity : AppCompatActivity(), CoroutineScope {
-
-    private lateinit var binding: ActivitySplashBinding
-
+class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash), CoroutineScope {
+    override val TAG: String = SplashActivity::class.java.simpleName
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -34,7 +34,6 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
         const val REQUEST_CODE_UPDATE = 999
-        const val TAG = "SplashActivity"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

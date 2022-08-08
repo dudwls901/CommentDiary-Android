@@ -19,28 +19,16 @@ import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class OnboardingSignUpPasswordFragment : BaseFragment(), CoroutineScope {
+class OnboardingSignUpPasswordFragment : BaseFragment<FragmentOnboardingSignUpPasswordBinding>(R.layout.fragment_onboarding_sign_up_password), CoroutineScope {
     override val TAG: String = OnboardingSignUpPasswordFragment::class.java.simpleName
-
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
-
-    private lateinit var binding: FragmentOnboardingSignUpPasswordBinding
-
     private val job = Job()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentOnboardingSignUpPasswordBinding.inflate(layoutInflater)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         onboardingViewModel.setShakeView(false)
         onboardingViewModel.setPassword("")
         onboardingViewModel.setCheckPassword("")
@@ -54,7 +42,6 @@ class OnboardingSignUpPasswordFragment : BaseFragment(), CoroutineScope {
         }
         initViews()
         observeDatas()
-        return binding.root
     }
 
     private fun observeDatas() {

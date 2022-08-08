@@ -8,6 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentMypageBinding
 import com.movingmaker.commentdiary.global.CodaSnackBar
@@ -17,7 +18,7 @@ import com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class MyPageFragment : BaseFragment(), CoroutineScope {
+class MyPageFragment : BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypage), CoroutineScope {
     override val TAG: String = MyPageFragment::class.java.simpleName
 
     private val job = Job()
@@ -29,31 +30,9 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
 
     private var temperatureBarMaxWidthPx = 0
-//    private lateinit var display: Display
 
-    companion object {
-        fun newInstance(): MyPageFragment {
-            return MyPageFragment()
-        }
-    }
-
-    private lateinit var binding: FragmentMypageBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentMypageBinding.inflate(layoutInflater)
-
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = myPageViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.MY_PAGE)
@@ -61,7 +40,6 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
         bindButtons()
         observeDatas()
 
-        return binding.root
     }
 
     private fun observeDatas() {
@@ -99,17 +77,7 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
     }
 
     private fun setTemperatureBar(temp: Double) = with(binding) {
-        //dp값 구하기
-//        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R){
-//            display = requireActivity().display!!
-//            display.getRealMetrics()
-//        }
-//        else{
-//            display = requireActivity().windowManager.defaultDisplay
-//        }
-//        val displayMetrics = DisplayMetrics()
-//        val dpi = displayMetrics.densityDpi
-//        val density = displayMetrics.density
+
         //값이 없거나 0.0인 경우 0dp로 들어가서 css,cee parent에 의해 꽉차게 되는 것을 1.0으로 방지
         var temperature = temp
         if (temperature == 0.0) {
@@ -133,6 +101,5 @@ class MyPageFragment : BaseFragment(), CoroutineScope {
         //invisible로 가려놨다가 유저 temperature 불러오고 계산, 셋팅 끝난 후 보여주기
         temperatureBar.isVisible = true
 
-//        Log.d(TAG, "setTemperatureBar: ${displayMetrics.densityDpi} ${displayMetrics.density}")
     }
 }

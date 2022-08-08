@@ -38,43 +38,25 @@ import java.util.*
 import kotlin.coroutines.CoroutineContext
 import kotlin.math.roundToInt
 
-class CalendarWithDiaryFragment : BaseFragment(), CoroutineScope {
+class CalendarWithDiaryFragment : BaseFragment<FragmentMydiaryWithCalendarBinding>(R.layout.fragment_mydiary_with_calendar), CoroutineScope {
     override val TAG: String = CalendarWithDiaryFragment::class.java.simpleName
-
     private val job = Job()
-
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
-
-    private lateinit var binding: FragmentMydiaryWithCalendarBinding
 
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
 
-    companion object {
-        fun newInstance(): CalendarWithDiaryFragment {
-            return CalendarWithDiaryFragment()
-        }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentMydiaryWithCalendarBinding.inflate(layoutInflater)
-        binding.lifecycleOwner = viewLifecycleOwner
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentMydiaryWithCalendarBinding.inflate(layoutInflater)
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.myDiaryviewModel = myDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.CALENDAR_WITH_DIARY)
-        myDiaryViewModel.setResponseGetMonthDiary(DateConverter.ymFormat(DateConverter.getCodaToday()), "viewcreated")
-        myDiaryViewModel.setResponseGetMonthDiary(DateConverter.ymFormat(DateConverter.getCodaToday()), "viewcreated")
-        myDiaryViewModel.setResponseGetMonthDiary(DateConverter.ymFormat(DateConverter.getCodaToday()), "viewcreated")
-        myDiaryViewModel.setResponseGetMonthDiary(DateConverter.ymFormat(DateConverter.getCodaToday()), "viewcreated")
+//        myDiaryViewModel.setResponseGetMonthDiary(DateConverter.ymFormat(DateConverter.getCodaToday()), "viewcreated")
+//        myDiaryViewModel.setResponseGetMonthDiary(DateConverter.ymFormat(DateConverter.getCodaToday()), "viewcreated")
+//        myDiaryViewModel.setResponseGetMonthDiary(DateConverter.ymFormat(DateConverter.getCodaToday()), "viewcreated")
+//        myDiaryViewModel.setResponseGetMonthDiary(DateConverter.ymFormat(DateConverter.getCodaToday()), "viewcreated")
 
         myDiaryViewModel.setSelectedDate("")
         initSwipeRefresh()

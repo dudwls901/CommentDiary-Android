@@ -31,50 +31,32 @@ import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class DiaryListFragment : BaseFragment(), CoroutineScope, OnDiarySelectListener {
+class DiaryListFragment : BaseFragment<FragmentGatherdiaryDiarylistBinding>(R.layout.fragment_gatherdiary_diarylist), CoroutineScope, OnDiarySelectListener {
     override val TAG: String = DiaryListFragment::class.java.simpleName
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
-    private lateinit var binding: FragmentGatherdiaryDiarylistBinding
+
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private val gatherDiaryViewModel: GatherDiaryViewModel by activityViewModels()
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private lateinit var diaryListAdapter: DiaryListAdapter
-
     private var searchPeriod = "all"
-
-    private val job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
     companion object {
         private const val MAX_YEAR = 2099
         private const val MIN_YEAR = 1980
-
-        fun newInstance(): DiaryListFragment {
-            return DiaryListFragment()
-        }
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentGatherdiaryDiarylistBinding.inflate(layoutInflater)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.gatherDiaryviewModel = gatherDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.GATHER_DIARY)
         setDiaries()
         observeDatas()
         initViews()
-
-        return binding.root
     }
 
     private fun observeDatas() {

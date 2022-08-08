@@ -3,16 +3,17 @@ package com.movingmaker.commentdiary.global.base
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 
-abstract class BaseActivity<T: ViewDataBinding>: AppCompatActivity() {
+abstract class BaseActivity<T: ViewDataBinding>(@LayoutRes val layoutRes: Int): AppCompatActivity() {
 
     lateinit var binding: T // 데이터 바인딩
     abstract val TAG :String // 액티비티 태그
-    abstract val layoutRes: Int // 바인딩에 필요한 layout
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,4 +54,31 @@ abstract class BaseActivity<T: ViewDataBinding>: AppCompatActivity() {
         Log.i(TAG,"onDestroy")
     }
 
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        Log.i(TAG, "onRestoreInstanceState: one parameter")
+    }
+
+    override fun onRestoreInstanceState(
+        savedInstanceState: Bundle?,
+        persistentState: PersistableBundle?
+    ) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
+        Log.i(TAG, "onRestoreInstanceState: two parameter")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        Log.i(TAG, "onSaveInstanceState: two parameter")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.i(TAG, "onSaveInstanceState: one parameter")
+    }
+
+    override fun onStateNotSaved() {
+        super.onStateNotSaved()
+        Log.i(TAG, "onStateNotSaved: ")
+    }
 }

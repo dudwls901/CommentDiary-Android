@@ -27,27 +27,16 @@ import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class OnboardingKakaoTermsFragment : BaseFragment(),CoroutineScope {
+class OnboardingKakaoTermsFragment : BaseFragment<FragmentOnboardingKakaoTermsBinding>(R.layout.fragment_onboarding_kakao_terms),CoroutineScope {
     override val TAG: String = OnboardingKakaoTermsFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
-
-
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 
-    private lateinit var binding: FragmentOnboardingKakaoTermsBinding
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentOnboardingKakaoTermsBinding.inflate(layoutInflater)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
         binding.vm = onboardingViewModel
         binding.lifecycleOwner = viewLifecycleOwner
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.KAKAO_TERMS)
@@ -59,7 +48,6 @@ class OnboardingKakaoTermsFragment : BaseFragment(),CoroutineScope {
             onboardingViewModel.setAllAccept()
         }
         initViews()
-        return binding.root
     }
 
     private fun initViews() = with(binding) {

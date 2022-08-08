@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingSignUpTermsBinding
 import com.movingmaker.commentdiary.util.FRAGMENT_NAME
@@ -19,28 +20,17 @@ import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class OnboardingSignUpTermsFragment : BaseFragment() {
+class OnboardingSignUpTermsFragment : BaseFragment<FragmentOnboardingSignUpTermsBinding>(R.layout.fragment_onboarding_sign_up_terms) {
     override val TAG: String = OnboardingSignUpTermsFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
-    private lateinit var binding: FragmentOnboardingSignUpTermsBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentOnboardingSignUpTermsBinding.inflate(layoutInflater)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.vm = onboardingViewModel
         binding.lifecycleOwner = viewLifecycleOwner
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_TERMS)
         initViews()
-        return binding.root
     }
 
     private fun initViews() = with(binding) {

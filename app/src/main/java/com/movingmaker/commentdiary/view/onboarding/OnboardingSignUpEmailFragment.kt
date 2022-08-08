@@ -21,29 +21,15 @@ import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class OnboardingSignUpEmailFragment : BaseFragment(), CoroutineScope {
+class OnboardingSignUpEmailFragment : BaseFragment<FragmentOnboardingSignUpEmailBinding>(R.layout.fragment_onboarding_sign_up_email), CoroutineScope {
     override val TAG: String = OnboardingSignUpEmailFragment::class.java.simpleName
-
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
-
-    private lateinit var binding: FragmentOnboardingSignUpEmailBinding
-
     private val job = Job()
-
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentOnboardingSignUpEmailBinding.inflate(layoutInflater)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         onboardingViewModel.setShakeView(false)
         onboardingViewModel.setEmailNotice("")
         onboardingViewModel.setEmailCorrect(true)
@@ -56,20 +42,6 @@ class OnboardingSignUpEmailFragment : BaseFragment(), CoroutineScope {
         initViews()
         observeDatas()
 
-//todo dddd
-
-//        val mTransform: Linkify.TransformFilter = Linkify.TransformFilter { matcher, s ->
-//            ""
-//        }
-//        val pattern1 = Pattern.compile("개인정보 취급 방침")
-//        val pattern2 = Pattern.compile("이용 약관")
-//        Linkify.addLinks(binding.signUpAgreeNoticeTextView,pattern1,
-//            CodaApplication.policyUrl, null, mTransform )
-//        Linkify.addLinks(binding.signUpAgreeNoticeTextView,pattern2,
-//            CodaApplication.termsUrl, null, mTransform )
-
-
-        return binding.root
     }
 
     private fun observeDatas() {

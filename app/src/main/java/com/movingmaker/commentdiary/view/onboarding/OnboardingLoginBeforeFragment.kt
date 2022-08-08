@@ -18,6 +18,7 @@ import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingLoginBeforeBinding
+import com.movingmaker.commentdiary.global.base.BaseFragment
 import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.view.main.MainActivity
 import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
@@ -28,9 +29,8 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.math.log
 
-class OnboardingLoginBeforeFragment : Fragment(), CoroutineScope {
-    private val TAG = OnboardingLoginBeforeFragment::class.java.simpleName
-    private lateinit var binding: FragmentOnboardingLoginBeforeBinding
+class OnboardingLoginBeforeFragment : BaseFragment<FragmentOnboardingLoginBeforeBinding>(R.layout.fragment_onboarding_login_before), CoroutineScope {
+    override val TAG: String = OnboardingLoginBeforeFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
@@ -38,18 +38,10 @@ class OnboardingLoginBeforeFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentOnboardingLoginBeforeBinding.inflate(layoutInflater)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.LOGIN_BEFORE)
         initViews()
-        return binding.root
     }
 
     private fun initViews() {

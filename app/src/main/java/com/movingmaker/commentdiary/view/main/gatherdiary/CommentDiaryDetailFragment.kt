@@ -29,45 +29,28 @@ import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class CommentDiaryDetailFragment : BaseFragment(), CoroutineScope, OnCommentSelectListener {
+class CommentDiaryDetailFragment : BaseFragment<FragmentGatherdiaryCommentdiaryDetailBinding>(R.layout.fragment_gatherdiary_commentdiary_detail), CoroutineScope, OnCommentSelectListener {
 
     override val TAG: String = CommentDiaryDetailFragment::class.java.simpleName
-
-    private lateinit var binding: FragmentGatherdiaryCommentdiaryDetailBinding
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val gatherDiaryViewModel: GatherDiaryViewModel by activityViewModels()
     private lateinit var commentListAdapter: CommentListAdapter
-    private val job = Job()
     private var reportedCommentId = -1L
     private var likedCommentId = -1L
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
-    companion object {
-        fun newInstance(): CommentDiaryDetailFragment {
-            return CommentDiaryDetailFragment()
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentGatherdiaryCommentdiaryDetailBinding.inflate(layoutInflater)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.myDiaryviewModel = myDiaryViewModel
         binding.lifecycleOwner = viewLifecycleOwner
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.COMMENT_DIARY_DETAIL)
         observeDatas()
         initViews()
         initToolBar()
-        return binding.root
     }
 
     @SuppressLint("NotifyDataSetChanged")

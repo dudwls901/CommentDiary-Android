@@ -32,57 +32,39 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
-class SendedCommentListFragment : BaseFragment(), CoroutineScope {
+class SendedCommentListFragment : BaseFragment<FragmentMypageSendedCommentListBinding>(R.layout.fragment_mypage_sended_comment_list), CoroutineScope {
     override val TAG: String = SendedCommentListFragment::class.java.simpleName
-
     private val job = Job()
-
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
     private val myPageViewModel: MyPageViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
 
-    private var searchPeriod="all"
+    private var searchPeriod = "all"
 
     companion object {
         private const val MAX_YEAR = 2099
         private const val MIN_YEAR = 1980
-
-        fun newInstance(): SendedCommentListFragment {
-            return SendedCommentListFragment()
-        }
     }
 
-    private lateinit var binding: FragmentMypageSendedCommentListBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentMypageSendedCommentListBinding.inflate(layoutInflater)
-
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.vm= myPageViewModel
+        binding.vm = myPageViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.SENDED_COMMENT_LIST)
         setComments()
         observeDatas()
         initViews()
-        return binding.root
     }
 
     private fun observeDatas() {
-        myPageViewModel.errorMessage.observe(viewLifecycleOwner){
+        myPageViewModel.errorMessage.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
 
-        myPageViewModel.snackMessage.observe(viewLifecycleOwner){
-            CodaSnackBar.make(binding.root, it ).show()
+        myPageViewModel.snackMessage.observe(viewLifecycleOwner) {
+            CodaSnackBar.make(binding.root, it).show()
         }
     }
 
@@ -118,23 +100,28 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
         monthPicker.maxValue = 12
         yearPicker.minValue = MIN_YEAR
         yearPicker.maxValue = MAX_YEAR
-        val (y,m) = myPageViewModel.selectedMonth.value!!.split('.')
+        val (y, m) = myPageViewModel.selectedMonth.value!!.split('.')
         yearPicker.value = y.toInt()
         monthPicker.value = m.toInt()
 
         val typeface = resources.getFont(R.font.robotomedium)
-        setNumberPickerStyle(yearPicker,
-            ContextCompat.getColor(requireContext(), R.color.text_black), typeface)
-        setNumberPickerStyle(monthPicker,
-            ContextCompat.getColor(requireContext(), R.color.text_black), typeface)
+        setNumberPickerStyle(
+            yearPicker,
+            ContextCompat.getColor(requireContext(), R.color.text_black), typeface
+        )
+        setNumberPickerStyle(
+            monthPicker,
+            ContextCompat.getColor(requireContext(), R.color.text_black), typeface
+        )
 
         saveButton.setOnClickListener {
             // 날짜로 일기 불러오기 검색
-            val date = "${yearPicker.value}.${String.format("%02d",monthPicker.value)}"
+            val date = "${yearPicker.value}.${String.format("%02d", monthPicker.value)}"
             searchPeriod = date
             setComments()
             myPageViewModel.setSelectedMonth(date)
-            binding.selectDateTextView.text = "${yearPicker.value}년 ${String.format("%02d",monthPicker.value)}월"
+            binding.selectDateTextView.text =
+                "${yearPicker.value}년 ${String.format("%02d", monthPicker.value)}월"
             dialogView.dismiss()
         }
 
@@ -193,7 +180,7 @@ class SendedCommentListFragment : BaseFragment(), CoroutineScope {
             for (i in 0..count) {
                 val child = numberPicker.getChildAt(i)
                 try {
-                    if(child is TextView) {
+                    if (child is TextView) {
 //                        child.typeface = typeface
                         val paint = Paint()
                         paint.typeface = typeface

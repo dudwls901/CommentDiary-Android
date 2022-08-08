@@ -18,23 +18,13 @@ import com.movingmaker.commentdiary.databinding.FragmentOnboardingFindPasswordBi
 import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel
 
-class OnboardingFindPasswordFragment : BaseFragment() {
+class OnboardingFindPasswordFragment : BaseFragment<FragmentOnboardingFindPasswordBinding>(R.layout.fragment_onboarding_find_password) {
     override val TAG: String = OnboardingFindPasswordFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
-    private lateinit var binding: FragmentOnboardingFindPasswordBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentOnboardingFindPasswordBinding.inflate(layoutInflater)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.FIND_PASSWORD)
         //화면 재진입 시 notice 텍스트 초기화를 위함
         onboardingViewModel.setShakeView(false)
@@ -44,7 +34,6 @@ class OnboardingFindPasswordFragment : BaseFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         initViews()
         observeDatas()
-        return binding.root
     }
 
     @SuppressLint("ResourceAsColor")

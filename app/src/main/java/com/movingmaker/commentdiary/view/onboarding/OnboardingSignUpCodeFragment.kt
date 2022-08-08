@@ -31,28 +31,17 @@ import java.lang.NumberFormatException
 import java.util.regex.Pattern
 import kotlin.coroutines.CoroutineContext
 
-class OnboardingSignUpCodeFragment : BaseFragment(), CoroutineScope {
+class OnboardingSignUpCodeFragment : BaseFragment<FragmentOnboardingSignUpCodeBinding>(R.layout.fragment_onboarding_sign_up_code), CoroutineScope {
     override val TAG: String = OnboardingSignUpCodeFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
-
-    private lateinit var binding: FragmentOnboardingSignUpCodeBinding
-
     private val job = Job()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentOnboardingSignUpCodeBinding.inflate(layoutInflater)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         onboardingViewModel.setShakeView(false)
         onboardingViewModel.setCodeCorrect(true)
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_CODE)
@@ -63,7 +52,6 @@ class OnboardingSignUpCodeFragment : BaseFragment(), CoroutineScope {
         }
         initViews()
         observeDatas()
-        return binding.root
     }
 
     private fun observeDatas() {
