@@ -25,7 +25,6 @@ class SignOutFragment : BaseFragment<FragmentMypageSignoutBinding>(R.layout.frag
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
         initViews()
         observeDatas()
     }

@@ -34,6 +34,7 @@ abstract class BaseFragment<T: ViewDataBinding>(@LayoutRes val layoutRes: Int): 
     ): View? {
         Log.i(TAG, "onCreateView")
         binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
 

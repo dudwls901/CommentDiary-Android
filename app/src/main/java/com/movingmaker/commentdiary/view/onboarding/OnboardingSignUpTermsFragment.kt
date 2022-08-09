@@ -28,7 +28,6 @@ class OnboardingSignUpTermsFragment : BaseFragment<FragmentOnboardingSignUpTerms
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = onboardingViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_TERMS)
         initViews()
     }

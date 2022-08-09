@@ -35,7 +35,6 @@ class OnboardingSignUpEmailFragment : BaseFragment<FragmentOnboardingSignUpEmail
         onboardingViewModel.setEmailCorrect(true)
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_EMAIL)
         binding.vm = onboardingViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }

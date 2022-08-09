@@ -20,8 +20,8 @@ abstract class BaseActivity<T: ViewDataBinding>(@LayoutRes val layoutRes: Int): 
         super.onCreate(savedInstanceState)
         Log.i(TAG,"onCreate")
         binding = DataBindingUtil.setContentView(this, layoutRes)
+        binding.lifecycleOwner = this
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
     }
 
     override fun onRestart() {

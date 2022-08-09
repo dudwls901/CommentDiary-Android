@@ -47,7 +47,6 @@ class WriteDiaryFragment : BaseFragment<FragmentMydiaryWritediaryBinding>(R.layo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.myDiaryviewModel = myDiaryViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.WRITE_DIARY)
 
         initViews()

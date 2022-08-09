@@ -41,7 +41,6 @@ class ReceivedDiaryFragment : BaseFragment<FragmentReceiveddiaryBinding>(R.layou
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = receivedDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.RECEIVED_DIARY)
         initViews()

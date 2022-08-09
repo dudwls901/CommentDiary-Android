@@ -28,7 +28,6 @@ class MyAccountFragment: BaseFragment<FragmentMypageMyaccountBinding>(R.layout.f
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.MY_ACCOUNT)
         initViews()
         observeDatas()

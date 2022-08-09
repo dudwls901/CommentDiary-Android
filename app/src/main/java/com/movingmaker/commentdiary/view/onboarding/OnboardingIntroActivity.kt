@@ -36,11 +36,8 @@ class OnboardingIntroActivity : BaseActivity<ActivityOnboardingIntroBinding>(R.l
 //            setTheme(R.style.Theme_CommentDiary)
 //        }
         super.onCreate(savedInstanceState)
-        binding = ActivityOnboardingIntroBinding.inflate(layoutInflater)
-
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.statusBarColor = getColor(R.color.background_ivory)
-        setContentView(binding.root)
         initViews()
         observeDatas()
     }

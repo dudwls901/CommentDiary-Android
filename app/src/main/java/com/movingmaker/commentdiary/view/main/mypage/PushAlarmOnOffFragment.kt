@@ -29,7 +29,6 @@ class PushAlarmOnOffFragment: BaseFragment<FragmentMypagePushBinding>(R.layout.f
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = myPageViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.PUSHALARM_ONOFF)
         initViews()

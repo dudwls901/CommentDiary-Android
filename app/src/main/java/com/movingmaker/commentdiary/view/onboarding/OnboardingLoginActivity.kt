@@ -64,10 +64,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(R.l
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.onboardingNavHostFragment) as NavHostFragment
         navController = navHostFragment.navController
-
-        binding.lifecycleOwner = this
         binding.vm = onboardingViewModel
-        binding.activity = this
         initViews()
         observeDatas()
     }

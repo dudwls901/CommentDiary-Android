@@ -46,7 +46,6 @@ class CommentDiaryDetailFragment : BaseFragment<FragmentGatherdiaryCommentdiaryD
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.myDiaryviewModel = myDiaryViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.COMMENT_DIARY_DETAIL)
         observeDatas()
         initViews()

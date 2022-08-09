@@ -46,7 +46,6 @@ class OnboardingSignUpCodeFragment : BaseFragment<FragmentOnboardingSignUpCodeBi
         onboardingViewModel.setCodeCorrect(true)
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_CODE)
         binding.vm = onboardingViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }

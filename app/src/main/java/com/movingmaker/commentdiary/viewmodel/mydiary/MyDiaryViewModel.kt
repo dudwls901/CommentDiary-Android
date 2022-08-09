@@ -66,11 +66,7 @@ class MyDiaryViewModel : ViewModel() {
     private var _pushDate = MutableLiveData<String>()
 
     //api response
-    private var _responseGetMonthDiary = MutableLiveData<Response<DiaryListResponse>>()
-    private var _responseSaveDiary = MutableLiveData<Response<SaveDiaryResponse>>()
     private var _responseEditDiary = MutableLiveData<Response<IsSuccessResponse>>()
-    private var _responseDeleteDiary = MutableLiveData<Response<IsSuccessResponse>>()
-    private var _responseGetDayComment = MutableLiveData<Response<CommentListResponse>>()
 
     val aloneDiary: LiveData<List<CalendarDay>>
         get() = _aloneDiary
@@ -108,32 +104,17 @@ class MyDiaryViewModel : ViewModel() {
     val pushDate: LiveData<String>
         get() = _pushDate
 
-    val responseGetMonthDiary: LiveData<Response<DiaryListResponse>>
-        get() = _responseGetMonthDiary
-
-    val responseSaveDiary: LiveData<Response<SaveDiaryResponse>>
-        get() = _responseSaveDiary
-
     val responseEditDiary: LiveData<Response<IsSuccessResponse>>
         get() = _responseEditDiary
 
-    val responseDeleteDiary: LiveData<Response<IsSuccessResponse>>
-        get() = _responseDeleteDiary
-
-    val responseGetDayComment: LiveData<Response<CommentListResponse>>
-        get() = _responseGetDayComment
 
 
     init {
-//        _aloneDiary.value = emptyList()
-//        _commentDiary.value = emptyList()
-//        _monthDiaries.value = emptyList()
         _deliveryYN.value = ' '
         _selectedDiary.value = Diary(null, "", "", "", ' ', ' ', null)
         _dateDiaryText.value = ""
         _commentDiaryTextCount.value = 0
         _saveOrEdit.value = ""
-//        _selectedDate.value = DateConverter.ymdFormat(DateConverter.getCodaToday())
         _selectedDate.value = ""
     }
 
@@ -145,7 +126,7 @@ class MyDiaryViewModel : ViewModel() {
         _commentDiary.value = list
     }
 
-    fun setMonthDiaries(list: List<Diary>) {
+    private fun setMonthDiaries(list: List<Diary>) {
 
         Log.d("observedata", "setMonthDiaries: $list")
         val aloneDiary = ArrayList<CalendarDay>()

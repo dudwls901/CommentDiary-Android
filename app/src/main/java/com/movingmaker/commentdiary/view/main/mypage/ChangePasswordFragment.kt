@@ -29,7 +29,6 @@ class ChangePasswordFragment : BaseFragment<FragmentMypageChangePasswordBinding>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.mypageviewmodel = myPageViewModel
         initViews()
         observeDatas()

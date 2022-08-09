@@ -28,7 +28,6 @@ class OnboardingLoginFragment: BaseFragment<FragmentOnboardingLoginBinding>(R.la
         onboardingViewModel.setLoginNotice("")
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.LOGIN)
         binding.vm = onboardingViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
 
         initViews()
         observeDatas()

@@ -33,7 +33,6 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(R.layout.fragment_myp
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = myPageViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.MY_PAGE)
         myPageViewModel.setResponseGetMyPage()

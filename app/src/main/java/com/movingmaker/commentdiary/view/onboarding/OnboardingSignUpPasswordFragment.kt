@@ -36,7 +36,6 @@ class OnboardingSignUpPasswordFragment : BaseFragment<FragmentOnboardingSignUpPa
         onboardingViewModel.validateCheckPassword()
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_PASSWORD)
         binding.vm = onboardingViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }

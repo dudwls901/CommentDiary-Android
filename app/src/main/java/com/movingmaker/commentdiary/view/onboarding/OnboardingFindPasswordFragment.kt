@@ -31,7 +31,6 @@ class OnboardingFindPasswordFragment : BaseFragment<FragmentOnboardingFindPasswo
         onboardingViewModel.setFindPasswordEmailCorrect(true)
         onboardingViewModel.setFindPasswordEmailNotice("")
         binding.vm = onboardingViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
         initViews()
         observeDatas()
     }

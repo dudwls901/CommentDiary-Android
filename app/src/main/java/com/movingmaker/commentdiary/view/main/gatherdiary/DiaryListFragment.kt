@@ -51,7 +51,6 @@ class DiaryListFragment : BaseFragment<FragmentGatherdiaryDiarylistBinding>(R.la
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.gatherDiaryviewModel = gatherDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.GATHER_DIARY)
         setDiaries()

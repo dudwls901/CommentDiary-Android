@@ -36,9 +36,7 @@ class OnboardingKakaoTermsFragment : BaseFragment<FragmentOnboardingKakaoTermsBi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.vm = onboardingViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.KAKAO_TERMS)
         if(onboardingViewModel.isAllAccept.value == true){
             onboardingViewModel.setAllAccept()
