@@ -22,6 +22,7 @@
 + Android Studio
   + targetSdkVersion : 32
   + minSdkVersion : 26
++ CI/CD (Github Actions)
 + Figma
 + Zeplin
 + PostMan
@@ -34,18 +35,17 @@
 + LiveData
 + EncryptedSharedPreferences
 + Retrofit2, OkHttp3
-+ RecyclerView
++ RecyclerView (DiffUtil + ListAdapter)
 + ViewPager2
-+ BottomNavigationView
 + material-calendarview
++ Kakao Login API
 + Firebase
     + FCM
     + Analytics
     + Crashritics
 + For Refactoring & Develop
     + Paging
-    + Dagger-Hilt   
-    + CI/CD
+    + Hilt   
     + Clean Archiecture
     + MotionLayout
 ## 📝 License
