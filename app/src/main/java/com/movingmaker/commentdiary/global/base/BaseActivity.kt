@@ -12,7 +12,7 @@ import androidx.databinding.ViewDataBinding
 
 abstract class BaseActivity<T: ViewDataBinding>(@LayoutRes val layoutRes: Int): AppCompatActivity() {
 
-    lateinit var binding: T // 데이터 바인딩
+    protected lateinit var binding: T // 데이터 바인딩
     abstract val TAG :String // 액티비티 태그
 
     @SuppressLint("SourceLockedOrientationActivity")

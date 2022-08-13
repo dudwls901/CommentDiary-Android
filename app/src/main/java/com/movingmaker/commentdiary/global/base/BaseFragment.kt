@@ -14,7 +14,7 @@ import com.movingmaker.commentdiary.databinding.FragmentOnboardingLoginBinding
 
 abstract class BaseFragment<T: ViewDataBinding>(@LayoutRes val layoutRes: Int): Fragment(){
 
-    lateinit var binding: T
+    protected lateinit var binding: T
     abstract val TAG :String// 프래그먼트 태그
 
     override fun onAttach(context: Context) {
