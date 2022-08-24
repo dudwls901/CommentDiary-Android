@@ -27,7 +27,7 @@
 + Zeplin
 + PostMan
 + Kotlin
-+ MVVM-Repository
++ MVVM
 + Navigation
 + Coroutines
 + DataBinding
