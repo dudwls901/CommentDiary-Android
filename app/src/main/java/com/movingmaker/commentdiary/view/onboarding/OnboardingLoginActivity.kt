@@ -18,6 +18,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -43,11 +44,13 @@ import java.text.SimpleDateFormat
 import kotlin.coroutines.CoroutineContext
 
 class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(R.layout.activity_onboarding_login), CoroutineScope {
+//class OnboardingLoginActivity: AppCompatActivity(), CoroutineScope{
     override val TAG: String = OnboardingLoginActivity::class.java.simpleName
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
+//    lateinit var binding: ActivityOnboardingLoginBinding
     private val onboardingViewModel: OnboardingViewModel by viewModels()
     private var backButtonTime = 0L
     private lateinit var navController: NavController
@@ -55,16 +58,17 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(R.l
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.statusBarColor = getColor(R.color.background_ivory)
+        binding.vm = onboardingViewModel
+        binding.activity = this
         //todo 스플래시 대응 수부
 //        binding.backgroundLayout.setBackgroundColor(R.color.background_ivory)
+
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.onboardingNavHostFragment) as NavHostFragment
         navController = navHostFragment.navController
-        binding.vm = onboardingViewModel
         initViews()
         observeDatas()
     }
