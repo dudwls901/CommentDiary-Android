@@ -212,8 +212,6 @@ object RetrofitClient {
             ).convert(errorBody)
         }catch (e: Exception){
             Log.e(TAG, "getErrorResponse: ${e.message}")
-        }
-        finally {
             return null
         }
     }
