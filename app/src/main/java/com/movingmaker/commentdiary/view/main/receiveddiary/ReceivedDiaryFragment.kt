@@ -45,7 +45,7 @@ class ReceivedDiaryFragment : BaseFragment<FragmentReceiveddiaryBinding>(R.layou
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.RECEIVED_DIARY)
         initViews()
         observeDatas()
-        receivedDiaryViewModel.setResponseGetReceivedDiary()
+        receivedDiaryViewModel.getReceiveDiary()
     }
 
     @SuppressLint("ResourceAsColor")

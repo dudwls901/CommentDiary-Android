@@ -26,7 +26,6 @@ import kotlin.coroutines.CoroutineContext
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main), CoroutineScope {
     override val TAG: String = MainActivity::class.java.simpleName
     private val job = Job()
-    private var deferredJob: Deferred<Job>? = null
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
@@ -46,26 +45,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main), 
         Log.d("MainActivity", "onNewIntent: push $pushDate")
         if (pushDate != null) {
             myDiaryViewModel.setPushDate(pushDate!!)
-
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.lifecycleOwner = this
         binding.fragmentviewModel = fragmentViewModel
-        Log.d(TAG, "onCreate: -->")
         initViews()
-//            replaceFragment("myDiary")
         observerFragments()
         observerDatas()
-        deferredJob = async(start = CoroutineStart.LAZY) {
-            myDiaryViewModel.setResponseGetMonthDiary(
-                DateConverter.ymFormat(DateConverter.getCodaToday()),
-                "onCreate"
-            )
-        }
-        receivedDiaryViewModel.setResponseGetReceivedDiary()
+
+        receivedDiaryViewModel.getReceiveDiary()
 
         pushDate = intent.getStringExtra("pushDate")
         //푸시로 들어온 경우 바로 코멘트 화면으로
@@ -77,26 +67,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main), 
 
     private fun observerDatas() {
 
-        receivedDiaryViewModel.initReceivedDiary.observe(this) {
-            launch {
-                Log.d(TAG, "observerDatas: $deferredJob --> 실행")
-                deferredJob?.await()
-            }
-            Log.d(TAG, "observerDatas: --> receivedDiary: ${it}")
+        receivedDiaryViewModel.receivedDiary.observe(this) {
             if (it != null) {
                 if (it.myComment?.isNotEmpty() == true) {
                     binding.bottomNavigationView.menu[1].icon =
-//                    ContextCompat.getDrawable(this, R.drawable.bottom_ic_received_notice)
                         ContextCompat.getDrawable(this, R.drawable.bottom_ic_received)
                 } else {
                     //코멘트가 없다면
                     binding.bottomNavigationView.menu[1].icon =
-//                    ContextCompat.getDrawable(this, R.drawable.bottom_ic_received)
                         ContextCompat.getDrawable(this, R.drawable.bottom_ic_received_notice)
                 }
             } else {
                 //도착한 일기가 없다면
-                ContextCompat.getDrawable(this, R.drawable.bottom_ic_received)
+                binding.bottomNavigationView.menu[1].icon =
+                    ContextCompat.getDrawable(this, R.drawable.bottom_ic_received)
             }
 
         }
@@ -153,8 +137,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main), 
                 // 2초 안에 두번 뒤로가기 누를 시 앱 종료
 //                finish()
                 finishAndRemoveTask()
-                //todo 아래 코드 필요?
-                android.os.Process.killProcess(android.os.Process.myPid())
+//                android.os.Process.killProcess(android.os.Process.myPid())
             } else {
                 backButtonTime = currentTime
                 CodaSnackBar.make(binding.root, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.").show()

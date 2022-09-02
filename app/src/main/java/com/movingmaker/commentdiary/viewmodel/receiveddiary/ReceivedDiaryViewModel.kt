@@ -40,19 +40,11 @@ class ReceivedDiaryViewModel : ViewModel() {
         onError("Exception handled: ${throwable.localizedMessage}")
     }
 
-    private var _initReceivedDiary = MutableLiveData<ReceivedDiary?>()
-    val initReceivedDiary: LiveData<ReceivedDiary?>
-        get() = _initReceivedDiary
-
     private var _receivedDiary = MutableLiveData<ReceivedDiary?>()
-    private var _commentTextCount = MutableLiveData<Int>()
-
-    private var _responseSaveComment = MutableLiveData<Response<IsSuccessResponse>>()
-    private var _responseReportDiary = MutableLiveData<Response<IsSuccessResponse>>()
-
     val receivedDiary: LiveData<ReceivedDiary?>
         get() = _receivedDiary
 
+    private var _commentTextCount = MutableLiveData<Int>()
     val commentTextCount: LiveData<Int>
         get() = _commentTextCount
 
@@ -60,7 +52,7 @@ class ReceivedDiaryViewModel : ViewModel() {
         _commentTextCount.value = 0
     }
 
-    fun setReceivedDiary(diary: ReceivedDiary?) {
+    private fun setReceivedDiary(diary: ReceivedDiary?) {
         _receivedDiary.value = diary
     }
 
@@ -69,11 +61,10 @@ class ReceivedDiaryViewModel : ViewModel() {
     }
 
     //오늘 날짜로 받은 일기 조회
-    fun setResponseGetReceivedDiary() = viewModelScope.launch {
+    fun getReceiveDiary() = viewModelScope.launch {
         _loading.postValue(true)
-        Log.d("abcabc", "setResponseGetReceivedDiary: 몇 번 일기 불러오니")
         var response: Response<ReceivedDiaryResponse>? = null
-        val date = DateConverter.ymdFormat(DateConverter.getCodaToday())
+        val date = DateConverter.ymdFormat(DateConverter.getCodaToday())!!
         val job = launch(Dispatchers.Main + exceptionHandler) {
             response = ReceivedDiaryRepository.INSTANCE.getReceivedDiary(date)
         }
@@ -85,20 +76,23 @@ class ReceivedDiaryViewModel : ViewModel() {
                     when (it.code()) {
                         200 -> {
                             setReceivedDiary(it.body()!!.result)
-                            _initReceivedDiary.postValue(it.body()!!.result)
                         }
-                        else -> onError(it.message())
+                        else -> {
+                            setReceivedDiary(null)
+                            onError(it.message())
+                        }
                     }
                 }
             } else {
                 it.errorBody()?.let { errorBody ->
                     RetrofitClient.getErrorResponse(errorBody)?.let {
-                        setReceivedDiary(null)
-                        _initReceivedDiary.postValue(null)
                         //Received 일기 없는 경우 화면에 텍스트로 (toast X)
                         if (it.status == 401) {
                             onError("다시 로그인해 주세요.")
                             CodaApplication.getInstance().logOut()
+                        }
+                        else{
+                            setReceivedDiary(null)
                         }
                     }
                 }
@@ -116,7 +110,7 @@ class ReceivedDiaryViewModel : ViewModel() {
             response = ReceivedDiaryRepository.INSTANCE.saveComment(
                 SaveCommentRequest(
                     id = receivedDiary.value!!.id!!,
-                    date = date,
+                    date = date!!,
                     content = content
                 )
             )
@@ -170,7 +164,7 @@ class ReceivedDiaryViewModel : ViewModel() {
                 it.body()?.let { result ->
                     when (it.code()) {
                         200 -> {
-                            setResponseGetReceivedDiary()
+                            getReceiveDiary()
                         }
                         else -> onError(it.message())
                     }
