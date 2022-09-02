@@ -9,7 +9,7 @@
         <import type="android.view.View" />
 
         <variable
-            name="myDiaryviewModel"
+            name="vm"
             type="com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel" />
     </data>
 
@@ -67,6 +67,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="@color/text_black"
+                    android:yearMonth="@{vm.selectedYearMonth}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:text="2022년 3월" />
@@ -147,7 +148,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="20dp"
                             android:layout_marginTop="19dp"
-                            android:text="@{myDiaryviewModel.dateDiaryText}"
+                            android:text="@{vm.dateDiaryText}"
                             android:textColor="@color/core_pure_orange"
                             app:layout_constraintBottom_toTopOf="@id/writeDiaryTextView"
                             app:layout_constraintStart_toStartOf="parent"
@@ -240,7 +241,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
                         android:layout_marginTop="16dp"
-                        android:text="@{myDiaryviewModel.dateDiaryText}"
+                        android:text="@{vm.dateDiaryText}"
                         android:textColor="@color/core_pure_orange"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -255,7 +256,7 @@
                         android:layout_marginTop="5dp"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:text="@{myDiaryviewModel.selectedDiary.title}"
+                        android:text="@{vm.selectedDiary.title}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/diaryDateTextView"
@@ -306,7 +307,7 @@
                         android:layout_marginHorizontal="24dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="16dp"
-                        android:text="@{myDiaryviewModel.selectedDiary.content}"
+                        android:text="@{vm.selectedDiary.content}"
                         app:layout_constraintBottom_toTopOf="@id/sendDiaryBeforeAfterTextView"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

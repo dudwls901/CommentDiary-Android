@@ -147,7 +147,7 @@ object RetrofitClient {
 
             val accessTokenExpiresIn = CodaApplication.getInstance().getAccessExpiresIn()
 //            val accessTokenExpiresIn = getSyncAccessTokenExpiresIn()
-            var accessToken =""
+            var accessToken = CodaApplication.getInstance().getAccessToken()
             Log.d(TAG, "intercept: --> ${accessTokenExpiresIn}")
             if (accessTokenExpiresIn <= System.currentTimeMillis()) {
                 accessToken = runBlocking {
@@ -210,7 +210,7 @@ object RetrofitClient {
                 ErrorResponse::class.java,
                 ErrorResponse::class.java.annotations
             ).convert(errorBody)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, "getErrorResponse: ${e.message}")
             return null
         }

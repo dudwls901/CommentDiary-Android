@@ -135,7 +135,7 @@ class DiaryListFragment : BaseFragment<FragmentGatherdiaryDiarylistBinding>(R.la
             // 전체 보기
             searchPeriod = "all"
             setDiaries()
-            gatherDiaryViewModel.setSelectedMonth(DateConverter.ymFormat(DateConverter.getCodaToday()))
+            gatherDiaryViewModel.setSelectedMonth(DateConverter.ymFormat(DateConverter.getCodaToday())!!)
             binding.selectDateTextView.text = getString(R.string.show_all)
             dialogView.dismiss()
         }

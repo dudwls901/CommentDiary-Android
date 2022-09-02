@@ -1,5 +1,6 @@
 package com.movingmaker.commentdiary.util
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.util.Log
 import android.view.View
@@ -15,12 +16,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.common.internal.StringResourceValueReader
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.util.Constant.EMAIL
 import com.movingmaker.commentdiary.util.Constant.KAKAO
 import com.movingmaker.commentdiary.view.main.mypage.MyCommentListAdapter
+import java.lang.Exception
 
 object BindingAdapter {
 
@@ -130,6 +133,20 @@ object BindingAdapter {
                 activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 view.visibility = View.GONE
             }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    @BindingAdapter("android:yearMonth")
+    @JvmStatic
+    fun changeYearMonth(view: TextView, text: LiveData<String>) {
+        Log.d(TAG, "changeYearMonth: onviewcreated ${text.value}")
+        try {
+            val (y,m) = text.value!!.split('.')
+            view.text = "${y}년 ${m}월"
+        }catch (e: Exception){
+            view.text = "년 월"
+            Log.e(TAG, "changeYearMonth: $e", )
         }
     }
 

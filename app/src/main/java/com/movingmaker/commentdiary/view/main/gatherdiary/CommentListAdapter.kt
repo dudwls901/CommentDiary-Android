@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.movingmaker.commentdiary.databinding.RvItemMydiaryCommentBinding
 import com.movingmaker.commentdiary.data.model.Comment
 
-class CommentListAdapter(val onCommentSelectListener: OnCommentSelectListener): ListAdapter<Comment, CommentListAdapter.ItemViewHolder>(
+class CommentListAdapter(private val onCommentSelectListener: OnCommentSelectListener): ListAdapter<Comment, CommentListAdapter.ItemViewHolder>(
     diffUtil
 ) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ItemViewHolder = ItemViewHolder(RvItemMydiaryCommentBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+    ): ItemViewHolder = ItemViewHolder(RvItemMydiaryCommentBinding.inflate(LayoutInflater.from(parent.context),parent,false),onCommentSelectListener)
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bind(currentList[position])
@@ -28,7 +28,7 @@ class CommentListAdapter(val onCommentSelectListener: OnCommentSelectListener): 
     override fun getItemId(position: Int): Long {
         return currentList[position].id
     }
-    inner class ItemViewHolder(private val binding: RvItemMydiaryCommentBinding) : RecyclerView.ViewHolder(binding.root){
+     class ItemViewHolder(private val binding: RvItemMydiaryCommentBinding,val onCommentSelectListener: OnCommentSelectListener) : RecyclerView.ViewHolder(binding.root){
         fun bind(comment : Comment){
             binding.comment = comment
             //todo 하트 애니메이션
