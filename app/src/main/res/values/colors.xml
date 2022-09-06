@@ -11,7 +11,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="dot_red">#ffac86</color>
-    <color name="dot_sky">#73bf90</color>
+    <color name="dot_green">#73bf90</color>
     <color name="date_selected_color">#EEE</color>
 
     <color name="onboarding_yellow_button">#FFECE4A5</color>

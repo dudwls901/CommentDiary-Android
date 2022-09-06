@@ -11,7 +11,7 @@ import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
 
 class CommentDotDecorator(context: Context, private val dates: List<CalendarDay>) : DayViewDecorator {
-    val color = ContextCompat.getColor(context, R.color.dot_sky)
+    val color = ContextCompat.getColor(context, R.color.dot_green)
     override fun shouldDecorate(day: CalendarDay?): Boolean {
         return dates.contains(day)
     }
