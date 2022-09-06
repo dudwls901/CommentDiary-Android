@@ -97,7 +97,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main), 
                 fragment == FRAGMENT_NAME.TERMS ||
                 fragment == FRAGMENT_NAME.SENDED_COMMENT_LIST ||
                 fragment == FRAGMENT_NAME.CHANGE_PASSWORD ||
-                fragment == FRAGMENT_NAME.PUSHALARM_ONOFF
+                fragment == FRAGMENT_NAME.PUSHALARM_ONOFF ||
+                fragment == FRAGMENT_NAME.WRITE_DIARY
             ) {
                 window.statusBarColor = getColor(R.color.background_ivory)
             } else {
