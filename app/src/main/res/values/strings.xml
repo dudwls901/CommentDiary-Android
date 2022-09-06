@@ -163,4 +163,9 @@
     <string name="terms_accept">[필수] 서비스 이용 약관</string>
     <string name="push_accept_condition">동의 시 \'코멘트\' 도착 알림을 받을 수 있어요!</string>
     <string name="push_accept">[선택] 앱 푸시 알림 수신</string>
+    <string name="diary_type_comment">코멘트 받는 일기</string>
+    <string name="diary_type_arrow">DiaryTypeArrow</string>
+    <string name="send">전송</string>
+    <string name="select_diary_type">일기 유형 선택</string>
+    <string name="diary_type_alone">혼자 쓰는 일기</string>
 </resources>

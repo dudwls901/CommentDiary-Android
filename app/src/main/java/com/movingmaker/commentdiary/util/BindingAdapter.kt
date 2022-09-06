@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -17,6 +18,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.internal.StringResourceValueReader
+import com.google.android.material.textview.MaterialTextView
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.global.CodaApplication
@@ -121,6 +123,82 @@ object BindingAdapter {
         }
     }
 
+    @BindingAdapter("diaryType", "isExpand")
+    @JvmStatic
+    fun changeVisibleWithDiaryType(view: View, diaryType: LiveData<DIARY_TYPE>, isExpand: LiveData<Boolean>) {
+        when(isExpand.value){
+            true ->{
+                when(view.id){
+                    R.id.sendButton,R.id.saveButton->{
+                        view.visibility = View.INVISIBLE
+                    }
+                    R.id.selectAloneDiaryInRadioButton ->{
+                        when (diaryType.value) {
+                            DIARY_TYPE.COMMENT_DIARY -> {
+                                view.visibility = View.GONE
+                            }
+                            DIARY_TYPE.ALONE_DIARY -> {
+                                view.visibility = View.VISIBLE
+                            }
+                            else -> {}
+                        }
+                    }
+                    R.id.selectCommentDiaryInRadioButton ->{
+                        when (diaryType.value) {
+                            DIARY_TYPE.COMMENT_DIARY -> {
+                                view.visibility = View.VISIBLE
+                            }
+                            DIARY_TYPE.ALONE_DIARY -> {
+                                view.visibility = View.GONE
+                            }
+                            else -> {}
+                        }
+                    }
+                    else ->{
+                        (view as TextView).setCompoundDrawablesWithIntrinsicBounds( 0,0, 0, 0)
+                        view.context.getString(R.string.select_diary_type)
+                    }
+                }
+            }
+            else ->{
+                when(view.id){
+                    R.id.sendButton->{
+                        when (diaryType.value) {
+                            DIARY_TYPE.COMMENT_DIARY -> {
+                                view.visibility = View.VISIBLE
+                            }
+                            DIARY_TYPE.ALONE_DIARY -> {
+                                view.visibility = View.INVISIBLE
+                            }
+                            else -> {}
+                        }
+                    }
+                    R.id.saveButton->{
+                        when (diaryType.value) {
+                            DIARY_TYPE.COMMENT_DIARY -> {
+                                view.visibility = View.INVISIBLE
+                            }
+                            DIARY_TYPE.ALONE_DIARY -> {
+                                view.visibility = View.VISIBLE
+                            }
+                            else -> {}
+                        }
+                    }
+                    R.id.selectCommentDiaryInRadioButton, R.id.selectAloneDiaryInRadioButton ->{
+                        view.visibility = View.GONE
+                    }
+                    else->{
+                        (view as TextView).setCompoundDrawablesWithIntrinsicBounds( 0,0, R.drawable.ic_arrow_down, 0)
+                        view.text = when(diaryType.value){
+                            DIARY_TYPE.COMMENT_DIARY -> view.context.getString(R.string.diary_type_comment)
+                            else -> view.context.getString(R.string.diary_type_alone)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @BindingAdapter("activity", "loading")
     @JvmStatic
     fun setNonClickableLoading(view: ProgressBar, activity: Activity, state: LiveData<Boolean>) {
@@ -140,7 +218,6 @@ object BindingAdapter {
     @BindingAdapter("android:yearMonth")
     @JvmStatic
     fun changeYearMonth(view: TextView, text: LiveData<String>) {
-        Log.d(TAG, "changeYearMonth: onviewcreated ${text.value}")
         try {
             val (y,m) = text.value!!.split('.')
             view.text = "${y}년 ${m}월"

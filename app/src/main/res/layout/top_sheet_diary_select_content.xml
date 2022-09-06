@@ -3,17 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="vm"
+            type="com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel" />
+    </data>
+
     <LinearLayout
         android:id="@+id/bottomSheetLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:background="@drawable/background_ivory_radius_top_10"
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/selectAloneDiaryLayout"
+            android:id="@+id/selectCommentDiaryLayout"
+            android:onClick="@{vm.selectDiaryType}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="16dp">
@@ -47,6 +57,9 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <View
+                    diaryType="@{vm.selectedDiaryType}"
+                    isExpand="@{vm.selectDiaryTypeToolbarIsExpanded}"
+                    android:visibility="gone"
                     android:id="@+id/selectCommentDiaryInRadioButton"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
@@ -62,9 +75,11 @@
             android:background="@color/text_light_brown" />
 
         <LinearLayout
-            android:id="@+id/selectCommentDiaryLayout"
+            android:id="@+id/selectAloneDiaryLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="@{vm.selectDiaryType}"
+            android:animateLayoutChanges="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="16dp">
@@ -97,7 +112,10 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <View
+                    android:visibility="gone"
                     android:id="@+id/selectAloneDiaryInRadioButton"
+                    diaryType="@{vm.selectedDiaryType}"
+                    isExpand="@{vm.selectDiaryTypeToolbarIsExpanded}"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:background="@drawable/background_dark_brown_oval" />

@@ -22,7 +22,9 @@
             android:id="@+id/wrapperLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="170dp"
             android:alpha="0.6"
+            android:animateLayoutChanges="true"
             android:background="@color/black"
             android:clickable="true"
             android:focusable="true"
@@ -34,17 +36,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.motion.widget.MotionLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:background="@color/background_ivory"
             android:translationZ="2dp"
-            app:layoutDescription="@xml/fragment_mydiary_writediary_scene"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
 
             <ImageButton
                 android:id="@+id/backButton"
@@ -54,67 +55,57 @@
                 android:background="@color/transparent"
                 android:contentDescription="@string/backButton"
                 android:src="@drawable/ic_arrow_left"
-                app:layout_constraintBottom_toBottomOf="@id/diaryTypeLayout"
+                app:layout_constraintBottom_toBottomOf="@id/diaryTypeTextView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/diaryTypeLayout"
+                app:layout_constraintTop_toTopOf="@id/diaryTypeTextView"
                 tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
 
-            <LinearLayout
-                android:id="@+id/diaryTypeLayout"
-                android:layout_width="200dp"
+            <TextView
+                android:id="@+id/diaryTypeTextView"
+                style="@style/BCaption"
+                diaryType="@{vm.selectedDiaryType}"
+                isExpand="@{vm.selectDiaryTypeToolbarIsExpanded}"
+                android:layout_width="wrap_content"
                 android:layout_height="65dp"
-                android:gravity="center_vertical|center_horizontal"
-                android:orientation="horizontal"
+                android:layout_marginEnd="1dp"
+                android:text="@string/diary_type_comment"
+                android:textColor="@color/text_black"
+                app:drawableEndCompat="@drawable/ic_arrow_down"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="UseCompoundDrawables">
-
-                <TextView
-                    android:id="@+id/diaryTypeTextView"
-                    style="@style/BCaption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="1dp"
-                    android:text="@string/diary_type_comment"
-                    android:textColor="@color/text_black" />
-
-                <ImageView
-                    android:id="@+id/diaryTypeSelectIconImageView"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:contentDescription="@string/select_diary_type"
-                    android:src="@drawable/ic_arrow_down" />
-            </LinearLayout>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/sendButton"
                 style="@style/BCaption"
+                diaryType="@{vm.selectedDiaryType}"
+                isExpand="@{vm.selectDiaryTypeToolbarIsExpanded}"
                 android:layout_width="62dp"
                 android:layout_height="31dp"
                 android:layout_marginEnd="31dp"
-                android:alpha="0.4"
-                android:background="@drawable/background_green_radius_10"
+                android:background="@drawable/background_green_alpha_40_radius_10"
                 android:text="@string/send"
                 android:textAlignment="center"
                 android:textColor="@color/background_ivory"
-                app:layout_constraintBottom_toBottomOf="@id/diaryTypeLayout"
+                app:layout_constraintBottom_toBottomOf="@id/diaryTypeTextView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/diaryTypeLayout"
+                app:layout_constraintTop_toTopOf="@id/diaryTypeTextView"
                 tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/saveButton"
                 style="@style/BHeadline2"
+                diaryType="@{vm.selectedDiaryType}"
+                isExpand="@{vm.selectDiaryTypeToolbarIsExpanded}"
                 android:layout_width="37.6dp"
                 android:layout_height="25dp"
                 android:layout_marginEnd="25dp"
                 android:text="@string/store"
                 android:textAlignment="center"
                 android:textColor="@color/core_green"
-                app:layout_constraintBottom_toBottomOf="@id/diaryTypeLayout"
+                app:layout_constraintBottom_toBottomOf="@id/diaryTypeTextView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/diaryTypeLayout" />
+                app:layout_constraintTop_toTopOf="@id/diaryTypeTextView" />
 
             <View
                 android:id="@+id/line1"
@@ -124,21 +115,25 @@
                 android:background="@color/background_tap"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/diaryTypeLayout" />
+                app:layout_constraintTop_toBottomOf="@id/diaryTypeTextView" />
 
             <include
                 android:id="@+id/selectDiaryTypeSheet"
-                layout="@layout/top_sheet_fragment_writediary_typeselect"
+                layout="@layout/top_sheet_diary_select_content"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:animateLayoutChanges="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/line1" />
-        </androidx.constraintlayout.motion.widget.MotionLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/diaryLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="65dp"
             android:layout_marginBottom="92dp"
             android:background="@drawable/background_ivory_radius_10"
             android:paddingHorizontal="18dp"
@@ -146,7 +141,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlSymmetry">
 
             <TextView
@@ -154,10 +149,10 @@
                 style="@style/BHeadline2"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
-                android:text="@{vm.selectedDiary.date}"
+                android:text="@{vm.selectedDate}"
                 android:textColor="@color/core_pure_orange"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@id/diaryLayout"
                 tools:text="2022.2.21" />
 
             <EditText

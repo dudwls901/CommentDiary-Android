@@ -1,10 +1,12 @@
 package com.movingmaker.commentdiary.viewmodel.mydiary
 
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.global.CodaApplication
 import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.data.model.Diary
@@ -14,6 +16,7 @@ import com.movingmaker.commentdiary.data.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.data.remote.response.*
 import com.movingmaker.commentdiary.data.repository.MyDiaryRepository
 import com.movingmaker.commentdiary.data.repository.MyPageRepository
+import com.movingmaker.commentdiary.util.DIARY_TYPE
 import com.movingmaker.commentdiary.util.DateConverter
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import kotlinx.coroutines.*
@@ -53,8 +56,8 @@ class MyDiaryViewModel : ViewModel() {
     val monthDiaries: LiveData<List<Diary>>
         get() = _monthDiaries
 
-    private var _selectedDiary = MutableLiveData<Diary>()
-    val selectedDiary: LiveData<Diary>
+    private var _selectedDiary = MutableLiveData<Diary?>()
+    val selectedDiary: LiveData<Diary?>
         get() = _selectedDiary
 
     private var _dateDiaryText = MutableLiveData<String>()
@@ -65,25 +68,21 @@ class MyDiaryViewModel : ViewModel() {
     val isDeletedDiary: LiveData<Boolean>
         get() = _isDeletedDiary
 
-    private var _isSavedDiary = MutableLiveData<Boolean>()
-    val isSavedDiary: LiveData<Boolean>
-        get() = _isSavedDiary
-
-    private var _isEditedDiary = MutableLiveData<Boolean>()
-    val isEditedDiary: LiveData<Boolean>
-        get() = _isEditedDiary
-
-    private var _deliveryYN = MutableLiveData<Char>()
-    val deliveryYN: LiveData<Char>
-        get() = _deliveryYN
+//    private var _isSavedDiary = MutableLiveData<Boolean>()
+//    val isSavedDiary: LiveData<Boolean>
+//        get() = _isSavedDiary
+//
+//    private var _isEditedDiary = MutableLiveData<Boolean>()
+//    val isEditedDiary: LiveData<Boolean>
+//        get() = _isEditedDiary
 
     private var _commentDiaryTextCount = MutableLiveData<Int>()
     val commentDiaryTextCount: LiveData<Int>
         get() = _commentDiaryTextCount
 
-    private var _saveOrEdit = MutableLiveData<String>()
-    val saveOrEdit: LiveData<String>
-        get() = _saveOrEdit
+//    private var _saveOrEdit = MutableLiveData<String>()
+//    val saveOrEdit: LiveData<String>
+//        get() = _saveOrEdit
 
     private var _selectedYearMonth = MutableLiveData<String>().apply { value = DateConverter.ymFormat(DateConverter.getCodaToday()) }
     val selectedYearMonth: LiveData<String>
@@ -105,17 +104,23 @@ class MyDiaryViewModel : ViewModel() {
     val pushDate: LiveData<String>
         get() = _pushDate
 
+    private var _selectDiaryTypeToolbarIsExpanded = MutableLiveData<Boolean>().apply{value = false}
+    val selectDiaryTypeToolbarIsExpanded: LiveData<Boolean>
+        get() = _selectDiaryTypeToolbarIsExpanded
+
     //api response
     private var _responseEditDiary = MutableLiveData<Response<IsSuccessResponse>>()
     val responseEditDiary: LiveData<Response<IsSuccessResponse>>
         get() = _responseEditDiary
 
+    private var _selectedDiaryType = MutableLiveData<DIARY_TYPE>()
+    val selectedDiaryType: LiveData<DIARY_TYPE>
+        get() = _selectedDiaryType
+
     init {
-        _deliveryYN.value = ' '
-        _selectedDiary.value = Diary(null, "", "", "", ' ', ' ', null)
+//        _selectedDiary.value = Diary(null, "", "", "", ' ', ' ', null)
         _dateDiaryText.value = ""
         _commentDiaryTextCount.value = 0
-        _saveOrEdit.value = ""
     }
 
     private fun setAloneDiary(list: List<CalendarDay>) {
@@ -149,9 +154,34 @@ class MyDiaryViewModel : ViewModel() {
     }
 
     //for diary data
-    fun setSelectedDiary(diary: Diary) {
-        _selectedDiary.value = diary
-        _commentList.value = diary.commentList ?: emptyList()
+    fun setSelectedDiary(diary: Diary?) {
+        if(diary == null){
+            _selectedDiary.value = null
+            _commentList.value = null
+        } else{
+            _selectedDiary.value = diary
+            _commentList.value = diary.commentList ?: emptyList()
+        }
+    }
+
+    fun setSelectedDiaryType(type: DIARY_TYPE){
+        _selectedDiaryType.value = type
+    }
+
+    fun selectDiaryType(view: View){
+        _selectDiaryTypeToolbarIsExpanded.value = false
+        when(view.id){
+            R.id.selectCommentDiaryLayout -> {
+                setSelectedDiaryType(DIARY_TYPE.COMMENT_DIARY)
+            }
+            R.id.selectAloneDiaryLayout -> {
+                setSelectedDiaryType(DIARY_TYPE.ALONE_DIARY)
+            }
+        }
+    }
+
+    fun changeSelectDiaryTypeToolbarIsExpanded() {
+        _selectDiaryTypeToolbarIsExpanded.value = _selectDiaryTypeToolbarIsExpanded.value!! xor true
     }
 
     fun setDeliveryYN(type: Char) {
@@ -180,9 +210,6 @@ class MyDiaryViewModel : ViewModel() {
         _commentDiaryTextCount.value = count
     }
 
-    fun setSaveOrEdit(state: String) {
-        _saveOrEdit.value = state
-    }
 
     fun setHaveDayMyComment(isHave: Boolean) {
         _haveDayMyComment.value = isHave
@@ -295,7 +322,6 @@ class MyDiaryViewModel : ViewModel() {
                                 null
                             )
                             setSelectedDiary(newDiary)
-                            _isSavedDiary.postValue(true)
                             //혼자 쓴 일기 저장할 때만 스낵바
                             if (selectedDiary.value!!.deliveryYN == 'N') {
                                 _snackMessage.postValue("일기가 저장되었습니다.")
@@ -345,7 +371,6 @@ class MyDiaryViewModel : ViewModel() {
                                 )
                                 setSelectedDiary(newDiary)
                                 _snackMessage.postValue("일기가 수정되었습니다.")
-                                _isEditedDiary.value = true
                             }
                             else -> onError(it.message())
                         }

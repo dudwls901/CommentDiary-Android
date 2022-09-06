@@ -51,6 +51,7 @@
 <!--    ver2-->
     <color name="core_notice">#f83c32</color>
     <color name="core_green">#5abd80</color>
+    <color name="core_green_alpha_40">#665ABD80</color>
     <color name="core_orange">#ffa665</color>
     <color name="background_comment">#f8f4ef</color>
 

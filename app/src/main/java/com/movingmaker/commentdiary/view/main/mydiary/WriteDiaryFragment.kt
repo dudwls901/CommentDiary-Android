@@ -4,13 +4,17 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.opengl.Visibility
 import android.os.Bundle
+import android.text.Layout
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.animation.*
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -28,6 +32,7 @@ import com.movingmaker.commentdiary.global.CodaSnackBar
 import com.movingmaker.commentdiary.data.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.data.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.global.CodaApplication
+import com.movingmaker.commentdiary.util.DIARY_TYPE
 import com.movingmaker.commentdiary.util.DateConverter
 import com.movingmaker.commentdiary.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.viewmodel.FragmentViewModel
@@ -35,24 +40,23 @@ import com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class WriteDiaryFragment : BaseFragment<FragmentMydiaryWritediaryBinding>(R.layout.fragment_mydiary_writediary), CoroutineScope, SelectDiaryTypeListener {
+class WriteDiaryFragment : BaseFragment<FragmentMydiaryWritediaryBinding>(R.layout.fragment_mydiary_writediary), CoroutineScope {
 
     override val TAG: String = WriteDiaryFragment::class.java.simpleName
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
-
-    private lateinit var diaryTypeBottomSheet: SelectDiaryTypeBottomSheet
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = myDiaryViewModel
+        binding.selectDiaryTypeSheet.vm = myDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.WRITE_DIARY)
 
         //selectedDiary는 Null, selectedDate는 있음
-
+        Log.d(TAG, "onViewCreated: writeDiary ${myDiaryViewModel.selectedDiary.value} ${myDiaryViewModel.selectedDate.value} ${myDiaryViewModel.selectedYearMonth.value}")
         initViews()
         initToolbar()
         observeDatas()
@@ -70,26 +74,50 @@ class WriteDiaryFragment : BaseFragment<FragmentMydiaryWritediaryBinding>(R.layo
             CodaSnackBar.make(binding.root, it).show()
         }
 
-        myDiaryViewModel.isSavedDiary.observe(viewLifecycleOwner){
-            //코멘트 일기 저장한 경우에 디테일 화면으로 이동
-            if(it){
-                if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='Y' &&
-                    myDiaryViewModel.selectedDiary.value!!.tempYN=='N') {
-                    val action =
-                        WriteDiaryFragmentDirections.actionWriteDiaryFragmentToCommentDiaryDetailFragment()
-                    findNavController().navigate(action)
-                }
-            }
-        }
+//        myDiaryViewModel.isSavedDiary.observe(viewLifecycleOwner){
+//            //코멘트 일기 저장한 경우에 디테일 화면으로 이동
+//            if(it){
+//                if(myDiaryViewModel.selectedDiary.value!!.deliveryYN=='Y' &&
+//                    myDiaryViewModel.selectedDiary.value!!.tempYN=='N') {
+//                    val action =
+//                        WriteDiaryFragmentDirections.actionWriteDiaryFragmentToCommentDiaryDetailFragment()
+//                    findNavController().navigate(action)
+//                }
+//            }
+//        }
 
         //저장은 혼자 쓴 일기, 코멘트 일기 둘 다 가능
         myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner){ diary->
-
+            //다이어리 타입 설정
+            myDiaryViewModel.setSelectedDiaryType(
+                when{
+                    diary == null || diary.deliveryYN == 'Y'  ->  DIARY_TYPE.COMMENT_DIARY
+                    else -> DIARY_TYPE.ALONE_DIARY
+                }
+            )
         }
 
-        //todo 다 selectedDiaryobserve에서 처리?
-        myDiaryViewModel.isEditedDiary.observe(viewLifecycleOwner){
+        myDiaryViewModel.selectedDiaryType.observe(viewLifecycleOwner){ diaryType ->
+            Log.d(TAG, "observeDatas: ${diaryType}")
+            changeViews(diaryType)
+        }
 
+        myDiaryViewModel.selectDiaryTypeToolbarIsExpanded.observe(viewLifecycleOwner){ isExpand ->
+            if(isExpand){
+                wrapperLayout.isVisible = true
+                selectDiaryTypeSheet.root.visibility = View.VISIBLE
+                val alphaIn: Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.alpha_in)
+                wrapperLayout.startAnimation(alphaIn)
+                val scaleIn: Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_in)
+                selectDiaryTypeSheet.root.startAnimation(scaleIn)
+            } else{
+                wrapperLayout.isVisible = false
+                val alphaOut: Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.alpha_out)
+                wrapperLayout.startAnimation(alphaOut)
+                val scaleOut: Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_out)
+                selectDiaryTypeSheet.root.startAnimation(scaleOut)
+                selectDiaryTypeSheet.root.visibility = View.GONE
+            }
         }
 
         //혼자쓴 일기, 임시 저장 일기 수정
@@ -155,36 +183,9 @@ class WriteDiaryFragment : BaseFragment<FragmentMydiaryWritediaryBinding>(R.layo
     }
 
     private fun initToolbar() = with(binding) {
-        toolbar.addTransitionListener(object: MotionLayout.TransitionListener{
-            override fun onTransitionStarted(
-                motionLayout: MotionLayout?,
-                startId: Int,
-                endId: Int
-            ) {
-                wrapperLayout.isVisible = true
-            }
-
-            override fun onTransitionChange(
-                motionLayout: MotionLayout?,
-                startId: Int,
-                endId: Int,
-                progress: Float
-            ) {
-                if(progress == 0.0f){
-                    wrapperLayout.isVisible = false
-                }
-            }
-
-            override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {}
-
-            override fun onTransitionTrigger(
-                motionLayout: MotionLayout?,
-                triggerId: Int,
-                positive: Boolean,
-                progress: Float
-            ) {}
-
-        })
+        diaryTypeTextView.setOnClickListener {
+            myDiaryViewModel.changeSelectDiaryTypeToolbarIsExpanded()
+        }
     }
 
     private fun initViews() = with(binding){
@@ -192,7 +193,21 @@ class WriteDiaryFragment : BaseFragment<FragmentMydiaryWritediaryBinding>(R.layo
     }
 
     @SuppressLint("ResourceAsColor")
-    private fun changeViews() = with(binding) {
+    private fun changeViews(diaryType: DIARY_TYPE) = with(binding) {
+        when(diaryType){
+            DIARY_TYPE.COMMENT_DIARY ->{
+                setCommentDiaryView()
+            }
+            DIARY_TYPE.ALONE_DIARY ->{
+                setAloneDiaryView()
+            }
+        }
+    }
+
+    private fun setAloneDiaryView() = with(binding){
+    }
+
+    private fun setCommentDiaryView() = with(binding) {
     }
 
     private fun showBackDialog(){
@@ -314,9 +329,5 @@ class WriteDiaryFragment : BaseFragment<FragmentMydiaryWritediaryBinding>(R.layo
         dialogView.show()
         delay(2000L)
         dialogView.dismiss()
-    }
-
-    override fun onSelectDiaryTypeListener(deliveryYN: Char) {
-        changeViews()
     }
 }
