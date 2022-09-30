@@ -53,9 +53,12 @@ android {
             signingConfig signingConfigs.release
             //디버그 테스트할 때  사용
             debuggable false
+
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"true"]
         }
         debug {
             signingConfig signingConfigs.release
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
         }
     }
     compileOptions {

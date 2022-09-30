@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CommentDiary"
         android:usesCleartextTraffic="true">
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="${crashlyticsCollectionEnabled}" />
+
         <activity
             android:name="com.movingmaker.commentdiary.view.onboarding.SplashActivity"
             android:exported="true"
@@ -22,12 +26,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.movingmaker.commentdiary.view.main.MainActivity"
-            android:exported="true"/>
-        <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity"
+        <activity
+            android:name="com.movingmaker.commentdiary.view.main.MainActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize"
-            />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
@@ -37,20 +42,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth" -->
                 <data
                     android:host="oauth"
                     android:scheme="kakao${KAKAO_OAUTH_KEY}" />
             </intent-filter>
         </activity>
-        <activity android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"
-            android:exported="true">
-        </activity>
-<!--        com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity-->
-        <service android:name="com.movingmaker.commentdiary.global.MyFirebaseMessagingService"
+        <activity
+            android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"
+            android:exported="true"></activity>
+
+        <service
+            android:name="com.movingmaker.commentdiary.global.MyFirebaseMessagingService"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <meta-data
