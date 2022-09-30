@@ -57,6 +57,7 @@
             android:layout_marginHorizontal="33dp"
             android:layout_marginTop="103dp"
             android:background="@drawable/background_brown_radius_10"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="19dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -67,16 +68,16 @@
             <TextView
                 style="@style/BHeadline2"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/all_accepts"
                 android:textColor="@color/text_dark_brown" />
 
             <ImageView
-                android:checkState="@{vm.isAllAccept}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:checkState="@{vm.isAllAccept}"
                 android:contentDescription="@string/accepts_terms"
                 android:paddingVertical="12dp"
                 android:paddingStart="23dp"
@@ -102,14 +103,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="11dp"
-                android:contentDescription="@string/policy_accept"
                 android:checkState="@{vm.isPolicyAccept}"
+                android:contentDescription="@string/policy_accept"
                 android:src="@drawable/ic_check" />
 
             <TextView
                 style="@style/MCaption2"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/policy_accept"
                 android:textColor="@color/text_dark_brown" />
         </LinearLayout>
@@ -140,17 +141,17 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                android:checkState="@{vm.isTermsAccept}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="11dp"
+                android:checkState="@{vm.isTermsAccept}"
                 android:contentDescription="@string/policy_accept"
                 android:src="@drawable/ic_check" />
 
             <TextView
                 style="@style/MCaption2"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/terms_accept"
                 android:textColor="@color/text_dark_brown" />
         </LinearLayout>
@@ -173,18 +174,18 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="19dp"
             android:layout_marginTop="10dp"
-            android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:paddingTop="7dp"
             app:layout_constraintEnd_toEndOf="@id/allAcceptsLayout"
             app:layout_constraintStart_toStartOf="@id/allAcceptsLayout"
             app:layout_constraintTop_toBottomOf="@id/termsAcceptLayout"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                android:checkState="@{vm.isPushAccept}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="11dp"
+                android:checkState="@{vm.isPushAccept}"
                 android:contentDescription="@string/policy_accept"
                 android:src="@drawable/ic_check" />
 
