@@ -1,5 +1,33 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+
+    ext {
+        // App dependencies
+        hiltVersion = '2.42'
+        navigationVersion = '2.5.2'
+        retrofit2Version = '2.9.0'
+        okHttp3Version = "4.10.0"
+        lifecycleVersion = '2.5.1'
+        roomVersion = '2.4.3'
+        glideVersion = '4.13.0'
+        pagingVersion = "3.1.1"
+        timberVersion = '5.0.1'
+        chartVersion = "3.1.0"
+        googleServiceVersion = "4.3.14"
+        crashlyticsVersion = "2.9.2"
+        manifestSecretVersion = "2.0.1"
+        circleIndicatorVersion = "2.1.6"
+        viewPager2Version = "1.0.0"
+        activityKtxVersion = "1.5.1"
+        fragmentKtxVersion = "1.5.3"
+        materialCalendarviewVersion = "1.4.3"
+        scalarsVersion = "2.1.0"
+        firebaseBomVersion = "29.2.1"
+        securityVersion = "1.1.0-alpha03"
+        kakaoVersion = "2.10.0"
+    }
+
+
     repositories {
         google()
         mavenCentral()
@@ -11,13 +39,13 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
 
         //navigation
-        classpath 'androidx.navigation:navigation-safe-args-gradle-plugin:2.4.2'
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
 
         //firebase
-        classpath 'com.google.gms:google-services:4.3.10'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
+        classpath "com.google.gms:google-services:$googleServiceVersion"
+        classpath "com.google.firebase:firebase-crashlytics-gradle:$crashlyticsVersion"
         //Manifest 보안
-        classpath 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1'
+        classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:$manifestSecretVersion"
     }
 }
 
