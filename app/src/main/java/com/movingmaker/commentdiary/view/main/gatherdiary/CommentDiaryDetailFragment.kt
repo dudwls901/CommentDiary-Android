@@ -66,7 +66,9 @@ class CommentDiaryDetailFragment : BaseFragment<FragmentGatherdiaryCommentdiaryD
 
         myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
             Log.d(TAG, "observeDatas: --> $diary ")
-            commentListAdapter.submitList(diary.commentList?.toMutableList())
+            diary?.let {
+                commentListAdapter.submitList(diary.commentList?.toMutableList())
+            }
         }
 
         myDiaryViewModel.haveDayMyComment.observe(viewLifecycleOwner) {

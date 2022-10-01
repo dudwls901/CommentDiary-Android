@@ -1,17 +1,14 @@
 package com.movingmaker.commentdiary.util
 
-import android.util.Log
 import com.prolificinteractive.materialcalendarview.CalendarDay
-import java.lang.Exception
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.*
 
 const val TAG = "DateConverter"
 object DateConverter {
 
     @JvmStatic
-    fun getCodaToday() = LocalDateTime.now().minusHours(7).toLocalDate()
+    fun getCodaToday(): LocalDate = LocalDateTime.now().minusHours(7).toLocalDate()
 
     @JvmStatic
     fun getToday() = LocalDateTime.now().toLocalDate()

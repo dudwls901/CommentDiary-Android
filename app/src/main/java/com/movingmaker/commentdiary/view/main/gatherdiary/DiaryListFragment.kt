@@ -148,7 +148,7 @@ class DiaryListFragment : BaseFragment<FragmentGatherdiaryDiarylistBinding>(R.la
         //혼자 쓰는 일기, 코멘트 일기 분기 처리
 
         if (diary.deliveryYN == 'N') {
-            myDiaryViewModel.setSaveOrEdit("save")
+//            myDiaryViewModel.setSaveOrEdit("save")
             val action = DiaryListFragmentDirections.actionDiaryListFragmentToWriteDiaryFragment()
             findNavController().navigate(action)
         } else {

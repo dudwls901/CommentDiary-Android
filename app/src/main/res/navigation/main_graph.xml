@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_calendarWithDiaryFragment_to_commentDiaryDetailFragment"
             app:destination="@id/commentDiaryDetailFragment" />
+        <action
+            android:id="@+id/action_calendarWithDiaryFragment_to_aloneDiaryDetailFragment"
+            app:destination="@id/aloneDiaryDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/receivedDiaryFragment"
@@ -56,16 +59,23 @@
         android:id="@+id/writeDiaryFragment"
         android:name="com.movingmaker.commentdiary.view.main.mydiary.WriteDiaryFragment"
         android:label="WriteDiaryFragment"
-        tools:layout="@layout/fragment_mydiary_writediary" >
+        tools:layout="@layout/fragment_mydiary_writediary">
         <action
             android:id="@+id/action_writeDiaryFragment_to_commentDiaryDetailFragment"
-            app:destination="@id/commentDiaryDetailFragment" />
+            app:destination="@id/commentDiaryDetailFragment"
+            app:popUpTo="@id/writeDiaryFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_writeDiaryFragment_to_aloneDiaryDetailFragment"
+            app:destination="@id/aloneDiaryDetailFragment"
+            app:popUpTo="@id/writeDiaryFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/commentDiaryDetailFragment"
         android:name="com.movingmaker.commentdiary.view.main.gatherdiary.CommentDiaryDetailFragment"
         android:label="CommentDiaryDetailFragment"
-        tools:layout="@layout/fragment_gatherdiary_commentdiary_detail" >
+        tools:layout="@layout/fragment_gatherdiary_commentdiary_detail">
         <action
             android:id="@+id/action_commentDiaryDetailFragment_to_receivedDiaryFragment"
             app:destination="@id/receivedDiaryFragment" />
@@ -106,9 +116,17 @@
         android:id="@+id/changePasswordFragment"
         android:name="com.movingmaker.commentdiary.view.main.mypage.ChangePasswordFragment"
         android:label="ChangePasswordFragment"
-        tools:layout="@layout/fragment_mypage_change_password" >
+        tools:layout="@layout/fragment_mypage_change_password">
         <action
             android:id="@+id/action_changePasswordFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aloneDiaryDetailFragment"
+        android:name="com.movingmaker.commentdiary.view.main.mydiary.AloneDiaryDetailFragment"
+        android:label="AloneDiaryDetailFragment" >
+        <action
+            android:id="@+id/action_aloneDiaryDetailFragment_to_writeDiaryFragment"
+            app:destination="@id/writeDiaryFragment" />
     </fragment>
 </navigation>

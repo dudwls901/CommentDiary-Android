@@ -16,6 +16,7 @@ import androidx.core.view.marginEnd
 import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.data.model.Diary
@@ -40,11 +41,9 @@ import java.util.*
 import kotlin.coroutines.CoroutineContext
 import kotlin.math.roundToInt
 
-class CalendarWithDiaryFragment : BaseFragment<FragmentMydiaryWithCalendarBinding>(R.layout.fragment_mydiary_with_calendar), CoroutineScope {
+class CalendarWithDiaryFragment :
+    BaseFragment<FragmentMydiaryWithCalendarBinding>(R.layout.fragment_mydiary_with_calendar) {
     override val TAG: String = CalendarWithDiaryFragment::class.java.simpleName
-    private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
@@ -55,9 +54,7 @@ class CalendarWithDiaryFragment : BaseFragment<FragmentMydiaryWithCalendarBindin
         binding.vm = myDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.CALENDAR_WITH_DIARY)
 
-        initSwipeRefresh()
         initViews()
-        initButtons()
         observeData()
     }
 
@@ -69,7 +66,9 @@ class CalendarWithDiaryFragment : BaseFragment<FragmentMydiaryWithCalendarBindin
         if (curDate != null && curDate != "") {
             try {
                 val dateYM = curDate.substring(0, 7)
-                myDiaryViewModel.getMonthDiary(dateYM)
+                lifecycleScope.launch {
+                    myDiaryViewModel.getMonthDiary(dateYM)
+                }
             } catch (e: Exception) {
             }
         }
@@ -85,7 +84,7 @@ class CalendarWithDiaryFragment : BaseFragment<FragmentMydiaryWithCalendarBindin
         myDiaryViewModel.pushDate.observe(viewLifecycleOwner) {
             Log.d(TAG, "observeData: push ${myDiaryViewModel.pushDate.value}")
             val date = it
-            val (y, m, d) = date.split('.').map { it.toInt() }
+//            val (y, m, d) = date.split('.').map { it.toInt() }
 //            checkSelectedDate(CalendarDay.from(y, m - 1, d))
             myDiaryViewModel.setSelectedDate(date)
             refreshViews()
@@ -99,17 +98,30 @@ class CalendarWithDiaryFragment : BaseFragment<FragmentMydiaryWithCalendarBindin
             )
             ym?.let {
                 myDiaryViewModel.getMonthDiary(it)
-                binding.materialCalendarView.currentDate = DateConverter.toCalenderDay(ym)
             }
         }
 
         myDiaryViewModel.monthDiaries.observe(viewLifecycleOwner) {
-            binding.materialCalendarView.removeDecorator(SelectedDateDecorator(requireContext()))
-            binding.materialCalendarView.addDecorators(
-                AloneDotDecorator(requireContext(), myDiaryViewModel.aloneDiary.value!!),
-                CommentDotDecorator(requireContext(), myDiaryViewModel.commentDiary.value!!),
-            )
+            myDiaryViewModel.selectedDate.value?.let { selectedDate ->
+                val (y, m, d) = selectedDate.split('.').map { it.toInt() }
+                checkSelectedDate(CalendarDay.from(y, m - 1, d))
+            }
+            with(binding.materialCalendarView) {
+                currentDate = DateConverter.toCalenderDay(myDiaryViewModel.selectedYearMonth.value)
+                removeDecorators()
+                addDecorators(
+                    AloneDotDecorator(
+                        requireContext(),
+                        myDiaryViewModel.aloneDiary.value!!
+                    ),
+                    CommentDotDecorator(
+                        requireContext(),
+                        myDiaryViewModel.commentDiary.value!!
+                    ),
+                )
+            }
         }
+
 
         myDiaryViewModel.selectedDate.observe(viewLifecycleOwner) { date ->
             binding.materialCalendarView.selectedDate = DateConverter.toCalenderDay(date)
@@ -130,6 +142,12 @@ class CalendarWithDiaryFragment : BaseFragment<FragmentMydiaryWithCalendarBindin
 
     }
 
+    private fun initViews() {
+        initSwipeRefresh()
+        initCalendar()
+        initButtons()
+    }
+
     private fun initButtons() = with(binding) {
         //일기가 없는 경우 writeDiary
         writeDiaryLayout.setOnClickListener {
@@ -137,21 +155,13 @@ class CalendarWithDiaryFragment : BaseFragment<FragmentMydiaryWithCalendarBindin
                 CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToWriteDiaryFragment()
             findNavController().navigate(action)
         }
-        //일기가 있는 경우
-        readDiaryLayout.setOnClickListener {
-            //임시저장 상태면 writeDiary로, 이미 저장된 상태면 commentDiaryDetail
-            //서버에 저장된 코멘트 일기인 경우
-            if (myDiaryViewModel.selectedDiary.value!!.tempYN == 'N' && myDiaryViewModel.selectedDiary.value!!.deliveryYN == 'Y') {
-                val action =
-                    CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToCommentDiaryDetailFragment()
-                findNavController().navigate(action)
+        readDiaryLayout.setOnClickListener { //일기가 있는 경우
+            val action = if (myDiaryViewModel.selectedDiary.value?.deliveryYN == 'Y') {
+                CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToCommentDiaryDetailFragment()
+            } else { //혼자쓴 일기인 경우
+                CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToAloneDiaryDetailFragment()
             }
-            //임시저장(코멘트일기)인 경우, 혼자쓴 일기인 경우
-            else {
-                val action =
-                    CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToWriteDiaryFragment()
-                findNavController().navigate(action)
-            }
+            findNavController().navigate(action)
         }
     }
 
@@ -174,9 +184,6 @@ class CalendarWithDiaryFragment : BaseFragment<FragmentMydiaryWithCalendarBindin
 
     }
 
-    private fun initViews() {
-        initCalendar()
-    }
 
     @SuppressLint("SetTextI18n", "ResourceType")
     private fun initCalendar() = with(binding) {
@@ -186,10 +193,6 @@ class CalendarWithDiaryFragment : BaseFragment<FragmentMydiaryWithCalendarBindin
         //리스너, 날짜 바뀌었을 시
         materialCalendarView.setOnDateChangedListener { widget, date, selected ->
             myDiaryViewModel.setSelectedDate(DateConverter.ymdFormat(date))
-            Log.d(
-                TAG,
-                "initCalendar: datelistener $date ${myDiaryViewModel.selectedDate.value} ${materialCalendarView.selectedDate} $selected"
-            )
         }
         leftArrowButton.setOnClickListener {
             val beforeDate = materialCalendarView.currentDate
@@ -304,7 +307,7 @@ class CalendarWithDiaryFragment : BaseFragment<FragmentMydiaryWithCalendarBindin
         val nextDateToString = nextDate.toString().replace('-', '.')
 
         //오늘 내가 코멘트를 받은 경우 어제 일기를 선택했을 때 오늘 내가 코멘트를 쓴 상태인지 확인 -> Day+1
-        launch {
+        lifecycleScope.launch {
             myDiaryViewModel.setResponseGetDayComment(nextDateToString)
         }
 
@@ -398,17 +401,7 @@ class CalendarWithDiaryFragment : BaseFragment<FragmentMydiaryWithCalendarBindin
         }
 
         //일기가 없다면
-        myDiaryViewModel.setSelectedDiary(
-            Diary(
-                null,
-                "",
-                "",
-                selectedDate.toString().replace('-', '.'),
-                ' ',
-                ' ',
-                null
-            )
-        )
+        myDiaryViewModel.setSelectedDiary(null)
         writeDiaryWrapLayout.isVisible = true
         writeDiaryLayout.isVisible = true
         lineDecorationTextView.text = getString(R.string.mydiary_text_decoration)

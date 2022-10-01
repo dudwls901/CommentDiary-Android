@@ -20,11 +20,11 @@
 
         <LinearLayout
             android:id="@+id/selectCommentDiaryLayout"
-            android:onClick="@{vm.selectDiaryType}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
             android:gravity="center_vertical"
+            android:onClick="@{vm.selectDiaryType}"
             android:orientation="horizontal"
             android:paddingHorizontal="16dp">
 
@@ -36,6 +36,7 @@
                 android:layout_weight="1"
                 android:background="@color/background_ivory"
                 android:drawablePadding="8dp"
+                android:gravity="center_vertical"
                 android:text="@string/diary_type_comment"
                 android:textColor="@color/text_black"
                 app:drawableStartCompat="@drawable/background_green_oval_8"
@@ -57,13 +58,14 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <View
+                    android:id="@+id/selectCommentDiaryInRadioButton"
                     diaryType="@{vm.selectedDiaryType}"
                     isExpand="@{vm.selectDiaryTypeToolbarIsExpanded}"
-                    android:visibility="gone"
-                    android:id="@+id/selectCommentDiaryInRadioButton"
+                    selectedDate="@{vm.selectedDate}"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
-                    android:background="@drawable/background_dark_brown_oval" />
+                    android:background="@drawable/background_dark_brown_oval"
+                    android:visibility="gone" />
 
             </LinearLayout>
         </LinearLayout>
@@ -78,9 +80,9 @@
             android:id="@+id/selectAloneDiaryLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="@{vm.selectDiaryType}"
             android:animateLayoutChanges="true"
             android:gravity="center_vertical"
+            android:onClick="@{vm.selectDiaryType}"
             android:orientation="horizontal"
             android:paddingHorizontal="16dp">
 
@@ -92,6 +94,7 @@
                 android:layout_weight="1"
                 android:background="@color/background_ivory"
                 android:drawablePadding="8dp"
+                android:gravity="center_vertical"
                 android:text="@string/diary_type_alone"
                 android:textColor="@color/text_black"
                 app:drawableStartCompat="@drawable/background_orange_oval_8"
@@ -112,13 +115,14 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <View
-                    android:visibility="gone"
                     android:id="@+id/selectAloneDiaryInRadioButton"
                     diaryType="@{vm.selectedDiaryType}"
                     isExpand="@{vm.selectDiaryTypeToolbarIsExpanded}"
+                    selectedDate="@{vm.selectedDate}"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
-                    android:background="@drawable/background_dark_brown_oval" />
+                    android:background="@drawable/background_dark_brown_oval"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
