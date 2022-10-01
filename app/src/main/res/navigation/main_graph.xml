@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/calendarWithDiaryFragment"
-        android:name="com.movingmaker.commentdiary.view.main.mydiary.CalendarWithDiaryFragment"
+        android:name="com.movingmaker.commentdiary.presentation.view.main.mydiary.CalendarWithDiaryFragment"
         android:label="CalendarWithDiaryFragment"
         tools:layout="@layout/fragment_mydiary_with_calendar">
         <action
@@ -22,12 +22,12 @@
     </fragment>
     <fragment
         android:id="@+id/receivedDiaryFragment"
-        android:name="com.movingmaker.commentdiary.view.main.receiveddiary.ReceivedDiaryFragment"
+        android:name="com.movingmaker.commentdiary.presentation.view.main.receiveddiary.ReceivedDiaryFragment"
         android:label="ReceivedDiaryFragment"
         tools:layout="@layout/fragment_receiveddiary" />
     <fragment
         android:id="@+id/diaryListFragment"
-        android:name="com.movingmaker.commentdiary.view.main.gatherdiary.DiaryListFragment"
+        android:name="com.movingmaker.commentdiary.presentation.view.main.gatherdiary.DiaryListFragment"
         android:label="DiaryListFragment"
         tools:layout="@layout/fragment_gatherdiary_diarylist">
         <action
@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/myPageFragment"
-        android:name="com.movingmaker.commentdiary.view.main.mypage.MyPageFragment"
+        android:name="com.movingmaker.commentdiary.presentation.view.main.mypage.MyPageFragment"
         android:label="MyPageFragment"
         tools:layout="@layout/fragment_mypage">
         <action
@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/writeDiaryFragment"
-        android:name="com.movingmaker.commentdiary.view.main.mydiary.WriteDiaryFragment"
+        android:name="com.movingmaker.commentdiary.presentation.view.main.mydiary.WriteDiaryFragment"
         android:label="WriteDiaryFragment"
         tools:layout="@layout/fragment_mydiary_writediary">
         <action
@@ -73,7 +73,7 @@
     </fragment>
     <fragment
         android:id="@+id/commentDiaryDetailFragment"
-        android:name="com.movingmaker.commentdiary.view.main.gatherdiary.CommentDiaryDetailFragment"
+        android:name="com.movingmaker.commentdiary.presentation.view.main.gatherdiary.CommentDiaryDetailFragment"
         android:label="CommentDiaryDetailFragment"
         tools:layout="@layout/fragment_gatherdiary_commentdiary_detail">
         <action
@@ -82,7 +82,7 @@
     </fragment>
     <fragment
         android:id="@+id/myAccountFragment"
-        android:name="com.movingmaker.commentdiary.view.main.mypage.MyAccountFragment"
+        android:name="com.movingmaker.commentdiary.presentation.view.main.mypage.MyAccountFragment"
         android:label="MyAccountFragment"
         tools:layout="@layout/fragment_mypage_myaccount">
         <action
@@ -94,27 +94,27 @@
     </fragment>
     <fragment
         android:id="@+id/termsFragment"
-        android:name="com.movingmaker.commentdiary.view.main.mypage.TermsFragment"
+        android:name="com.movingmaker.commentdiary.presentation.view.main.mypage.TermsFragment"
         android:label="TermsFragment"
         tools:layout="@layout/fragment_mypage_terms" />
     <fragment
         android:id="@+id/pushAlarmOnOffFragment"
-        android:name="com.movingmaker.commentdiary.view.main.mypage.PushAlarmOnOffFragment"
+        android:name="com.movingmaker.commentdiary.presentation.view.main.mypage.PushAlarmOnOffFragment"
         android:label="PushAlarmOnOffFragment"
         tools:layout="@layout/fragment_mypage_push" />
     <fragment
         android:id="@+id/sendedCommentListFragment"
-        android:name="com.movingmaker.commentdiary.view.main.mypage.SendedCommentListFragment"
+        android:name="com.movingmaker.commentdiary.presentation.view.main.mypage.SendedCommentListFragment"
         android:label="SendedCommentListFragment"
         tools:layout="@layout/fragment_mypage_sended_comment_list" />
     <fragment
         android:id="@+id/signOutFragment"
-        android:name="com.movingmaker.commentdiary.view.main.mypage.SignOutFragment"
+        android:name="com.movingmaker.commentdiary.presentation.view.main.mypage.SignOutFragment"
         android:label="SignOutFragment"
         tools:layout="@layout/fragment_mypage_signout" />
     <fragment
         android:id="@+id/changePasswordFragment"
-        android:name="com.movingmaker.commentdiary.view.main.mypage.ChangePasswordFragment"
+        android:name="com.movingmaker.commentdiary.presentation.view.main.mypage.ChangePasswordFragment"
         android:label="ChangePasswordFragment"
         tools:layout="@layout/fragment_mypage_change_password">
         <action
@@ -123,7 +123,7 @@
     </fragment>
     <fragment
         android:id="@+id/aloneDiaryDetailFragment"
-        android:name="com.movingmaker.commentdiary.view.main.mydiary.AloneDiaryDetailFragment"
+        android:name="com.movingmaker.commentdiary.presentation.view.main.mydiary.AloneDiaryDetailFragment"
         android:label="AloneDiaryDetailFragment" >
         <action
             android:id="@+id/action_aloneDiaryDetailFragment_to_writeDiaryFragment"

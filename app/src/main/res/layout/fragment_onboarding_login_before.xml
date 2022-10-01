@@ -7,14 +7,14 @@
 
         <variable
             name="vm"
-            type="com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel" />
+            type="com.movingmaker.commentdiary.presentation.viewmodel.onboarding.OnboardingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background_ivory"
-        tools:context=".view.onboarding.OnboardingLoginBeforeFragment">
+        tools:context=".presentation.view.onboarding.OnboardingLoginBeforeFragment">
 
         <TextView
             android:id="@+id/headTextView"

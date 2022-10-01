@@ -4,17 +4,17 @@
 
     <data>
 
-        <import type="com.movingmaker.commentdiary.util.FRAGMENT_NAME" />
+        <import type="com.movingmaker.commentdiary.common.util.FRAGMENT_NAME" />
 
         <import type="android.view.View" />
 
         <variable
             name="vm"
-            type="com.movingmaker.commentdiary.viewmodel.onboarding.OnboardingViewModel" />
+            type="com.movingmaker.commentdiary.presentation.viewmodel.onboarding.OnboardingViewModel" />
 
         <variable
             name="activity"
-            type="com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity" />
+            type="com.movingmaker.commentdiary.presentation.view.onboarding.OnboardingLoginActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

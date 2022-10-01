@@ -5,12 +5,12 @@
 
     <data>
 
-        <import type="com.movingmaker.commentdiary.util.Constant" />
+        <import type="com.movingmaker.commentdiary.common.util.Constant" />
         <import type="android.view.View" />
 
         <variable
             name="vm"
-            type="com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel" />
+            type="com.movingmaker.commentdiary.presentation.viewmodel.mypage.MyPageViewModel" />
 
     </data>
 

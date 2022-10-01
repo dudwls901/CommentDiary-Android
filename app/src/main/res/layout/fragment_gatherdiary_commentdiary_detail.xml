@@ -9,7 +9,7 @@
 
         <variable
             name="myDiaryviewModel"
-            type="com.movingmaker.commentdiary.viewmodel.mydiary.MyDiaryViewModel" />
+            type="com.movingmaker.commentdiary.presentation.viewmodel.mydiary.MyDiaryViewModel" />
 
     </data>
 

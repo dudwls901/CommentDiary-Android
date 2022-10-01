@@ -9,7 +9,7 @@
 
         <variable
             name="vm"
-            type="com.movingmaker.commentdiary.viewmodel.mypage.MyPageViewModel" />
+            type="com.movingmaker.commentdiary.presentation.viewmodel.mypage.MyPageViewModel" />
 
     </data>
 

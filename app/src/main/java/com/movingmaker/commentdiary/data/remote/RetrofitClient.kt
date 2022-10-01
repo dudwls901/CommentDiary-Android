@@ -4,12 +4,12 @@ import android.util.Log
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.movingmaker.commentdiary.BuildConfig
-import com.movingmaker.commentdiary.global.CodaApplication
+import com.movingmaker.commentdiary.common.CodaApplication
 import com.movingmaker.commentdiary.data.remote.api.*
 import com.movingmaker.commentdiary.data.remote.response.ErrorResponse
 import com.movingmaker.commentdiary.data.repository.ReIssueTokenRepository
-import com.movingmaker.commentdiary.util.RetrofitHeaderCondition
-import com.movingmaker.commentdiary.util.Url.BASE_URL
+import com.movingmaker.commentdiary.common.util.RetrofitHeaderCondition
+import com.movingmaker.commentdiary.common.util.Url.BASE_URL
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
