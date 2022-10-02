@@ -17,22 +17,22 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryCommentdiaryDetailBinding
-import com.movingmaker.commentdiary.data.remote.request.ReportCommentRequest
 import com.movingmaker.commentdiary.common.util.DateConverter
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.data.remote.request.ReportCommentRequest
+import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryCommentdiaryDetailBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.mydiary.MyDiaryViewModel
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
-class CommentDiaryDetailFragment : BaseFragment<FragmentGatherdiaryCommentdiaryDetailBinding>(R.layout.fragment_gatherdiary_commentdiary_detail), CoroutineScope, OnCommentSelectListener {
+@AndroidEntryPoint
+class CommentDiaryDetailFragment :
+    BaseFragment<FragmentGatherdiaryCommentdiaryDetailBinding>(R.layout.fragment_gatherdiary_commentdiary_detail),
+    OnCommentSelectListener {
 
     override val TAG: String = CommentDiaryDetailFragment::class.java.simpleName
-    private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
@@ -53,17 +53,16 @@ class CommentDiaryDetailFragment : BaseFragment<FragmentGatherdiaryCommentdiaryD
     @SuppressLint("NotifyDataSetChanged")
     private fun observeDatas() {
 
-        gatherDiaryViewModel.handleComment.observe(viewLifecycleOwner){
-            if(it.second=="report"){
+        gatherDiaryViewModel.handleComment.observe(viewLifecycleOwner) {
+            if (it.second == "report") {
                 myDiaryViewModel.deleteLocalReportedComment(it.first)
-            }
-            else{
+            } else {
                 myDiaryViewModel.likeLocalComment(it.first)
             }
         }
 
         myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
-            Log.d(TAG, "observeDatas: --> $diary ")
+            Timber.d( "observeDatas: --> $diary ")
             diary?.let {
                 commentListAdapter.submitList(diary.commentList?.toMutableList())
             }
@@ -71,9 +70,9 @@ class CommentDiaryDetailFragment : BaseFragment<FragmentGatherdiaryCommentdiaryD
 
         myDiaryViewModel.haveDayMyComment.observe(viewLifecycleOwner) {
             val diary = myDiaryViewModel.selectedDiary.value!!
-            if(diary.id==null) return@observe
+            if (diary.id == null) return@observe
             val codaToday = DateConverter.getCodaToday()
-//            Log.d(TAG, "observeDatas:converter before $diary ${diary.date}")
+//            Timber.d( "observeDatas:converter before $diary ${diary.date}")
             val selectedDate = DateConverter.ymdToDate(diary.date)
 
             //코멘트 없는 경우
@@ -107,7 +106,6 @@ class CommentDiaryDetailFragment : BaseFragment<FragmentGatherdiaryCommentdiaryD
                     binding.noWriteCommentTextView.isVisible = false
                 } else {
                     //내가 코멘트를 작성 안 한 경우
-                    //                    Log.d(TAG, "observeDatas: detail 6 ${selectedDate} ${codaToday.minusDays(2)}")
                     if (selectedDate <= codaToday.minusDays(2)) {
                         binding.goToWriteCommentButton.isVisible = false
                         binding.goToWriteCommentTextView.isVisible = false

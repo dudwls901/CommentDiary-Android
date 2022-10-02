@@ -9,12 +9,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentOnboardingLoginBinding
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.databinding.FragmentOnboardingLoginBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.onboarding.OnboardingViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
-class OnboardingLoginFragment: BaseFragment<FragmentOnboardingLoginBinding>(R.layout.fragment_onboarding_login) {
+@AndroidEntryPoint
+class OnboardingLoginFragment :
+    BaseFragment<FragmentOnboardingLoginBinding>(R.layout.fragment_onboarding_login) {
     override val TAG: String = OnboardingLoginFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
@@ -32,15 +34,16 @@ class OnboardingLoginFragment: BaseFragment<FragmentOnboardingLoginBinding>(R.la
     }
 
     private fun observeDatas() {
-        onboardingViewModel.shakeView.observe(viewLifecycleOwner){
-            if(it) {
-                val shortShake: Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.shake_short)
+        onboardingViewModel.shakeView.observe(viewLifecycleOwner) {
+            if (it) {
+                val shortShake: Animation =
+                    AnimationUtils.loadAnimation(requireContext(), R.anim.shake_short)
                 binding.loginNoticeTextView.startAnimation(shortShake)
             }
         }
     }
 
-    private fun initViews() = with(binding){
+    private fun initViews() = with(binding) {
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }

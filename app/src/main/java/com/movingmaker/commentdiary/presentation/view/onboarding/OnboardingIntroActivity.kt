@@ -7,24 +7,21 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.databinding.ActivityOnboardingIntroBinding
 import com.movingmaker.commentdiary.common.base.BaseActivity
+import com.movingmaker.commentdiary.databinding.ActivityOnboardingIntroBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.onboarding.IntroViewModel
-import kotlinx.coroutines.*
+import dagger.hilt.android.AndroidEntryPoint
 import me.relex.circleindicator.CircleIndicator3
-import kotlin.coroutines.CoroutineContext
 
-class OnboardingIntroActivity : BaseActivity<ActivityOnboardingIntroBinding>(R.layout.activity_onboarding_intro),CoroutineScope {
+@AndroidEntryPoint
+class OnboardingIntroActivity :
+    BaseActivity<ActivityOnboardingIntroBinding>(R.layout.activity_onboarding_intro) {
     override val TAG: String = OnboardingIntroActivity::class.java.simpleName
 
     //    private val TAG: String = OnboardingIntroActivity::class.java.simpleName
     private lateinit var onboardingIntroAdapter: OnboardingIntroAdapter
     private lateinit var indicator: CircleIndicator3
     val introViewModel: IntroViewModel by viewModels()
-    private val job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
     //Todo 스플래시 31>=, 31< 대응... 자동로그인이냐 인트로 화면이냐
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +36,8 @@ class OnboardingIntroActivity : BaseActivity<ActivityOnboardingIntroBinding>(R.l
         observeDatas()
     }
 
-    private fun observeDatas(){
-        introViewModel.introImage.observe(this){image->
+    private fun observeDatas() {
+        introViewModel.introImage.observe(this) { image ->
             binding.introLayout.setBackgroundResource(image)
         }
     }
@@ -108,9 +105,7 @@ class OnboardingIntroActivity : BaseActivity<ActivityOnboardingIntroBinding>(R.l
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 introViewModel.setIntroPageNum(position)
-//                Log.d("???????????", theme.toString())
                 setTheme(R.style.Theme_CommentDiary)
-//                Log.d("???????????", theme.toString())
                 changeButton()
             }
         })

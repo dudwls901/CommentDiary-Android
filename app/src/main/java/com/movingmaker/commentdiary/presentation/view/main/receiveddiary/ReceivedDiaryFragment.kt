@@ -17,22 +17,18 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentReceiveddiaryBinding
 import com.movingmaker.commentdiary.common.CodaSnackBar
+import com.movingmaker.commentdiary.common.base.BaseFragment
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.databinding.FragmentReceiveddiaryBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.receiveddiary.ReceivedDiaryViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlin.coroutines.CoroutineContext
+import dagger.hilt.android.AndroidEntryPoint
 
-class ReceivedDiaryFragment : BaseFragment<FragmentReceiveddiaryBinding>(R.layout.fragment_receiveddiary), CoroutineScope {
+@AndroidEntryPoint
+class ReceivedDiaryFragment :
+    BaseFragment<FragmentReceiveddiaryBinding>(R.layout.fragment_receiveddiary) {
     override val TAG: String = ReceivedDiaryFragment::class.java.simpleName
-    private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private val receivedDiaryViewModel: ReceivedDiaryViewModel by activityViewModels()

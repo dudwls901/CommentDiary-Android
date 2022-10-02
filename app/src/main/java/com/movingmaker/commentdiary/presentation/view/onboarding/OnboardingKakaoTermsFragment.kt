@@ -5,31 +5,31 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentOnboardingKakaoTermsBinding
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.common.util.Url
+import com.movingmaker.commentdiary.databinding.FragmentOnboardingKakaoTermsBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.onboarding.OnboardingViewModel
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
-class OnboardingKakaoTermsFragment : BaseFragment<FragmentOnboardingKakaoTermsBinding>(R.layout.fragment_onboarding_kakao_terms),CoroutineScope {
+@AndroidEntryPoint
+class OnboardingKakaoTermsFragment :
+    BaseFragment<FragmentOnboardingKakaoTermsBinding>(R.layout.fragment_onboarding_kakao_terms) {
     override val TAG: String = OnboardingKakaoTermsFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = onboardingViewModel
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.KAKAO_TERMS)
-        if(onboardingViewModel.isAllAccept.value == true){
+        if (onboardingViewModel.isAllAccept.value == true) {
             onboardingViewModel.setAllAccept()
-        }
-        else{
+        } else {
             onboardingViewModel.setAllAccept()
             onboardingViewModel.setAllAccept()
         }
@@ -59,7 +59,7 @@ class OnboardingKakaoTermsFragment : BaseFragment<FragmentOnboardingKakaoTermsBi
         }
 
         binding.backButton.setOnClickListener {
-             launch {
+            lifecycleScope.launch {
                 onboardingViewModel.onLoading()
                 if (onboardingViewModel.signOut()) {
                     findNavController().popBackStack()

@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.animation.Animation
@@ -17,17 +16,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.databinding.FragmentMydiaryWritediaryBinding
 import com.movingmaker.commentdiary.common.CodaSnackBar
 import com.movingmaker.commentdiary.common.base.BaseFragment
 import com.movingmaker.commentdiary.common.util.DIARY_TYPE
 import com.movingmaker.commentdiary.common.util.DateConverter
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.databinding.FragmentMydiaryWritediaryBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.mydiary.MyDiaryViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
+@AndroidEntryPoint
 class WriteDiaryFragment :
     BaseFragment<FragmentMydiaryWritediaryBinding>(R.layout.fragment_mydiary_writediary) {
 
@@ -52,10 +54,7 @@ class WriteDiaryFragment :
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.WRITE_DIARY)
 
         //selectedDiary는 Null, selectedDate는 있음
-        Log.d(
-            TAG,
-            "onViewCreated: writeDiary ${myDiaryViewModel.selectedDiary.value} ${myDiaryViewModel.selectedDate.value} ${myDiaryViewModel.selectedYearMonth.value}"
-        )
+        Timber.d("onViewCreated: writeDiary " + myDiaryViewModel.selectedDiary.value + " " + myDiaryViewModel.selectedDate.value + " " + myDiaryViewModel.selectedYearMonth.value)
         initViews()
         initToolbar()
         observeDatas()
@@ -111,8 +110,7 @@ class WriteDiaryFragment :
         backButton.setOnClickListener {
             when (myDiaryViewModel.selectedDiaryType.value) {
                 DIARY_TYPE.ALONE_DIARY -> {
-                    Log.d(
-                        TAG,
+                    Timber.d(
                         "initViews: ${myDiaryViewModel.diaryContentText.value} ${myDiaryViewModel.diaryHeadText.value}"
                     )
                     if (myDiaryViewModel.diaryContentText.value.isNullOrEmpty() && myDiaryViewModel.diaryHeadText.value.isNullOrEmpty()) {

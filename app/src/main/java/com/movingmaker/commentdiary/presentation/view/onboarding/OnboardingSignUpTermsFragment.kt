@@ -8,13 +8,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentOnboardingSignUpTermsBinding
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.common.util.Url.POLICY_URL
 import com.movingmaker.commentdiary.common.util.Url.TERMS_URL
+import com.movingmaker.commentdiary.databinding.FragmentOnboardingSignUpTermsBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.onboarding.OnboardingViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class OnboardingSignUpTermsFragment : BaseFragment<FragmentOnboardingSignUpTermsBinding>(R.layout.fragment_onboarding_sign_up_terms) {
+@AndroidEntryPoint
+class OnboardingSignUpTermsFragment :
+    BaseFragment<FragmentOnboardingSignUpTermsBinding>(R.layout.fragment_onboarding_sign_up_terms) {
     override val TAG: String = OnboardingSignUpTermsFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()

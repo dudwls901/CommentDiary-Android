@@ -6,20 +6,18 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentMypageMyaccountBinding
 import com.movingmaker.commentdiary.common.CodaSnackBar
+import com.movingmaker.commentdiary.common.base.BaseFragment
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.databinding.FragmentMypageMyaccountBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.mypage.MyPageViewModel
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+import dagger.hilt.android.AndroidEntryPoint
 
-class MyAccountFragment: BaseFragment<FragmentMypageMyaccountBinding>(R.layout.fragment_mypage_myaccount), CoroutineScope {
+@AndroidEntryPoint
+class MyAccountFragment :
+    BaseFragment<FragmentMypageMyaccountBinding>(R.layout.fragment_mypage_myaccount) {
     override val TAG: String = MyAccountFragment::class.java.simpleName
-    private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
     private val myPageViewModel: MyPageViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
@@ -31,17 +29,17 @@ class MyAccountFragment: BaseFragment<FragmentMypageMyaccountBinding>(R.layout.f
         observeDatas()
     }
 
-    private fun observeDatas(){
-        myPageViewModel.errorMessage.observe(viewLifecycleOwner){
+    private fun observeDatas() {
+        myPageViewModel.errorMessage.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
 
-        myPageViewModel.snackMessage.observe(viewLifecycleOwner){
+        myPageViewModel.snackMessage.observe(viewLifecycleOwner) {
             CodaSnackBar.make(binding.root, it).show()
         }
     }
 
-    private fun initViews() = with(binding){
+    private fun initViews() = with(binding) {
         logoutLayout.setOnClickListener {
             myPageViewModel.logout()
         }
@@ -50,7 +48,8 @@ class MyAccountFragment: BaseFragment<FragmentMypageMyaccountBinding>(R.layout.f
             findNavController().navigate(action)
         }
         changePasswordLayout.setOnClickListener {
-            val action = MyAccountFragmentDirections.actionMyAccountFragmentToChangePasswordFragment()
+            val action =
+                MyAccountFragmentDirections.actionMyAccountFragmentToChangePasswordFragment()
             findNavController().navigate(action)
         }
         backButton.setOnClickListener {

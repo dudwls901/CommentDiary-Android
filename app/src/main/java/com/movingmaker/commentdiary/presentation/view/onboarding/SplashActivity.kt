@@ -5,24 +5,26 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
+import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.common.CodaApplication
-import com.movingmaker.commentdiary.databinding.ActivitySplashBinding
 import com.movingmaker.commentdiary.common.CodaSnackBar
 import com.movingmaker.commentdiary.common.base.BaseActivity
 import com.movingmaker.commentdiary.common.util.DateConverter
+import com.movingmaker.commentdiary.databinding.ActivitySplashBinding
 import com.movingmaker.commentdiary.presentation.view.main.MainActivity
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
-class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash), CoroutineScope {
+@AndroidEntryPoint
+class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
     override val TAG: String = SplashActivity::class.java.simpleName
-    private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+
     private var pushDate: String? = null
 
     companion object {
@@ -39,7 +41,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
             for (key: String in intent!!.extras!!.keySet()) {
                 val value = intent!!.extras!!.get(key)
                 if (value.toString().contains("코멘트가 도착하였습니다.")) {
-                    Log.d("push", "$value Key: $key           Value: $value");
+                    Timber.d("$value Key: $key           Value: $value");
                     val yesterday = DateConverter.getCodaToday().minusDays(1)
                     pushDate = DateConverter.ymdFormat(yesterday)
                 }
@@ -51,7 +53,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 //        window.statusBarColor = getColor(R.color.onboarding_background)
 
 
-        launch(coroutineContext) {
+        lifecycleScope.launch {
             val refreshToken = CodaApplication.getInstance().getRefreshToken()
             delay(1000L)
             //자동 로그인
@@ -79,14 +81,14 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
 // Checks that the platform will allow the specified type of update.
         appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-            Log.d(TAG, "updateVersion: $appUpdateInfo")
-            Log.d(TAG, "updateVersion: ${UpdateAvailability.UPDATE_AVAILABLE}")
+            Timber.d("updateVersion: $appUpdateInfo")
+            Timber.d("updateVersion: ${UpdateAvailability.UPDATE_AVAILABLE}")
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                 // This example applies an immediate update. To apply a flexible update
                 // instead, pass in AppUpdateType.FLEXIBLEΩ
                 && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
             ) {
-                Log.d(TAG, " in if updateVersion: ${appUpdateInfo}")
+                Timber.d(" in if updateVersion: ${appUpdateInfo}")
                 appUpdateManager.startUpdateFlowForResult(
                     appUpdateInfo,
                     AppUpdateType.IMMEDIATE,
@@ -99,7 +101,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
     //업데이트 취소시
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.d("update", "onActivityResult: $requestCode $resultCode $data ")
+        Timber.d("onActivityResult: $requestCode $resultCode $data ")
         if (requestCode == REQUEST_CODE_UPDATE) {
             if (resultCode != Activity.RESULT_OK) {
                 CodaSnackBar.make(binding.root, "업데이트가 취소 되었습니다.").show()

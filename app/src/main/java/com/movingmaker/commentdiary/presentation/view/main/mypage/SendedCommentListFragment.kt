@@ -18,23 +18,19 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentMypageSendedCommentListBinding
 import com.movingmaker.commentdiary.common.CodaSnackBar
+import com.movingmaker.commentdiary.common.base.BaseFragment
 import com.movingmaker.commentdiary.common.util.DateConverter
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.databinding.FragmentMypageSendedCommentListBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.mypage.MyPageViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlin.coroutines.CoroutineContext
+import dagger.hilt.android.AndroidEntryPoint
 
-class SendedCommentListFragment : BaseFragment<FragmentMypageSendedCommentListBinding>(R.layout.fragment_mypage_sended_comment_list), CoroutineScope {
+@AndroidEntryPoint
+class SendedCommentListFragment :
+    BaseFragment<FragmentMypageSendedCommentListBinding>(R.layout.fragment_mypage_sended_comment_list) {
     override val TAG: String = SendedCommentListFragment::class.java.simpleName
-    private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
     private val myPageViewModel: MyPageViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
@@ -146,9 +142,7 @@ class SendedCommentListFragment : BaseFragment<FragmentMypageSendedCommentListBi
                 if (child is TextView) {
                     try {
                         child.setTextColor(color)
-//                        child.typeface = typeface
                         numberPicker.invalidate()
-//                        Log.d(TAG, "setNumberPickerText: downversion ${child::class.java.simpleName}")
                         val selectorWheelPaintField =
                             numberPicker.javaClass.getDeclaredField("mSelectorWheelPaint")
                         var accessible = selectorWheelPaintField.isAccessible
@@ -171,7 +165,7 @@ class SendedCommentListFragment : BaseFragment<FragmentMypageSendedCommentListBi
                 }
             }
         } else {
-//            Log.d(TAG, "setNumberPickerStyle: upversion")
+//            Timber.d( "setNumberPickerStyle: upversion")
             numberPicker.textColor = color
             val count = numberPicker.childCount
             for (i in 0..count) {

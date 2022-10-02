@@ -11,30 +11,34 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.Window
-import android.widget.*
+import android.widget.Button
+import android.widget.NumberPicker
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.base.BaseFragment
 import com.movingmaker.commentdiary.common.CodaSnackBar
-import com.movingmaker.commentdiary.data.model.Diary
-import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryDiarylistBinding
+import com.movingmaker.commentdiary.common.base.BaseFragment
 import com.movingmaker.commentdiary.common.util.DateConverter
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.data.model.Diary
+import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryDiarylistBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.mydiary.MyDiaryViewModel
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
-class DiaryListFragment : BaseFragment<FragmentGatherdiaryDiarylistBinding>(R.layout.fragment_gatherdiary_diarylist), CoroutineScope, OnDiarySelectListener {
+@AndroidEntryPoint
+class DiaryListFragment :
+    BaseFragment<FragmentGatherdiaryDiarylistBinding>(R.layout.fragment_gatherdiary_diarylist),
+    OnDiarySelectListener {
     override val TAG: String = DiaryListFragment::class.java.simpleName
-    private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
-
 
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private val gatherDiaryViewModel: GatherDiaryViewModel by activityViewModels()
@@ -141,7 +145,7 @@ class DiaryListFragment : BaseFragment<FragmentGatherdiaryDiarylistBinding>(R.la
     }
 
     override fun onDiarySelectListener(diary: Diary) {
-        Log.d(TAG, "onDiarySelectListener: $diary")
+        Timber.d( "onDiarySelectListener: $diary")
         myDiaryViewModel.setSelectedDiary(diary)
         //혼자 쓰는 일기, 코멘트 일기 분기 처리
 
@@ -152,7 +156,7 @@ class DiaryListFragment : BaseFragment<FragmentGatherdiaryDiarylistBinding>(R.la
         } else {
             val nextDate = DateConverter.ymdToDate(diary.date)
             val nextDateToString = nextDate.plusDays(1).toString().replace('-', '.')
-            launch(coroutineContext) {
+            lifecycleScope.launch {
                 myDiaryViewModel.setResponseGetDayComment(nextDateToString)
             }
             val action =
@@ -176,7 +180,6 @@ class DiaryListFragment : BaseFragment<FragmentGatherdiaryDiarylistBinding>(R.la
                         child.setTextColor(color)
 //                        child.typeface = typeface
                         numberPicker.invalidate()
-//                        Log.d(TAG, "setNumberPickerText: downversion ${child::class.java.simpleName}")
                         var selectorWheelPaintField =
                             numberPicker.javaClass.getDeclaredField("mSelectorWheelPaint")
                         var accessible = selectorWheelPaintField.isAccessible

@@ -10,23 +10,22 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.base.BaseActivity
-import com.movingmaker.commentdiary.databinding.ActivityMainBinding
 import com.movingmaker.commentdiary.common.CodaSnackBar
+import com.movingmaker.commentdiary.common.base.BaseActivity
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.databinding.ActivityMainBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.mydiary.MyDiaryViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.mypage.MyPageViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.receiveddiary.ReceivedDiaryViewModel
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
-class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main), CoroutineScope {
+@AndroidEntryPoint
+class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     override val TAG: String = MainActivity::class.java.simpleName
-    private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+
 
     private val myPageViewModel: MyPageViewModel by viewModels()
     private val myDiaryViewModel: MyDiaryViewModel by viewModels()
@@ -41,7 +40,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main), 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         pushDate = intent?.getStringExtra("pushDate")
-        Log.d("MainActivity", "onNewIntent: push $pushDate")
+        Timber.d("onNewIntent: push $pushDate")
         if (pushDate != null) {
             myDiaryViewModel.setPushDate(pushDate!!)
         }
@@ -58,7 +57,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main), 
 
         pushDate = intent.getStringExtra("pushDate")
         //푸시로 들어온 경우 바로 코멘트 화면으로
-        Log.d("MainActivity", "oncreate: push $pushDate")
+        Timber.d("oncreate: push $pushDate")
         if (pushDate != null) {
             myDiaryViewModel.setPushDate(pushDate!!)
         }
@@ -87,8 +86,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main), 
 
     private fun observerFragments() {
         fragmentViewModel.curFragment.observe(this) { fragment ->
-            Log.d(TAG, "observerFragments: nav ${navController.currentDestination?.label}")
-            Log.d(TAG, "observerFragments: frag $fragment")
+            Timber.d( "observerFragments: nav ${navController.currentDestination?.label}")
+            Timber.d( "observerFragments: frag $fragment")
             //마이페이지만 스테이터스바 흰색
             if (fragment == FRAGMENT_NAME.MY_PAGE ||
                 fragment == FRAGMENT_NAME.MY_ACCOUNT ||

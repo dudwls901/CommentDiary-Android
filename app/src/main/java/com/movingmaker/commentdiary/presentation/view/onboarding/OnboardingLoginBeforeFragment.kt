@@ -5,31 +5,28 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.databinding.FragmentOnboardingLoginBeforeBinding
 import com.movingmaker.commentdiary.common.base.BaseFragment
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.databinding.FragmentOnboardingLoginBeforeBinding
 import com.movingmaker.commentdiary.presentation.view.main.MainActivity
 import com.movingmaker.commentdiary.presentation.viewmodel.onboarding.OnboardingViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
+import timber.log.Timber
 
-class OnboardingLoginBeforeFragment : BaseFragment<FragmentOnboardingLoginBeforeBinding>(R.layout.fragment_onboarding_login_before), CoroutineScope {
+@AndroidEntryPoint
+class OnboardingLoginBeforeFragment :
+    BaseFragment<FragmentOnboardingLoginBeforeBinding>(R.layout.fragment_onboarding_login_before) {
     override val TAG: String = OnboardingLoginBeforeFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
-
-    private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,9 +44,9 @@ class OnboardingLoginBeforeFragment : BaseFragment<FragmentOnboardingLoginBefore
             // 카카오톡으로 로그인 할 수 없어 카카오계정으로 로그인할 경우 사용됨
             val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
                 if (error != null) {
-                    Log.e(TAG, "카카오계정으로 로그인 실패", error)
+                    Timber.e("카카오계정으로 로그인 실패", error)
                 } else if (token != null) {
-                    Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
+                    Timber.i("카카오계정으로 로그인 성공 ${token.accessToken}")
                     login(token.accessToken)
                 }
             }
@@ -58,10 +55,9 @@ class OnboardingLoginBeforeFragment : BaseFragment<FragmentOnboardingLoginBefore
             if (UserApiClient.instance.isKakaoTalkLoginAvailable(requireContext())) {
                 UserApiClient.instance.loginWithKakaoTalk(requireContext()) { token, error ->
                     if (error != null) {
-                        Log.e(TAG, "카카오톡으로 로그인 실패", error)
+                        Timber.e("카카오톡으로 로그인 실패", error)
                         //todo 예외처리
-                        Log.e(
-                            TAG,
+                        Timber.e(
                             "${error is ClientError && error.reason == ClientErrorCause.Cancelled}",
                             error
                         )
@@ -78,7 +74,7 @@ class OnboardingLoginBeforeFragment : BaseFragment<FragmentOnboardingLoginBefore
                             callback = callback
                         )
                     } else if (token != null) {
-                        Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
+                        Timber.i( "카카오톡으로 로그인 성공 ${token.accessToken}")
                         login(token.accessToken)
                     }
                 }
@@ -89,7 +85,7 @@ class OnboardingLoginBeforeFragment : BaseFragment<FragmentOnboardingLoginBefore
     }
 
     private fun login(kakaoToken: String) {
-        launch {
+        lifecycleScope.launch {
             onboardingViewModel.onLoading()
             val (isSuccessLogin, isNewMember) = onboardingViewModel.kakaoLogin(kakaoToken)
             if (isSuccessLogin) {

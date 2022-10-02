@@ -5,18 +5,31 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.common.CodaApplication
+import com.movingmaker.commentdiary.common.util.DateConverter
 import com.movingmaker.commentdiary.data.model.Diary
-import com.movingmaker.commentdiary.data.remote.RetrofitClient
-import com.movingmaker.commentdiary.data.remote.request.*
+import com.movingmaker.commentdiary.data.remote.request.ReportCommentRequest
 import com.movingmaker.commentdiary.data.remote.response.DiaryListResponse
 import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.data.repository.GatherDiaryRepository
-import com.movingmaker.commentdiary.common.util.DateConverter
-import kotlinx.coroutines.*
+import com.movingmaker.commentdiary.domain.usecase.GetAllDiaryUseCase
+import com.movingmaker.commentdiary.domain.usecase.GetMonthDiaryUseCase
+import com.movingmaker.commentdiary.domain.usecase.LikeCommentUseCase
+import com.movingmaker.commentdiary.domain.usecase.ReportCommentUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Response
+import timber.log.Timber
+import javax.inject.Inject
 
-class GatherDiaryViewModel : ViewModel() {
+@HiltViewModel
+class GatherDiaryViewModel @Inject constructor(
+    private val getAllDiaryUseCase: GetAllDiaryUseCase,
+    private val getMonthDiaryUseCase: GetMonthDiaryUseCase,
+    private val reportCommentUseCase: ReportCommentUseCase,
+    private val likeCommentUseCase: LikeCommentUseCase
+) : ViewModel() {
 
     var job: Job? = null
 
@@ -37,27 +50,17 @@ class GatherDiaryViewModel : ViewModel() {
         onError("Exception handled: ${throwable.localizedMessage}")
     }
 
-    private var _handleComment = MutableLiveData<Pair<Long,String>>()
-        val handleComment: LiveData<Pair<Long,String>>
-            get() = _handleComment
+    private var _handleComment = MutableLiveData<Pair<Long, String>>()
+    val handleComment: LiveData<Pair<Long, String>>
+        get() = _handleComment
 
     private var _diaryList = MutableLiveData<List<Diary>>()
-    private var _selectedMonth = MutableLiveData<String>()
-    private var _responseLikeComment = MutableLiveData<Response<IsSuccessResponse>>()
-    private var _responseReportComment = MutableLiveData<Response<IsSuccessResponse>>()
-
-
     val diaryList: LiveData<List<Diary>>
         get() = _diaryList
 
+    private var _selectedMonth = MutableLiveData<String>()
     val selectedMonth: LiveData<String>
         get() = _selectedMonth
-
-    val responseLikeComment: LiveData<Response<IsSuccessResponse>>
-        get() = _responseLikeComment
-
-    val responseReportComment: LiveData<Response<IsSuccessResponse>>
-        get() = _responseReportComment
 
     init {
         _diaryList.value = emptyList()
@@ -77,16 +80,15 @@ class GatherDiaryViewModel : ViewModel() {
         var response: Response<DiaryListResponse>? = null
         val job = launch(Dispatchers.Main + exceptionHandler) {
             response = if (date == "all")
-                GatherDiaryRepository.INSTANCE.getAllDiary()
+                getAllDiaryUseCase()
             else
-                GatherDiaryRepository.INSTANCE.getMonthDiary(date)
+                getMonthDiaryUseCase(date)
         }
         job.join()
         _loading.postValue(false)
         response?.let {
             if (it.isSuccessful) {
-                //todo 그냥 리스폰스에서 주는 200 말고 우리 서버가 직접 내려주는 1000사용
-                Log.d("code확인", "setResponseGetDiaryList: ${it.code()} ${response!!.body()!!.code}")
+                Timber.d("setResponseGetDiaryList: ${it.code()} ${response!!.body()!!.code}")
                 it.body()?.let { result ->
                     when (it.code()) {
                         200 -> {
@@ -97,65 +99,66 @@ class GatherDiaryViewModel : ViewModel() {
                 }
             } else {
                 it.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            onError("다시 로그인해 주세요.")
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            _snackMessage.postValue("일기를 불러오지 못했습니다.")
-//                            onError(it.message)
-                        }
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        if (it.status == 401) {
+//                            onError("다시 로그인해 주세요.")
+//                            CodaApplication.getInstance().logOut()
+//                        } else {
+//                            _snackMessage.postValue("일기를 불러오지 못했습니다.")
+////                            onError(it.message)
+//                        }
+//                    }
                 }
             }
         }
     }
 
-    fun setResponseReportComment(reportCommentRequest: ReportCommentRequest) = viewModelScope.launch {
-        _loading.postValue(true)
-        var response: Response<IsSuccessResponse>? = null
-        val job = launch(Dispatchers.Main + exceptionHandler) {
-            response = GatherDiaryRepository.INSTANCE.reportComment(reportCommentRequest)
-        }
-        job.join()
-        _loading.postValue(false)
-        response?.let {
-            if (it.isSuccessful) {
-                it.body()?.let { result ->
-                    when (it.code()) {
-                        200 -> {
-                            _handleComment.postValue(Pair(reportCommentRequest.id, "report"))
+    fun setResponseReportComment(reportCommentRequest: ReportCommentRequest) =
+        viewModelScope.launch {
+            _loading.postValue(true)
+            var response: Response<IsSuccessResponse>? = null
+            val job = launch(Dispatchers.Main + exceptionHandler) {
+                response = reportCommentUseCase(reportCommentRequest)
+            }
+            job.join()
+            _loading.postValue(false)
+            response?.let {
+                if (it.isSuccessful) {
+                    it.body()?.let { result ->
+                        when (it.code()) {
+                            200 -> {
+                                _handleComment.postValue(Pair(reportCommentRequest.id, "report"))
+                            }
+                            else -> onError(it.message())
                         }
-                        else -> onError(it.message())
                     }
-                }
-            } else {
-                it.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            onError("다시 로그인해 주세요.")
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            onError(it.message)
-                        }
+                } else {
+                    it.errorBody()?.let { errorBody ->
+//                        RetrofitClient.getErrorResponse(errorBody)?.let {
+//                            if (it.status == 401) {
+//                                onError("다시 로그인해 주세요.")
+//                                CodaApplication.getInstance().logOut()
+//                            } else {
+//                                onError(it.message)
+//                            }
+//                        }
                     }
                 }
             }
         }
-    }
 
     fun setResponseLikeComment(commentId: Long) = viewModelScope.launch {
         _loading.postValue(true)
         var response: Response<IsSuccessResponse>? = null
         val job = launch(Dispatchers.Main + exceptionHandler) {
-            response = GatherDiaryRepository.INSTANCE.likeComment(commentId)
+            response = likeCommentUseCase(commentId)
         }
         job.join()
         _loading.postValue(false)
         response?.let {
             if (it.isSuccessful) {
                 it.body()?.let { result ->
-                    Log.d("-->", "setResponseLikeComment: ${result}")
+                    Timber.d("setResponseLikeComment: ${result}")
                     when (it.code()) {
                         200 -> {
                             _handleComment.postValue(Pair(commentId, "like"))
@@ -165,14 +168,14 @@ class GatherDiaryViewModel : ViewModel() {
                 }
             } else {
                 it.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            onError("다시 로그인해 주세요.")
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            onError(it.message)
-                        }
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        if (it.status == 401) {
+//                            onError("다시 로그인해 주세요.")
+//                            CodaApplication.getInstance().logOut()
+//                        } else {
+//                            onError(it.message)
+//                        }
+//                    }
                 }
             }
         }

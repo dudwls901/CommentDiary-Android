@@ -17,6 +17,7 @@ import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.common.util.DateConverter
 import com.movingmaker.commentdiary.presentation.view.main.MainActivity
+import timber.log.Timber
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
@@ -44,58 +45,40 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         wakeLock.acquire(3000)
 
 
-//        Log.d(TAG, "onMessageReceived: $remoteMessage")
-
         // Data 항목이 있을때.
         // background 처리시
 //        if (remoteMessage.data.isNotEmpty()) {
 //            val data = remoteMessage.data
 //            val messageTitle = data["title"]
 //            val messageBody = data["body"]
-//            Log.d("fcm_response", "data 알림 메시지: $messageTitle $messageBody")
 //            sendMessage("Adfadfa", "DAfdafad", "background")
 //        }
 
         if (remoteMessage.notification != null) {
             val messageBody = remoteMessage.notification!!.body
             val messageTitle = remoteMessage.notification!!.title
-            Log.d("fcm_response", "noti 알림 메시지: $messageTitle $messageBody" )
-            sendMessage(messageTitle!!, messageBody!!,"foreground")
+            Timber.d("noti 알림 메시지: $messageTitle $messageBody")
+            sendMessage(messageTitle!!, messageBody!!, "foreground")
         }
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
     private fun sendMessage(messageTitle: String, messageBody: String, state: String) {
-//        val intent = Intent(this, SplashActivity::class.java)
-//        intent.putExtra("title", messageTitle)
-//        intent.putExtra("body", messageBody)
-//        intent.putExtra("alarm", true)
-//        baseToken.setAlarm(this, true)
-
-        Log.d(TAG, "sendMessage:push  $state")
-        //백그라운드일 때
-//        if(state=="background"){
-//            intent = Intent(this, SplashActivity::class.java)
-//        }
-        //포그라운드일 때
-//        if(state=="foreground"){
-//            Log.d(TAG, "sendMessage: push $yesterDay") //
-//        }
 
         val intent = Intent(this, MainActivity::class.java)
         val yesterDay = DateConverter.getCodaToday().minusDays(1)
-        intent.putExtra("pushDate",DateConverter.ymdFormat(yesterDay))
+        intent.putExtra("pushDate", DateConverter.ymdFormat(yesterDay))
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
         val pendingIntent =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
             } else {
-                PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT)
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
             }
         val channelId = "Alarm"
 
-        val defaultSoundUri: Uri =  RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL)
+        val defaultSoundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL)
         val notificationBuilder: NotificationCompat.Builder =
             NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.mipmap.ic_logo)

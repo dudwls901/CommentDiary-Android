@@ -28,11 +28,14 @@ import com.movingmaker.commentdiary.presentation.viewmodel.mydiary.MyDiaryViewMo
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import timber.log.Timber
 import java.time.LocalDate
 import java.util.*
 import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class CalendarWithDiaryFragment :
     BaseFragment<FragmentMydiaryWithCalendarBinding>(R.layout.fragment_mydiary_with_calendar) {
     override val TAG: String = CalendarWithDiaryFragment::class.java.simpleName
@@ -51,7 +54,7 @@ class CalendarWithDiaryFragment :
     }
 
     private fun refreshViews() {
-        Log.d(TAG, "refreshViews: initcalendar")
+        Timber.d("refreshViews: initcalendar")
         //현재 클릭된 날짜는 그대로, but 내용만 최신화됨
         val curDate = myDiaryViewModel.selectedDate.value
         //선택해 놓은 날짜가 있을 시
@@ -74,7 +77,7 @@ class CalendarWithDiaryFragment :
         }
 
         myDiaryViewModel.pushDate.observe(viewLifecycleOwner) {
-            Log.d(TAG, "observeData: push ${myDiaryViewModel.pushDate.value}")
+            Timber.d("observeData: push ${myDiaryViewModel.pushDate.value}")
             val date = it
 //            val (y, m, d) = date.split('.').map { it.toInt() }
 //            checkSelectedDate(CalendarDay.from(y, m - 1, d))
@@ -84,8 +87,7 @@ class CalendarWithDiaryFragment :
         }
 
         myDiaryViewModel.selectedYearMonth.observe(viewLifecycleOwner) { ym ->
-            Log.d(
-                TAG,
+            Timber.d(
                 "observeData:ym $ym ${binding.materialCalendarView.selectedDate} ${binding.materialCalendarView.currentDate}"
             )
             ym?.let {
@@ -117,8 +119,7 @@ class CalendarWithDiaryFragment :
 
         myDiaryViewModel.selectedDate.observe(viewLifecycleOwner) { date ->
             binding.materialCalendarView.selectedDate = DateConverter.toCalenderDay(date)
-            Log.d(
-                TAG,
+            Timber.d(
                 "observeData: date $date ${binding.materialCalendarView.selectedDate} ${binding.materialCalendarView.currentDate}"
             )
             when (date) {
@@ -193,8 +194,7 @@ class CalendarWithDiaryFragment :
             myDiaryViewModel.setSelectedYearMonth(DateConverter.ymFormat(nextDate))
             myDiaryViewModel.setSelectedDate(null)
             materialCalendarView.selectedDate = null
-            Log.d(
-                TAG,
+            Timber.d(
                 "initCalendar: ${materialCalendarView.currentDate} ${materialCalendarView.selectedDate}"
             )
         }

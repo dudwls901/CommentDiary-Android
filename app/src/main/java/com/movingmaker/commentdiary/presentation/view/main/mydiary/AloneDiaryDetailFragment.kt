@@ -13,13 +13,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.databinding.FragmentMydiaryAlonediaryDetailBinding
 import com.movingmaker.commentdiary.common.base.BaseFragment
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.databinding.FragmentMydiaryAlonediaryDetailBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.mydiary.MyDiaryViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
+@AndroidEntryPoint
 class AloneDiaryDetailFragment :
     BaseFragment<FragmentMydiaryAlonediaryDetailBinding>(R.layout.fragment_mydiary_alonediary_detail) {
 
@@ -74,7 +77,7 @@ class AloneDiaryDetailFragment :
                         findNavController().navigateUp()
                     }
                     else -> {
-                        Log.e(TAG, "showDialog: 삭제되지 않음")
+                        Timber.e( "showDialog: 삭제되지 않음")
                     }
                 }
                 dialogView.dismiss()

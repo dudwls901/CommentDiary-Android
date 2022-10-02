@@ -5,14 +5,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.movingmaker.commentdiary.databinding.RvItemGatherdiaryDiaryBinding
 import com.movingmaker.commentdiary.data.model.Diary
+import com.movingmaker.commentdiary.databinding.RvItemGatherdiaryDiaryBinding
 
-class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener): ListAdapter<Diary,DiaryListAdapter.ItemViewHolder>(diffUtil) {
+class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener) :
+    ListAdapter<Diary, DiaryListAdapter.ItemViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): DiaryListAdapter.ItemViewHolder = ItemViewHolder(RvItemGatherdiaryDiaryBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+    ): DiaryListAdapter.ItemViewHolder = ItemViewHolder(
+        RvItemGatherdiaryDiaryBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+    )
 
     override fun onBindViewHolder(holder: DiaryListAdapter.ItemViewHolder, position: Int) {
         holder.bind(currentList[position])
@@ -26,8 +33,10 @@ class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener): ListAd
     override fun getItemId(position: Int): Long {
         return currentList[position].id!!
     }
-    inner class ItemViewHolder(private val binding: RvItemGatherdiaryDiaryBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(diary : Diary){
+
+    inner class ItemViewHolder(private val binding: RvItemGatherdiaryDiaryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(diary: Diary) {
             binding.diary = diary
             binding.root.setOnClickListener {
                 onDiarySelectListener.onDiarySelectListener(diary)
@@ -35,8 +44,8 @@ class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener): ListAd
         }
     }
 
-    companion object{
-        val diffUtil = object: DiffUtil.ItemCallback<Diary>(){
+    companion object {
+        val diffUtil = object : DiffUtil.ItemCallback<Diary>() {
             override fun areItemsTheSame(oldItem: Diary, newItem: Diary): Boolean {
                 return oldItem.id == newItem.id
             }

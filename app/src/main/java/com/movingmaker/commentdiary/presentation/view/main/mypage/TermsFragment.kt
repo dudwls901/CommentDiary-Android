@@ -8,21 +8,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentMypageTermsBinding
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.common.util.Url.POLICY_URL
 import com.movingmaker.commentdiary.common.util.Url.TERMS_URL
+import com.movingmaker.commentdiary.databinding.FragmentMypageTermsBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlin.coroutines.CoroutineContext
+import dagger.hilt.android.AndroidEntryPoint
 
-class TermsFragment: BaseFragment<FragmentMypageTermsBinding>(R.layout.fragment_mypage_terms), CoroutineScope {
+@AndroidEntryPoint
+class TermsFragment : BaseFragment<FragmentMypageTermsBinding>(R.layout.fragment_mypage_terms) {
     override val TAG: String = TermsFragment::class.java.simpleName
-    private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
 
@@ -32,7 +27,7 @@ class TermsFragment: BaseFragment<FragmentMypageTermsBinding>(R.layout.fragment_
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.TERMS)
     }
 
-    private fun initViews() = with(binding){
+    private fun initViews() = with(binding) {
 
         policyLayout.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(POLICY_URL))

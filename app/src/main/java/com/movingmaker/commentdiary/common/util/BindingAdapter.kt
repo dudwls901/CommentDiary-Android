@@ -18,6 +18,7 @@ import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.common.util.Constant.EMAIL
 import com.movingmaker.commentdiary.common.util.Constant.KAKAO
 import com.movingmaker.commentdiary.presentation.view.main.mypage.MyCommentListAdapter
+import timber.log.Timber
 
 @BindingAdapter("items")
 fun setItems(recyclerView: RecyclerView, items: LiveData<List<Comment>>) {
@@ -233,7 +234,7 @@ fun changeYearMonth(view: TextView, text: LiveData<String>) {
         view.text = "${y}년 ${m}월"
     } catch (e: Exception) {
         view.text = "년 월"
-        Log.e(TAG, "changeYearMonth: $e")
+        Timber.e( "changeYearMonth: $e")
     }
 }
 

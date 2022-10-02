@@ -9,20 +9,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentOnboardingSignUpCodeBinding
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.databinding.FragmentOnboardingSignUpCodeBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.onboarding.OnboardingViewModel
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+import dagger.hilt.android.AndroidEntryPoint
 
-class OnboardingSignUpCodeFragment : BaseFragment<FragmentOnboardingSignUpCodeBinding>(R.layout.fragment_onboarding_sign_up_code), CoroutineScope {
+@AndroidEntryPoint
+class OnboardingSignUpCodeFragment :
+    BaseFragment<FragmentOnboardingSignUpCodeBinding>(R.layout.fragment_onboarding_sign_up_code) {
     override val TAG: String = OnboardingSignUpCodeFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
-    private val job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,9 +35,10 @@ class OnboardingSignUpCodeFragment : BaseFragment<FragmentOnboardingSignUpCodeBi
     }
 
     private fun observeDatas() {
-        onboardingViewModel.shakeView.observe(viewLifecycleOwner){
-            if(it) {
-                val shortShake: Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.shake_short)
+        onboardingViewModel.shakeView.observe(viewLifecycleOwner) {
+            if (it) {
+                val shortShake: Animation =
+                    AnimationUtils.loadAnimation(requireContext(), R.anim.shake_short)
                 binding.codeNoticeTextView.startAnimation(shortShake)
             }
         }

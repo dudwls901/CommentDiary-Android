@@ -7,24 +7,30 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.R
+import com.movingmaker.commentdiary.common.util.DIARY_TYPE
+import com.movingmaker.commentdiary.common.util.DateConverter
 import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.data.model.Diary
-import com.movingmaker.commentdiary.data.remote.RetrofitClient
 import com.movingmaker.commentdiary.data.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.data.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.data.repository.MyDiaryRepository
-import com.movingmaker.commentdiary.data.repository.MyPageRepository
-import com.movingmaker.commentdiary.common.CodaApplication
-import com.movingmaker.commentdiary.common.util.DIARY_TYPE
-import com.movingmaker.commentdiary.common.util.DateConverter
+import com.movingmaker.commentdiary.domain.usecase.*
 import com.prolificinteractive.materialcalendarview.CalendarDay
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Response
+import timber.log.Timber
+import javax.inject.Inject
 
-class MyDiaryViewModel : ViewModel() {
+@HiltViewModel
+class MyDiaryViewModel @Inject constructor(
+    private val saveDiaryUseCase: SaveDiaryUseCase,
+    private val editDiaryUseCase: EditDiaryUseCase,
+    private val deleteDiaryUseCase: DeleteDiaryUseCase,
+    private val getMonthDiaryUseCase: GetMonthDiaryUseCase,
+    private val getMonthCommentUseCase: GetMonthCommentUseCase
+) : ViewModel() {
 
     private var _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String>
@@ -98,7 +104,7 @@ class MyDiaryViewModel : ViewModel() {
 
     private fun setMonthDiaries(list: List<Diary>) {
 
-        Log.d("observedata", "setMonthDiaries: $list")
+        Timber.d("setMonthDiaries: $list")
         val aloneDiary = ArrayList<CalendarDay>()
         val commentDiary = ArrayList<CalendarDay>()
 
@@ -122,7 +128,7 @@ class MyDiaryViewModel : ViewModel() {
     fun setSelectedDiary(diary: Diary?) {
         if (diary == null) {
             _selectedDiary.value = null
-            _commentList.value = null
+            _commentList.value = emptyList()
         } else {
             _selectedDiary.value = diary
             _commentList.value = diary.commentList ?: emptyList()
@@ -253,13 +259,13 @@ class MyDiaryViewModel : ViewModel() {
             deliveryYN = deliveryYN,
             tempYN = 'N',
         )
-        with(MyDiaryRepository.INSTANCE.saveDiary(saveDiaryRequest)) {
+        with(saveDiaryUseCase(saveDiaryRequest)) {
             _loading.postValue(false)
             if (isSuccessful) {
                 body()?.let { response ->
                     when (code()) {
                         200 -> {
-                            Log.d("Abc", "setResponseEditDiary: ${response}")
+                            Timber.d("Abc", "setResponseEditDiary: ${response}")
                             val newDiary = Diary(
                                 response.result.id,
                                 saveDiaryRequest.title,
@@ -280,14 +286,14 @@ class MyDiaryViewModel : ViewModel() {
                 }
             } else {
                 errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            onError("다시 로그인해 주세요.")
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            _snackMessage.postValue("일기 저장에 실패하였습니다.")
-                        }
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        if (it.status == 401) {
+//                            onError("다시 로그인해 주세요.")
+//                            CodaApplication.getInstance().logOut()
+//                        } else {
+//                            _snackMessage.postValue("일기 저장에 실패하였습니다.")
+//                        }
+//                    }
                 }
             }
         }
@@ -325,26 +331,26 @@ class MyDiaryViewModel : ViewModel() {
 
     fun getMonthDiary(date: String) = viewModelScope.launch {
         _loading.postValue(true)
-        with(MyDiaryRepository.INSTANCE.getMonthDiary(date)) {
+        with(getMonthDiaryUseCase(date)) {
             _loading.postValue(false)
             if (isSuccessful) {
                 body()?.let { result ->
-                    Log.d("observedata", "setResponseGetMonthDiary: $result")
-//                    Log.d("code", "setResponseGetMonthDiary: code: ${it.code()}")
+                    Timber.d("observedata", "setResponseGetMonthDiary: $result")
+//                    Timber.d("code", "setResponseGetMonthDiary: code: ${it.code()}")
                     when (code()) {
                         200 -> {
                             setMonthDiaries(body()!!.result)
                         }
                         else -> onError(message())
                     }
-//                    Log.d("viewmodel", "observerDatas: ${solvedProblems.value!!.size}")
+//                    Timber.d("viewmodel", "observerDatas: ${solvedProblems.value!!.size}")
                 }
             } else {
                 errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        onError(it.message)
-                        Log.d("viewmodel", "observerDatas: $it")
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        onError(it.message)
+//                        Timber.d("viewmodel", "observerDatas: $it")
+//                    }
                 }
             }
         }
@@ -353,7 +359,7 @@ class MyDiaryViewModel : ViewModel() {
     fun setResponseEditDiary(diaryId: Long, editDiaryRequest: EditDiaryRequest) =
         viewModelScope.launch {
             _loading.postValue(true)
-            with(MyDiaryRepository.INSTANCE.editDiary(diaryId, editDiaryRequest)) {
+            with(editDiaryUseCase(diaryId, editDiaryRequest)) {
                 _loading.postValue(false)
                 if (isSuccessful) {
                     body()?.let { response ->
@@ -376,22 +382,16 @@ class MyDiaryViewModel : ViewModel() {
                     }
                 } else {
                     errorBody()?.let { errorBody ->
-                        RetrofitClient.getErrorResponse(errorBody)?.let {
-                            if (it.status == 401) {
-                                onError("다시 로그인해 주세요.")
-                                CodaApplication.getInstance().logOut()
-                            } else {
-                                _snackMessage.postValue("일기 저장에 실패하였습니다.")
-                            }
-                        }
+//                        RetrofitClient.getErrorResponse(errorBody)?.let {
+//                            if (it.status == 401) {
+//                                onError("다시 로그인해 주세요.")
+//                                CodaApplication.getInstance().logOut()
+//                            } else {
+//                                _snackMessage.postValue("일기 저장에 실패하였습니다.")
+//                            }
+//                        }
                     }
                 }
-            }
-
-
-            withContext(viewModelScope.coroutineContext) {
-                _responseEditDiary.value =
-                    MyDiaryRepository.INSTANCE.editDiary(diaryId, editDiaryRequest)
             }
         }
 
@@ -399,7 +399,7 @@ class MyDiaryViewModel : ViewModel() {
         var isSuccess = false
         _loading.postValue(true)
         if (selectedDiary.value?.id != null) {
-            with(MyDiaryRepository.INSTANCE.deleteDiary(selectedDiary.value!!.id!!)) {
+            with(deleteDiaryUseCase(selectedDiary.value!!.id!!)) {
                 _loading.postValue(false)
                 if (isSuccessful) {
                     body()?.let {
@@ -413,14 +413,14 @@ class MyDiaryViewModel : ViewModel() {
                     }
                 } else {
                     errorBody()?.let { errorBody ->
-                        RetrofitClient.getErrorResponse(errorBody)?.let {
-                            if (it.status == 401) {
-                                onError("다시 로그인해 주세요.")
-                                CodaApplication.getInstance().logOut()
-                            } else {
-                                _snackMessage.postValue("일기 삭제에 실패하였습니다.")
-                            }
-                        }
+//                        RetrofitClient.getErrorResponse(errorBody)?.let {
+//                            if (it.status == 401) {
+//                                onError("다시 로그인해 주세요.")
+//                                CodaApplication.getInstance().logOut()
+//                            } else {
+//                                _snackMessage.postValue("일기 삭제에 실패하였습니다.")
+//                            }
+//                        }
                     }
                 }
             }
@@ -430,7 +430,7 @@ class MyDiaryViewModel : ViewModel() {
 
     fun setResponseGetDayComment(date: String) = viewModelScope.launch {
         _loading.postValue(true)
-        with(MyPageRepository.INSTANCE.getMonthComment(date)) {
+        with(getMonthCommentUseCase(date)) {
             _loading.postValue(false)
             if (isSuccessful) {
                 body()?.let { result ->
@@ -443,14 +443,14 @@ class MyDiaryViewModel : ViewModel() {
                 }
             } else {
                 errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            onError("다시 로그인해 주세요.")
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            _snackMessage.postValue("코멘트를 읽는 데 실패하였습니다.")
-                        }
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        if (it.status == 401) {
+//                            onError("다시 로그인해 주세요.")
+//                            CodaApplication.getInstance().logOut()
+//                        } else {
+//                            _snackMessage.postValue("코멘트를 읽는 데 실패하였습니다.")
+//                        }
+//                    }
                 }
             }
         }

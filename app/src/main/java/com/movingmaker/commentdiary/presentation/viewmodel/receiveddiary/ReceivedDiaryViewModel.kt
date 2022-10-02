@@ -1,21 +1,32 @@
 package com.movingmaker.commentdiary.presentation.viewmodel.receiveddiary
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.common.CodaApplication
-import com.movingmaker.commentdiary.data.model.ReceivedDiary
-import com.movingmaker.commentdiary.data.remote.RetrofitClient
-import com.movingmaker.commentdiary.data.remote.request.*
-import com.movingmaker.commentdiary.data.remote.response.*
-import com.movingmaker.commentdiary.data.repository.ReceivedDiaryRepository
 import com.movingmaker.commentdiary.common.util.DateConverter
-import kotlinx.coroutines.*
+import com.movingmaker.commentdiary.data.model.ReceivedDiary
+import com.movingmaker.commentdiary.data.remote.request.ReportDiaryRequest
+import com.movingmaker.commentdiary.data.remote.request.SaveCommentRequest
+import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
+import com.movingmaker.commentdiary.data.remote.response.ReceivedDiaryResponse
+import com.movingmaker.commentdiary.domain.usecase.GetReceivedDiaryUseCase
+import com.movingmaker.commentdiary.domain.usecase.ReportDiaryUseCase
+import com.movingmaker.commentdiary.domain.usecase.SaveCommentUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class ReceivedDiaryViewModel : ViewModel() {
+@HiltViewModel
+class ReceivedDiaryViewModel @Inject constructor(
+    private val receivedDiaryUseCase: GetReceivedDiaryUseCase,
+    private val saveCommentUseCase: SaveCommentUseCase,
+    private val reportDiaryUseCase: ReportDiaryUseCase,
+) : ViewModel() {
 
     var mJob: Job? = null
 
@@ -66,7 +77,7 @@ class ReceivedDiaryViewModel : ViewModel() {
         var response: Response<ReceivedDiaryResponse>? = null
         val date = DateConverter.ymdFormat(DateConverter.getCodaToday())!!
         val job = launch(Dispatchers.Main + exceptionHandler) {
-            response = ReceivedDiaryRepository.INSTANCE.getReceivedDiary(date)
+            response = receivedDiaryUseCase(date)
         }
         job.join()
         _loading.postValue(false)
@@ -85,16 +96,15 @@ class ReceivedDiaryViewModel : ViewModel() {
                 }
             } else {
                 it.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        //Received 일기 없는 경우 화면에 텍스트로 (toast X)
-                        if (it.status == 401) {
-                            onError("다시 로그인해 주세요.")
-                            CodaApplication.getInstance().logOut()
-                        }
-                        else{
-                            setReceivedDiary(null)
-                        }
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        //Received 일기 없는 경우 화면에 텍스트로 (toast X)
+//                        if (it.status == 401) {
+//                            onError("다시 로그인해 주세요.")
+//                            CodaApplication.getInstance().logOut()
+//                        } else {
+//                            setReceivedDiary(null)
+//                        }
+//                    }
                 }
             }
         }
@@ -107,7 +117,7 @@ class ReceivedDiaryViewModel : ViewModel() {
         val date = DateConverter.ymdFormat(DateConverter.getCodaToday())
         var response: Response<IsSuccessResponse>? = null
         val job = launch(Dispatchers.Main + exceptionHandler) {
-            response = ReceivedDiaryRepository.INSTANCE.saveComment(
+            response = saveCommentUseCase(
                 SaveCommentRequest(
                     id = receivedDiary.value!!.id!!,
                     date = date!!,
@@ -129,28 +139,27 @@ class ReceivedDiaryViewModel : ViewModel() {
                 }
             } else {
                 it.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            onError("다시 로그인해 주세요.")
-                            CodaApplication.getInstance().logOut()
-                        }
-                        else {
-                            onError(it.message)
-                        }
-                        Log.d("viewmodel", "observerDatas: $it")
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        if (it.status == 401) {
+//                            onError("다시 로그인해 주세요.")
+//                            CodaApplication.getInstance().logOut()
+//                        } else {
+//                            onError(it.message)
+//                        }
+//                        Timber.d("viewmodel", "observerDatas: $it")
+//                    }
                 }
             }
         }
     }
 
     //일기 신고
-    fun setResponseReportDiary(content: String) = viewModelScope.launch{
+    fun setResponseReportDiary(content: String) = viewModelScope.launch {
 
         _loading.postValue(true)
         var response: Response<IsSuccessResponse>? = null
         val job = launch(Dispatchers.Main + exceptionHandler) {
-            response = ReceivedDiaryRepository.INSTANCE.reportDiary(
+            response = reportDiaryUseCase(
                 ReportDiaryRequest(
                     id = receivedDiary.value!!.id!!,
                     content = content
@@ -171,16 +180,15 @@ class ReceivedDiaryViewModel : ViewModel() {
                 }
             } else {
                 it.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        onError(it.message)
-                        if (it.status == 401) {
-                            onError("다시 로그인해 주세요.")
-                            CodaApplication.getInstance().logOut()
-                        }
-                        else{
-                            onError(it.message)
-                        }
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        onError(it.message)
+//                        if (it.status == 401) {
+//                            onError("다시 로그인해 주세요.")
+//                            CodaApplication.getInstance().logOut()
+//                        } else {
+//                            onError(it.message)
+//                        }
+//                    }
                 }
             }
         }

@@ -1,20 +1,37 @@
 package com.movingmaker.commentdiary.presentation.viewmodel.mypage
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.common.CodaApplication
-import com.movingmaker.commentdiary.data.model.Comment
-import com.movingmaker.commentdiary.data.remote.RetrofitClient
-import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
-import com.movingmaker.commentdiary.data.remote.response.*
-import com.movingmaker.commentdiary.data.repository.LogOutRepository
-import com.movingmaker.commentdiary.data.repository.MyPageRepository
 import com.movingmaker.commentdiary.common.util.Constant.SUCCESS_CODE
 import com.movingmaker.commentdiary.common.util.DateConverter
-import kotlinx.coroutines.*
+import com.movingmaker.commentdiary.data.model.Comment
+import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
+import com.movingmaker.commentdiary.data.remote.response.CommentListResponse
+import com.movingmaker.commentdiary.data.remote.response.CommentPushStateResponse
+import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
+import com.movingmaker.commentdiary.data.remote.response.MyPageResponse
+import com.movingmaker.commentdiary.domain.usecase.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class MyPageViewModel : ViewModel() {
-//    class MyPageViewModel (application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class MyPageViewModel @Inject constructor(
+    private val signOutUseCase: SignOutUseCase,
+    private val logOutUseCase: LogOutUseCase,
+    private val changePasswordUseCase: ChangePasswordUseCase,
+    private val getMyPageUseCase: GetMyPageUseCase,
+    private val getAllCommentUseCase: GetAllCommentUseCase,
+    private val getMonthCommentUseCase: GetMonthCommentUseCase,
+    private val patchCommentPushStateUseCase: PatchCommentPushStateUseCase
+) : ViewModel() {
 
     var job: Job? = null
 
@@ -121,7 +138,7 @@ class MyPageViewModel : ViewModel() {
     }
 
     fun signOut() = viewModelScope.launch {
-        MyPageRepository.INSTANCE.signOut().apply{
+        signOutUseCase().apply {
             if (this.isSuccessful) {
                 this.body()?.let { response ->
                     when (response.code) {
@@ -135,9 +152,9 @@ class MyPageViewModel : ViewModel() {
                 }
             } else {
                 this.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        onError("회원 탈퇴에 실패하였습니다.")
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        onError("회원 탈퇴에 실패하였습니다.")
+//                    }
                 }
             }
         }
@@ -148,7 +165,7 @@ class MyPageViewModel : ViewModel() {
             _loading.postValue(true)
             var response: Response<IsSuccessResponse>? = null
             val job = launch(Dispatchers.Main + exceptionHandler) {
-                response = MyPageRepository.INSTANCE.changePassword(changePasswordRequest)
+                response = changePasswordUseCase(changePasswordRequest)
             }
             job.join()
             _loading.postValue(false)
@@ -165,26 +182,26 @@ class MyPageViewModel : ViewModel() {
                     }
                 } else {
                     it.errorBody()?.let { errorBody ->
-                        RetrofitClient.getErrorResponse(errorBody)?.let {
-                            if (it.status == 401) {
-                                onError("다시 로그인해 주세요.")
-                                CodaApplication.getInstance().logOut()
-                            } else {
-                                onError("비밀번호 변경에 실패하였습니다.")
-                            }
-                        }
+//                        RetrofitClient.getErrorResponse(errorBody)?.let {
+//                            if (it.status == 401) {
+//                                onError("다시 로그인해 주세요.")
+//                                CodaApplication.getInstance().logOut()
+//                            } else {
+//                                onError("비밀번호 변경에 실패하였습니다.")
+//                            }
+//                        }
                     }
                 }
             }
         }
 
     fun logout() = viewModelScope.launch {
-        LogOutRepository.INSTANCE.logOut().apply {
+        logOutUseCase().apply {
             if (this.isSuccessful) {
                 this.body()?.let { response ->
                     when (response.code) {
                         SUCCESS_CODE -> {
-                           
+
                         }
                     }
                 }
@@ -198,7 +215,7 @@ class MyPageViewModel : ViewModel() {
         _loading.postValue(true)
         var response: Response<MyPageResponse>? = null
         val job = launch(Dispatchers.Main + exceptionHandler) {
-            response = MyPageRepository.INSTANCE.getMyPage()
+            response = getMyPageUseCase()
         }
         job.join()
         _loading.postValue(false)
@@ -217,14 +234,14 @@ class MyPageViewModel : ViewModel() {
                 }
             } else {
                 it.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            onError("다시 로그인해 주세요.")
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            _snackMessage.postValue("내 정보를 불러오는 데 실패하였습니다.")
-                        }
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        if (it.status == 401) {
+//                            onError("다시 로그인해 주세요.")
+//                            CodaApplication.getInstance().logOut()
+//                        } else {
+//                            _snackMessage.postValue("내 정보를 불러오는 데 실패하였습니다.")
+//                        }
+//                    }
                 }
             }
         }
@@ -236,9 +253,9 @@ class MyPageViewModel : ViewModel() {
         var response: Response<CommentListResponse>? = null
         val job = launch(Dispatchers.Main + exceptionHandler) {
             response = if (date == "all")
-                MyPageRepository.INSTANCE.getAllComment()
+                getAllCommentUseCase()
             else
-                MyPageRepository.INSTANCE.getMonthComment(date)
+                getMonthCommentUseCase(date)
         }
         job.join()
         _loading.postValue(false)
@@ -254,15 +271,15 @@ class MyPageViewModel : ViewModel() {
                 }
             } else {
                 it.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            onError("다시 로그인해 주세요.")
-                            CodaApplication.getInstance().logOut()
-                        } else {
-//                            CodaSnackBar.make(binding.root, "코멘트를 받아오는 데 실패했습니다.")
-                            onError(it.message)
-                        }
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        if (it.status == 401) {
+//                            onError("다시 로그인해 주세요.")
+//                            CodaApplication.getInstance().logOut()
+//                        } else {
+////                            CodaSnackBar.make(binding.root, "코멘트를 받아오는 데 실패했습니다.")
+//                            onError(it.message)
+//                        }
+//                    }
                 }
             }
         }
@@ -272,7 +289,7 @@ class MyPageViewModel : ViewModel() {
         _loading.postValue(true)
         var response: Response<CommentPushStateResponse>? = null
         val job = launch(Dispatchers.Main + exceptionHandler) {
-            response = MyPageRepository.INSTANCE.patchCommentPushState()
+            response = patchCommentPushStateUseCase()
         }
         job.join()
         _loading.postValue(false)
@@ -288,14 +305,14 @@ class MyPageViewModel : ViewModel() {
                 }
             } else {
                 it.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        if (it.status == 401) {
-                            onError("다시 로그인해 주세요.")
-                            CodaApplication.getInstance().logOut()
-                        } else {
-                            onError(it.message)
-                        }
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        if (it.status == 401) {
+//                            onError("다시 로그인해 주세요.")
+//                            CodaApplication.getInstance().logOut()
+//                        } else {
+//                            onError(it.message)
+//                        }
+//                    }
                 }
             }
         }

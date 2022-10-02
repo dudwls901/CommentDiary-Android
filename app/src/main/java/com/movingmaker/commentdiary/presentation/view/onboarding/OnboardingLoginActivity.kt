@@ -6,27 +6,27 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.base.BaseActivity
-import com.movingmaker.commentdiary.databinding.ActivityOnboardingLoginBinding
 import com.movingmaker.commentdiary.common.CodaSnackBar
+import com.movingmaker.commentdiary.common.base.BaseActivity
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.common.util.setOnSingleClickListener
+import com.movingmaker.commentdiary.databinding.ActivityOnboardingLoginBinding
 import com.movingmaker.commentdiary.presentation.view.main.MainActivity
 import com.movingmaker.commentdiary.presentation.viewmodel.onboarding.OnboardingViewModel
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
-class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(R.layout.activity_onboarding_login), CoroutineScope {
-//class OnboardingLoginActivity: AppCompatActivity(), CoroutineScope{
+@AndroidEntryPoint
+class OnboardingLoginActivity :
+    BaseActivity<ActivityOnboardingLoginBinding>(R.layout.activity_onboarding_login) {
+    //class OnboardingLoginActivity: AppCompatActivity(), CoroutineScope{
     override val TAG: String = OnboardingLoginActivity::class.java.simpleName
-    private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
-//    lateinit var binding: ActivityOnboardingLoginBinding
+    //    lateinit var binding: ActivityOnboardingLoginBinding
     private val onboardingViewModel: OnboardingViewModel by viewModels()
     private var backButtonTime = 0L
     private lateinit var navController: NavController
@@ -150,7 +150,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(R.l
     }
 
     private fun findPassword() {
-        launch {
+        lifecycleScope.launch {
             onboardingViewModel.onLoading()
             if (onboardingViewModel.findPassword()) {
                 binding.onboardingBottomButton.setOnSingleClickListener {
@@ -162,7 +162,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(R.l
 
     private fun login() {
         onboardingViewModel.validateEmail("email")
-        launch {
+        lifecycleScope.launch {
             onboardingViewModel.onLoading()
             if (onboardingViewModel.login()) {
                 startActivity(Intent(this@OnboardingLoginActivity, MainActivity::class.java).apply {
@@ -173,7 +173,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(R.l
     }
 
     private fun kakaoSignUp() {
-        launch {
+        lifecycleScope.launch {
             onboardingViewModel.onLoading()
             if (onboardingViewModel.kakaoSignUpSetAccepts()) {
                 startActivity(
@@ -189,7 +189,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(R.l
     }
 
     private fun signUp() {
-        launch {
+        lifecycleScope.launch {
             onboardingViewModel.onLoading()
             if (onboardingViewModel.signUp()) {
                 login()
@@ -198,7 +198,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(R.l
     }
 
     private fun checkCode() {
-        launch {
+        lifecycleScope.launch {
             onboardingViewModel.onLoading()
             if (onboardingViewModel.checkCode()) {
                 navController.navigate(OnboardingSignUpCodeFragmentDirections.actionOnboardingSignUpCodeFragmentToOnboardingSignUpPasswordFragment())
@@ -207,7 +207,7 @@ class OnboardingLoginActivity : BaseActivity<ActivityOnboardingLoginBinding>(R.l
     }
 
     private fun sendCode() {
-        launch {
+        lifecycleScope.launch {
             onboardingViewModel.onLoading()
             if (onboardingViewModel.emailCodeSend()) {
                 navController.navigate(OnboardingSignUpEmailFragmentDirections.actionOnboardingSignUpEmailFragmentToOnboardingSignUpCodeFragment())

@@ -1,23 +1,35 @@
 package com.movingmaker.commentdiary.presentation.viewmodel.onboarding
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.data.remote.RetrofitClient
-import com.movingmaker.commentdiary.data.remote.request.*
 import com.movingmaker.commentdiary.common.CodaApplication
-import com.movingmaker.commentdiary.data.repository.ForSignUpRespository
-import com.movingmaker.commentdiary.data.repository.MyPageRepository
 import com.movingmaker.commentdiary.common.util.Constant.EMAIL
 import com.movingmaker.commentdiary.common.util.Constant.KAKAO
 import com.movingmaker.commentdiary.common.util.Constant.SUCCESS_CODE
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
-import kotlinx.coroutines.*
+import com.movingmaker.commentdiary.data.remote.request.*
+import com.movingmaker.commentdiary.domain.usecase.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import timber.log.Timber
+import javax.inject.Inject
 
-class OnboardingViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class OnboardingViewModel @Inject constructor(
+    private val sendEmailCodeUseCase: SendEmailCodeUseCase,
+    private val sendEmailCodeCheckUseCase: EmailCodeCheckUseCase,
+    private val signUpUseCase: SignUpUseCase,
+    private val findPasswordUseCase: FindPasswordUseCase,
+    private val logInUseCase: LogInUseCase,
+    private val kakaoLogInUseCase: KakaoLogInUseCase,
+    private val kakaoSignUpSetAcceptsUseCase: KakaoSignUpSetAcceptsUseCase,
+    private val signOutUseCase: SignOutUseCase
+) : ViewModel() {
 
     var job: Job? = null
 
@@ -297,7 +309,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
             return@async false
         }
         var successCodeSend = false
-        ForSignUpRespository.INSTANCE.sendEmailCode(email = email.value!!).apply {
+        sendEmailCodeUseCase(email = email.value!!).apply {
             offLoading()
             if (this.isSuccessful) {
                 this.body()?.let { response ->
@@ -309,10 +321,10 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
                 }
             } else {
                 this.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        setEmailNotice(it.message)
-                        setShakeView(true)
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        setEmailNotice(it.message)
+//                        setShakeView(true)
+//                    }
                 }
             }
         }
@@ -326,7 +338,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
             setShakeView(true)
             return@async false
         }
-        ForSignUpRespository.INSTANCE.emailCodeCheck(
+        sendEmailCodeCheckUseCase(
             EmailCodeCheckRequest(
                 email.value!!,
                 code.value!!
@@ -343,11 +355,11 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
                 }
             } else {
                 this.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        onError(it.message, "text")
-                        setCodeCorrect(false)
-                        setShakeView(true)
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        onError(it.message, "text")
+//                        setCodeCorrect(false)
+//                        setShakeView(true)
+//                    }
                 }
             }
         }
@@ -361,7 +373,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
             return@async false
         }
         var successSignUp = false
-        ForSignUpRespository.INSTANCE.signUp(
+        signUpUseCase(
             SignUpRequest(
                 email = email.value!!,
                 password = password.value!!,
@@ -380,10 +392,10 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
                 }
             } else {
                 this.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        onError(it.message, "text")
-                        setShakeView(true)
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        onError(it.message, "text")
+//                        setShakeView(true)
+//                    }
                 }
             }
         }
@@ -398,7 +410,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
             setSuccessFindPassword(false)
             return@async false
         }
-        ForSignUpRespository.INSTANCE.findPassword(findPasswordEmail.value!!).apply {
+        findPasswordUseCase(findPasswordEmail.value!!).apply {
             offLoading()
             if (this.isSuccessful) {
                 this.body()?.let { response ->
@@ -412,11 +424,11 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
                 }
             } else {
                 this.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        setSuccessFindPassword(false)
-                        setShakeView(true)
-                        _findPasswordEmailNotice.value = it.message
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        setSuccessFindPassword(false)
+//                        setShakeView(true)
+//                        _findPasswordEmailNotice.value = it.message
+//                    }
                 }
             }
         }
@@ -437,7 +449,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
             return@async false
         }
         var successLogin = false
-        ForSignUpRespository.INSTANCE.logIn(
+        logInUseCase(
             LogInRequest(
                 email = email.value!!,
                 password = password.value!!,
@@ -449,12 +461,11 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
                 this.body()?.let { response ->
                     when (response.code) {
                         SUCCESS_CODE -> {
-                            Log.d("login", "login: $response")
+                            Timber.d("login: $response")
                             val accessToken = response.result.accessToken
                             val refreshToken = response.result.refreshToken
                             val accessTokenExpiresIn = response.result.accessTokenExpiresIn
-                            Log.d(
-                                "login",
+                            Timber.d(
                                 "login: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}"
                             )
                             CodaApplication.getInstance()
@@ -465,10 +476,10 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
                 }
             } else {
                 this.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        setLoginNotice(it.message)
-                        setShakeView(true)
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        setLoginNotice(it.message)
+//                        setShakeView(true)
+//                    }
                 }
             }
         }
@@ -478,7 +489,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     suspend fun kakaoLogin(kakaoAccessToken: String) = viewModelScope.async {
         var successLogin = false
         var isNewMember = false
-        ForSignUpRespository.INSTANCE.kakaoLogin(
+        kakaoLogInUseCase(
             KakaoLoginRequest(
                 KAKAO,
                 kakaoAccessToken,
@@ -491,13 +502,12 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
                     when (loginResponse.code) {
                         SUCCESS_CODE -> {
                             successLogin = true
-                            Log.d("kakaoLogin", "kakaoLogin: $loginResponse")
+                            Timber.d("kakaoLogin: $loginResponse")
                             val accessToken = loginResponse.result.accessToken
                             val refreshToken = loginResponse.result.refreshToken
                             val accessTokenExpiresIn = loginResponse.result.accessTokenExpiresIn
                             isNewMember = loginResponse.result.isNewMember == true
-                            Log.d(
-                                "kakaoLogin",
+                            Timber.d(
                                 "kakaoLogin: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}"
                             )
                             CodaApplication.getInstance()
@@ -508,21 +518,21 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
                 }
             } else {
                 this.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        //토스트든 스낵바든 띄우기
-                        onError(it.message, "toast")
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        //토스트든 스낵바든 띄우기
+//                        onError(it.message, "toast")
+//                    }
                 }
             }
         }
-        Pair(successLogin,isNewMember)
+        Pair(successLogin, isNewMember)
     }.await()
 
     suspend fun kakaoSignUpSetAccepts() = viewModelScope.async {
         var successSignUp = false
         val kakaoSignUpRequest =
             if (isPushAccept.value == true) KakaoSignUpRequest('Y') else KakaoSignUpRequest('N')
-        MyPageRepository.INSTANCE.kakaoSignUpSetAccepts(kakaoSignUpRequest).apply {
+        kakaoSignUpSetAcceptsUseCase(kakaoSignUpRequest).apply {
             offLoading()
             if (this.isSuccessful) {
                 this.body()?.let { loginResponse ->
@@ -536,10 +546,10 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
             } else {
                 successSignUp = false
                 this.errorBody()?.let { errorBody ->
-                    RetrofitClient.getErrorResponse(errorBody)?.let {
-                        //토스트든 스낵바든 띄우기
-                        onError(it.message, "toast")
-                    }
+//                    RetrofitClient.getErrorResponse(errorBody)?.let {
+//                        //토스트든 스낵바든 띄우기
+//                        onError(it.message, "toast")
+//                    }
                 }
             }
         }
@@ -548,7 +558,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
 
     suspend fun signOut() = viewModelScope.async {
         var successSignOut = false
-        MyPageRepository.INSTANCE.signOut().apply{
+        signOutUseCase().apply {
             if (this.isSuccessful) {
                 this.body()?.let { response ->
                     when (response.code) {
@@ -567,7 +577,6 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     }.await()
 
 
-
     fun onLoading() {
         _loading.postValue(true)
     }
@@ -578,7 +587,7 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
 
     private fun onError(message: String, type: String) {
 //        _errorMessage.value = message
-        Log.d("onboardingViewModelError", "onError: $message")
+        Timber.d("onboardingViewModelError", "onError: $message")
         when (type) {
             "text" -> {
 

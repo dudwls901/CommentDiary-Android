@@ -11,11 +11,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.databinding.FragmentOnboardingFindPasswordBinding
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.databinding.FragmentOnboardingFindPasswordBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.onboarding.OnboardingViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class OnboardingFindPasswordFragment : BaseFragment<FragmentOnboardingFindPasswordBinding>(R.layout.fragment_onboarding_find_password) {
+@AndroidEntryPoint
+class OnboardingFindPasswordFragment :
+    BaseFragment<FragmentOnboardingFindPasswordBinding>(R.layout.fragment_onboarding_find_password) {
     override val TAG: String = OnboardingFindPasswordFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
@@ -34,27 +37,38 @@ class OnboardingFindPasswordFragment : BaseFragment<FragmentOnboardingFindPasswo
 
     @SuppressLint("ResourceAsColor")
     private fun observeDatas() {
-        onboardingViewModel.shakeView.observe(viewLifecycleOwner){
-            if(it){
-                val shortShake: Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.shake_short)
+        onboardingViewModel.shakeView.observe(viewLifecycleOwner) {
+            if (it) {
+                val shortShake: Animation =
+                    AnimationUtils.loadAnimation(requireContext(), R.anim.shake_short)
                 binding.emailIncorrectTextView.startAnimation(shortShake)
             }
         }
-        onboardingViewModel.successFindPassword.observe(viewLifecycleOwner){
-            if(it){
-                binding.emailIncorrectTextView.setTextColor(ContextCompat.getColor(requireContext(),R.color.core_green))
+        onboardingViewModel.successFindPassword.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.emailIncorrectTextView.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.core_green
+                    )
+                )
                 binding.emailIncorrectTextView.text = getString(R.string.onboarding_password_send)
                 binding.emailIncorrectTextView.visibility = View.VISIBLE
             }
         }
-        onboardingViewModel.findPasswordEmailNotice.observe(viewLifecycleOwner){
-            binding.emailIncorrectTextView.setTextColor(ContextCompat.getColor(requireContext(),R.color.core_notice))
+        onboardingViewModel.findPasswordEmailNotice.observe(viewLifecycleOwner) {
+            binding.emailIncorrectTextView.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.core_notice
+                )
+            )
             binding.emailIncorrectTextView.text = it
             binding.emailIncorrectTextView.visibility = View.VISIBLE
         }
     }
 
-    private fun initViews() = with(binding){
+    private fun initViews() = with(binding) {
         backButton.setOnClickListener {
             findNavController().popBackStack()
         }
