@@ -7,12 +7,6 @@ import android.util.Log
  */
 open class Event<out T>(private val content: T) {
 
-    companion object{
-        const val CLICK_INTERVAL = 600L
-    }
-
-    private var lastClickTime =0L
-
     var hasBeenHandled = false
         private set // Allow external read but not write
 
@@ -21,12 +15,10 @@ open class Event<out T>(private val content: T) {
      */
     fun getContentIfNotHandled(): T? {
         return if (hasBeenHandled) {
-            Log.d("what", "heeeeeeere: $hasBeenHandled")
             null
         }
         else {
             hasBeenHandled = true
-            Log.d("what", "here?: $hasBeenHandled")
             content
         }
     }
