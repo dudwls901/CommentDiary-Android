@@ -46,6 +46,8 @@ buildscript {
         classpath "com.google.firebase:firebase-crashlytics-gradle:$crashlyticsVersion"
         //Manifest 보안
         classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:$manifestSecretVersion"
+        //hilt
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
     }
 }
 

@@ -3,19 +3,20 @@ package com.movingmaker.commentdiary.common
 import android.app.Application
 import android.content.Intent
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.KakaoSdk
-import com.movingmaker.commentdiary.R
-//import com.movingmaker.commentdiary.data.AuthProvider
-import com.movingmaker.commentdiary.presentation.view.onboarding.OnboardingLoginActivity
 import com.kakao.sdk.user.UserApiClient
 import com.movingmaker.commentdiary.BuildConfig
+import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.common.util.Constant.KAKAO
+import com.movingmaker.commentdiary.presentation.view.onboarding.OnboardingLoginActivity
+import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 
+@HiltAndroidApp
 class CodaApplication : Application() {
 
     //    private lateinit var dataStore: AuthProvider
@@ -103,9 +104,9 @@ class CodaApplication : Application() {
             // 연결 끊기
             UserApiClient.instance.unlink { error ->
                 if (error != null) {
-                    Log.e("signout", "연결 끊기 실패", error)
+                    Timber.e("연결 끊기 실패", error)
                 } else {
-                    Log.i("signout", "연결 끊기 성공. SDK에서 토큰 삭제 됨")
+                    Timber.i("연결 끊기 성공. SDK에서 토큰 삭제 됨")
                 }
             }
         }
@@ -118,9 +119,9 @@ class CodaApplication : Application() {
             // 카카오 로그아웃
             UserApiClient.instance.logout { error ->
                 if (error != null) {
-                    Log.e("logout", "로그아웃 실패. SDK에서 토큰 삭제됨", error)
+                    Timber.e("로그아웃 실패. SDK에서 토큰 삭제됨", error)
                 } else {
-                    Log.i("logout", "로그아웃 성공. SDK에서 토큰 삭제됨")
+                    Timber.i("로그아웃 성공. SDK에서 토큰 삭제됨")
                 }
             }
         }

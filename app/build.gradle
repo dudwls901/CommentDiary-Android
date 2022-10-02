@@ -10,6 +10,8 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
     //Manifest 보안
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    //hilt
+    id 'dagger.hilt.android.plugin'
 }
 
 
@@ -144,4 +146,6 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
 
+    // Timber
+    implementation "com.jakewharton.timber:timber:$timberVersion"
 }
