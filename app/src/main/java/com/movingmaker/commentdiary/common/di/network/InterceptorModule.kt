@@ -25,7 +25,7 @@ object InterceptorModule {
     annotation class TwoHeaderInterceptor
 
     @Qualifier
-    @Retention
+    @Retention(AnnotationRetention.RUNTIME)
     annotation class BearerInterceptor
 
     @Provides
