@@ -3,12 +3,12 @@ package com.movingmaker.commentdiary.data.remote.api
 import com.movingmaker.commentdiary.data.remote.request.*
 import com.movingmaker.commentdiary.data.remote.response.DiaryListResponse
 import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.util.Url.ALL
-import com.movingmaker.commentdiary.util.Url.COMMENT
-import com.movingmaker.commentdiary.util.Url.DIARY
-import com.movingmaker.commentdiary.util.Url.LIKE
-import com.movingmaker.commentdiary.util.Url.MY
-import com.movingmaker.commentdiary.util.Url.REPORT
+import com.movingmaker.commentdiary.common.util.Url.ALL
+import com.movingmaker.commentdiary.common.util.Url.COMMENT
+import com.movingmaker.commentdiary.common.util.Url.DIARY
+import com.movingmaker.commentdiary.common.util.Url.LIKE
+import com.movingmaker.commentdiary.common.util.Url.MY
+import com.movingmaker.commentdiary.common.util.Url.REPORT
 import retrofit2.Response
 import retrofit2.http.*
 

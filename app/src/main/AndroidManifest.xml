@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".global.CodaApplication"
+        android:name=".common.CodaApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
@@ -18,7 +18,7 @@
             android:value="${crashlyticsCollectionEnabled}" />
 
         <activity
-            android:name="com.movingmaker.commentdiary.view.onboarding.SplashActivity"
+            android:name="com.movingmaker.commentdiary.presentation.view.onboarding.SplashActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -27,10 +27,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.movingmaker.commentdiary.view.main.MainActivity"
+            android:name="com.movingmaker.commentdiary.presentation.view.main.MainActivity"
             android:exported="true" />
         <activity
-            android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingLoginActivity"
+            android:name="com.movingmaker.commentdiary.presentation.view.onboarding.OnboardingLoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -48,11 +48,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.movingmaker.commentdiary.view.onboarding.OnboardingIntroActivity"
+            android:name="com.movingmaker.commentdiary.presentation.view.onboarding.OnboardingIntroActivity"
             android:exported="true"></activity>
 
         <service
-            android:name="com.movingmaker.commentdiary.global.MyFirebaseMessagingService"
+            android:name="com.movingmaker.commentdiary.common.MyFirebaseMessagingService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

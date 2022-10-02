@@ -9,7 +9,7 @@
 
         <variable
             name="vm"
-            type="com.movingmaker.commentdiary.viewmodel.receiveddiary.ReceivedDiaryViewModel" />
+            type="com.movingmaker.commentdiary.presentation.viewmodel.receiveddiary.ReceivedDiaryViewModel" />
 
     </data>
 
