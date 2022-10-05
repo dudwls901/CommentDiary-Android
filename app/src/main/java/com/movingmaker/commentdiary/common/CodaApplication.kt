@@ -45,6 +45,11 @@ class CodaApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        if(BuildConfig.DEBUG){
+            Timber.plant(Timber.DebugTree())
+        }
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         codaApplication = this
         // Kakao SDK 초기화
@@ -57,7 +62,7 @@ class CodaApplication : Application() {
         }
 
         sharedPref = EncryptedSharedPreferences.create(
-            this, "enCryptedAuth", masterKey,
+            this, "encryptedAuth", masterKey,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
