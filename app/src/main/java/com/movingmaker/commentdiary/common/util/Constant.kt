@@ -1,11 +1,5 @@
 package com.movingmaker.commentdiary.common.util
 
-object RetrofitHeaderCondition {
-    const val BEARER = "bearer"
-    const val ONE_HEADER = "oneHeader"
-    const val TWO_HEADER = "twoHeader"
-    const val NO_HEADER ="noHeader"
-}
 object Constant{
     const val KAKAO = "KAKAO"
     const val EMAIL = "EMAIL"
