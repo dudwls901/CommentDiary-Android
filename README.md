@@ -1,4 +1,4 @@
-# 코다 - 코멘트 다이어리
+# 코다 - 코멘트 다이어리 (Version 2 )
 <img width="259" alt="image" src="https://user-images.githubusercontent.com/66052467/172058647-a50ee6a7-d134-4023-86fb-3374d8b34b6a.png">
 
 #### [플레이스토어](https://play.google.com/store/apps/details?id=com.movingmaker.commentdiary) |  [홈페이지](https://glittery-silk-987.notion.site/Moving-Maker-52fb6a3152cb42a5b12edf4e49df7cf5)
