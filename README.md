@@ -23,31 +23,28 @@
   + targetSdkVersion : 32
   + minSdkVersion : 26
 + CI/CD (Github Actions)
-+ Figma
-+ Zeplin
-+ PostMan
++ Figma, Zeplin, Slack, PostMan
 + Kotlin
-+ MVVM
-+ Navigation
-+ Coroutines
-+ DataBinding
-+ ViewModel
-+ LiveData
++ Clean Architecture, MVVM
++ DataBinding, ViewModel, LiveData, Navigation
 + EncryptedSharedPreferences
++ Coroutines
 + Retrofit2, OkHttp3
 + RecyclerView (DiffUtil + ListAdapter)
 + ViewPager2
 + material-calendarview
 + Kakao Login API
++ Hilt
 + Firebase
     + FCM
     + Analytics
     + Crashritics
 + For Refactoring & Develop
-    + Paging
-    + Hilt   
-    + Clean Archiecture
+    + Paging3
+    + Multi-Module
     + MotionLayout
+    + Room (caching, transient storage)
+    
 ## 📝 License
 Copyright © 2021 dudwls901. <br>
 This project is MIT licensed.
