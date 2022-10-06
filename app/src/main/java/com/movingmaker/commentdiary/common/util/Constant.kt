@@ -4,6 +4,8 @@ object Constant{
     const val KAKAO = "KAKAO"
     const val EMAIL = "EMAIL"
     const val SUCCESS_CODE = 200
+    const val MESSAGE_KEY = "message"
+    const val ERROR_KEY = "error"
 }
 
 object Url {
@@ -48,9 +50,4 @@ enum class FRAGMENT_NAME{
 
 enum class DIARY_TYPE{
     ALONE_DIARY,COMMENT_DIARY
-}
-
-enum class RESPONSE_STATE{
-    OKAY,
-    FAIL
 }
