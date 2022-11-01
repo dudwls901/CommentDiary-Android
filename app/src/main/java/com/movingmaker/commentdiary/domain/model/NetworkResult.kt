@@ -1,6 +1,5 @@
 package com.movingmaker.commentdiary.domain.model
 
-import com.movingmaker.commentdiary.data.util.ErrorType
 import timber.log.Timber
 
 sealed class NetworkResult<out T> {
@@ -25,7 +24,7 @@ fun <T> NetworkResult<T>.toUiState(): UiState<T> {
         }
         is NetworkResult.Exception -> {
             Timber.d("error $this")
-            UiState.Error(this.errorType)
+            UiState.Error(this.errorType.getErrorMessage())
         }
         is NetworkResult.Fail -> {
             Timber.d("fail $this")

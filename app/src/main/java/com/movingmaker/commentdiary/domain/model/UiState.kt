@@ -1,13 +1,11 @@
 package com.movingmaker.commentdiary.domain.model
 
-import com.movingmaker.commentdiary.data.util.ErrorType
-
 sealed class UiState<out T> {
     object Loading : UiState<Nothing>()
     data class Success<T>(val data: T) : UiState<T>()
     data class Empty(val message: String) : UiState<Nothing>()
     data class Fail(val message: String) : UiState<Nothing>()
-    data class Error(val errorType: ErrorType) : UiState<Nothing>()
+    data class Error(val message: String) : UiState<Nothing>()
 }
 
 fun <T> UiState<T>.toModel(): T {
@@ -21,13 +19,13 @@ private fun <R> changeUiState(replaceData: R): UiState<R> {
     }
 }
 
-//succes 분리
-fun <T, R> UiState<T>.mapUiState(getData: (T) -> R): UiState<R> {
+//success 분리
+suspend fun <T, R> UiState<T>.mapUiState(getData: suspend (T) -> R): UiState<R> {
     return when (this) {
         is UiState.Success -> changeUiState(getData(toModel()))
         is UiState.Fail -> this
         is UiState.Error -> this
         is UiState.Empty -> this
-        else -> this as UiState.Error
+        is UiState.Loading -> this
     }
 }
