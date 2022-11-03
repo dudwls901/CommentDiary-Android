@@ -16,26 +16,24 @@ class ForSignUpDataSourceImpl @Inject constructor(
     private val onboardingApiService: OnboardingApiService
 ) : ForSignUpDataSource {
     override suspend fun sendEmailCode(email: String): NetworkResult<BaseResponse<Nothing>> =
-        onboardingApiService.sendEmailCode(email).safeApiCall()
+        safeApiCall { onboardingApiService.sendEmailCode(email) }
 
 
     override suspend fun emailCodeCheck(emailCodeCheckRequest: EmailCodeCheckRequest): NetworkResult<BaseResponse<Nothing>> =
-        onboardingApiService.emailCodeCheck(emailCodeCheckRequest).safeApiCall()
+        safeApiCall { onboardingApiService.emailCodeCheck(emailCodeCheckRequest) }
 
     override suspend fun signUp(signUpRequest: SignUpRequest): NetworkResult<BaseResponse<Nothing>> =
-        onboardingApiService.signUp(signUpRequest).safeApiCall()
-
+        safeApiCall { onboardingApiService.signUp(signUpRequest) }
 
     override suspend fun kakaoLogIn(kakaoLoginRequest: KakaoLoginRequest): NetworkResult<BaseResponse<AuthTokens>> =
-        onboardingApiService.kakaoLogIn(kakaoLoginRequest).safeApiCall()
+       safeApiCall { onboardingApiService.kakaoLogIn(kakaoLoginRequest) }
 
 
     override suspend fun findPassword(email: String): NetworkResult<BaseResponse<Nothing>> =
-        onboardingApiService.findPassword(email).safeApiCall()
+       safeApiCall { onboardingApiService.findPassword(email) }
 
 
     override suspend fun logIn(logInRequest: LogInRequest): NetworkResult<BaseResponse<AuthTokens>> =
-        onboardingApiService.logIn(logInRequest).safeApiCall()
-
+       safeApiCall { onboardingApiService.logIn(logInRequest) }
 
 }

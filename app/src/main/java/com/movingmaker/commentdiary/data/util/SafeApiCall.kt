@@ -6,24 +6,27 @@ import com.movingmaker.commentdiary.domain.model.ErrorType
 import com.movingmaker.commentdiary.domain.model.NetworkResult
 import okhttp3.ResponseBody
 import org.json.JSONObject
-import retrofit2.HttpException
 import retrofit2.Response
+import timber.log.Timber
 import java.io.IOException
 import java.net.SocketTimeoutException
 
-fun <T> Response<T>.safeApiCall(): NetworkResult<T> {
+suspend fun <T> safeApiCall(callFunction: suspend () -> Response<T>): NetworkResult<T> {
     return try {
-        if (isSuccessful) {
-            NetworkResult.Success(this.body()!!)
-        } else {
-            NetworkResult.Fail(getErrorMessage(this.errorBody()))
+        val response = callFunction.invoke()
+        Timber.d("result ${response.body()}")
+        if(response.isSuccessful) {
+            NetworkResult.Success(response.body()!!)
+        }else{
+            if(response.code()  in 400 .. 405) {
+                NetworkResult.Fail(getErrorMessage(response.errorBody()))
+            }else{
+                NetworkResult.Exception(ErrorType.SERVER_ERROR)
+            }
         }
     } catch (e: Exception) {
+        Timber.e("error $e")
         when (e) {
-            is HttpException -> {
-                val body = e.response()?.errorBody()
-                NetworkResult.Fail(getErrorMessage(body))
-            }
             is SocketTimeoutException -> NetworkResult.Exception(ErrorType.TIMEOUT)
             is IOException -> NetworkResult.Exception(ErrorType.NETWORK)
             else -> NetworkResult.Exception(ErrorType.UNKNOWN)
