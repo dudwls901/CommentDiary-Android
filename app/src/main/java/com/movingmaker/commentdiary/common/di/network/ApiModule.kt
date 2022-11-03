@@ -1,6 +1,11 @@
 package com.movingmaker.commentdiary.common.di.network
 
-import com.movingmaker.commentdiary.data.remote.api.*
+import com.movingmaker.commentdiary.data.remote.api.GatherDiaryApiService
+import com.movingmaker.commentdiary.data.remote.api.MyDiaryApiService
+import com.movingmaker.commentdiary.data.remote.api.MyPageApiService
+import com.movingmaker.commentdiary.data.remote.api.OnboardingApiService
+import com.movingmaker.commentdiary.data.remote.api.ReIssueTokenApiService
+import com.movingmaker.commentdiary.data.remote.api.ReceivedDiaryApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,14 +48,6 @@ object ApiModule {
         @RetrofitModule.TwoHeaderRetrofit retrofit: Retrofit
     ): ReIssueTokenApiService {
         return retrofit.create(ReIssueTokenApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideLogOutApiService(
-        @RetrofitModule.OneHeaderRetrofit retrofit: Retrofit
-    ): LogOutApiService {
-        return retrofit.create(LogOutApiService::class.java)
     }
 
     @Provides
