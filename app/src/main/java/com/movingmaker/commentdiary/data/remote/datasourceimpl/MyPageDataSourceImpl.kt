@@ -3,7 +3,6 @@ package com.movingmaker.commentdiary.data.remote.datasourceimpl
 import com.movingmaker.commentdiary.data.remote.api.MyPageApiService
 import com.movingmaker.commentdiary.data.remote.datasource.MyPageDataSource
 import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
-import com.movingmaker.commentdiary.data.remote.request.KakaoSignUpRequest
 import com.movingmaker.commentdiary.data.remote.response.CommentListResponse
 import com.movingmaker.commentdiary.data.remote.response.CommentPushStateResponse
 import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
@@ -37,9 +36,5 @@ class MyPageDataSourceImpl @Inject constructor(
 
     override suspend fun patchCommentPushState(): Response<CommentPushStateResponse> {
         return myPageApiService.patchCommentPushState()
-    }
-
-    override suspend fun kakaoSignUpSetAccepts(kakaoSignUpRequest: KakaoSignUpRequest): Response<IsSuccessResponse>{
-        return myPageApiService.kakaoSignUpSetAccepts(kakaoSignUpRequest)
     }
 }

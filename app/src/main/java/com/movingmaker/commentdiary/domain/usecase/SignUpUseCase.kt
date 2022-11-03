@@ -10,7 +10,7 @@ import javax.inject.Inject
 class SignUpUseCase @Inject constructor(
     private val forSignUpRepository: ForSignUpRepository,
 ) {
-    suspend operator fun invoke(signUpRequest: SignUpRequest): UiState<Nothing> =
+    suspend operator fun invoke(signUpRequest: SignUpRequest): UiState<String> =
         forSignUpRepository.signUp(signUpRequest).toUiState().mapUiState { it.result }
 
 }

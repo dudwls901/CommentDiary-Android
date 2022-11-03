@@ -1,7 +1,6 @@
 package com.movingmaker.commentdiary.domain.repository
 
 import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
-import com.movingmaker.commentdiary.data.remote.request.KakaoSignUpRequest
 import com.movingmaker.commentdiary.data.remote.response.CommentListResponse
 import com.movingmaker.commentdiary.data.remote.response.CommentPushStateResponse
 import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
@@ -22,5 +21,4 @@ interface MyPageRepository {
 
     suspend fun patchCommentPushState(): Response<CommentPushStateResponse>
 
-    suspend fun kakaoSignUpSetAccepts(kakaoSignUpRequest: KakaoSignUpRequest): Response<IsSuccessResponse>
 }

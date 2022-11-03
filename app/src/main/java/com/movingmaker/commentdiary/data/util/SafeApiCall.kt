@@ -18,7 +18,7 @@ suspend fun <T> safeApiCall(callFunction: suspend () -> Response<T>): NetworkRes
         if(response.isSuccessful) {
             NetworkResult.Success(response.body()!!)
         }else{
-            if(response.code()  in 400 .. 405) {
+            if(response.code()  in 400 until 500) {
                 NetworkResult.Fail(getErrorMessage(response.errorBody()))
             }else{
                 NetworkResult.Exception(ErrorType.SERVER_ERROR)

@@ -9,7 +9,7 @@ import javax.inject.Inject
 class SendEmailCodeUseCase @Inject constructor(
     private val forSignUpRepository: ForSignUpRepository,
 ) {
-    suspend operator fun invoke(email: String): UiState<Nothing> =
+    suspend operator fun invoke(email: String): UiState<String> =
         forSignUpRepository.sendEmailCode(email).toUiState().mapUiState { it.result }
 
 }

@@ -10,7 +10,7 @@ import javax.inject.Inject
 class EmailCodeCheckUseCase @Inject constructor(
     private val forSignUpRepository: ForSignUpRepository,
 ) {
-    suspend operator fun invoke(emailCodeCheckRequest: EmailCodeCheckRequest): UiState<Nothing> =
+    suspend operator fun invoke(emailCodeCheckRequest: EmailCodeCheckRequest): UiState<String> =
         forSignUpRepository.emailCodeCheck(emailCodeCheckRequest).toUiState()
             .mapUiState { it.result }
 

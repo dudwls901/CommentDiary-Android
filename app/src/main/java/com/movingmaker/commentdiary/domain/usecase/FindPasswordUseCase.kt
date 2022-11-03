@@ -9,7 +9,10 @@ import javax.inject.Inject
 class FindPasswordUseCase @Inject constructor(
     private val forSignUpRepository: ForSignUpRepository,
 ) {
-    suspend operator fun invoke(email: String): UiState<Nothing> =
-        forSignUpRepository.findPassword(email).toUiState().mapUiState { it.result }
+    suspend operator fun invoke(email: String): UiState<String> {
+        val a =forSignUpRepository.findPassword(email).toUiState().mapUiState { it.result }
+        println(a)
+        return forSignUpRepository.findPassword(email).toUiState().mapUiState { it.result }
+    }
 
 }
