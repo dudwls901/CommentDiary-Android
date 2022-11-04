@@ -1,31 +1,28 @@
 package com.movingmaker.commentdiary.data.remote.api
 
+import com.movingmaker.commentdiary.common.util.Url.DIARY
 import com.movingmaker.commentdiary.data.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.data.remote.request.SaveDiaryRequest
-import com.movingmaker.commentdiary.data.remote.response.DiaryListResponse
-import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.data.remote.response.SaveDiaryResponse
-import com.movingmaker.commentdiary.common.util.Url.DIARY
-import com.movingmaker.commentdiary.common.util.Url.MONTH_DIARY
+import com.movingmaker.commentdiary.domain.model.BaseResponse
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.PATCH
+import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface MyDiaryApiService {
-    @GET(MONTH_DIARY)
-    suspend fun getMonthDiary(@Query("date") date: String): Response<DiaryListResponse>
 
     @POST(DIARY)
-    suspend fun saveDiary(@Body saveDiaryRequest: SaveDiaryRequest): Response<SaveDiaryResponse>
+    suspend fun saveDiary(@Body saveDiaryRequest: SaveDiaryRequest): Response<BaseResponse<Long>>
 
-    //path variable
     @PATCH("${DIARY}/{diaryId}")
     suspend fun editDiary(
         @Path("diaryId") diaryId: Long,
         @Body editDiaryRequest: EditDiaryRequest
-    ): Response<IsSuccessResponse>
+    ): Response<BaseResponse<String>>
 
-    //path variable
     @DELETE("${DIARY}/{diaryId}")
-    suspend fun deleteDiary(@Path("diaryId") diaryId: Long): Response<IsSuccessResponse>
+    suspend fun deleteDiary(@Path("diaryId") diaryId: Long): Response<BaseResponse<String>>
 
 }

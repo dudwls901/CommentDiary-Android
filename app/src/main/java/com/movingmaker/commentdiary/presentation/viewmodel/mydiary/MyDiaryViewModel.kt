@@ -250,57 +250,6 @@ class MyDiaryViewModel @Inject constructor(
         _selectDiaryTypeToolbarIsExpanded.value = false
     }
 
-    suspend fun saveDiary(deliveryYN: Char) = viewModelScope.async {
-        var isSuccess = false
-        _loading.postValue(true)
-        val saveDiaryRequest: SaveDiaryRequest = SaveDiaryRequest(
-            title = diaryHeadText.value ?: "",
-            content = diaryContentText.value ?: "",
-            date = selectedDate.value ?: "",
-            deliveryYN = deliveryYN,
-            tempYN = 'N',
-        )
-        with(saveDiaryUseCase(saveDiaryRequest)) {
-            _loading.postValue(false)
-            if (isSuccessful) {
-                body()?.let { response ->
-                    when (code()) {
-                        200 -> {
-                            Timber.d("Abc", "setResponseEditDiary: ${response}")
-                            val newDiary = Diary(
-                                response.result.id,
-                                saveDiaryRequest.title,
-                                saveDiaryRequest.content,
-                                saveDiaryRequest.date,
-                                saveDiaryRequest.deliveryYN,
-                                saveDiaryRequest.tempYN,
-                                null
-                            )
-                            setSelectedDiary(newDiary)
-                            _snackMessage.postValue(Event("일기가 저장되었습니다."))
-                            isSuccess = true
-                        }
-                        else -> {
-                            _snackMessage.value = Event(message())
-                        }
-                    }
-                }
-            } else {
-                errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        if (it.status == 401) {
-//                            onError("다시 로그인해 주세요.")
-//                            CodaApplication.getInstance().logOut()
-//                        } else {
-//                            _snackMessage.postValue("일기 저장에 실패하였습니다.")
-//                        }
-//                    }
-                }
-            }
-        }
-        return@async isSuccess
-    }.await()
-
     fun likeLocalComment(commentId: Long) {
         val newDiary = Diary(
             selectedDiary.value!!.id,
@@ -311,7 +260,7 @@ class MyDiaryViewModel @Inject constructor(
             selectedDiary.value!!.tempYN,
             selectedDiary.value!!.commentList
         )
-        //신고한 코멘트 삭
+        //신고한 코멘트 삭제
         for (idx in _selectedDiary.value!!.commentList!!.indices) {
             val comment = selectedDiary.value!!.commentList!![idx]
             if (comment.id == commentId) {
@@ -331,66 +280,107 @@ class MyDiaryViewModel @Inject constructor(
     }
 
     fun getMonthDiary(date: String) = viewModelScope.launch {
-        _loading.postValue(true)
+        onLoading()
         with(getMonthDiaryUseCase(date)) {
-            _loading.postValue(false)
-            if (isSuccessful) {
-                body()?.let { result ->
-                    Timber.d("observedata", "setResponseGetMonthDiary: $result")
-//                    Timber.d("code", "setResponseGetMonthDiary: code: ${it.code()}")
-                    when (code()) {
-                        200 -> {
-                            setMonthDiaries(body()!!.result)
-                        }
-//                        else -> onError(message())
-                    }
-//                    Timber.d("viewmodel", "observerDatas: ${solvedProblems.value!!.size}")
-                }
-            } else {
-                errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        onError(it.message)
-//                        Timber.d("viewmodel", "observerDatas: $it")
+            offLoading()
+            Timber.d("result $this")
+//            when (this) {
+//                is UiState.Success -> {
+//                    setMonthDiaries(data)
+//                }
+//                is UiState.Error -> {
+//                    _snackMessage.value = Event(message)
+//                }
+//                is UiState.Fail -> {
+//                    _snackMessage.value = Event(message)
+//                }
+//            }
+//            if (isSuccessful) {
+//                body()?.let { result ->
+//                    Timber.d("observedata", "setResponseGetMonthDiary: $result")
+////                    Timber.d("code", "setResponseGetMonthDiary: code: ${it.code()}")
+//                    when (code()) {
+//                        200 -> {
+//                            setMonthDiaries(body()!!.result)
+//                        }
+////                        else -> onError(message())
 //                    }
-                }
-            }
+////                    Timber.d("viewmodel", "observerDatas: ${solvedProblems.value!!.size}")
+//                }
+//            } else {
+//                errorBody()?.let { errorBody ->
+////                    RetrofitClient.getErrorResponse(errorBody)?.let {
+////                        onError(it.message)
+////                        Timber.d("viewmodel", "observerDatas: $it")
+////                    }
+//                }
+//            }
         }
     }
 
-    fun setResponseEditDiary(diaryId: Long, editDiaryRequest: EditDiaryRequest) =
+    suspend fun saveDiary(deliveryYN: Char) = viewModelScope.async {
+        var isSuccess = false
+        onLoading()
+        val saveDiaryRequest: SaveDiaryRequest = SaveDiaryRequest(
+            title = diaryHeadText.value ?: "",
+            content = diaryContentText.value ?: "",
+            date = selectedDate.value ?: "",
+            deliveryYN = deliveryYN,
+            tempYN = 'N',
+        )
+        with(saveDiaryUseCase(saveDiaryRequest)) {
+            offLoading()
+            Timber.d("result $this")
+            when (this) {
+                is UiState.Success -> {
+                    val newDiary = Diary(
+                        this.data,
+                        saveDiaryRequest.title,
+                        saveDiaryRequest.content,
+                        saveDiaryRequest.date,
+                        saveDiaryRequest.deliveryYN,
+                        saveDiaryRequest.tempYN,
+                        null
+                    )
+                    setSelectedDiary(newDiary)
+                    _snackMessage.value = Event("일기가 저장되었습니다.")
+                    isSuccess = true
+                }
+                is UiState.Error -> {
+                    _snackMessage.value = Event(message)
+                }
+                is UiState.Fail -> {
+                    _snackMessage.value = Event(message)
+                }
+            }
+        }
+        return@async isSuccess
+    }.await()
+
+    fun editDiary(diaryId: Long, editDiaryRequest: EditDiaryRequest) =
         viewModelScope.launch {
-            _loading.postValue(true)
+            onLoading()
             with(editDiaryUseCase(diaryId, editDiaryRequest)) {
-                _loading.postValue(false)
-                if (isSuccessful) {
-                    body()?.let { response ->
-                        when (code()) {
-                            200 -> {
-                                val newDiary = Diary(
-                                    selectedDiary.value!!.id,
-                                    editDiaryRequest.title,
-                                    editDiaryRequest.content,
-                                    selectedDiary.value!!.date,
-                                    selectedDiary.value!!.deliveryYN,
-                                    selectedDiary.value!!.tempYN,
-                                    selectedDiary.value!!.commentList
-                                )
-                                setSelectedDiary(newDiary)
-                                _snackMessage.postValue(Event("일기가 수정되었습니다."))
-                            }
-//                            else -> onError(message())
-                        }
+                offLoading()
+                when (this) {
+                    is UiState.Success -> {
+                        val newDiary = Diary(
+                            selectedDiary.value!!.id,
+                            editDiaryRequest.title,
+                            editDiaryRequest.content,
+                            selectedDiary.value!!.date,
+                            selectedDiary.value!!.deliveryYN,
+                            selectedDiary.value!!.tempYN,
+                            selectedDiary.value!!.commentList
+                        )
+                        setSelectedDiary(newDiary)
+                        _snackMessage.value = Event("일기가 수정되었습니다.")
                     }
-                } else {
-                    errorBody()?.let { errorBody ->
-//                        RetrofitClient.getErrorResponse(errorBody)?.let {
-//                            if (it.status == 401) {
-//                                onError("다시 로그인해 주세요.")
-//                                CodaApplication.getInstance().logOut()
-//                            } else {
-//                                _snackMessage.postValue("일기 저장에 실패하였습니다.")
-//                            }
-//                        }
+                    is UiState.Error -> {
+                        _snackMessage.value = Event(message)
+                    }
+                    is UiState.Fail -> {
+                        _snackMessage.value = Event(message)
                     }
                 }
             }
@@ -398,30 +388,20 @@ class MyDiaryViewModel @Inject constructor(
 
     suspend fun deleteDiary() = viewModelScope.async {
         var isSuccess = false
-        _loading.postValue(true)
+        onLoading()
         if (selectedDiary.value?.id != null) {
             with(deleteDiaryUseCase(selectedDiary.value!!.id!!)) {
-                _loading.postValue(false)
-                if (isSuccessful) {
-                    body()?.let {
-                        when (code()) {
-                            200 -> {
-                                _snackMessage.value = Event("일기가 삭제되었습니다.")
-                                isSuccess = true
-                            }
-//                            else -> onError(message())
-                        }
+                offLoading()
+                when (this) {
+                    is UiState.Success -> {
+                        _snackMessage.value = Event("일기가 삭제되었습니다.")
+                        isSuccess = true
                     }
-                } else {
-                    errorBody()?.let { errorBody ->
-//                        RetrofitClient.getErrorResponse(errorBody)?.let {
-//                            if (it.status == 401) {
-//                                onError("다시 로그인해 주세요.")
-//                                CodaApplication.getInstance().logOut()
-//                            } else {
-//                                _snackMessage.postValue("일기 삭제에 실패하였습니다.")
-//                            }
-//                        }
+                    is UiState.Error -> {
+                        _snackMessage.value = Event(message)
+                    }
+                    is UiState.Fail -> {
+                        _snackMessage.value = Event(message)
                     }
                 }
             }
