@@ -2,7 +2,6 @@ package com.movingmaker.commentdiary.presentation.view.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
@@ -12,6 +11,7 @@ import androidx.navigation.ui.NavigationUI
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.common.CodaSnackBar
 import com.movingmaker.commentdiary.common.base.BaseActivity
+import com.movingmaker.commentdiary.common.util.EventObserver
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
@@ -65,6 +65,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun observerDatas() {
 
+        myPageViewModel.snackMessage.observe(this, EventObserver {
+            CodaSnackBar.make(binding.root, it).show()
+        })
+
         receivedDiaryViewModel.receivedDiary.observe(this) {
             if (it != null) {
                 if (it.myComment?.isNotEmpty() == true) {
@@ -86,8 +90,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun observerFragments() {
         fragmentViewModel.curFragment.observe(this) { fragment ->
-            Timber.d( "observerFragments: nav ${navController.currentDestination?.label}")
-            Timber.d( "observerFragments: frag $fragment")
+            Timber.d("observerFragments: nav ${navController.currentDestination?.label}")
+            Timber.d("observerFragments: frag $fragment")
             //마이페이지만 스테이터스바 흰색
             if (fragment == FRAGMENT_NAME.MY_PAGE ||
                 fragment == FRAGMENT_NAME.MY_ACCOUNT ||

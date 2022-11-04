@@ -1,6 +1,5 @@
 package com.movingmaker.commentdiary.presentation.viewmodel.onboarding
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,13 +7,23 @@ import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.common.CodaApplication
 import com.movingmaker.commentdiary.common.util.Constant.EMAIL
 import com.movingmaker.commentdiary.common.util.Constant.KAKAO
-import com.movingmaker.commentdiary.common.util.Constant.SUCCESS_CODE
+import com.movingmaker.commentdiary.common.util.Event
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
-import com.movingmaker.commentdiary.data.remote.request.*
-import com.movingmaker.commentdiary.domain.usecase.*
+import com.movingmaker.commentdiary.data.remote.request.EmailCodeCheckRequest
+import com.movingmaker.commentdiary.data.remote.request.KakaoLoginRequest
+import com.movingmaker.commentdiary.data.remote.request.KakaoSignUpRequest
+import com.movingmaker.commentdiary.data.remote.request.LogInRequest
+import com.movingmaker.commentdiary.data.remote.request.SignUpRequest
+import com.movingmaker.commentdiary.domain.model.UiState
+import com.movingmaker.commentdiary.domain.usecase.EmailCodeCheckUseCase
+import com.movingmaker.commentdiary.domain.usecase.FindPasswordUseCase
+import com.movingmaker.commentdiary.domain.usecase.KakaoLogInUseCase
+import com.movingmaker.commentdiary.domain.usecase.KakaoSignUpSetAcceptsUseCase
+import com.movingmaker.commentdiary.domain.usecase.LogInUseCase
+import com.movingmaker.commentdiary.domain.usecase.SendEmailCodeUseCase
+import com.movingmaker.commentdiary.domain.usecase.SignOutUseCase
+import com.movingmaker.commentdiary.domain.usecase.SignUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,11 +40,9 @@ class OnboardingViewModel @Inject constructor(
     private val signOutUseCase: SignOutUseCase
 ) : ViewModel() {
 
-    var job: Job? = null
-
-    val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        onError("Exception handled: ${throwable.localizedMessage}", "log")
-    }
+    private var _toastMessage = MutableLiveData<Event<String>>()
+    val toastMessage: LiveData<Event<String>>
+        get() = _toastMessage
 
     private var _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean>
@@ -54,7 +61,7 @@ class OnboardingViewModel @Inject constructor(
         get() = _passwordCheckCorrect
 
     private var _canMakeAccount = MutableLiveData<Boolean>()
-    val canMakeAccount: LiveData<Boolean>
+    private val canMakeAccount: LiveData<Boolean>
         get() = _canMakeAccount
 
     private var _currentFragment = MutableLiveData<FRAGMENT_NAME>().apply {
@@ -62,10 +69,6 @@ class OnboardingViewModel @Inject constructor(
     }
     val currentFragment: LiveData<FRAGMENT_NAME>
         get() = _currentFragment
-
-    private var _loginCorrect = MutableLiveData<Boolean>()
-    val loginCorrect: LiveData<Boolean>
-        get() = _loginCorrect
 
     private var _loginNotice = MutableLiveData<String>()
     val loginNotice: LiveData<String>
@@ -109,7 +112,7 @@ class OnboardingViewModel @Inject constructor(
         get() = _password
 
     private var _checkPassword = MutableLiveData<String>().apply { value = "" }
-    val checkPassword: LiveData<String>
+    private val checkPassword: LiveData<String>
         get() = _checkPassword
 
     //for findPassword
@@ -135,7 +138,6 @@ class OnboardingViewModel @Inject constructor(
 
     init {
         _canMakeAccount.value = false
-        _loginCorrect.value = true
     }
 
     private fun setValuesIsCorrect(isCorrect: Boolean, type: String) {
@@ -230,10 +232,6 @@ class OnboardingViewModel @Inject constructor(
         _loginNotice.value = text
     }
 
-    private fun setSuccessFindPassword(isSuccess: Boolean) {
-        _successFindPassword.value = isSuccess
-    }
-
     fun setEmailCode(text: String) {
         if (text.isNotBlank())
             _code.value = text.toInt()
@@ -303,28 +301,26 @@ class OnboardingViewModel @Inject constructor(
     }
 
     suspend fun emailCodeSend() = viewModelScope.async {
+        onLoading()
         if (email.value == null || email.value == "" || emailCorrect.value != true) {
             offLoading()
             setShakeView(true)
             return@async false
         }
         var successCodeSend = false
-        sendEmailCodeUseCase(email = email.value!!).apply {
+        with(sendEmailCodeUseCase(email = email.value!!)) {
             offLoading()
-            if (this.isSuccessful) {
-                this.body()?.let { response ->
-                    when (response.code) {
-                        SUCCESS_CODE -> {
-                            successCodeSend = true
-                        }
-                    }
+            Timber.d("result $this")
+            when (this) {
+                is UiState.Success -> {
+                    successCodeSend = true
                 }
-            } else {
-                this.errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        setEmailNotice(it.message)
-//                        setShakeView(true)
-//                    }
+                is UiState.Error -> {
+                    _toastMessage.value = Event(this.message)
+                }
+                is UiState.Fail -> {
+                    setEmailNotice(this.message)
+                    setShakeView(true)
                 }
             }
         }
@@ -332,34 +328,34 @@ class OnboardingViewModel @Inject constructor(
     }.await()
 
     suspend fun checkCode() = viewModelScope.async {
+        onLoading()
         if (email.value == null || code.value == null) {
             offLoading()
             setCodeCorrect(false)
             setShakeView(true)
             return@async false
         }
-        sendEmailCodeCheckUseCase(
-            EmailCodeCheckRequest(
-                email.value!!,
-                code.value!!
+        with(
+            sendEmailCodeCheckUseCase(
+                EmailCodeCheckRequest(
+                    email.value!!,
+                    code.value!!
+                )
             )
-        ).apply {
+        ) {
             offLoading()
-            if (this.isSuccessful) {
-                this.body()?.let { response ->
-                    when (response.code) {
-                        SUCCESS_CODE -> {
-                            setCodeCorrect(true)
-                        }
-                    }
+            Timber.d("result $this")
+            when (this) {
+                is UiState.Success -> {
+                    setCodeCorrect(true)
                 }
-            } else {
-                this.errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        onError(it.message, "text")
-//                        setCodeCorrect(false)
-//                        setShakeView(true)
-//                    }
+                is UiState.Error -> {
+                    _toastMessage.value = Event(this.message)
+                    setCodeCorrect(false)
+                }
+                is UiState.Fail -> {
+                    setCodeCorrect(false)
+                    setShakeView(true)
                 }
             }
         }
@@ -367,35 +363,32 @@ class OnboardingViewModel @Inject constructor(
     }.await()
 
     suspend fun signUp() = viewModelScope.async {
+        onLoading()
         if (canMakeAccount.value != true) {
             offLoading()
             setShakeView(true)
             return@async false
         }
         var successSignUp = false
-        signUpUseCase(
+        with(signUpUseCase(
             SignUpRequest(
                 email = email.value!!,
                 password = password.value!!,
                 checkPassword = checkPassword.value!!,
                 loginType = EMAIL
             )
-        ).apply {
+        )) {
             offLoading()
-            if (this.isSuccessful) {
-                this.body()?.let { response ->
-                    when (response.code) {
-                        SUCCESS_CODE -> {
-                            successSignUp = true
-                        }
-                    }
+            Timber.d("result $this")
+            when (this) {
+                is UiState.Success -> {
+                    successSignUp = true
                 }
-            } else {
-                this.errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        onError(it.message, "text")
-//                        setShakeView(true)
-//                    }
+                is UiState.Error -> {
+                    _toastMessage.value = Event(this.message)
+                }
+                is UiState.Fail -> {
+                    setShakeView(true)
                 }
             }
         }
@@ -405,30 +398,27 @@ class OnboardingViewModel @Inject constructor(
 
     suspend fun findPassword() = viewModelScope.async {
         if (findPasswordEmail.value == null || findPasswordEmailCorrect.value != true) {
-            offLoading()
             setShakeView(true)
-            setSuccessFindPassword(false)
+            _successFindPassword.value = false
             return@async false
         }
-        findPasswordUseCase(findPasswordEmail.value!!).apply {
+        onLoading()
+        with(findPasswordUseCase(findPasswordEmail.value!!)) {
             offLoading()
-            if (this.isSuccessful) {
-                this.body()?.let { response ->
-                    when (response.code) {
-                        SUCCESS_CODE -> {
-                            setSuccessFindPassword(true)
-                        }
-                        else -> {
-                        }
-                    }
+            Timber.d("result $this")
+            when (this) {
+                is UiState.Success -> {
+                    _successFindPassword.value = true
                 }
-            } else {
-                this.errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        setSuccessFindPassword(false)
-//                        setShakeView(true)
-//                        _findPasswordEmailNotice.value = it.message
-//                    }
+                is UiState.Error -> {
+                    _toastMessage.value = Event(this.message)
+                    _successFindPassword.value = false
+                }
+                is UiState.Fail -> {
+                    setShakeView(true)
+                    _findPasswordEmailNotice.value = this.message
+                    _successFindPassword.value = false
+
                 }
             }
         }
@@ -436,6 +426,7 @@ class OnboardingViewModel @Inject constructor(
     }.await()
 
     suspend fun login() = viewModelScope.async {
+        onLoading()
         if (emailCorrect.value == false) {
             offLoading()
             setLoginNotice("이메일을 확인해 주세요.")
@@ -448,7 +439,7 @@ class OnboardingViewModel @Inject constructor(
             setLoginNotice("이메일 혹은 비밀번호가 올바르지 않습니다.")
             return@async false
         }
-        var successLogin = false
+        var isSuccessLogin = false
         logInUseCase(
             LogInRequest(
                 email = email.value!!,
@@ -457,71 +448,60 @@ class OnboardingViewModel @Inject constructor(
             )
         ).apply {
             offLoading()
-            if (this.isSuccessful) {
-                this.body()?.let { response ->
-                    when (response.code) {
-                        SUCCESS_CODE -> {
-                            Timber.d("login: $response")
-                            val accessToken = response.result.accessToken
-                            val refreshToken = response.result.refreshToken
-                            val accessTokenExpiresIn = response.result.accessTokenExpiresIn
-                            Timber.d(
-                                "login: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}"
-                            )
-                            CodaApplication.getInstance()
-                                .insertAuth(EMAIL, accessToken, refreshToken, accessTokenExpiresIn)
-                            successLogin = true
-                        }
-                    }
+            Timber.d("result $this")
+            when (this) {
+                is UiState.Success -> {
+                    val accessToken = this.data.accessToken
+                    val refreshToken = this.data.refreshToken
+                    val accessTokenExpiresIn = this.data.accessTokenExpiresIn
+                    Timber.d("login: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}")
+                    CodaApplication.getInstance()
+                        .insertAuth(EMAIL, accessToken, refreshToken, accessTokenExpiresIn)
+                    isSuccessLogin = true
                 }
-            } else {
-                this.errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        setLoginNotice(it.message)
-//                        setShakeView(true)
-//                    }
+                is UiState.Error -> {
+                    _toastMessage.value = Event(this.message)
+                }
+                is UiState.Fail -> {
+                    setShakeView(true)
+                    _loginNotice.value = this.message
                 }
             }
         }
-        successLogin
+        isSuccessLogin
     }.await()
 
     suspend fun kakaoLogin(kakaoAccessToken: String) = viewModelScope.async {
         var successLogin = false
         var isNewMember = false
-        kakaoLogInUseCase(
-            KakaoLoginRequest(
-                KAKAO,
-                kakaoAccessToken,
-                CodaApplication.deviceToken
+        with(
+            kakaoLogInUseCase(
+                KakaoLoginRequest(
+                    KAKAO,
+                    kakaoAccessToken,
+                    CodaApplication.deviceToken
+                )
             )
-        ).apply {
-            offLoading()
-            if (this.isSuccessful) {
-                this.body()?.let { loginResponse ->
-                    when (loginResponse.code) {
-                        SUCCESS_CODE -> {
-                            successLogin = true
-                            Timber.d("kakaoLogin: $loginResponse")
-                            val accessToken = loginResponse.result.accessToken
-                            val refreshToken = loginResponse.result.refreshToken
-                            val accessTokenExpiresIn = loginResponse.result.accessTokenExpiresIn
-                            isNewMember = loginResponse.result.isNewMember == true
-                            Timber.d(
-                                "kakaoLogin: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}"
-                            )
-                            CodaApplication.getInstance()
-                                .insertAuth(KAKAO, accessToken, refreshToken, accessTokenExpiresIn)
-                        }
-                    }
-
+        ) {
+            Timber.d("result $this")
+            when (this) {
+                is UiState.Success -> {
+                    successLogin = true
+                    val accessToken = this.data.accessToken
+                    val refreshToken = this.data.refreshToken
+                    val accessTokenExpiresIn = this.data.accessTokenExpiresIn
+                    isNewMember = this.data.isNewMember == true
+                    Timber.d(
+                        "kakaoLogin: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}"
+                    )
+                    CodaApplication.getInstance()
+                        .insertAuth(KAKAO, accessToken, refreshToken, accessTokenExpiresIn)
                 }
-            } else {
-                this.errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        //토스트든 스낵바든 띄우기
-//                        onError(it.message, "toast")
-//                    }
+                is UiState.Error -> {
+                    _toastMessage.value = Event(this.message)
+                }
+                is UiState.Fail -> {
+                    _toastMessage.value = Event(this.message)
                 }
             }
         }
@@ -529,27 +509,22 @@ class OnboardingViewModel @Inject constructor(
     }.await()
 
     suspend fun kakaoSignUpSetAccepts() = viewModelScope.async {
+        onLoading()
         var successSignUp = false
         val kakaoSignUpRequest =
             if (isPushAccept.value == true) KakaoSignUpRequest('Y') else KakaoSignUpRequest('N')
-        kakaoSignUpSetAcceptsUseCase(kakaoSignUpRequest).apply {
+        with(kakaoSignUpSetAcceptsUseCase(kakaoSignUpRequest)) {
             offLoading()
-            if (this.isSuccessful) {
-                this.body()?.let { loginResponse ->
-                    when (loginResponse.code) {
-                        SUCCESS_CODE -> {
-                            successSignUp = true
-                        }
-                    }
-
+            Timber.d("result $this")
+            when (this) {
+                is UiState.Success -> {
+                    successSignUp = true
                 }
-            } else {
-                successSignUp = false
-                this.errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        //토스트든 스낵바든 띄우기
-//                        onError(it.message, "toast")
-//                    }
+                is UiState.Error -> {
+                    _toastMessage.value = Event(this.message)
+                }
+                is UiState.Fail -> {
+                    _toastMessage.value = Event(this.message)
                 }
             }
         }
@@ -557,19 +532,20 @@ class OnboardingViewModel @Inject constructor(
     }.await()
 
     suspend fun signOut() = viewModelScope.async {
+        onLoading()
         var successSignOut = false
-        signOutUseCase().apply {
-            if (this.isSuccessful) {
-                this.body()?.let { response ->
-                    when (response.code) {
-                        SUCCESS_CODE -> {
-                            successSignOut = true
-                            CodaApplication.getInstance().signOut()
-                        }
-                    }
+        with(signOutUseCase()) {
+            Timber.d("result $this")
+            when (this) {
+                is UiState.Success -> {
+                    successSignOut = true
+                    CodaApplication.getInstance().signOut()
                 }
-            } else {
-                this.errorBody()?.let { errorBody ->
+                is UiState.Error -> {
+                    _toastMessage.value = Event(this.message)
+                }
+                is UiState.Fail -> {
+                    _toastMessage.value = Event(this.message)
                 }
             }
         }
@@ -577,25 +553,11 @@ class OnboardingViewModel @Inject constructor(
     }.await()
 
 
-    fun onLoading() {
-        _loading.postValue(true)
+    private fun onLoading() {
+        _loading.value = true
     }
 
-    fun offLoading() {
-        _loading.postValue(false)
-    }
-
-    private fun onError(message: String, type: String) {
-//        _errorMessage.value = message
-        Timber.d("onboardingViewModelError", "onError: $message")
-        when (type) {
-            "text" -> {
-
-            }
-            "toast" -> {
-
-            }
-        }
-        offLoading()
+    private fun offLoading() {
+        _loading.value = false
     }
 }

@@ -1,6 +1,5 @@
 package com.movingmaker.commentdiary.presentation.viewmodel.mydiary
 
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,12 +8,18 @@ import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.common.util.DIARY_TYPE
 import com.movingmaker.commentdiary.common.util.DateConverter
+import com.movingmaker.commentdiary.common.util.Event
 import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.data.model.Diary
 import com.movingmaker.commentdiary.data.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.data.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.domain.usecase.*
+import com.movingmaker.commentdiary.domain.model.UiState
+import com.movingmaker.commentdiary.domain.usecase.DeleteDiaryUseCase
+import com.movingmaker.commentdiary.domain.usecase.EditDiaryUseCase
+import com.movingmaker.commentdiary.domain.usecase.GetMonthCommentUseCase
+import com.movingmaker.commentdiary.domain.usecase.GetMonthDiaryUseCase
+import com.movingmaker.commentdiary.domain.usecase.SaveDiaryUseCase
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -32,16 +37,12 @@ class MyDiaryViewModel @Inject constructor(
     private val getMonthCommentUseCase: GetMonthCommentUseCase
 ) : ViewModel() {
 
-    private var _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String>
-        get() = _errorMessage
-
     private var _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean>
         get() = _loading
 
-    private var _snackMessage = MutableLiveData<String>()
-    val snackMessage: LiveData<String>
+    private var _snackMessage = MutableLiveData<Event<String>>()
+    val snackMessage: LiveData<Event<String>>
         get() = _snackMessage
 
     private var _aloneDiary = MutableLiveData<List<CalendarDay>>()
@@ -276,11 +277,11 @@ class MyDiaryViewModel @Inject constructor(
                                 null
                             )
                             setSelectedDiary(newDiary)
-                            _snackMessage.postValue("일기가 저장되었습니다.")
+                            _snackMessage.postValue(Event("일기가 저장되었습니다."))
                             isSuccess = true
                         }
                         else -> {
-                            onError(message())
+                            _snackMessage.value = Event(message())
                         }
                     }
                 }
@@ -341,7 +342,7 @@ class MyDiaryViewModel @Inject constructor(
                         200 -> {
                             setMonthDiaries(body()!!.result)
                         }
-                        else -> onError(message())
+//                        else -> onError(message())
                     }
 //                    Timber.d("viewmodel", "observerDatas: ${solvedProblems.value!!.size}")
                 }
@@ -375,9 +376,9 @@ class MyDiaryViewModel @Inject constructor(
                                     selectedDiary.value!!.commentList
                                 )
                                 setSelectedDiary(newDiary)
-                                _snackMessage.postValue("일기가 수정되었습니다.")
+                                _snackMessage.postValue(Event("일기가 수정되었습니다."))
                             }
-                            else -> onError(message())
+//                            else -> onError(message())
                         }
                     }
                 } else {
@@ -405,10 +406,10 @@ class MyDiaryViewModel @Inject constructor(
                     body()?.let {
                         when (code()) {
                             200 -> {
-                                _snackMessage.value = "일기가 삭제되었습니다."
+                                _snackMessage.value = Event("일기가 삭제되었습니다.")
                                 isSuccess = true
                             }
-                            else -> onError(message())
+//                            else -> onError(message())
                         }
                     }
                 } else {
@@ -429,35 +430,28 @@ class MyDiaryViewModel @Inject constructor(
     }.await()
 
     fun setResponseGetDayComment(date: String) = viewModelScope.launch {
-        _loading.postValue(true)
+        onLoading()
         with(getMonthCommentUseCase(date)) {
-            _loading.postValue(false)
-            if (isSuccessful) {
-                body()?.let { result ->
-                    when (code()) {
-                        200 -> {
-                            setHaveDayMyComment(result.result.isEmpty())
-                        }
-                        else -> onError(message())
-                    }
+            offLoading()
+            when (this) {
+                is UiState.Success -> {
+                    setHaveDayMyComment(data.isEmpty())
                 }
-            } else {
-                errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        if (it.status == 401) {
-//                            onError("다시 로그인해 주세요.")
-//                            CodaApplication.getInstance().logOut()
-//                        } else {
-//                            _snackMessage.postValue("코멘트를 읽는 데 실패하였습니다.")
-//                        }
-//                    }
+                is UiState.Error -> {
+                    _snackMessage.value = Event(message)
+                }
+                is UiState.Fail -> {
+                    _snackMessage.value = Event(message)
                 }
             }
         }
     }
 
-    private fun onError(message: String) {
-        _errorMessage.value = message
+    private fun onLoading() {
+        _loading.value = true
+    }
+
+    private fun offLoading() {
         _loading.value = false
     }
 

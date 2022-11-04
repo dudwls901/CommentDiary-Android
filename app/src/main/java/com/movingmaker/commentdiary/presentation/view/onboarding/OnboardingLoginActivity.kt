@@ -12,6 +12,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.common.CodaSnackBar
 import com.movingmaker.commentdiary.common.base.BaseActivity
+import com.movingmaker.commentdiary.common.util.EventObserver
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.common.util.setOnSingleClickListener
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingLoginBinding
@@ -34,7 +35,7 @@ class OnboardingLoginActivity :
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = getColor(R.color.background_ivory)
         binding.vm = onboardingViewModel
         binding.activity = this
@@ -62,6 +63,11 @@ class OnboardingLoginActivity :
     }
 
     private fun observeDatas() {
+
+        onboardingViewModel.toastMessage.observe(this,EventObserver{
+            CodaSnackBar.make(binding.root, it).show()
+        })
+
         onboardingViewModel.successFindPassword.observe(this) {
             if (it) {
                 binding.onboardingBottomButton.text = getString(R.string.onboarding_go_to_login)
@@ -151,7 +157,6 @@ class OnboardingLoginActivity :
 
     private fun findPassword() {
         lifecycleScope.launch {
-            onboardingViewModel.onLoading()
             if (onboardingViewModel.findPassword()) {
                 binding.onboardingBottomButton.setOnSingleClickListener {
                     navController.popBackStack()
@@ -163,7 +168,6 @@ class OnboardingLoginActivity :
     private fun login() {
         onboardingViewModel.validateEmail("email")
         lifecycleScope.launch {
-            onboardingViewModel.onLoading()
             if (onboardingViewModel.login()) {
                 startActivity(Intent(this@OnboardingLoginActivity, MainActivity::class.java).apply {
                     finish()
@@ -174,7 +178,6 @@ class OnboardingLoginActivity :
 
     private fun kakaoSignUp() {
         lifecycleScope.launch {
-            onboardingViewModel.onLoading()
             if (onboardingViewModel.kakaoSignUpSetAccepts()) {
                 startActivity(
                     Intent(
@@ -190,7 +193,6 @@ class OnboardingLoginActivity :
 
     private fun signUp() {
         lifecycleScope.launch {
-            onboardingViewModel.onLoading()
             if (onboardingViewModel.signUp()) {
                 login()
             }
@@ -199,7 +201,6 @@ class OnboardingLoginActivity :
 
     private fun checkCode() {
         lifecycleScope.launch {
-            onboardingViewModel.onLoading()
             if (onboardingViewModel.checkCode()) {
                 navController.navigate(OnboardingSignUpCodeFragmentDirections.actionOnboardingSignUpCodeFragmentToOnboardingSignUpPasswordFragment())
             }
@@ -208,7 +209,6 @@ class OnboardingLoginActivity :
 
     private fun sendCode() {
         lifecycleScope.launch {
-            onboardingViewModel.onLoading()
             if (onboardingViewModel.emailCodeSend()) {
                 navController.navigate(OnboardingSignUpEmailFragmentDirections.actionOnboardingSignUpEmailFragmentToOnboardingSignUpCodeFragment())
             }

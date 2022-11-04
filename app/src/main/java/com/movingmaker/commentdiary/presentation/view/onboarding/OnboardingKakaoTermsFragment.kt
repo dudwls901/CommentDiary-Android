@@ -60,7 +60,6 @@ class OnboardingKakaoTermsFragment :
 
         binding.backButton.setOnClickListener {
             lifecycleScope.launch {
-                onboardingViewModel.onLoading()
                 if (onboardingViewModel.signOut()) {
                     findNavController().popBackStack()
                 }

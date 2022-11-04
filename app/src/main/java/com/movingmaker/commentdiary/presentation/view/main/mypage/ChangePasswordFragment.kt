@@ -2,12 +2,10 @@ package com.movingmaker.commentdiary.presentation.view.main.mypage
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.CodaSnackBar
 import com.movingmaker.commentdiary.common.base.BaseFragment
 import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.databinding.FragmentMypageChangePasswordBinding
@@ -30,14 +28,6 @@ class ChangePasswordFragment :
 
     private fun observeDatas() {
 
-        myPageViewModel.errorMessage.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-        }
-
-        myPageViewModel.snackMessage.observe(viewLifecycleOwner) {
-            CodaSnackBar.make(binding.root, it).show()
-        }
-
         myPageViewModel.isPasswordChanged.observe(viewLifecycleOwner) {
             if (it) {
                 val action =
@@ -50,7 +40,7 @@ class ChangePasswordFragment :
 
     private fun initViews() = with(binding) {
         changePasswordButton.setOnClickListener {
-            myPageViewModel.setResponseChangePassword(
+            myPageViewModel.changePassword(
                 ChangePasswordRequest(
                     password = passwordEditText.text.toString(),
                     checkPassword = passwordCheckEditText.text.toString()
