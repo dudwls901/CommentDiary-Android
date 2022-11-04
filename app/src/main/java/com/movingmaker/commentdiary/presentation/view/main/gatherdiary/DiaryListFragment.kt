@@ -8,20 +8,17 @@ import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.NumberPicker
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.CodaSnackBar
 import com.movingmaker.commentdiary.common.base.BaseFragment
 import com.movingmaker.commentdiary.common.util.DateConverter
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
@@ -62,14 +59,6 @@ class DiaryListFragment :
 
     private fun observeDatas() {
 
-        gatherDiaryViewModel.errorMessage.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-        }
-
-        gatherDiaryViewModel.snackMessage.observe(viewLifecycleOwner) {
-            CodaSnackBar.make(binding.root, it).show()
-        }
-
         gatherDiaryViewModel.loading.observe(viewLifecycleOwner) {
             binding.loadingBar.isVisible = it
         }
@@ -81,7 +70,7 @@ class DiaryListFragment :
     }
 
     private fun setDiaries() {
-        gatherDiaryViewModel.setResponseGetDiaryList(searchPeriod)
+        gatherDiaryViewModel.getDiaries(searchPeriod)
     }
 
     private fun initViews() = with(binding) {
@@ -180,7 +169,7 @@ class DiaryListFragment :
                         child.setTextColor(color)
 //                        child.typeface = typeface
                         numberPicker.invalidate()
-                        var selectorWheelPaintField =
+                        val selectorWheelPaintField =
                             numberPicker.javaClass.getDeclaredField("mSelectorWheelPaint")
                         var accessible = selectorWheelPaintField.isAccessible
                         selectorWheelPaintField.isAccessible = true
@@ -189,7 +178,7 @@ class DiaryListFragment :
                         (selectorWheelPaintField.get(numberPicker) as Paint).typeface = typeface
 
                         numberPicker.invalidate()
-                        var selectionDividerField =
+                        val selectionDividerField =
                             numberPicker.javaClass.getDeclaredField("mSelectionDivider")
                         accessible = selectionDividerField.isAccessible
                         selectionDividerField.isAccessible = true

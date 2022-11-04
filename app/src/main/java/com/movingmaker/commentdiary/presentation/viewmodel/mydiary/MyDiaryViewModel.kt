@@ -13,7 +13,6 @@ import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.data.model.Diary
 import com.movingmaker.commentdiary.data.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.data.remote.request.SaveDiaryRequest
-import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
 import com.movingmaker.commentdiary.domain.model.UiState
 import com.movingmaker.commentdiary.domain.usecase.DeleteDiaryUseCase
 import com.movingmaker.commentdiary.domain.usecase.EditDiaryUseCase
@@ -24,7 +23,6 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -88,12 +86,6 @@ class MyDiaryViewModel @Inject constructor(
     private var _pushDate = MutableLiveData<String>()
     val pushDate: LiveData<String>
         get() = _pushDate
-
-    //api response
-    private var _responseEditDiary = MutableLiveData<Response<IsSuccessResponse>>()
-    val responseEditDiary: LiveData<Response<IsSuccessResponse>>
-        get() = _responseEditDiary
-
 
     private fun setAloneDiary(list: List<CalendarDay>) {
         _aloneDiary.value = list
@@ -284,44 +276,24 @@ class MyDiaryViewModel @Inject constructor(
         with(getMonthDiaryUseCase(date)) {
             offLoading()
             Timber.d("result $this")
-//            when (this) {
-//                is UiState.Success -> {
-//                    setMonthDiaries(data)
-//                }
-//                is UiState.Error -> {
-//                    _snackMessage.value = Event(message)
-//                }
-//                is UiState.Fail -> {
-//                    _snackMessage.value = Event(message)
-//                }
-//            }
-//            if (isSuccessful) {
-//                body()?.let { result ->
-//                    Timber.d("observedata", "setResponseGetMonthDiary: $result")
-////                    Timber.d("code", "setResponseGetMonthDiary: code: ${it.code()}")
-//                    when (code()) {
-//                        200 -> {
-//                            setMonthDiaries(body()!!.result)
-//                        }
-////                        else -> onError(message())
-//                    }
-////                    Timber.d("viewmodel", "observerDatas: ${solvedProblems.value!!.size}")
-//                }
-//            } else {
-//                errorBody()?.let { errorBody ->
-////                    RetrofitClient.getErrorResponse(errorBody)?.let {
-////                        onError(it.message)
-////                        Timber.d("viewmodel", "observerDatas: $it")
-////                    }
-//                }
-//            }
+            when (this) {
+                is UiState.Success -> {
+                    setMonthDiaries(data)
+                }
+                is UiState.Error -> {
+                    _snackMessage.value = Event(message)
+                }
+                is UiState.Fail -> {
+                    _snackMessage.value = Event(message)
+                }
+            }
         }
     }
 
     suspend fun saveDiary(deliveryYN: Char) = viewModelScope.async {
         var isSuccess = false
         onLoading()
-        val saveDiaryRequest: SaveDiaryRequest = SaveDiaryRequest(
+        val saveDiaryRequest = SaveDiaryRequest(
             title = diaryHeadText.value ?: "",
             content = diaryContentText.value ?: "",
             date = selectedDate.value ?: "",

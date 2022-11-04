@@ -69,6 +69,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             CodaSnackBar.make(binding.root, it).show()
         })
 
+        myDiaryViewModel.snackMessage.observe(this, EventObserver{
+            CodaSnackBar.make(binding.root, it).show()
+        })
+
+        gatherDiaryViewModel.snackMessage.observe(this, EventObserver{
+            CodaSnackBar.make(binding.root, it).show()
+        })
+
         receivedDiaryViewModel.receivedDiary.observe(this) {
             if (it != null) {
                 if (it.myComment?.isNotEmpty() == true) {
