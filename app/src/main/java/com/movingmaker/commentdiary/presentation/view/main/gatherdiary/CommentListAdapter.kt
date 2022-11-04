@@ -53,7 +53,7 @@ class CommentListAdapter(private val onCommentSelectListener: OnCommentSelectLis
                 onCommentSelectListener.onReportClickListener(comment.id)
             }
             binding.commentBlockTextView.setOnClickListener {
-                onCommentSelectListener.onBlockClickLinstener(comment.id)
+                onCommentSelectListener.onBlockClickListener(comment.id)
             }
         }
     }
