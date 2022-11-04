@@ -1,5 +1,6 @@
 package com.movingmaker.commentdiary.data.remote.datasourceimpl
 
+import com.movingmaker.commentdiary.data.model.DiaryId
 import com.movingmaker.commentdiary.data.remote.api.MyDiaryApiService
 import com.movingmaker.commentdiary.data.remote.datasource.MyDiaryDataSource
 import com.movingmaker.commentdiary.data.remote.request.EditDiaryRequest
@@ -13,7 +14,7 @@ class MyDiaryDataSourceImpl @Inject constructor(
     private val myDiaryApiService: MyDiaryApiService
 ) : MyDiaryDataSource {
 
-    override suspend fun saveDiary(saveDiaryRequest: SaveDiaryRequest): NetworkResult<BaseResponse<Long>> =
+    override suspend fun saveDiary(saveDiaryRequest: SaveDiaryRequest): NetworkResult<BaseResponse<DiaryId>> =
         safeApiCall { myDiaryApiService.saveDiary(saveDiaryRequest) }
 
 

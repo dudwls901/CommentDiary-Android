@@ -1,6 +1,7 @@
 package com.movingmaker.commentdiary.data.remote.api
 
 import com.movingmaker.commentdiary.common.util.Url.DIARY
+import com.movingmaker.commentdiary.data.model.DiaryId
 import com.movingmaker.commentdiary.data.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.data.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.domain.model.BaseResponse
@@ -14,7 +15,7 @@ import retrofit2.http.Path
 interface MyDiaryApiService {
 
     @POST(DIARY)
-    suspend fun saveDiary(@Body saveDiaryRequest: SaveDiaryRequest): Response<BaseResponse<Long>>
+    suspend fun saveDiary(@Body saveDiaryRequest: SaveDiaryRequest): Response<BaseResponse<DiaryId>>
 
     @PATCH("${DIARY}/{diaryId}")
     suspend fun editDiary(

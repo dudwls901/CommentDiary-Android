@@ -1,5 +1,6 @@
 package com.movingmaker.commentdiary.data.repositoryimpl
 
+import com.movingmaker.commentdiary.data.model.DiaryId
 import com.movingmaker.commentdiary.data.remote.datasource.MyDiaryDataSource
 import com.movingmaker.commentdiary.data.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.data.remote.request.SaveDiaryRequest
@@ -12,7 +13,7 @@ class MyDiaryRepositoryImpl @Inject constructor(
     private val myDiaryDataSource: MyDiaryDataSource
 ) : MyDiaryRepository {
 
-    override suspend fun saveDiary(saveDiaryRequest: SaveDiaryRequest): NetworkResult<BaseResponse<Long>> =
+    override suspend fun saveDiary(saveDiaryRequest: SaveDiaryRequest): NetworkResult<BaseResponse<DiaryId>> =
         myDiaryDataSource.saveDiary(saveDiaryRequest)
 
 

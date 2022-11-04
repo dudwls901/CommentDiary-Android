@@ -306,7 +306,7 @@ class MyDiaryViewModel @Inject constructor(
             when (this) {
                 is UiState.Success -> {
                     val newDiary = Diary(
-                        this.data,
+                        this.data.id,
                         saveDiaryRequest.title,
                         saveDiaryRequest.content,
                         saveDiaryRequest.date,

@@ -1,5 +1,6 @@
 package com.movingmaker.commentdiary.domain.usecase
 
+import com.movingmaker.commentdiary.data.model.DiaryId
 import com.movingmaker.commentdiary.data.remote.request.SaveDiaryRequest
 import com.movingmaker.commentdiary.domain.model.UiState
 import com.movingmaker.commentdiary.domain.model.mapUiState
@@ -10,7 +11,7 @@ import javax.inject.Inject
 class SaveDiaryUseCase @Inject constructor(
     private val myDiaryRepository: MyDiaryRepository,
 ) {
-    suspend operator fun invoke(saveDiaryRequest: SaveDiaryRequest): UiState<Long> =
+    suspend operator fun invoke(saveDiaryRequest: SaveDiaryRequest): UiState<DiaryId> =
         myDiaryRepository.saveDiary(saveDiaryRequest).toUiState().mapUiState { it.result }
 
 }
