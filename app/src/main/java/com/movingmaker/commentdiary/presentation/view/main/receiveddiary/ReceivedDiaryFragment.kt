@@ -11,13 +11,11 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.CodaSnackBar
 import com.movingmaker.commentdiary.common.base.BaseFragment
 import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.databinding.FragmentReceiveddiaryBinding
@@ -90,23 +88,6 @@ class ReceivedDiaryFragment :
                 }
             }
         }
-
-        receivedDiaryViewModel.errorMessage.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-        }
-
-//        receivedDiaryViewModel.toastMessage.observe(viewLifecycleOwner){
-//            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-//        }
-
-        receivedDiaryViewModel.snackMessage.observe(viewLifecycleOwner) {
-            CodaSnackBar.make(binding.root, it).show()
-        }
-
-        receivedDiaryViewModel.loading.observe(viewLifecycleOwner) {
-            binding.loadingBar.isVisible = it
-        }
-
     }
 
     private fun initViews() = with(binding) {
@@ -143,7 +124,7 @@ class ReceivedDiaryFragment :
 
         submitButton.setOnClickListener {
             //코멘트 전송
-            receivedDiaryViewModel.setResponseSaveComment(
+            receivedDiaryViewModel.saveComment(
                 binding.commentEditTextView.text.toString()
             )
             dialogView.dismiss()
