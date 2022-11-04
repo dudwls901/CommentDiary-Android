@@ -23,6 +23,7 @@ class MyAccountFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.MY_ACCOUNT)
+        binding.vm = myPageViewModel
         initViews()
     }
 

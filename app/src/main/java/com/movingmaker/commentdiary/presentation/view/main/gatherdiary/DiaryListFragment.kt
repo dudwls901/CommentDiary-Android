@@ -50,7 +50,7 @@ class DiaryListFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.gatherDiaryviewModel = gatherDiaryViewModel
+        binding.vm = gatherDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.GATHER_DIARY)
         setDiaries()
         observeDatas()

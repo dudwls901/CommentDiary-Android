@@ -42,7 +42,7 @@ class CommentDiaryDetailFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.myDiaryviewModel = myDiaryViewModel
+        binding.vm = myDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.COMMENT_DIARY_DETAIL)
         observeDatas()
         initViews()
@@ -155,7 +155,7 @@ class CommentDiaryDetailFragment :
         showReportDialog(commentId)
     }
 
-    override fun onBlockClickLinstener(commentId: Long) {
+    override fun onBlockClickListener(commentId: Long) {
         showBlockDialog(commentId)
     }
 

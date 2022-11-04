@@ -21,7 +21,7 @@ class ChangePasswordFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.mypageviewmodel = myPageViewModel
+        binding.vm = myPageViewModel
         initViews()
         observeDatas()
     }

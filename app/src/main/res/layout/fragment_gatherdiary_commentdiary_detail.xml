@@ -8,7 +8,7 @@
         <import type="android.view.View" />
 
         <variable
-            name="myDiaryviewModel"
+            name="vm"
             type="com.movingmaker.commentdiary.presentation.viewmodel.mydiary.MyDiaryViewModel" />
 
     </data>
@@ -68,7 +68,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="@{myDiaryviewModel.selectedDiary.date}"
+                        android:text="@{vm.selectedDiary.date}"
                         android:textColor="@color/core_pure_orange"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -80,7 +80,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="@{myDiaryviewModel.selectedDiary.title}"
+                        android:text="@{vm.selectedDiary.title}"
                         android:textColor="@color/text_black"
                         android:textColorHint="@color/text_light_brown"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -106,7 +106,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="11dp"
                         android:layout_marginBottom="72dp"
-                        android:text="@{myDiaryviewModel.selectedDiary.content}"
+                        android:text="@{vm.selectedDiary.content}"
                         android:textColor="@color/text_black"
                         android:textColorHint="@color/text_light_brown"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -220,11 +220,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminateTint="@color/core_pure_green"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:loading="@{vm.loading}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
