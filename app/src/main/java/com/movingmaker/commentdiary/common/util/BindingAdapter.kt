@@ -2,7 +2,6 @@ package com.movingmaker.commentdiary.common.util
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
@@ -14,9 +13,9 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.common.util.Constant.EMAIL
 import com.movingmaker.commentdiary.common.util.Constant.KAKAO
+import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.presentation.view.main.mypage.MyCommentListAdapter
 import timber.log.Timber
 
@@ -209,7 +208,7 @@ fun changeVisibleWithDiaryType(
     }
 }
 
-@BindingAdapter("activity", "loading")
+@BindingAdapter("app:nonClickableActivity", "app:nonClickableLoading")
 fun setNonClickableLoading(view: ProgressBar, activity: Activity, state: LiveData<Boolean>) {
     when (state.value) {
         true -> {
@@ -226,6 +225,14 @@ fun setNonClickableLoading(view: ProgressBar, activity: Activity, state: LiveDat
     }
 }
 
+@BindingAdapter("app:loading")
+fun setLoading(view: ProgressBar, state: LiveData<Boolean>) {
+    view.visibility = when (state.value) {
+        true -> View.VISIBLE
+        else -> View.GONE
+    }
+}
+
 @SuppressLint("SetTextI18n")
 @BindingAdapter("android:yearMonth")
 fun changeYearMonth(view: TextView, text: LiveData<String>) {
@@ -234,7 +241,7 @@ fun changeYearMonth(view: TextView, text: LiveData<String>) {
         view.text = "${y}년 ${m}월"
     } catch (e: Exception) {
         view.text = "년 월"
-        Timber.e( "changeYearMonth: $e")
+        Timber.e("changeYearMonth: $e")
     }
 }
 
