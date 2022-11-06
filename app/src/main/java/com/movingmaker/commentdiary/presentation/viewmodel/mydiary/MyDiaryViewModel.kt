@@ -6,9 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.util.DIARY_TYPE
-import com.movingmaker.commentdiary.common.util.DateConverter
-import com.movingmaker.commentdiary.common.util.Event
 import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.data.model.Diary
 import com.movingmaker.commentdiary.data.remote.request.EditDiaryRequest
@@ -19,6 +16,9 @@ import com.movingmaker.commentdiary.domain.usecase.EditDiaryUseCase
 import com.movingmaker.commentdiary.domain.usecase.GetMonthCommentUseCase
 import com.movingmaker.commentdiary.domain.usecase.GetMonthDiaryUseCase
 import com.movingmaker.commentdiary.domain.usecase.SaveDiaryUseCase
+import com.movingmaker.commentdiary.presentation.util.DIARY_TYPE
+import com.movingmaker.commentdiary.presentation.util.DateConverter
+import com.movingmaker.commentdiary.presentation.util.event.Event
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async

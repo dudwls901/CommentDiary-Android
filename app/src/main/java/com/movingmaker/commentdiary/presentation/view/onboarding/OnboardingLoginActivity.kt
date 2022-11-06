@@ -10,13 +10,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.CodaSnackBar
-import com.movingmaker.commentdiary.common.base.BaseActivity
-import com.movingmaker.commentdiary.common.util.EventObserver
-import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
-import com.movingmaker.commentdiary.common.util.setOnSingleClickListener
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingLoginBinding
+import com.movingmaker.commentdiary.presentation.base.BaseActivity
+import com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.presentation.util.event.EventObserver
+import com.movingmaker.commentdiary.presentation.util.setOnSingleClickListener
 import com.movingmaker.commentdiary.presentation.view.main.MainActivity
+import com.movingmaker.commentdiary.presentation.view.snackbar.CodaSnackBar
 import com.movingmaker.commentdiary.presentation.viewmodel.onboarding.OnboardingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -64,7 +64,7 @@ class OnboardingLoginActivity :
 
     private fun observeDatas() {
 
-        onboardingViewModel.toastMessage.observe(this,EventObserver{
+        onboardingViewModel.snackMessage.observe(this, EventObserver{
             CodaSnackBar.make(binding.root, it).show()
         })
 

@@ -1,6 +1,4 @@
-package com.movingmaker.commentdiary.common.event
-
-import android.util.Log
+package com.movingmaker.commentdiary.presentation.util.event
 
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.

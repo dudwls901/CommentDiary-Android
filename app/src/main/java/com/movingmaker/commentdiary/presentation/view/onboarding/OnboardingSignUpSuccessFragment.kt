@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingSignUpSuccessBinding
+import com.movingmaker.commentdiary.presentation.base.BaseFragment
+import com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.presentation.viewmodel.onboarding.OnboardingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

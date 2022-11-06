@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.common
+package com.movingmaker.commentdiary.presentation.view.snackbar
 
 import android.view.LayoutInflater
 import android.view.View

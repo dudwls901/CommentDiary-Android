@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.common.di
+package com.movingmaker.commentdiary.di
 
 import com.movingmaker.commentdiary.data.repositoryimpl.ForSignUpRepositoryImpl
 import com.movingmaker.commentdiary.data.repositoryimpl.GatherDiaryRepositoryImpl

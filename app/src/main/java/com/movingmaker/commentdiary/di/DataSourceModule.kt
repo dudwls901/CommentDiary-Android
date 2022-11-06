@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.common.di
+package com.movingmaker.commentdiary.di
 
 import com.movingmaker.commentdiary.data.remote.datasource.ForSignUpDataSource
 import com.movingmaker.commentdiary.data.remote.datasource.GatherDiaryDataSource

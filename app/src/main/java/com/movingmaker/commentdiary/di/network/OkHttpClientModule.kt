@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.common.di.network
+package com.movingmaker.commentdiary.di.network
 
 import com.movingmaker.commentdiary.BuildConfig
 import dagger.Module

@@ -9,11 +9,11 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.CodaSnackBar
-import com.movingmaker.commentdiary.common.base.BaseActivity
-import com.movingmaker.commentdiary.common.util.EventObserver
-import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.databinding.ActivityMainBinding
+import com.movingmaker.commentdiary.presentation.base.BaseActivity
+import com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.presentation.util.event.EventObserver
+import com.movingmaker.commentdiary.presentation.view.snackbar.CodaSnackBar
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.mydiary.MyDiaryViewModel

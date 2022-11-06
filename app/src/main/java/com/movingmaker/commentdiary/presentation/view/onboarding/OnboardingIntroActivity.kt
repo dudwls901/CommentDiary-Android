@@ -7,8 +7,8 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.base.BaseActivity
 import com.movingmaker.commentdiary.databinding.ActivityOnboardingIntroBinding
+import com.movingmaker.commentdiary.presentation.base.BaseActivity
 import com.movingmaker.commentdiary.presentation.viewmodel.onboarding.IntroViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import me.relex.circleindicator.CircleIndicator3

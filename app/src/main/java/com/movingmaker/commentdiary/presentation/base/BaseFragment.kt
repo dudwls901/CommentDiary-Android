@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.common.base
+package com.movingmaker.commentdiary.presentation.base
 
 import android.content.Context
 import android.os.Bundle

@@ -1,7 +1,5 @@
 package com.movingmaker.commentdiary.data.util
 
-import com.movingmaker.commentdiary.common.util.Constant.ERROR_KEY
-import com.movingmaker.commentdiary.common.util.Constant.MESSAGE_KEY
 import com.movingmaker.commentdiary.domain.model.ErrorType
 import com.movingmaker.commentdiary.domain.model.NetworkResult
 import okhttp3.ResponseBody

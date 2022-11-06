@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <import type="com.movingmaker.commentdiary.common.util.Constant" />
         <import type="android.view.View" />
 
         <variable

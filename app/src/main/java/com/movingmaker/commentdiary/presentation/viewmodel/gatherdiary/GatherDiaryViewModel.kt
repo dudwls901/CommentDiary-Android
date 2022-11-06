@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.common.util.DateConverter
-import com.movingmaker.commentdiary.common.util.Event
 import com.movingmaker.commentdiary.data.model.Diary
 import com.movingmaker.commentdiary.data.remote.request.ReportCommentRequest
 import com.movingmaker.commentdiary.domain.model.UiState
@@ -13,6 +11,8 @@ import com.movingmaker.commentdiary.domain.usecase.GetAllDiaryUseCase
 import com.movingmaker.commentdiary.domain.usecase.GetMonthDiaryUseCase
 import com.movingmaker.commentdiary.domain.usecase.LikeCommentUseCase
 import com.movingmaker.commentdiary.domain.usecase.ReportCommentUseCase
+import com.movingmaker.commentdiary.presentation.util.DateConverter
+import com.movingmaker.commentdiary.presentation.util.event.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber

@@ -1,16 +1,20 @@
 package com.movingmaker.commentdiary.data.remote.api
 
-import com.movingmaker.commentdiary.common.util.Url.ALL
-import com.movingmaker.commentdiary.common.util.Url.COMMENT
-import com.movingmaker.commentdiary.common.util.Url.LOG_OUT
-import com.movingmaker.commentdiary.common.util.Url.MEMBERS
-import com.movingmaker.commentdiary.common.util.Url.PUSH
 import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.data.model.MyInfo
 import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
+import com.movingmaker.commentdiary.data.util.ALL
+import com.movingmaker.commentdiary.data.util.COMMENT
+import com.movingmaker.commentdiary.data.util.LOG_OUT
+import com.movingmaker.commentdiary.data.util.MEMBERS
+import com.movingmaker.commentdiary.data.util.PUSH
 import com.movingmaker.commentdiary.domain.model.BaseResponse
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.PATCH
+import retrofit2.http.Query
 
 
 interface MyPageApiService {

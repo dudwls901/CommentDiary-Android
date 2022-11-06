@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.common.event
+package com.movingmaker.commentdiary.presentation.util.event
 
 import androidx.lifecycle.Observer
 

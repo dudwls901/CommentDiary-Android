@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.common.util
+package com.movingmaker.commentdiary.presentation.util
 
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import java.time.LocalDate

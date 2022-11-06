@@ -4,11 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.common.CodaApplication
-import com.movingmaker.commentdiary.common.util.Constant.EMAIL
-import com.movingmaker.commentdiary.common.util.Constant.KAKAO
-import com.movingmaker.commentdiary.common.util.Event
-import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.data.remote.request.EmailCodeCheckRequest
 import com.movingmaker.commentdiary.data.remote.request.KakaoLoginRequest
 import com.movingmaker.commentdiary.data.remote.request.KakaoSignUpRequest
@@ -23,6 +18,11 @@ import com.movingmaker.commentdiary.domain.usecase.LogInUseCase
 import com.movingmaker.commentdiary.domain.usecase.SendEmailCodeUseCase
 import com.movingmaker.commentdiary.domain.usecase.SignOutUseCase
 import com.movingmaker.commentdiary.domain.usecase.SignUpUseCase
+import com.movingmaker.commentdiary.presentation.CodaApplication
+import com.movingmaker.commentdiary.presentation.util.EMAIL
+import com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.presentation.util.KAKAO
+import com.movingmaker.commentdiary.presentation.util.event.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import timber.log.Timber
@@ -40,9 +40,9 @@ class OnboardingViewModel @Inject constructor(
     private val signOutUseCase: SignOutUseCase
 ) : ViewModel() {
 
-    private var _toastMessage = MutableLiveData<Event<String>>()
-    val toastMessage: LiveData<Event<String>>
-        get() = _toastMessage
+    private var _snackMessage = MutableLiveData<Event<String>>()
+    val snackMessage: LiveData<Event<String>>
+        get() = _snackMessage
 
     private var _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean>
@@ -316,7 +316,7 @@ class OnboardingViewModel @Inject constructor(
                     successCodeSend = true
                 }
                 is UiState.Error -> {
-                    _toastMessage.value = Event(this.message)
+                    _snackMessage.value = Event(this.message)
                 }
                 is UiState.Fail -> {
                     setEmailNotice(this.message)
@@ -350,7 +350,7 @@ class OnboardingViewModel @Inject constructor(
                     setCodeCorrect(true)
                 }
                 is UiState.Error -> {
-                    _toastMessage.value = Event(this.message)
+                    _snackMessage.value = Event(this.message)
                     setCodeCorrect(false)
                 }
                 is UiState.Fail -> {
@@ -385,7 +385,7 @@ class OnboardingViewModel @Inject constructor(
                     successSignUp = true
                 }
                 is UiState.Error -> {
-                    _toastMessage.value = Event(this.message)
+                    _snackMessage.value = Event(this.message)
                 }
                 is UiState.Fail -> {
                     setShakeView(true)
@@ -411,7 +411,7 @@ class OnboardingViewModel @Inject constructor(
                     _successFindPassword.value = true
                 }
                 is UiState.Error -> {
-                    _toastMessage.value = Event(this.message)
+                    _snackMessage.value = Event(this.message)
                     _successFindPassword.value = false
                 }
                 is UiState.Fail -> {
@@ -460,7 +460,7 @@ class OnboardingViewModel @Inject constructor(
                     isSuccessLogin = true
                 }
                 is UiState.Error -> {
-                    _toastMessage.value = Event(this.message)
+                    _snackMessage.value = Event(this.message)
                 }
                 is UiState.Fail -> {
                     setShakeView(true)
@@ -498,10 +498,10 @@ class OnboardingViewModel @Inject constructor(
                         .insertAuth(KAKAO, accessToken, refreshToken, accessTokenExpiresIn)
                 }
                 is UiState.Error -> {
-                    _toastMessage.value = Event(this.message)
+                    _snackMessage.value = Event(this.message)
                 }
                 is UiState.Fail -> {
-                    _toastMessage.value = Event(this.message)
+                    _snackMessage.value = Event(this.message)
                 }
             }
         }
@@ -521,10 +521,10 @@ class OnboardingViewModel @Inject constructor(
                     successSignUp = true
                 }
                 is UiState.Error -> {
-                    _toastMessage.value = Event(this.message)
+                    _snackMessage.value = Event(this.message)
                 }
                 is UiState.Fail -> {
-                    _toastMessage.value = Event(this.message)
+                    _snackMessage.value = Event(this.message)
                 }
             }
         }
@@ -542,10 +542,10 @@ class OnboardingViewModel @Inject constructor(
                     CodaApplication.getInstance().signOut()
                 }
                 is UiState.Error -> {
-                    _toastMessage.value = Event(this.message)
+                    _snackMessage.value = Event(this.message)
                 }
                 is UiState.Fail -> {
-                    _toastMessage.value = Event(this.message)
+                    _snackMessage.value = Event(this.message)
                 }
             }
         }

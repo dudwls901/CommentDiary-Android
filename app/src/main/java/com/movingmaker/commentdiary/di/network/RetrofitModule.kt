@@ -1,6 +1,6 @@
-package com.movingmaker.commentdiary.common.di.network
+package com.movingmaker.commentdiary.di.network
 
-import com.movingmaker.commentdiary.common.util.Url
+import com.movingmaker.commentdiary.data.util.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,7 +43,7 @@ object RetrofitModule {
         nullOnEmptyConverterFactory: Converter.Factory
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(Url.BASE_URL)
+            .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(scalarsConverterFactory)
             .addConverterFactory(nullOnEmptyConverterFactory)
@@ -61,7 +61,7 @@ object RetrofitModule {
         nullOnEmptyConverterFactory: Converter.Factory
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(Url.BASE_URL)
+            .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(scalarsConverterFactory)
             .addConverterFactory(nullOnEmptyConverterFactory)
@@ -79,7 +79,7 @@ object RetrofitModule {
         nullOnEmptyConverterFactory: Converter.Factory
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(Url.BASE_URL)
+            .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(scalarsConverterFactory)
             .addConverterFactory(nullOnEmptyConverterFactory)
@@ -97,7 +97,7 @@ object RetrofitModule {
         nullOnEmptyConverterFactory: Converter.Factory
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(Url.BASE_URL)
+            .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(scalarsConverterFactory)
             .addConverterFactory(nullOnEmptyConverterFactory)

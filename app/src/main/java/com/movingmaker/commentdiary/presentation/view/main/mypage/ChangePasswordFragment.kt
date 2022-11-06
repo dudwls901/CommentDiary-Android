@@ -6,9 +6,9 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.base.BaseFragment
 import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.databinding.FragmentMypageChangePasswordBinding
+import com.movingmaker.commentdiary.presentation.base.BaseFragment
 import com.movingmaker.commentdiary.presentation.viewmodel.mypage.MyPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

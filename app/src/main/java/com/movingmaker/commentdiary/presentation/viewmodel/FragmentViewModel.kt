@@ -3,7 +3,7 @@ package com.movingmaker.commentdiary.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME
 
 class FragmentViewModel : ViewModel() {
     private var _curFragment = MutableLiveData<FRAGMENT_NAME>()

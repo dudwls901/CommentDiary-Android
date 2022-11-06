@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.common.di.network
+package com.movingmaker.commentdiary.di.network
 
 import com.movingmaker.commentdiary.data.remote.api.GatherDiaryApiService
 import com.movingmaker.commentdiary.data.remote.api.MyDiaryApiService

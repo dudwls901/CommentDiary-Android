@@ -4,9 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.common.CodaApplication
-import com.movingmaker.commentdiary.common.util.DateConverter
-import com.movingmaker.commentdiary.common.util.Event
+import com.movingmaker.commentdiary.presentation.CodaApplication
+import com.movingmaker.commentdiary.presentation.util.DateConverter
 import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.domain.model.UiState
@@ -17,6 +16,7 @@ import com.movingmaker.commentdiary.domain.usecase.GetMyPageUseCase
 import com.movingmaker.commentdiary.domain.usecase.LogOutUseCase
 import com.movingmaker.commentdiary.domain.usecase.PatchCommentPushStateUseCase
 import com.movingmaker.commentdiary.domain.usecase.SignOutUseCase
+import com.movingmaker.commentdiary.presentation.util.event.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber

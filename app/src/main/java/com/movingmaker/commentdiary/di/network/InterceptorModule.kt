@@ -1,7 +1,7 @@
-package com.movingmaker.commentdiary.common.di.network
+package com.movingmaker.commentdiary.di.network
 
-import com.movingmaker.commentdiary.common.CodaApplication
 import com.movingmaker.commentdiary.data.remote.datasource.ReIssueTokenDataSource
+import com.movingmaker.commentdiary.presentation.CodaApplication
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

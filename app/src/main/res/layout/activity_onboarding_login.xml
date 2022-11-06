@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="com.movingmaker.commentdiary.common.util.FRAGMENT_NAME" />
+        <import type="com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME" />
 
         <import type="android.view.View" />
 

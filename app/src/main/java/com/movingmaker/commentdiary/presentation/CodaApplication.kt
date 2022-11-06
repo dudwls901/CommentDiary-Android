@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.common
+package com.movingmaker.commentdiary.presentation
 
 import android.app.Application
 import android.content.Intent
@@ -11,7 +11,7 @@ import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.user.UserApiClient
 import com.movingmaker.commentdiary.BuildConfig
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.util.Constant.KAKAO
+import com.movingmaker.commentdiary.presentation.util.KAKAO
 import com.movingmaker.commentdiary.presentation.view.onboarding.OnboardingLoginActivity
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber

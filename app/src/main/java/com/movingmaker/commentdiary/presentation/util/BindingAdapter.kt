@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.common.util
+package com.movingmaker.commentdiary.presentation.util
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -13,8 +13,6 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.util.Constant.EMAIL
-import com.movingmaker.commentdiary.common.util.Constant.KAKAO
 import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.presentation.view.main.mypage.MyCommentListAdapter
 import timber.log.Timber
