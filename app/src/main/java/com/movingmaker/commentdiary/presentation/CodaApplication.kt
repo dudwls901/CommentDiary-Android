@@ -37,7 +37,7 @@ class CodaApplication : Application() {
 
         //        fun getCustomExpire() = System.currentTimeMillis()+(60*60*1000)
 //        fun getCustomExpire() = System.currentTimeMillis()+60*1000L
-        fun getCustomExpire() = System.currentTimeMillis() + 10000L
+        fun getCustomExpire() = System.currentTimeMillis() + 1000L
 
         const val TAG = "start app CodaApplication"
 
@@ -74,7 +74,6 @@ class CodaApplication : Application() {
         refreshToken: String,
         accessTokenExpiresIn: Long
     ) {
-
         // 자동 로그인 데이터 저장
         sharedPref.edit().apply {
             putString("loginType", loginType)

@@ -1,6 +1,8 @@
 package com.movingmaker.commentdiary.di.network
 
 import com.movingmaker.commentdiary.data.remote.datasource.ReIssueTokenDataSource
+import com.movingmaker.commentdiary.domain.model.NetworkResult
+import com.movingmaker.commentdiary.domain.model.getErrorMessage
 import com.movingmaker.commentdiary.presentation.CodaApplication
 import dagger.Module
 import dagger.Provides
@@ -49,7 +51,6 @@ object InterceptorModule {
         val newRequest = chain.request().newBuilder().addHeader("X-AUTH-TOKEN", accessToken)
             .addHeader("REFRESH-TOKEN", refreshToken)
             .build()
-        Timber.d("okhttp twoHeader intercept: $newRequest")
         chain.proceed(newRequest)
     }
 
@@ -57,38 +58,47 @@ object InterceptorModule {
     @Singleton
     @BearerInterceptor
     fun provideBearerInterceptor(
-        reIssueTokenDataSource: ReIssueTokenDataSource
+        reIssueTokenDataSource: ReIssueTokenDataSource,
     ) = Interceptor { chain ->
         val accessTokenExpiresIn = CodaApplication.getInstance().getAccessExpiresIn()
-//        val accessTokenExpiresIn = getSyncAccessTokenExpiresIn()
-        var accessToken = CodaApplication.getInstance().getAccessToken()
-        if (accessTokenExpiresIn <= System.currentTimeMillis()) {
-            accessToken = runBlocking {
-                //토큰 갱신 api 호출
-//                val response = reIssueTokenRepository.reIssueToken()
-                val response = reIssueTokenDataSource.reIssueToken()
-                //refreshToken  만료된 경우
-                if (response.code() in 401..404) {
-                    CodaApplication.getInstance().logOut()
-                } else {
-                    try {
-                        CodaApplication.getInstance().insertAuth(
-                            CodaApplication.getInstance().getLoginType(),
-                            response.body()!!.result.accessToken,
-                            response.body()!!.result.refreshToken,
-                            CodaApplication.getCustomExpire()
-                        )
-                    } catch (e: Exception) {
-                        Timber.e("okhttp intercept: error $e")
+        val accessToken = if (accessTokenExpiresIn <= System.currentTimeMillis()) {
+            synchronized(this) {
+                runBlocking {
+                    //토큰 갱신 api 호출
+                    val response = reIssueTokenDataSource.reIssueToken()
+                    var ret = "EMPTY"
+                    with(response) {
+                        when (this) {
+                            is NetworkResult.Success -> {
+                                (this.data.result).also { authTokens ->
+                                    CodaApplication.getInstance().insertAuth(
+                                        CodaApplication.getInstance().getLoginType(),
+                                        authTokens.accessToken,
+                                        authTokens.refreshToken,
+                                        //todo 현재 서버에서 받은 만료 시간이 아닌 커스텀 만료 시간 (현재 시간 + 1초) -> release 버전엔 서버 데이터
+//                                        authTokens.accessTokenExpiresIn
+                                        CodaApplication.getCustomExpire()
+                                    )
+                                    ret = authTokens.accessToken
+                                }
+                            }
+                            is NetworkResult.Fail -> {
+                                CodaApplication.getInstance().logOut()
+                                Timber.e("Reissue Fail : ${this.message}")
+                            }
+                            is NetworkResult.Exception -> {
+                                Timber.e("ReIssue Error : ${this.errorType.getErrorMessage()}")
+                            }
+                        }
                     }
+                    ret
                 }
-                response.body()?.result?.accessToken ?: "Empty Token"
             }
         } else {
-            accessToken = CodaApplication.getInstance().getAccessToken()
+            CodaApplication.getInstance().getAccessToken()
         }
         val newRequest =
-            chain.request().newBuilder().addHeader("Authorization", "Bearer ${accessToken}")
+            chain.request().newBuilder().addHeader("Authorization", "Bearer $accessToken")
                 .build()
         Timber.d("intercept: $newRequest")
         chain.proceed(newRequest)
