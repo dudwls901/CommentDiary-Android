@@ -1,12 +1,15 @@
 package com.movingmaker.commentdiary.domain.usecase
 
-import com.movingmaker.commentdiary.domain.repository.LogOutRepository
+import com.movingmaker.commentdiary.domain.model.UiState
+import com.movingmaker.commentdiary.domain.model.mapUiState
+import com.movingmaker.commentdiary.domain.model.toUiState
+import com.movingmaker.commentdiary.domain.repository.MyPageRepository
 import javax.inject.Inject
 
 class LogOutUseCase @Inject constructor(
-    private val logOutRepository: LogOutRepository,
+    private val myPageRepository: MyPageRepository
 ) {
-    suspend operator fun invoke() =
-        logOutRepository.logOut()
+    suspend operator fun invoke(): UiState<String> =
+        myPageRepository.logOut().toUiState().mapUiState { it.result }
 
 }

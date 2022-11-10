@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="com.movingmaker.commentdiary.common.util.FRAGMENT_NAME" />
+        <import type="com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME" />
 
         <import type="android.view.View" />
 
@@ -112,8 +112,8 @@
             android:layout_height="wrap_content"
             android:indeterminateTint="@color/core_pure_green"
             android:visibility="invisible"
-            app:activity="@{activity}"
-            app:loading="@{vm.loading}"
+            app:nonClickableActivity="@{activity}"
+            app:nonClickableLoading="@{vm.loading}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

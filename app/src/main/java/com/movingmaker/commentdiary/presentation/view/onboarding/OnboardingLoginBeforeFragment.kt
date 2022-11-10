@@ -2,7 +2,6 @@ package com.movingmaker.commentdiary.presentation.view.onboarding
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,9 +11,9 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.databinding.FragmentOnboardingLoginBeforeBinding
+import com.movingmaker.commentdiary.presentation.base.BaseFragment
+import com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.presentation.view.main.MainActivity
 import com.movingmaker.commentdiary.presentation.viewmodel.onboarding.OnboardingViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -86,7 +85,6 @@ class OnboardingLoginBeforeFragment :
 
     private fun login(kakaoToken: String) {
         lifecycleScope.launch {
-            onboardingViewModel.onLoading()
             val (isSuccessLogin, isNewMember) = onboardingViewModel.kakaoLogin(kakaoToken)
             if (isSuccessLogin) {
                 when (isNewMember) {

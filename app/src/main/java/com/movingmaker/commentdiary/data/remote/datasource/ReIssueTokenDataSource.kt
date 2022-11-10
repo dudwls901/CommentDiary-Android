@@ -1,10 +1,11 @@
 package com.movingmaker.commentdiary.data.remote.datasource
 
-import com.movingmaker.commentdiary.data.remote.response.LogInResponse
-import retrofit2.Response
+import com.movingmaker.commentdiary.data.model.AuthTokens
+import com.movingmaker.commentdiary.domain.model.BaseResponse
+import com.movingmaker.commentdiary.domain.model.NetworkResult
 
 interface ReIssueTokenDataSource {
 
-    suspend fun reIssueToken(): Response<LogInResponse>
+    suspend fun reIssueToken(): NetworkResult<BaseResponse<AuthTokens>>
 
 }

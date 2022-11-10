@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".common.CodaApplication"
+        android:name=".presentation.CodaApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
@@ -52,7 +52,7 @@
             android:exported="true"></activity>
 
         <service
-            android:name="com.movingmaker.commentdiary.common.MyFirebaseMessagingService"
+            android:name="com.movingmaker.commentdiary.presentation.service.MyFirebaseMessagingService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

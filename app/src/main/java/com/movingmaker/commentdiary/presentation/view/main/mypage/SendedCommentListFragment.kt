@@ -13,16 +13,14 @@ import android.view.Window
 import android.widget.Button
 import android.widget.NumberPicker
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.CodaSnackBar
-import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.common.util.DateConverter
-import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.databinding.FragmentMypageSendedCommentListBinding
+import com.movingmaker.commentdiary.presentation.base.BaseFragment
+import com.movingmaker.commentdiary.presentation.util.DateConverter
+import com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.mypage.MyPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,18 +45,7 @@ class SendedCommentListFragment :
         binding.vm = myPageViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.SENDED_COMMENT_LIST)
         setComments()
-        observeDatas()
         initViews()
-    }
-
-    private fun observeDatas() {
-        myPageViewModel.errorMessage.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-        }
-
-        myPageViewModel.snackMessage.observe(viewLifecycleOwner) {
-            CodaSnackBar.make(binding.root, it).show()
-        }
     }
 
     private fun initViews() = with(binding) {

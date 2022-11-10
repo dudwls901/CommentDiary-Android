@@ -1,37 +1,39 @@
 package com.movingmaker.commentdiary.data.repositoryimpl
 
+import com.movingmaker.commentdiary.data.model.AuthTokens
 import com.movingmaker.commentdiary.data.remote.datasource.ForSignUpDataSource
-import com.movingmaker.commentdiary.data.remote.request.EmailCodeCheckRequest
-import com.movingmaker.commentdiary.data.remote.request.KakaoLoginRequest
-import com.movingmaker.commentdiary.data.remote.request.LogInRequest
-import com.movingmaker.commentdiary.data.remote.request.SignUpRequest
-import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.data.remote.response.LogInResponse
+import com.movingmaker.commentdiary.data.remote.request.*
+import com.movingmaker.commentdiary.domain.model.BaseResponse
+import com.movingmaker.commentdiary.domain.model.NetworkResult
 import com.movingmaker.commentdiary.domain.repository.ForSignUpRepository
-import retrofit2.Response
 import javax.inject.Inject
 
 class ForSignUpRepositoryImpl @Inject constructor(
     private val signUpDataSource: ForSignUpDataSource
 ) : ForSignUpRepository {
-
-    override suspend fun sendEmailCode(email: String): Response<IsSuccessResponse> =
+    override suspend fun sendEmailCode(email: String): NetworkResult<BaseResponse<String>> =
         signUpDataSource.sendEmailCode(email)
 
 
-    override suspend fun emailCodeCheck(emailCodeCheckRequest: EmailCodeCheckRequest): Response<IsSuccessResponse> =
+    override suspend fun emailCodeCheck(emailCodeCheckRequest: EmailCodeCheckRequest): NetworkResult<BaseResponse<String>> =
         signUpDataSource.emailCodeCheck(emailCodeCheckRequest)
 
 
-    override suspend fun signUp(signUpRequest: SignUpRequest): Response<IsSuccessResponse> =
+    override suspend fun signUp(signUpRequest: SignUpRequest): NetworkResult<BaseResponse<String>> =
         signUpDataSource.signUp(signUpRequest)
 
-    override suspend fun logIn(logInRequest: LogInRequest): Response<LogInResponse> =
+
+    override suspend fun logIn(logInRequest: LogInRequest): NetworkResult<BaseResponse<AuthTokens>> =
         signUpDataSource.logIn(logInRequest)
 
-    override suspend fun kakaoLogIn(kakaoLoginRequest: KakaoLoginRequest): Response<LogInResponse> =
+
+    override suspend fun kakaoLogIn(kakaoLoginRequest: KakaoLoginRequest): NetworkResult<BaseResponse<AuthTokens>> =
         signUpDataSource.kakaoLogIn(kakaoLoginRequest)
 
-    override suspend fun findPassword(email: String): Response<IsSuccessResponse> =
+
+    override suspend fun findPassword(email: String): NetworkResult<BaseResponse<String>> =
         signUpDataSource.findPassword(email)
+
+    override suspend fun kakaoSignUpSetAccepts(kakaoSignUpRequest: KakaoSignUpRequest): NetworkResult<BaseResponse<String>> =
+        signUpDataSource.kakaoSignUpSetAccepts(kakaoSignUpRequest)
 }

@@ -3,7 +3,6 @@ package com.movingmaker.commentdiary.presentation.view.main.mydiary
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -15,11 +14,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.databinding.FragmentMydiaryWithCalendarBinding
-import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.common.util.DateConverter
-import com.movingmaker.commentdiary.common.util.Extension.toDp
-import com.movingmaker.commentdiary.common.util.Extension.toPx
-import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.presentation.base.BaseFragment
+import com.movingmaker.commentdiary.presentation.util.DateConverter
+import com.movingmaker.commentdiary.presentation.util.Extension.toDp
+import com.movingmaker.commentdiary.presentation.util.Extension.toPx
+import com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.presentation.view.main.mydiary.calendardecorator.AloneDotDecorator
 import com.movingmaker.commentdiary.presentation.view.main.mydiary.calendardecorator.CommentDotDecorator
 import com.movingmaker.commentdiary.presentation.view.main.mydiary.calendardecorator.SelectedDateDecorator
@@ -29,10 +28,10 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
-import java.util.*
+import java.util.Calendar
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint

@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.animation.Animation
@@ -16,11 +15,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.common.util.DateConverter
-import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.data.remote.request.ReportCommentRequest
 import com.movingmaker.commentdiary.databinding.FragmentGatherdiaryCommentdiaryDetailBinding
+import com.movingmaker.commentdiary.presentation.base.BaseFragment
+import com.movingmaker.commentdiary.presentation.util.DateConverter
+import com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.mydiary.MyDiaryViewModel
@@ -43,7 +42,7 @@ class CommentDiaryDetailFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.myDiaryviewModel = myDiaryViewModel
+        binding.vm = myDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.COMMENT_DIARY_DETAIL)
         observeDatas()
         initViews()
@@ -62,7 +61,7 @@ class CommentDiaryDetailFragment :
         }
 
         myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
-            Timber.d( "observeDatas: --> $diary ")
+            Timber.d("observeDatas: --> $diary ")
             diary?.let {
                 commentListAdapter.submitList(diary.commentList?.toMutableList())
             }
@@ -149,14 +148,14 @@ class CommentDiaryDetailFragment :
 
     override fun onHeartClickListener(commentId: Long) {
         likedCommentId = commentId
-        gatherDiaryViewModel.setResponseLikeComment(commentId)
+        gatherDiaryViewModel.likeComment(commentId)
     }
 
     override fun onReportClickListener(commentId: Long) {
         showReportDialog(commentId)
     }
 
-    override fun onBlockClickLinstener(commentId: Long) {
+    override fun onBlockClickListener(commentId: Long) {
         showBlockDialog(commentId)
     }
 
@@ -174,7 +173,7 @@ class CommentDiaryDetailFragment :
         submitButton.setOnClickListener {
             //차단, 신고하기 api에 내용 널로 올리기
             reportedCommentId = commentId
-            gatherDiaryViewModel.setResponseReportComment(
+            gatherDiaryViewModel.reportComment(
                 ReportCommentRequest(
                     id = commentId,
                     ""
@@ -211,7 +210,7 @@ class CommentDiaryDetailFragment :
             else {
                 //신고
                 //로컬에서 코멘트 삭제
-                gatherDiaryViewModel.setResponseReportComment(
+                gatherDiaryViewModel.reportComment(
                     ReportCommentRequest(
                         id = commentId,
                         content = reportContent

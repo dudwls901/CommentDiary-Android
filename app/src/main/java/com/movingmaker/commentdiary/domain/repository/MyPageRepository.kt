@@ -1,26 +1,24 @@
 package com.movingmaker.commentdiary.domain.repository
 
+import com.movingmaker.commentdiary.data.model.Comment
+import com.movingmaker.commentdiary.data.model.MyInfo
 import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
-import com.movingmaker.commentdiary.data.remote.request.KakaoSignUpRequest
-import com.movingmaker.commentdiary.data.remote.response.CommentListResponse
-import com.movingmaker.commentdiary.data.remote.response.CommentPushStateResponse
-import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.data.remote.response.MyPageResponse
-import retrofit2.Response
+import com.movingmaker.commentdiary.domain.model.BaseResponse
+import com.movingmaker.commentdiary.domain.model.NetworkResult
 
 interface MyPageRepository {
 
-    suspend fun signOut(): Response<IsSuccessResponse>
+    suspend fun signOut(): NetworkResult<BaseResponse<String>>
 
-    suspend fun changePassword(changePasswordRequest: ChangePasswordRequest): Response<IsSuccessResponse>
+    suspend fun changePassword(changePasswordRequest: ChangePasswordRequest): NetworkResult<BaseResponse<String>>
 
-    suspend fun getMyPage(): Response<MyPageResponse>
+    suspend fun getMyPage(): NetworkResult<BaseResponse<MyInfo>>
 
-    suspend fun getAllComment(): Response<CommentListResponse>
+    suspend fun getAllComment(): NetworkResult<BaseResponse<List<Comment>>>
 
-    suspend fun getMonthComment(date: String): Response<CommentListResponse>
+    suspend fun getMonthComment(date: String): NetworkResult<BaseResponse<List<Comment>>>
 
-    suspend fun patchCommentPushState(): Response<CommentPushStateResponse>
+    suspend fun patchCommentPushState(): NetworkResult<BaseResponse<Map<String,Char>>>
 
-    suspend fun kakaoSignUpSetAccepts(kakaoSignUpRequest: KakaoSignUpRequest): Response<IsSuccessResponse>
+    suspend fun logOut(): NetworkResult<BaseResponse<String>>
 }

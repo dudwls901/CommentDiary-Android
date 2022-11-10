@@ -1,19 +1,19 @@
 package com.movingmaker.commentdiary.domain.repository
 
+import com.movingmaker.commentdiary.data.model.DiaryId
 import com.movingmaker.commentdiary.data.remote.request.EditDiaryRequest
 import com.movingmaker.commentdiary.data.remote.request.SaveDiaryRequest
-import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.data.remote.response.SaveDiaryResponse
-import retrofit2.Response
+import com.movingmaker.commentdiary.domain.model.BaseResponse
+import com.movingmaker.commentdiary.domain.model.NetworkResult
 
 interface MyDiaryRepository {
 
-    suspend fun saveDiary(saveDiaryRequest: SaveDiaryRequest): Response<SaveDiaryResponse>
+    suspend fun saveDiary(saveDiaryRequest: SaveDiaryRequest): NetworkResult<BaseResponse<DiaryId>>
 
     suspend fun editDiary(
         diaryId: Long,
         editDiaryRequest: EditDiaryRequest
-    ): Response<IsSuccessResponse>
+    ): NetworkResult<BaseResponse<String>>
 
-    suspend fun deleteDiary(diaryId: Long): Response<IsSuccessResponse>
+    suspend fun deleteDiary(diaryId: Long): NetworkResult<BaseResponse<String>>
 }

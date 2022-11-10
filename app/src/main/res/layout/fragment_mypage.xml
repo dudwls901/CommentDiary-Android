@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <import type="com.movingmaker.commentdiary.common.util.Constant" />
         <import type="android.view.View" />
 
         <variable
@@ -91,7 +89,7 @@
                 android:layout_height="14dp"
                 android:layout_marginHorizontal="18dp"
                 android:layout_marginBottom="11dp"
-                android:background="@drawable/background_green_oval_8"
+                android:background="@drawable/background_green_radius_10"
                 android:clipChildren="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -266,7 +264,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminateTint="@color/core_pure_green"
-            android:visibility="gone"
+            app:loading="@{vm.loading}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

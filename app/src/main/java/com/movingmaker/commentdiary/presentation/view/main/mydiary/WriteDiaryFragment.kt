@@ -16,12 +16,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.common.CodaSnackBar
-import com.movingmaker.commentdiary.common.base.BaseFragment
-import com.movingmaker.commentdiary.common.util.DIARY_TYPE
-import com.movingmaker.commentdiary.common.util.DateConverter
-import com.movingmaker.commentdiary.common.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.databinding.FragmentMydiaryWritediaryBinding
+import com.movingmaker.commentdiary.presentation.base.BaseFragment
+import com.movingmaker.commentdiary.presentation.util.DIARY_TYPE
+import com.movingmaker.commentdiary.presentation.util.DateConverter
+import com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME
+import com.movingmaker.commentdiary.presentation.view.snackbar.CodaSnackBar
 import com.movingmaker.commentdiary.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.commentdiary.presentation.viewmodel.mydiary.MyDiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,15 +62,10 @@ class WriteDiaryFragment :
 
     private fun observeDatas() = with(binding) {
 
-        myDiaryViewModel.snackMessage.observe(viewLifecycleOwner) {
-            CodaSnackBar.make(binding.root, it).show()
-        }
-
         //저장은 혼자 쓴 일기, 코멘트 일기 둘 다 가능
         myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
             //이전 날짜면은 AlONE_DIARY
             val selectedDate = myDiaryViewModel.selectedDate.value
-            selectedDate
             //다이어리 타입 설정
             myDiaryViewModel.setSelectedDiaryType(
                 when {

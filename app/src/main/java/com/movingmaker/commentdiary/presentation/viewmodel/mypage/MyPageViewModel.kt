@@ -4,22 +4,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.common.CodaApplication
-import com.movingmaker.commentdiary.common.util.Constant.SUCCESS_CODE
-import com.movingmaker.commentdiary.common.util.DateConverter
+import com.movingmaker.commentdiary.presentation.CodaApplication
+import com.movingmaker.commentdiary.presentation.util.DateConverter
 import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
-import com.movingmaker.commentdiary.data.remote.response.CommentListResponse
-import com.movingmaker.commentdiary.data.remote.response.CommentPushStateResponse
-import com.movingmaker.commentdiary.data.remote.response.IsSuccessResponse
-import com.movingmaker.commentdiary.data.remote.response.MyPageResponse
-import com.movingmaker.commentdiary.domain.usecase.*
+import com.movingmaker.commentdiary.domain.model.UiState
+import com.movingmaker.commentdiary.domain.usecase.ChangePasswordUseCase
+import com.movingmaker.commentdiary.domain.usecase.GetAllCommentUseCase
+import com.movingmaker.commentdiary.domain.usecase.GetMonthCommentUseCase
+import com.movingmaker.commentdiary.domain.usecase.GetMyPageUseCase
+import com.movingmaker.commentdiary.domain.usecase.LogOutUseCase
+import com.movingmaker.commentdiary.domain.usecase.PatchCommentPushStateUseCase
+import com.movingmaker.commentdiary.domain.usecase.SignOutUseCase
+import com.movingmaker.commentdiary.presentation.util.event.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.Response
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,24 +33,13 @@ class MyPageViewModel @Inject constructor(
     private val patchCommentPushStateUseCase: PatchCommentPushStateUseCase
 ) : ViewModel() {
 
-    var job: Job? = null
-
-    private var _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String>
-        get() = _errorMessage
-
     private var _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean>
         get() = _loading
 
-    private var _snackMessage = MutableLiveData<String>()
-    val snackMessage: LiveData<String>
+    private var _snackMessage = MutableLiveData<Event<String>>()
+    val snackMessage: LiveData<Event<String>>
         get() = _snackMessage
-
-    //코루틴 예외처리 핸들러
-    val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        onError("Exception handled: ${throwable.localizedMessage}")
-    }
 
     private var _isPasswordChanged = MutableLiveData<Boolean>()
     val isPasswordChanged: LiveData<Boolean>
@@ -133,200 +122,139 @@ class MyPageViewModel @Inject constructor(
         _canChangePassword.value = passwordCorrect.value!! && passwordCheckCorrect.value!!
     }
 
-    fun setPushYN(yn: Char) {
+    private fun setPushYN(yn: Char) {
         _pushYN.value = yn
     }
 
     fun signOut() = viewModelScope.launch {
-        signOutUseCase().apply {
-            if (this.isSuccessful) {
-                this.body()?.let { response ->
-                    when (response.code) {
-                        SUCCESS_CODE -> {
-                            //todo toast vs snackbar
-                            _snackMessage.value = "회원 탈퇴가 완료되었습니다."
-                            CodaApplication.getInstance().signOut()
-                        }
-                        else -> onError(response.message)
-                    }
+        onLoading()
+        with(signOutUseCase()) {
+            Timber.d("result $this")
+            when (this) {
+                is UiState.Success -> {
+                    _snackMessage.value = Event("회원 탈퇴가 완료되었습니다.")
+                    CodaApplication.getInstance().signOut()
                 }
-            } else {
-                this.errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        onError("회원 탈퇴에 실패하였습니다.")
-//                    }
+                is UiState.Error -> {
+                    _snackMessage.value = Event(this.message)
+                }
+                is UiState.Fail -> {
+                    _snackMessage.value = Event(this.message)
                 }
             }
         }
     }
 
-    fun setResponseChangePassword(changePasswordRequest: ChangePasswordRequest) =
+    fun changePassword(changePasswordRequest: ChangePasswordRequest) =
         viewModelScope.launch {
-            _loading.postValue(true)
-            var response: Response<IsSuccessResponse>? = null
-            val job = launch(Dispatchers.Main + exceptionHandler) {
-                response = changePasswordUseCase(changePasswordRequest)
-            }
-            job.join()
-            _loading.postValue(false)
-            response?.let {
-                if (it.isSuccessful) {
-                    it.body()?.let { response ->
-                        when (it.code()) {
-                            200 -> {
-                                //todo toast vs snackbar 바로 화면 이동되는 경우
-                                _snackMessage.value = "비밀번호를 변경하였습니다."
-                            }
-                            else -> onError(response.message)
-                        }
+            onLoading()
+            with(changePasswordUseCase(changePasswordRequest)) {
+                Timber.d("result $this")
+                offLoading()
+                when (this) {
+                    is UiState.Success -> {
+                        _snackMessage.value = Event("비밀번호를 변경하였습니다.")
                     }
-                } else {
-                    it.errorBody()?.let { errorBody ->
-//                        RetrofitClient.getErrorResponse(errorBody)?.let {
-//                            if (it.status == 401) {
-//                                onError("다시 로그인해 주세요.")
-//                                CodaApplication.getInstance().logOut()
-//                            } else {
-//                                onError("비밀번호 변경에 실패하였습니다.")
-//                            }
-//                        }
+                    is UiState.Error -> {
+                        _snackMessage.value = Event(this.message)
+                    }
+                    is UiState.Fail -> {
+                        _snackMessage.value = Event(this.message)
                     }
                 }
             }
         }
 
     fun logout() = viewModelScope.launch {
-        logOutUseCase().apply {
-            if (this.isSuccessful) {
-                this.body()?.let { response ->
-                    when (response.code) {
-                        SUCCESS_CODE -> {
-
-                        }
-                    }
+        onLoading()
+        with(logOutUseCase()) {
+            Timber.d("result $this")
+            offLoading()
+            when (this) {
+                is UiState.Success -> {
+                    CodaApplication.getInstance().logOut()
+                }
+                is UiState.Error -> {
+                    _snackMessage.value = Event(this.message)
+                }
+                is UiState.Fail -> {
+                    _snackMessage.value = Event(this.message)
                 }
             }
         }
-        CodaApplication.getInstance().logOut()
     }
 
-    fun setResponseGetMyPage() = viewModelScope.launch {
-
-        _loading.postValue(true)
-        var response: Response<MyPageResponse>? = null
-        val job = launch(Dispatchers.Main + exceptionHandler) {
-            response = getMyPageUseCase()
-        }
-        job.join()
-        _loading.postValue(false)
-        response?.let {
-            if (it.isSuccessful) {
-                it.body()?.let { response ->
-                    when (it.code()) {
-                        200 -> {
-                            setMyAccount(response.result.email)
-                            setTemperature(response.result.temperature)
-                            setPushYN(response.result.pushYN)
-                            setLoginType(response.result.loginType)
-                        }
-                        else -> onError(it.message())
-                    }
+    fun getMyPage() = viewModelScope.launch {
+        onLoading()
+        with(getMyPageUseCase()) {
+            Timber.d("result $this")
+            offLoading()
+            when (this) {
+                is UiState.Success -> {
+                    setMyAccount(data.email)
+                    setTemperature(data.temperature)
+                    setPushYN(data.pushYN)
+                    setLoginType(data.loginType)
                 }
-            } else {
-                it.errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        if (it.status == 401) {
-//                            onError("다시 로그인해 주세요.")
-//                            CodaApplication.getInstance().logOut()
-//                        } else {
-//                            _snackMessage.postValue("내 정보를 불러오는 데 실패하였습니다.")
-//                        }
-//                    }
+                is UiState.Error -> {
+                    _snackMessage.value = Event(message)
+                }
+                is UiState.Fail -> {
+                    _snackMessage.value = Event(message)
                 }
             }
         }
     }
 
     fun getResponseCommentList(date: String) = viewModelScope.launch {
-
-        _loading.postValue(true)
-        var response: Response<CommentListResponse>? = null
-        val job = launch(Dispatchers.Main + exceptionHandler) {
-            response = if (date == "all")
-                getAllCommentUseCase()
-            else
-                getMonthCommentUseCase(date)
+        onLoading()
+        val response = if (date == "all") {
+            getAllCommentUseCase()
+        } else {
+            getMonthCommentUseCase(date)
         }
-        job.join()
-        _loading.postValue(false)
-        response?.let {
-            if (it.isSuccessful) {
-                it.body()?.let { response ->
-                    when (it.code()) {
-                        200 -> {
-                            setCommentList(response.result)
-                        }
-                        else -> onError(it.message())
-                    }
+        with(response) {
+            offLoading()
+            Timber.d("result $this")
+            when (this) {
+                is UiState.Success -> {
+                    setCommentList(data)
                 }
-            } else {
-                it.errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        if (it.status == 401) {
-//                            onError("다시 로그인해 주세요.")
-//                            CodaApplication.getInstance().logOut()
-//                        } else {
-////                            CodaSnackBar.make(binding.root, "코멘트를 받아오는 데 실패했습니다.")
-//                            onError(it.message)
-//                        }
-//                    }
+                is UiState.Error -> {
+                    _snackMessage.value = Event(message)
+                }
+                is UiState.Fail -> {
+                    _snackMessage.value = Event(message)
                 }
             }
         }
     }
 
     fun setResponsePatchCommentPushState() = viewModelScope.launch {
-        _loading.postValue(true)
-        var response: Response<CommentPushStateResponse>? = null
-        val job = launch(Dispatchers.Main + exceptionHandler) {
-            response = patchCommentPushStateUseCase()
-        }
-        job.join()
-        _loading.postValue(false)
-        response?.let {
-            if (it.isSuccessful) {
-                it.body()?.let { response ->
-                    when (it.code()) {
-                        200 -> {
-                            response.result["pushYn"]?.let { yn -> setPushYN(yn) }
-                        }
-                        else -> onError(it.message())
-                    }
+        onLoading()
+        with(patchCommentPushStateUseCase()) {
+            offLoading()
+            Timber.d("result $this")
+            when (this) {
+                is UiState.Success -> {
+                    data["pushYn"]?.let{yn -> setPushYN(yn)}
                 }
-            } else {
-                it.errorBody()?.let { errorBody ->
-//                    RetrofitClient.getErrorResponse(errorBody)?.let {
-//                        if (it.status == 401) {
-//                            onError("다시 로그인해 주세요.")
-//                            CodaApplication.getInstance().logOut()
-//                        } else {
-//                            onError(it.message)
-//                        }
-//                    }
+                is UiState.Error -> {
+                    _snackMessage.value = Event(message)
+                }
+                is UiState.Fail -> {
+                    _snackMessage.value = Event(message)
                 }
             }
         }
     }
 
-    private fun onError(message: String) {
-        _errorMessage.value = message
-        _loading.value = false
-
+    private fun onLoading() {
+        _loading.value = true
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        job?.cancel()
+    private fun offLoading() {
+        _loading.value = false
     }
 
 }
