@@ -1,6 +1,7 @@
 package com.movingmaker.commentdiary.di.network
 
 import com.movingmaker.commentdiary.data.remote.api.GatherDiaryApiService
+import com.movingmaker.commentdiary.data.remote.api.LogOutApiService
 import com.movingmaker.commentdiary.data.remote.api.MyDiaryApiService
 import com.movingmaker.commentdiary.data.remote.api.MyPageApiService
 import com.movingmaker.commentdiary.data.remote.api.OnboardingApiService
@@ -31,6 +32,14 @@ object ApiModule {
         @RetrofitModule.BearerRetrofit retrofit: Retrofit
     ): MyPageApiService {
         return retrofit.create(MyPageApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLogOutApiService(
+        @RetrofitModule.OneHeaderRetrofit retrofit: Retrofit
+    ): LogOutApiService {
+        return retrofit.create(LogOutApiService::class.java)
     }
 
     @Provides

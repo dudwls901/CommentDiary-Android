@@ -2,6 +2,7 @@ package com.movingmaker.commentdiary.data.remote.datasourceimpl
 
 import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.data.model.MyInfo
+import com.movingmaker.commentdiary.data.remote.api.LogOutApiService
 import com.movingmaker.commentdiary.data.remote.api.MyPageApiService
 import com.movingmaker.commentdiary.data.remote.datasource.MyPageDataSource
 import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
@@ -11,7 +12,8 @@ import com.movingmaker.commentdiary.domain.model.NetworkResult
 import javax.inject.Inject
 
 class MyPageDataSourceImpl @Inject constructor(
-    private val myPageApiService: MyPageApiService
+    private val myPageApiService: MyPageApiService,
+    private val logOutApiService: LogOutApiService
 ) : MyPageDataSource {
 
     override suspend fun signOut(): NetworkResult<BaseResponse<String>> =
@@ -38,6 +40,6 @@ class MyPageDataSourceImpl @Inject constructor(
         safeApiCall { myPageApiService.patchCommentPushState() }
 
     override suspend fun logOut(): NetworkResult<BaseResponse<String>> =
-        safeApiCall { myPageApiService.logOut() }
+        safeApiCall { logOutApiService.logOut() }
 
 }

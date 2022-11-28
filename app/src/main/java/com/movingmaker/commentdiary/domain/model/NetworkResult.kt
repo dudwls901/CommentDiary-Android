@@ -1,7 +1,5 @@
 package com.movingmaker.commentdiary.domain.model
 
-import timber.log.Timber
-
 sealed class NetworkResult<out T> {
     data class Success<T>(val data: T) : NetworkResult<T>()
     data class Fail(val message: String) : NetworkResult<Nothing>()
@@ -14,15 +12,12 @@ sealed class NetworkResult<out T> {
 fun <T> NetworkResult<T>.toUiState(): UiState<T> {
     return when (this) {
         is NetworkResult.Success -> {
-            Timber.d("success ${this.data}")
             UiState.Success(this.data)
         }
         is NetworkResult.Exception -> {
-            Timber.d("error $this")
             UiState.Error(this.errorType.getErrorMessage())
         }
         is NetworkResult.Fail -> {
-            Timber.d("fail $this")
             UiState.Fail(this.message)
         }
     }

@@ -5,7 +5,6 @@ import com.movingmaker.commentdiary.data.model.MyInfo
 import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.data.util.ALL
 import com.movingmaker.commentdiary.data.util.COMMENT
-import com.movingmaker.commentdiary.data.util.LOG_OUT
 import com.movingmaker.commentdiary.data.util.MEMBERS
 import com.movingmaker.commentdiary.data.util.PUSH
 import com.movingmaker.commentdiary.domain.model.BaseResponse
@@ -35,8 +34,5 @@ interface MyPageApiService {
 
     @PATCH(MEMBERS + PUSH)
     suspend fun patchCommentPushState(): Response<BaseResponse<Map<String, Char>>>
-
-    @DELETE(MEMBERS + LOG_OUT)
-    suspend fun logOut(): Response<BaseResponse<String>>
 
 }
