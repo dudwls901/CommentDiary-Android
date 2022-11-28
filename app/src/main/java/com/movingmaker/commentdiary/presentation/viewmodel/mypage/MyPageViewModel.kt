@@ -2,10 +2,7 @@ package com.movingmaker.commentdiary.presentation.viewmodel.mypage
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.presentation.CodaApplication
-import com.movingmaker.commentdiary.presentation.util.DateConverter
 import com.movingmaker.commentdiary.data.model.Comment
 import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
 import com.movingmaker.commentdiary.domain.model.UiState
@@ -16,7 +13,9 @@ import com.movingmaker.commentdiary.domain.usecase.GetMyPageUseCase
 import com.movingmaker.commentdiary.domain.usecase.LogOutUseCase
 import com.movingmaker.commentdiary.domain.usecase.PatchCommentPushStateUseCase
 import com.movingmaker.commentdiary.domain.usecase.SignOutUseCase
-import com.movingmaker.commentdiary.presentation.util.event.Event
+import com.movingmaker.commentdiary.presentation.CodaApplication
+import com.movingmaker.commentdiary.presentation.base.BaseViewModel
+import com.movingmaker.commentdiary.presentation.util.DateConverter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -31,15 +30,7 @@ class MyPageViewModel @Inject constructor(
     private val getAllCommentUseCase: GetAllCommentUseCase,
     private val getMonthCommentUseCase: GetMonthCommentUseCase,
     private val patchCommentPushStateUseCase: PatchCommentPushStateUseCase
-) : ViewModel() {
-
-    private var _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean>
-        get() = _loading
-
-    private var _snackMessage = MutableLiveData<Event<String>>()
-    val snackMessage: LiveData<Event<String>>
-        get() = _snackMessage
+) : BaseViewModel() {
 
     private var _isPasswordChanged = MutableLiveData<Boolean>()
     val isPasswordChanged: LiveData<Boolean>
@@ -132,14 +123,14 @@ class MyPageViewModel @Inject constructor(
             Timber.d("result $this")
             when (this) {
                 is UiState.Success -> {
-                    _snackMessage.value = Event("회원 탈퇴가 완료되었습니다.")
+                    setMessage("회원 탈퇴가 완료되었습니다.")
                     CodaApplication.getInstance().signOut()
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                 }
             }
         }
@@ -153,13 +144,13 @@ class MyPageViewModel @Inject constructor(
                 offLoading()
                 when (this) {
                     is UiState.Success -> {
-                        _snackMessage.value = Event("비밀번호를 변경하였습니다.")
+                        setMessage("비밀번호를 변경하였습니다.")
                     }
                     is UiState.Error -> {
-                        _snackMessage.value = Event(this.message)
+                        setMessage(message)
                     }
                     is UiState.Fail -> {
-                        _snackMessage.value = Event(this.message)
+                        setMessage(message)
                     }
                 }
             }
@@ -175,10 +166,10 @@ class MyPageViewModel @Inject constructor(
                     CodaApplication.getInstance().logOut()
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                 }
             }
         }
@@ -197,10 +188,10 @@ class MyPageViewModel @Inject constructor(
                     setLoginType(data.loginType)
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
             }
         }
@@ -221,10 +212,10 @@ class MyPageViewModel @Inject constructor(
                     setCommentList(data)
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
             }
         }
@@ -237,24 +228,15 @@ class MyPageViewModel @Inject constructor(
             Timber.d("result $this")
             when (this) {
                 is UiState.Success -> {
-                    data["pushYn"]?.let{yn -> setPushYN(yn)}
+                    data["pushYn"]?.let { yn -> setPushYN(yn) }
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
             }
         }
     }
-
-    private fun onLoading() {
-        _loading.value = true
-    }
-
-    private fun offLoading() {
-        _loading.value = false
-    }
-
 }

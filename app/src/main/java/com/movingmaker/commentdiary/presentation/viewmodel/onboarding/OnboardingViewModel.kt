@@ -2,7 +2,6 @@ package com.movingmaker.commentdiary.presentation.viewmodel.onboarding
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.data.remote.request.EmailCodeCheckRequest
 import com.movingmaker.commentdiary.data.remote.request.KakaoLoginRequest
@@ -19,10 +18,10 @@ import com.movingmaker.commentdiary.domain.usecase.SendEmailCodeUseCase
 import com.movingmaker.commentdiary.domain.usecase.SignOutUseCase
 import com.movingmaker.commentdiary.domain.usecase.SignUpUseCase
 import com.movingmaker.commentdiary.presentation.CodaApplication
+import com.movingmaker.commentdiary.presentation.base.BaseViewModel
 import com.movingmaker.commentdiary.presentation.util.EMAIL
 import com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME
 import com.movingmaker.commentdiary.presentation.util.KAKAO
-import com.movingmaker.commentdiary.presentation.util.event.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import timber.log.Timber
@@ -38,15 +37,7 @@ class OnboardingViewModel @Inject constructor(
     private val kakaoLogInUseCase: KakaoLogInUseCase,
     private val kakaoSignUpSetAcceptsUseCase: KakaoSignUpSetAcceptsUseCase,
     private val signOutUseCase: SignOutUseCase
-) : ViewModel() {
-
-    private var _snackMessage = MutableLiveData<Event<String>>()
-    val snackMessage: LiveData<Event<String>>
-        get() = _snackMessage
-
-    private var _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean>
-        get() = _loading
+) : BaseViewModel() {
 
     private var _emailCorrect = MutableLiveData<Boolean>()
     val emailCorrect: LiveData<Boolean>
@@ -233,8 +224,7 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun setEmailCode(text: String) {
-        if (text.isNotBlank())
-            _code.value = text.toInt()
+        if (text.isNotBlank()) _code.value = text.toInt()
     }
 
     fun setCodeCorrect(isCorrect: Boolean) {
@@ -251,11 +241,10 @@ class OnboardingViewModel @Inject constructor(
 
     fun validateEmail(type: String) {
         val tempEmail = if (type == "email") email.value!! else findPasswordEmail.value!!
-        val isEmailCorrect = !(tempEmail.isNotEmpty() &&
-                (tempEmail.indexOf('@') == -1 || tempEmail.indexOf('.') == -1) ||
-                (tempEmail.indexOf('@') != -1 &&
-                        tempEmail.substring(tempEmail.indexOf('@'))
-                            .indexOf('.') == -1))
+        val isEmailCorrect =
+            !(tempEmail.isNotEmpty() && (tempEmail.indexOf('@') == -1 || tempEmail.indexOf('.') == -1) || (tempEmail.indexOf(
+                '@'
+            ) != -1 && tempEmail.substring(tempEmail.indexOf('@')).indexOf('.') == -1))
         if (type == "email") {
             setValuesIsCorrect(isEmailCorrect, "email")
         } else {
@@ -316,7 +305,7 @@ class OnboardingViewModel @Inject constructor(
                     successCodeSend = true
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
                     setEmailNotice(this.message)
@@ -338,8 +327,7 @@ class OnboardingViewModel @Inject constructor(
         with(
             sendEmailCodeCheckUseCase(
                 EmailCodeCheckRequest(
-                    email.value!!,
-                    code.value!!
+                    email.value!!, code.value!!
                 )
             )
         ) {
@@ -350,7 +338,7 @@ class OnboardingViewModel @Inject constructor(
                     setCodeCorrect(true)
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                     setCodeCorrect(false)
                 }
                 is UiState.Fail -> {
@@ -370,14 +358,16 @@ class OnboardingViewModel @Inject constructor(
             return@async false
         }
         var successSignUp = false
-        with(signUpUseCase(
-            SignUpRequest(
-                email = email.value!!,
-                password = password.value!!,
-                checkPassword = checkPassword.value!!,
-                loginType = EMAIL
+        with(
+            signUpUseCase(
+                SignUpRequest(
+                    email = email.value!!,
+                    password = password.value!!,
+                    checkPassword = checkPassword.value!!,
+                    loginType = EMAIL
+                )
             )
-        )) {
+        ) {
             offLoading()
             Timber.d("result $this")
             when (this) {
@@ -385,7 +375,7 @@ class OnboardingViewModel @Inject constructor(
                     successSignUp = true
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
                     setShakeView(true)
@@ -411,7 +401,7 @@ class OnboardingViewModel @Inject constructor(
                     _successFindPassword.value = true
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                     _successFindPassword.value = false
                 }
                 is UiState.Fail -> {
@@ -442,9 +432,7 @@ class OnboardingViewModel @Inject constructor(
         var isSuccessLogin = false
         logInUseCase(
             LogInRequest(
-                email = email.value!!,
-                password = password.value!!,
-                CodaApplication.deviceToken
+                email = email.value!!, password = password.value!!, CodaApplication.deviceToken
             )
         ).apply {
             offLoading()
@@ -460,7 +448,7 @@ class OnboardingViewModel @Inject constructor(
                     isSuccessLogin = true
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
                     setShakeView(true)
@@ -477,9 +465,7 @@ class OnboardingViewModel @Inject constructor(
         with(
             kakaoLogInUseCase(
                 KakaoLoginRequest(
-                    KAKAO,
-                    kakaoAccessToken,
-                    CodaApplication.deviceToken
+                    KAKAO, kakaoAccessToken, CodaApplication.deviceToken
                 )
             )
         ) {
@@ -498,10 +484,10 @@ class OnboardingViewModel @Inject constructor(
                         .insertAuth(KAKAO, accessToken, refreshToken, accessTokenExpiresIn)
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                 }
             }
         }
@@ -521,10 +507,10 @@ class OnboardingViewModel @Inject constructor(
                     successSignUp = true
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                 }
             }
         }
@@ -542,22 +528,14 @@ class OnboardingViewModel @Inject constructor(
                     CodaApplication.getInstance().signOut()
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(this.message)
+                    setMessage(message)
                 }
             }
         }
         successSignOut
     }.await()
 
-
-    private fun onLoading() {
-        _loading.value = true
-    }
-
-    private fun offLoading() {
-        _loading.value = false
-    }
 }
