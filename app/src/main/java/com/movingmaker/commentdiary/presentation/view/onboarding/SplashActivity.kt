@@ -22,7 +22,6 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
-    override val TAG: String = SplashActivity::class.java.simpleName
 
     private var pushDate: String? = null
 
@@ -40,7 +39,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
             for (key: String in intent!!.extras!!.keySet()) {
                 val value = intent!!.extras!!.get(key)
                 if (value.toString().contains("코멘트가 도착하였습니다.")) {
-                    Timber.d("$value Key: $key           Value: $value");
+                    Timber.d("$value Key: $key           Value: $value")
                     val yesterday = DateConverter.getCodaToday().minusDays(1)
                     pushDate = DateConverter.ymdFormat(yesterday)
                 }

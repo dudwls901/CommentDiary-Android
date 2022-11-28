@@ -24,8 +24,6 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
-    override val TAG: String = MainActivity::class.java.simpleName
-
 
     private val myPageViewModel: MyPageViewModel by viewModels()
     private val myDiaryViewModel: MyDiaryViewModel by viewModels()
@@ -69,15 +67,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             CodaSnackBar.make(binding.root, it).show()
         })
 
-        myDiaryViewModel.snackMessage.observe(this, EventObserver{
+        myDiaryViewModel.snackMessage.observe(this, EventObserver {
             CodaSnackBar.make(binding.root, it).show()
         })
 
-        gatherDiaryViewModel.snackMessage.observe(this, EventObserver{
+        gatherDiaryViewModel.snackMessage.observe(this, EventObserver {
             CodaSnackBar.make(binding.root, it).show()
         })
 
-        receivedDiaryViewModel.snackMessage.observe(this, EventObserver{
+        receivedDiaryViewModel.snackMessage.observe(this, EventObserver {
             CodaSnackBar.make(binding.root, it).show()
         })
 

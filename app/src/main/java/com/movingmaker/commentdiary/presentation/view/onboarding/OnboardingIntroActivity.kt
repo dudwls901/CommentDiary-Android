@@ -16,9 +16,7 @@ import me.relex.circleindicator.CircleIndicator3
 @AndroidEntryPoint
 class OnboardingIntroActivity :
     BaseActivity<ActivityOnboardingIntroBinding>(R.layout.activity_onboarding_intro) {
-    override val TAG: String = OnboardingIntroActivity::class.java.simpleName
 
-    //    private val TAG: String = OnboardingIntroActivity::class.java.simpleName
     private lateinit var onboardingIntroAdapter: OnboardingIntroAdapter
     private lateinit var indicator: CircleIndicator3
     val introViewModel: IntroViewModel by viewModels()

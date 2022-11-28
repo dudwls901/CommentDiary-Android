@@ -24,10 +24,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class OnboardingLoginActivity :
     BaseActivity<ActivityOnboardingLoginBinding>(R.layout.activity_onboarding_login) {
-    //class OnboardingLoginActivity: AppCompatActivity(), CoroutineScope{
-    override val TAG: String = OnboardingLoginActivity::class.java.simpleName
 
-    //    lateinit var binding: ActivityOnboardingLoginBinding
     private val onboardingViewModel: OnboardingViewModel by viewModels()
     private var backButtonTime = 0L
     private lateinit var navController: NavController
@@ -39,9 +36,6 @@ class OnboardingLoginActivity :
         window.statusBarColor = getColor(R.color.background_ivory)
         binding.vm = onboardingViewModel
         binding.activity = this
-        //todo 스플래시 대응 수부
-//        binding.backgroundLayout.setBackgroundColor(R.color.background_ivory)
-
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.onboardingNavHostFragment) as NavHostFragment
