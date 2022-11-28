@@ -19,7 +19,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class OnboardingFindPasswordFragment :
     BaseFragment<FragmentOnboardingFindPasswordBinding>(R.layout.fragment_onboarding_find_password) {
-    override val TAG: String = OnboardingFindPasswordFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 

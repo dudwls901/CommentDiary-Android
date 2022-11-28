@@ -13,7 +13,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class OnboardingSignUpSuccessFragment :
     BaseFragment<FragmentOnboardingSignUpSuccessBinding>(R.layout.fragment_onboarding_sign_up_success) {
-    override val TAG: String = OnboardingSignUpSuccessFragment::class.java.simpleName
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

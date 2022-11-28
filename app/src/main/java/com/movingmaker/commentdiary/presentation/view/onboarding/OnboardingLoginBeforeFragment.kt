@@ -23,7 +23,6 @@ import timber.log.Timber
 @AndroidEntryPoint
 class OnboardingLoginBeforeFragment :
     BaseFragment<FragmentOnboardingLoginBeforeBinding>(R.layout.fragment_onboarding_login_before) {
-    override val TAG: String = OnboardingLoginBeforeFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 

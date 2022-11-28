@@ -2,7 +2,6 @@ package com.movingmaker.commentdiary.presentation.viewmodel.receiveddiary
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.data.model.ReceivedDiary
 import com.movingmaker.commentdiary.data.remote.request.ReportDiaryRequest
@@ -11,8 +10,8 @@ import com.movingmaker.commentdiary.domain.model.UiState
 import com.movingmaker.commentdiary.domain.usecase.GetReceivedDiaryUseCase
 import com.movingmaker.commentdiary.domain.usecase.ReportDiaryUseCase
 import com.movingmaker.commentdiary.domain.usecase.SaveCommentUseCase
+import com.movingmaker.commentdiary.presentation.base.BaseViewModel
 import com.movingmaker.commentdiary.presentation.util.DateConverter
-import com.movingmaker.commentdiary.presentation.util.event.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -23,15 +22,7 @@ class ReceivedDiaryViewModel @Inject constructor(
     private val receivedDiaryUseCase: GetReceivedDiaryUseCase,
     private val saveCommentUseCase: SaveCommentUseCase,
     private val reportDiaryUseCase: ReportDiaryUseCase,
-) : ViewModel() {
-
-    private var _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean>
-        get() = _loading
-
-    private var _snackMessage = MutableLiveData<Event<String>>()
-    val snackMessage: LiveData<Event<String>>
-        get() = _snackMessage
+) : BaseViewModel() {
 
     private var _receivedDiary = MutableLiveData<ReceivedDiary?>()
     val receivedDiary: LiveData<ReceivedDiary?>
@@ -87,15 +78,15 @@ class ReceivedDiaryViewModel @Inject constructor(
             Timber.d("result $this")
             when (this) {
                 is UiState.Success -> {
-                    _snackMessage.value = Event("코멘트가 전송되었습니다.")
+                    setMessage("코멘트가 전송되었습니다.")
                 }
                 is UiState.Error -> {
                     setReceivedDiary(null)
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
                     setReceivedDiary(null)
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
             }
         }
@@ -119,21 +110,12 @@ class ReceivedDiaryViewModel @Inject constructor(
                     getReceiveDiary()
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
             }
         }
     }
-
-    private fun onLoading() {
-        _loading.value = true
-    }
-
-    private fun offLoading() {
-        _loading.value = false
-    }
-
 }

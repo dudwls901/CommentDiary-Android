@@ -15,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MyAccountFragment :
     BaseFragment<FragmentMypageMyaccountBinding>(R.layout.fragment_mypage_myaccount) {
-    override val TAG: String = MyAccountFragment::class.java.simpleName
 
     private val myPageViewModel: MyPageViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()

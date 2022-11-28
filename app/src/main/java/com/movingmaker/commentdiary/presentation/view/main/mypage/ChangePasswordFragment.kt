@@ -15,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ChangePasswordFragment :
     BaseFragment<FragmentMypageChangePasswordBinding>(R.layout.fragment_mypage_change_password) {
-    override val TAG: String = ChangePasswordFragment::class.java.simpleName
 
     private val myPageViewModel: MyPageViewModel by activityViewModels()
 

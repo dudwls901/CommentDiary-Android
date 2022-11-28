@@ -37,7 +37,6 @@ import kotlin.math.roundToInt
 @AndroidEntryPoint
 class CalendarWithDiaryFragment :
     BaseFragment<FragmentMydiaryWithCalendarBinding>(R.layout.fragment_mydiary_with_calendar) {
-    override val TAG: String = CalendarWithDiaryFragment::class.java.simpleName
 
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()

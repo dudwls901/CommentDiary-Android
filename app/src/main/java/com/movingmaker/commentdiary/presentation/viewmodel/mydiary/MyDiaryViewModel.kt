@@ -3,7 +3,6 @@ package com.movingmaker.commentdiary.presentation.viewmodel.mydiary
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.R
 import com.movingmaker.commentdiary.data.model.Comment
@@ -16,9 +15,9 @@ import com.movingmaker.commentdiary.domain.usecase.EditDiaryUseCase
 import com.movingmaker.commentdiary.domain.usecase.GetMonthCommentUseCase
 import com.movingmaker.commentdiary.domain.usecase.GetMonthDiaryUseCase
 import com.movingmaker.commentdiary.domain.usecase.SaveDiaryUseCase
+import com.movingmaker.commentdiary.presentation.base.BaseViewModel
 import com.movingmaker.commentdiary.presentation.util.DIARY_TYPE
 import com.movingmaker.commentdiary.presentation.util.DateConverter
-import com.movingmaker.commentdiary.presentation.util.event.Event
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -33,15 +32,7 @@ class MyDiaryViewModel @Inject constructor(
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val getMonthDiaryUseCase: GetMonthDiaryUseCase,
     private val getMonthCommentUseCase: GetMonthCommentUseCase
-) : ViewModel() {
-
-    private var _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean>
-        get() = _loading
-
-    private var _snackMessage = MutableLiveData<Event<String>>()
-    val snackMessage: LiveData<Event<String>>
-        get() = _snackMessage
+) : BaseViewModel() {
 
     private var _aloneDiary = MutableLiveData<List<CalendarDay>>()
     val aloneDiary: LiveData<List<CalendarDay>>
@@ -281,10 +272,10 @@ class MyDiaryViewModel @Inject constructor(
                     setMonthDiaries(data)
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
             }
         }
@@ -315,14 +306,14 @@ class MyDiaryViewModel @Inject constructor(
                         null
                     )
                     setSelectedDiary(newDiary)
-                    _snackMessage.value = Event("일기가 저장되었습니다.")
+                    setMessage("일기가 저장되었습니다.")
                     isSuccess = true
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
             }
         }
@@ -346,13 +337,13 @@ class MyDiaryViewModel @Inject constructor(
                             selectedDiary.value!!.commentList
                         )
                         setSelectedDiary(newDiary)
-                        _snackMessage.value = Event("일기가 수정되었습니다.")
+                        setMessage("일기가 수정되었습니다.")
                     }
                     is UiState.Error -> {
-                        _snackMessage.value = Event(message)
+                        setMessage(message)
                     }
                     is UiState.Fail -> {
-                        _snackMessage.value = Event(message)
+                        setMessage(message)
                     }
                 }
             }
@@ -366,14 +357,14 @@ class MyDiaryViewModel @Inject constructor(
                 offLoading()
                 when (this) {
                     is UiState.Success -> {
-                        _snackMessage.value = Event("일기가 삭제되었습니다.")
+                        setMessage("일기가 삭제되었습니다.")
                         isSuccess = true
                     }
                     is UiState.Error -> {
-                        _snackMessage.value = Event(message)
+                        setMessage(message)
                     }
                     is UiState.Fail -> {
-                        _snackMessage.value = Event(message)
+                        setMessage(message)
                     }
                 }
             }
@@ -390,21 +381,13 @@ class MyDiaryViewModel @Inject constructor(
                     setHaveDayMyComment(data.isEmpty())
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
             }
         }
-    }
-
-    private fun onLoading() {
-        _loading.value = true
-    }
-
-    private fun offLoading() {
-        _loading.value = false
     }
 
 }

@@ -24,8 +24,6 @@ import timber.log.Timber
 @AndroidEntryPoint
 class AloneDiaryDetailFragment :
     BaseFragment<FragmentMydiaryAlonediaryDetailBinding>(R.layout.fragment_mydiary_alonediary_detail) {
-
-    override val TAG: String = AloneDiaryDetailFragment::class.java.simpleName
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
 

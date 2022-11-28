@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class OnboardingKakaoTermsFragment :
     BaseFragment<FragmentOnboardingKakaoTermsBinding>(R.layout.fragment_onboarding_kakao_terms) {
-    override val TAG: String = OnboardingKakaoTermsFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 

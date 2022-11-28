@@ -2,7 +2,6 @@ package com.movingmaker.commentdiary.presentation.viewmodel.gatherdiary
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.movingmaker.commentdiary.data.model.Diary
 import com.movingmaker.commentdiary.data.remote.request.ReportCommentRequest
@@ -11,8 +10,8 @@ import com.movingmaker.commentdiary.domain.usecase.GetAllDiaryUseCase
 import com.movingmaker.commentdiary.domain.usecase.GetMonthDiaryUseCase
 import com.movingmaker.commentdiary.domain.usecase.LikeCommentUseCase
 import com.movingmaker.commentdiary.domain.usecase.ReportCommentUseCase
+import com.movingmaker.commentdiary.presentation.base.BaseViewModel
 import com.movingmaker.commentdiary.presentation.util.DateConverter
-import com.movingmaker.commentdiary.presentation.util.event.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -24,15 +23,7 @@ class GatherDiaryViewModel @Inject constructor(
     private val getMonthDiaryUseCase: GetMonthDiaryUseCase,
     private val reportCommentUseCase: ReportCommentUseCase,
     private val likeCommentUseCase: LikeCommentUseCase
-) : ViewModel() {
-
-    private var _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean>
-        get() = _loading
-
-    private var _snackMessage = MutableLiveData<Event<String>>()
-    val snackMessage: LiveData<Event<String>>
-        get() = _snackMessage
+) : BaseViewModel() {
 
     private var _handleComment = MutableLiveData<Pair<Long, String>>()
     val handleComment: LiveData<Pair<Long, String>>
@@ -75,10 +66,10 @@ class GatherDiaryViewModel @Inject constructor(
                     setDiaryList(data)
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
             }
         }
@@ -95,10 +86,10 @@ class GatherDiaryViewModel @Inject constructor(
                         _handleComment.value = Pair(reportCommentRequest.id, "report")
                     }
                     is UiState.Error -> {
-                        _snackMessage.value = Event(message)
+                        setMessage(message)
                     }
                     is UiState.Fail -> {
-                        _snackMessage.value = Event(message)
+                        setMessage(message)
                     }
                 }
             }
@@ -114,21 +105,13 @@ class GatherDiaryViewModel @Inject constructor(
                     _handleComment.value = Pair(commentId, "like")
                 }
                 is UiState.Error -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
                 is UiState.Fail -> {
-                    _snackMessage.value = Event(message)
+                    setMessage(message)
                 }
             }
         }
-    }
-
-    private fun onLoading() {
-        _loading.value = true
-    }
-
-    private fun offLoading() {
-        _loading.value = false
     }
 
 }

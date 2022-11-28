@@ -17,7 +17,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class OnboardingLoginFragment :
     BaseFragment<FragmentOnboardingLoginBinding>(R.layout.fragment_onboarding_login) {
-    override val TAG: String = OnboardingLoginFragment::class.java.simpleName
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
