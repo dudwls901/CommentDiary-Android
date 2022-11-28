@@ -35,7 +35,6 @@ import timber.log.Timber
 class DiaryListFragment :
     BaseFragment<FragmentGatherdiaryDiarylistBinding>(R.layout.fragment_gatherdiary_diarylist),
     OnDiarySelectListener {
-    override val TAG: String = DiaryListFragment::class.java.simpleName
 
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private val gatherDiaryViewModel: GatherDiaryViewModel by activityViewModels()

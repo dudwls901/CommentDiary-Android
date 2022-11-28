@@ -13,8 +13,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SignOutFragment :
     BaseFragment<FragmentMypageSignoutBinding>(R.layout.fragment_mypage_signout) {
-    override val TAG: String = SignOutFragment::class.java.simpleName
-
     private val myPageViewModel: MyPageViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

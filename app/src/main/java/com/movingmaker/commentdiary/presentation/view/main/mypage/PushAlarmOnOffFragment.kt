@@ -16,7 +16,6 @@ import timber.log.Timber
 @AndroidEntryPoint
 class PushAlarmOnOffFragment :
     BaseFragment<FragmentMypagePushBinding>(R.layout.fragment_mypage_push) {
-    override val TAG: String = PushAlarmOnOffFragment::class.java.simpleName
 
     private val myPageViewModel: MyPageViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()

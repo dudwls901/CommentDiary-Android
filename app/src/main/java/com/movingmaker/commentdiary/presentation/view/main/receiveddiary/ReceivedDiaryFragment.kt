@@ -26,7 +26,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ReceivedDiaryFragment :
     BaseFragment<FragmentReceiveddiaryBinding>(R.layout.fragment_receiveddiary) {
-    override val TAG: String = ReceivedDiaryFragment::class.java.simpleName
 
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private val receivedDiaryViewModel: ReceivedDiaryViewModel by activityViewModels()

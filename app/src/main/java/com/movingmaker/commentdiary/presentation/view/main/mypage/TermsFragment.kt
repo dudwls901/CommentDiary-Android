@@ -17,7 +17,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TermsFragment : BaseFragment<FragmentMypageTermsBinding>(R.layout.fragment_mypage_terms) {
-    override val TAG: String = TermsFragment::class.java.simpleName
 
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
 

@@ -33,7 +33,6 @@ import timber.log.Timber
 class WriteDiaryFragment :
     BaseFragment<FragmentMydiaryWritediaryBinding>(R.layout.fragment_mydiary_writediary) {
 
-    override val TAG: String = WriteDiaryFragment::class.java.simpleName
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
 

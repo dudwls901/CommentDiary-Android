@@ -31,8 +31,6 @@ class CommentDiaryDetailFragment :
     BaseFragment<FragmentGatherdiaryCommentdiaryDetailBinding>(R.layout.fragment_gatherdiary_commentdiary_detail),
     OnCommentSelectListener {
 
-    override val TAG: String = CommentDiaryDetailFragment::class.java.simpleName
-
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val gatherDiaryViewModel: GatherDiaryViewModel by activityViewModels()

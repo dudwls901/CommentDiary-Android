@@ -28,7 +28,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SendedCommentListFragment :
     BaseFragment<FragmentMypageSendedCommentListBinding>(R.layout.fragment_mypage_sended_comment_list) {
-    override val TAG: String = SendedCommentListFragment::class.java.simpleName
 
     private val myPageViewModel: MyPageViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
