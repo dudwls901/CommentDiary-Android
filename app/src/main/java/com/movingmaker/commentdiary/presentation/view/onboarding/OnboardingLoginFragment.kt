@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
@@ -45,13 +44,6 @@ class OnboardingLoginFragment :
     private fun initViews() = with(binding) {
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
-        }
-        emailEditText.addTextChangedListener {
-            onboardingViewModel.setEmail(emailEditText.text.toString())
-        }
-
-        passwordEditText.addTextChangedListener {
-            onboardingViewModel.setPassword(passwordEditText.text.toString())
         }
     }
 

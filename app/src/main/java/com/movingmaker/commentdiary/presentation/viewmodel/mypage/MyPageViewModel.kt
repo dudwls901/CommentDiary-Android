@@ -18,7 +18,6 @@ import com.movingmaker.commentdiary.presentation.base.BaseViewModel
 import com.movingmaker.commentdiary.presentation.util.DateConverter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,51 +35,48 @@ class MyPageViewModel @Inject constructor(
     val isPasswordChanged: LiveData<Boolean>
         get() = _isPasswordChanged
 
-
     private var _myAccount = MutableLiveData<String>()
-    private var _temperature = MutableLiveData<Double>()
-    private var _commentList = MutableLiveData<List<Comment>>()
-    private var _selectedMonth = MutableLiveData<String>()
-    private var _passwordCorrect = MutableLiveData<Boolean>()
-    private var _passwordCheckCorrect = MutableLiveData<Boolean>()
-    private var _canChangePassword = MutableLiveData<Boolean>()
-    private var _pushYN = MutableLiveData<Char>()
-
     val myAccount: LiveData<String>
         get() = _myAccount
 
+    private var _temperature = MutableLiveData<Double>()
     val temperature: LiveData<Double>
         get() = _temperature
+
+    private var _commentList = MutableLiveData<List<Comment>>()
+    val commentList: LiveData<List<Comment>>
+        get() = _commentList
 
     private var _loginType = MutableLiveData<String>()
     val loginType: LiveData<String>
         get() = _loginType
 
-    val commentList: LiveData<List<Comment>>
-        get() = _commentList
-
+    private var _selectedMonth = MutableLiveData<String>().apply {
+        value = DateConverter.ymFormat(
+            DateConverter.getCodaToday()
+        )
+    }
     val selectedMonth: LiveData<String>
         get() = _selectedMonth
 
+    var password = MutableLiveData<String>().apply { value = "" }
+    var passwordCheck = MutableLiveData<String>().apply { value = "" }
+
+    private var _passwordCorrect = MutableLiveData<Boolean>().apply { value = true }
     val passwordCorrect: LiveData<Boolean>
         get() = _passwordCorrect
 
+    private var _passwordCheckCorrect = MutableLiveData<Boolean>().apply { value = true }
     val passwordCheckCorrect: LiveData<Boolean>
         get() = _passwordCheckCorrect
 
+    private var _canChangePassword = MutableLiveData<Boolean>()
     val canChangePassword: LiveData<Boolean>
         get() = _canChangePassword
 
+    private var _pushYN = MutableLiveData<Char>()
     val pushYN: LiveData<Char>
         get() = _pushYN
-
-
-    init {
-        _selectedMonth.value = DateConverter.ymFormat(DateConverter.getCodaToday())
-        _passwordCorrect.value = true
-        _passwordCheckCorrect.value = true
-        _canChangePassword.value = false
-    }
 
     private fun setMyAccount(email: String) {
         _myAccount.value = email
@@ -98,18 +94,35 @@ class MyPageViewModel @Inject constructor(
         _loginType.value = type
     }
 
-
     fun setSelectedMonth(date: String) {
         _selectedMonth.value = date
     }
 
-    fun setPasswordCorrect(isCorrect: Boolean) {
-        _passwordCorrect.value = isCorrect
-        _canChangePassword.value = passwordCorrect.value!! && passwordCheckCorrect.value!!
+    fun validatePassword() {
+        var hasLetter = false
+        var hasNum = false
+        var hasSign = false
+        for (ch in password.value!!) {
+            when {
+                ch.isLetter() -> hasLetter = true
+                ch.isDigit() -> hasNum = true
+                else -> hasSign = true
+            }
+        }
+        _passwordCorrect.value =
+            !(password.value!!.isNotEmpty() && (password.value!!.length !in 8..16 || !hasLetter || !hasNum || !hasSign))
+        _passwordCheckCorrect.value =
+            !(passwordCheck.value!!.isNotEmpty() && (password.value!! != passwordCheck.value!!))
+        setCanChangePassword()
     }
 
-    fun setPasswordCheckCorrect(isCorrect: Boolean) {
-        _passwordCheckCorrect.value = isCorrect
+    fun validatedPasswordCheck() {
+        _passwordCheckCorrect.value = !(passwordCheck.value!!.isNotEmpty() &&
+                (password.value != passwordCheck.value))
+        setCanChangePassword()
+    }
+
+    private fun setCanChangePassword() {
         _canChangePassword.value = passwordCorrect.value!! && passwordCheckCorrect.value!!
     }
 
@@ -120,7 +133,6 @@ class MyPageViewModel @Inject constructor(
     fun signOut() = viewModelScope.launch {
         onLoading()
         with(signOutUseCase()) {
-            Timber.d("result $this")
             when (this) {
                 is UiState.Success -> {
                     setMessage("회원 탈퇴가 완료되었습니다.")
@@ -136,11 +148,17 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-    fun changePassword(changePasswordRequest: ChangePasswordRequest) =
+    fun changePassword() =
         viewModelScope.launch {
             onLoading()
-            with(changePasswordUseCase(changePasswordRequest)) {
-                Timber.d("result $this")
+            with(
+                changePasswordUseCase(
+                    ChangePasswordRequest(
+                        password.value!!,
+                        passwordCheck.value!!
+                    )
+                )
+            ) {
                 offLoading()
                 when (this) {
                     is UiState.Success -> {
@@ -159,7 +177,6 @@ class MyPageViewModel @Inject constructor(
     fun logout() = viewModelScope.launch {
         onLoading()
         with(logOutUseCase()) {
-            Timber.d("result $this")
             offLoading()
             when (this) {
                 is UiState.Success -> {
@@ -178,7 +195,6 @@ class MyPageViewModel @Inject constructor(
     fun getMyPage() = viewModelScope.launch {
         onLoading()
         with(getMyPageUseCase()) {
-            Timber.d("result $this")
             offLoading()
             when (this) {
                 is UiState.Success -> {
@@ -206,7 +222,6 @@ class MyPageViewModel @Inject constructor(
         }
         with(response) {
             offLoading()
-            Timber.d("result $this")
             when (this) {
                 is UiState.Success -> {
                     setCommentList(data)
@@ -225,7 +240,6 @@ class MyPageViewModel @Inject constructor(
         onLoading()
         with(patchCommentPushStateUseCase()) {
             offLoading()
-            Timber.d("result $this")
             when (this) {
                 is UiState.Success -> {
                     data["pushYn"]?.let { yn -> setPushYN(yn) }

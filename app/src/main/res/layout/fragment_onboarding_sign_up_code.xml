@@ -78,6 +78,7 @@
             android:background="@drawable/background_ivory_radius_4_border_green_2"
             android:hint="@string/write_code"
             android:inputType="number"
+            android:text="@={vm.code}"
             android:paddingHorizontal="12dp"
             android:textColor="@color/text_black"
             android:textColorHint="@color/text_light_brown"

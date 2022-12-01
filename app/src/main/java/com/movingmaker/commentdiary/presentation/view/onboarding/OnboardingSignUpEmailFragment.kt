@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
@@ -24,12 +23,12 @@ class OnboardingSignUpEmailFragment :
         onboardingViewModel.setShakeView(false)
         onboardingViewModel.setEmailNotice("")
         onboardingViewModel.setEmailCorrect(true)
+        onboardingViewModel.clearEmail()
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_EMAIL)
         binding.vm = onboardingViewModel
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
-        initViews()
         observeDatas()
 
     }
@@ -42,14 +41,8 @@ class OnboardingSignUpEmailFragment :
                 binding.emailNoticeTextView.startAnimation(shortShake)
             }
         }
-    }
-
-    private fun initViews() = with(binding) {
-
-        emailEditText.addTextChangedListener {
-            onboardingViewModel.setEmail(emailEditText.text.toString())
+        onboardingViewModel.email.observe(viewLifecycleOwner) {
             onboardingViewModel.validateEmail("email")
         }
     }
-
 }

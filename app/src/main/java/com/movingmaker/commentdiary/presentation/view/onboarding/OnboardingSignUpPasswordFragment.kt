@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
@@ -23,8 +22,8 @@ class OnboardingSignUpPasswordFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onboardingViewModel.setShakeView(false)
-        onboardingViewModel.setPassword("")
-        onboardingViewModel.setCheckPassword("")
+        onboardingViewModel.clearPassword()
+        onboardingViewModel.clearCheckPassword()
         onboardingViewModel.validatePassword()
         onboardingViewModel.validateCheckPassword()
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_PASSWORD)
@@ -32,7 +31,6 @@ class OnboardingSignUpPasswordFragment :
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
-        initViews()
         observeDatas()
     }
 
@@ -51,17 +49,10 @@ class OnboardingSignUpPasswordFragment :
                 }
             }
         }
-    }
-
-    private fun initViews() = with(binding) {
-
-        passwordEditText.addTextChangedListener {
-            onboardingViewModel.setPassword(passwordEditText.text.toString())
+        onboardingViewModel.password.observe(viewLifecycleOwner) {
             onboardingViewModel.validatePassword()
         }
-
-        passwordCheckEditText.addTextChangedListener {
-            onboardingViewModel.setCheckPassword(passwordCheckEditText.text.toString())
+        onboardingViewModel.checkPassword.observe(viewLifecycleOwner) {
             onboardingViewModel.validateCheckPassword()
         }
     }

@@ -72,7 +72,7 @@ class OnboardingLoginBeforeFragment :
                             callback = callback
                         )
                     } else if (token != null) {
-                        Timber.i( "카카오톡으로 로그인 성공 ${token.accessToken}")
+                        Timber.i("카카오톡으로 로그인 성공 ${token.accessToken}")
                         login(token.accessToken)
                     }
                 }
