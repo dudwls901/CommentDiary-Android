@@ -20,17 +20,23 @@ class OnboardingSignUpEmailFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onboardingViewModel.setShakeView(false)
-        onboardingViewModel.setEmailNotice("")
-        onboardingViewModel.setEmailCorrect(true)
-        onboardingViewModel.clearEmail()
-        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_EMAIL)
+
         binding.vm = onboardingViewModel
+        initViews()
+        observeDatas()
+    }
+
+    private fun initViews() {
+        with(onboardingViewModel) {
+            setShakeView(false)
+            setEmailNotice("")
+            setEmailCorrect(true)
+            clearEmail()
+            setCurrentFragment(FRAGMENT_NAME.SIGNUP_EMAIL)
+        }
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
-        observeDatas()
-
     }
 
     private fun observeDatas() {

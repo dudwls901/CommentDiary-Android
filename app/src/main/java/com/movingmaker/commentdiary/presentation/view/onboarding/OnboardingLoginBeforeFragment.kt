@@ -28,11 +28,13 @@ class OnboardingLoginBeforeFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.LOGIN_BEFORE)
         initViews()
     }
 
     private fun initViews() {
+
+        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.LOGIN_BEFORE)
+
         binding.startWithEmailButton.setOnClickListener {
             findNavController().navigate(OnboardingLoginBeforeFragmentDirections.actionOnboardingLoginBeforeFragmentToOnboardingLoginFragment())
         }

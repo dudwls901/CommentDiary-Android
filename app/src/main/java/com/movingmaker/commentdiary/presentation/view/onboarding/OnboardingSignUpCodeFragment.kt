@@ -21,15 +21,21 @@ class OnboardingSignUpCodeFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onboardingViewModel.setShakeView(false)
-        onboardingViewModel.setCodeCorrect(true)
-        onboardingViewModel.clearCode()
-        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_CODE)
         binding.vm = onboardingViewModel
+        initViews()
+        observeDatas()
+    }
+
+    private fun initViews() {
+        with(onboardingViewModel) {
+            setShakeView(false)
+            setCodeCorrect(true)
+            clearCode()
+            setCurrentFragment(FRAGMENT_NAME.SIGNUP_CODE)
+        }
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
-        observeDatas()
     }
 
     private fun observeDatas() {

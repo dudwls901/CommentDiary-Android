@@ -24,11 +24,12 @@ class OnboardingSignUpTermsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = onboardingViewModel
-        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_TERMS)
         initViews()
     }
 
     private fun initViews() = with(binding) {
+
+        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_TERMS)
 
         binding.allAcceptsLayout.setOnClickListener {
             onboardingViewModel.setAllAccept()

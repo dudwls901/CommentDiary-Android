@@ -22,13 +22,23 @@ class OnboardingLoginFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        onboardingViewModel.setShakeView(false)
-        onboardingViewModel.setLoginNotice("")
-        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.LOGIN)
         binding.vm = onboardingViewModel
-
         initViews()
         observeDatas()
+
+    }
+
+    private fun initViews() {
+
+        with(onboardingViewModel) {
+            setShakeView(false)
+            setLoginNotice("")
+            setCurrentFragment(FRAGMENT_NAME.LOGIN)
+        }
+
+        binding.backButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun observeDatas() {
@@ -40,11 +50,4 @@ class OnboardingLoginFragment :
             }
         }
     }
-
-    private fun initViews() = with(binding) {
-        binding.backButton.setOnClickListener {
-            findNavController().popBackStack()
-        }
-    }
-
 }

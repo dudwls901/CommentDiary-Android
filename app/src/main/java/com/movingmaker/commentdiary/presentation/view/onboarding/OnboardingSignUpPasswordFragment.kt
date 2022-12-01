@@ -21,17 +21,24 @@ class OnboardingSignUpPasswordFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onboardingViewModel.setShakeView(false)
-        onboardingViewModel.clearPassword()
-        onboardingViewModel.clearCheckPassword()
-        onboardingViewModel.validatePassword()
-        onboardingViewModel.validateCheckPassword()
-        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_PASSWORD)
         binding.vm = onboardingViewModel
+        initViews()
+        observeDatas()
+    }
+
+    private fun initViews() {
+        with(onboardingViewModel) {
+            setShakeView(false)
+            clearPassword()
+            clearCheckPassword()
+            validatePassword()
+            validateCheckPassword()
+            setCurrentFragment(FRAGMENT_NAME.SIGNUP_PASSWORD)
+        }
+
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
-        observeDatas()
     }
 
     private fun observeDatas() {
