@@ -28,11 +28,13 @@ class OnboardingLoginBeforeFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.LOGIN_BEFORE)
         initViews()
     }
 
     private fun initViews() {
+
+        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.LOGIN_BEFORE)
+
         binding.startWithEmailButton.setOnClickListener {
             findNavController().navigate(OnboardingLoginBeforeFragmentDirections.actionOnboardingLoginBeforeFragmentToOnboardingLoginFragment())
         }
@@ -72,7 +74,7 @@ class OnboardingLoginBeforeFragment :
                             callback = callback
                         )
                     } else if (token != null) {
-                        Timber.i( "카카오톡으로 로그인 성공 ${token.accessToken}")
+                        Timber.i("카카오톡으로 로그인 성공 ${token.accessToken}")
                         login(token.accessToken)
                     }
                 }

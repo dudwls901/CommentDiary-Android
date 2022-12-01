@@ -82,34 +82,23 @@ class OnboardingViewModel @Inject constructor(
     val isAllAccept: LiveData<Boolean>
         get() = _isAllAccept
 
-    private var _email = MutableLiveData<String>().apply { value = "" }
-    val email: LiveData<String>
-        get() = _email
+    var email = MutableLiveData<String>().apply { value = "" }
+    var password = MutableLiveData<String>().apply { value = "" }
 
     private var _emailNotice = MutableLiveData<String>()
     val emailNotice: LiveData<String>
         get() = _emailNotice
 
-    private var _code = MutableLiveData<Int>()
-    val code: LiveData<Int>
-        get() = _code
+    var code = MutableLiveData<String>()
 
     private var _codeCorrect = MutableLiveData<Boolean>().apply { value = true }
     val codeCorrect: LiveData<Boolean>
         get() = _codeCorrect
 
-    private var _password = MutableLiveData<String>().apply { value = "" }
-    val password: LiveData<String>
-        get() = _password
-
-    private var _checkPassword = MutableLiveData<String>().apply { value = "" }
-    private val checkPassword: LiveData<String>
-        get() = _checkPassword
+    var checkPassword = MutableLiveData<String>().apply { value = "" }
 
     //for findPassword
-    private var _findPasswordEmail = MutableLiveData<String>().apply { value = "" }
-    private val findPasswordEmail: LiveData<String>
-        get() = _findPasswordEmail
+    var findPasswordEmail = MutableLiveData<String>().apply { value = "" }
 
     private var _findPasswordEmailCorrect = MutableLiveData<Boolean>()
     val findPasswordEmailCorrect: LiveData<Boolean>
@@ -191,20 +180,20 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
-    fun setEmail(text: String) {
-        _email.value = text
+    fun clearEmail() {
+        email.value = ""
     }
 
-    fun setPassword(text: String) {
-        _password.value = text
+    fun clearPassword() {
+        password.value = ""
     }
 
-    fun setCheckPassword(text: String) {
-        _checkPassword.value = text
+    fun clearCheckPassword() {
+        checkPassword.value = ""
     }
 
-    fun setFindPasswordEmail(text: String) {
-        _findPasswordEmail.value = text
+    fun clearFindPasswordEmail() {
+        findPasswordEmail.value = ""
     }
 
     fun setFindPasswordEmailCorrect(isCorrect: Boolean) {
@@ -223,8 +212,8 @@ class OnboardingViewModel @Inject constructor(
         _loginNotice.value = text
     }
 
-    fun setEmailCode(text: String) {
-        if (text.isNotBlank()) _code.value = text.toInt()
+    fun clearCode() {
+        code.value = ""
     }
 
     fun setCodeCorrect(isCorrect: Boolean) {
@@ -327,7 +316,7 @@ class OnboardingViewModel @Inject constructor(
         with(
             sendEmailCodeCheckUseCase(
                 EmailCodeCheckRequest(
-                    email.value!!, code.value!!
+                    email.value!!, code.value!!.toInt()
                 )
             )
         ) {
@@ -426,6 +415,7 @@ class OnboardingViewModel @Inject constructor(
         if (email.value!!.isEmpty() || password.value!!.isEmpty()) {
             offLoading()
             setShakeView(true)
+            Timber.d("${email.value} ${password.value}")
             setLoginNotice("이메일 혹은 비밀번호가 올바르지 않습니다.")
             return@async false
         }

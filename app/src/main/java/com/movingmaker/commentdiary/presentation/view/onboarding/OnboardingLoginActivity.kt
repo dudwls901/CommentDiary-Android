@@ -47,8 +47,8 @@ class OnboardingLoginActivity :
     private fun initViews() = with(binding) {
         makeAccountTextView.setOnClickListener {
             //화면 넘어갈 시 공용 변수인 email, password 초기화
-            onboardingViewModel.setEmail("")
-            onboardingViewModel.setPassword("")
+            onboardingViewModel.clearEmail()
+            onboardingViewModel.clearPassword()
             navController.navigate(OnboardingLoginFragmentDirections.actionOnboardingLoginFragmentToOnboardingSignUpTermsFragment())
         }
         findPasswordTextView.setOnClickListener {
@@ -58,7 +58,7 @@ class OnboardingLoginActivity :
 
     private fun observeDatas() {
 
-        onboardingViewModel.snackMessage.observe(this, EventObserver{
+        onboardingViewModel.snackMessage.observe(this, EventObserver {
             CodaSnackBar.make(binding.root, it).show()
         })
 
@@ -77,8 +77,8 @@ class OnboardingLoginActivity :
                 }
                 FRAGMENT_NAME.LOGIN -> {
                     //로그인 화면으로 되돌아올 때 email, password 초기화
-                    onboardingViewModel.setEmail("")
-                    onboardingViewModel.setPassword("")
+                    onboardingViewModel.clearEmail()
+                    onboardingViewModel.clearPassword()
                     binding.onboardingBottomButton.setOnSingleClickListener {
                         login()
                     }

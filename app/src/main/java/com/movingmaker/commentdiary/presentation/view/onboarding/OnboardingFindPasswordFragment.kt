@@ -6,7 +6,6 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
@@ -26,6 +25,7 @@ class OnboardingFindPasswordFragment :
         super.onViewCreated(view, savedInstanceState)
         onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.FIND_PASSWORD)
         //화면 재진입 시 notice 텍스트 초기화를 위함
+        onboardingViewModel.clearFindPasswordEmail()
         onboardingViewModel.setShakeView(false)
         onboardingViewModel.setFindPasswordEmailCorrect(true)
         onboardingViewModel.setFindPasswordEmailNotice("")
@@ -65,16 +65,14 @@ class OnboardingFindPasswordFragment :
             binding.emailIncorrectTextView.text = it
             binding.emailIncorrectTextView.visibility = View.VISIBLE
         }
+        onboardingViewModel.findPasswordEmail.observe(viewLifecycleOwner) {
+            onboardingViewModel.validateEmail("findPasswordEmail")
+        }
     }
 
     private fun initViews() = with(binding) {
         backButton.setOnClickListener {
             findNavController().popBackStack()
         }
-        emailEditText.addTextChangedListener {
-            onboardingViewModel.setFindPasswordEmail(emailEditText.text.toString())
-            onboardingViewModel.validateEmail("findPasswordEmail")
-        }
-
     }
 }

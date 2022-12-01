@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
@@ -23,13 +22,23 @@ class OnboardingLoginFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        onboardingViewModel.setShakeView(false)
-        onboardingViewModel.setLoginNotice("")
-        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.LOGIN)
         binding.vm = onboardingViewModel
-
         initViews()
         observeDatas()
+
+    }
+
+    private fun initViews() {
+
+        with(onboardingViewModel) {
+            setShakeView(false)
+            setLoginNotice("")
+            setCurrentFragment(FRAGMENT_NAME.LOGIN)
+        }
+
+        binding.backButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun observeDatas() {
@@ -41,18 +50,4 @@ class OnboardingLoginFragment :
             }
         }
     }
-
-    private fun initViews() = with(binding) {
-        binding.backButton.setOnClickListener {
-            findNavController().popBackStack()
-        }
-        emailEditText.addTextChangedListener {
-            onboardingViewModel.setEmail(emailEditText.text.toString())
-        }
-
-        passwordEditText.addTextChangedListener {
-            onboardingViewModel.setPassword(passwordEditText.text.toString())
-        }
-    }
-
 }

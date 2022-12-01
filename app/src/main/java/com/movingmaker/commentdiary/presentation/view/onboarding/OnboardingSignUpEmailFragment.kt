@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
@@ -21,17 +20,23 @@ class OnboardingSignUpEmailFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onboardingViewModel.setShakeView(false)
-        onboardingViewModel.setEmailNotice("")
-        onboardingViewModel.setEmailCorrect(true)
-        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_EMAIL)
+
         binding.vm = onboardingViewModel
+        initViews()
+        observeDatas()
+    }
+
+    private fun initViews() {
+        with(onboardingViewModel) {
+            setShakeView(false)
+            setEmailNotice("")
+            setEmailCorrect(true)
+            clearEmail()
+            setCurrentFragment(FRAGMENT_NAME.SIGNUP_EMAIL)
+        }
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
-        initViews()
-        observeDatas()
-
     }
 
     private fun observeDatas() {
@@ -42,14 +47,8 @@ class OnboardingSignUpEmailFragment :
                 binding.emailNoticeTextView.startAnimation(shortShake)
             }
         }
-    }
-
-    private fun initViews() = with(binding) {
-
-        emailEditText.addTextChangedListener {
-            onboardingViewModel.setEmail(emailEditText.text.toString())
+        onboardingViewModel.email.observe(viewLifecycleOwner) {
             onboardingViewModel.validateEmail("email")
         }
     }
-
 }

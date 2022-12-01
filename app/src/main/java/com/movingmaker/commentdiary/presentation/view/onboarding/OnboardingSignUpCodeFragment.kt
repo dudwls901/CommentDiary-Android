@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.commentdiary.R
@@ -22,15 +21,21 @@ class OnboardingSignUpCodeFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onboardingViewModel.setShakeView(false)
-        onboardingViewModel.setCodeCorrect(true)
-        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.SIGNUP_CODE)
         binding.vm = onboardingViewModel
+        initViews()
+        observeDatas()
+    }
+
+    private fun initViews() {
+        with(onboardingViewModel) {
+            setShakeView(false)
+            setCodeCorrect(true)
+            clearCode()
+            setCurrentFragment(FRAGMENT_NAME.SIGNUP_CODE)
+        }
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
-        initViews()
-        observeDatas()
     }
 
     private fun observeDatas() {
@@ -42,11 +47,4 @@ class OnboardingSignUpCodeFragment :
             }
         }
     }
-
-    private fun initViews() = with(binding) {
-        codeEditText.addTextChangedListener {
-            onboardingViewModel.setEmailCode(codeEditText.text.toString())
-        }
-    }
-
 }
