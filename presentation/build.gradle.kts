@@ -1,16 +1,24 @@
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
+//    id("kotlin-parcelize")
+//    //navigation
+//    id("androidx.navigation.safeargs.kotlin")
+//    //Manifest 보안
+//    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+//    //hilt
+//    id("dagger.hilt.android.plugin")
 }
 
 android {
     namespace = "com.movingmaker.presentation"
-    compileSdk = 32
+    compileSdk = Versions.COMPILE_SDK
 
     defaultConfig {
-        minSdk = 26
-        targetSdk = 32
-
+        minSdk = Versions.MIN_SDK
+        targetSdk = Versions.TARGET_SDK
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -18,27 +26,84 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        dataBinding = true
+    }
 }
+
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("com.google.android.material:material:1.7.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.4")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
+    implementation(project(":domain"))
+
+    implementation(AndroidX.CONSTRAINT_LAYOUT)
+    implementation(Ktx.CORE)
+    implementation(AndroidX.APP_COMPAT)
+    implementation(Google.MATERIAL)
+    testImplementation(Test.JUNIT)
+    androidTestImplementation(AndroidTest.EXT_JUNIT)
+    androidTestImplementation(AndroidTest.ESPRESSO_CORE)
+    implementation(Google.PLAY_CORE)
+    implementation(Legacy.LEGACY_SUPPORT)// 인앱 업데이트 라이브러리
+
+    //ktx
+    implementation(Ktx.ACTIVITY)
+    implementation(Ktx.FRAGMENT)
+
+    //viewpager2
+    implementation(ViewPager2.VIEW_PAGER2)
+    //indicator for viewpager2
+    implementation(Indicator.INDICATOR)
+
+
+    //lifecycle
+    implementation(Lifecycle.LIFECYCLE)
+    // ViewModel
+    implementation(Lifecycle.LIFECYCLE_VIEWMODEL_KTX)
+    // LiveData
+    implementation(Lifecycle.LIFECYCLE_LIVEDATA_KTX)
+
+    //material-calendarview
+    implementation(MaterialCalendar.MATERIAL_CALENDAR_VIEW)
+
+    //Firebase
+    implementation(platform(Firebase.FIREBASE_BOM))
+    implementation(Firebase.FIREBASE_MESSAGING)
+    implementation(Firebase.FIREBASE_ANALYTICS)
+    implementation(Firebase.FIREBASE_CRASHLYTICS)
+
+    //Navigation
+    implementation(Navigation.NAVIGATION_UI)
+    implementation(Navigation.NAVIGATION_FRAGMENT)
+    implementation(Navigation.NAVIGATION_DYNAMIC_FEATURES_FRAGMENT)
+
+    //EncryptedSharedPreferences
+    implementation(EncryptedSharedPreferences.SECURITY_CRYPTO)
+
+    //kakao login
+    implementation(Kakao.KAKAO)
+
+    //Hilt
+    implementation(Hilt.HILT_ANDROID)
+    kapt(Hilt.HILT_ANDROID_COMPILER)
+
+    //Serialization
+    implementation(Serialization.SERIALIZATION)
+
+    // Timber
+    implementation(Timber.TIMBER)
+
 }

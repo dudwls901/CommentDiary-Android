@@ -1,151 +1,117 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
-    // 직렬
-    id 'kotlin-parcelize'
+
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
     //firebase
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
-    id 'androidx.navigation.safeargs.kotlin'
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
+    id("androidx.navigation.safeargs.kotlin")
     //Manifest 보안
-    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     //hilt
-    id 'dagger.hilt.android.plugin'
+    id("dagger.hilt.android.plugin")
 }
 
-
-// 선언 및 키값을 불러옴
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
+//val properties = Properties().apply {
+//    load(FileInputStream(File(rootProject.rootDir, "local.properties")))
+//}
 android {
-    compileSdk 32
+    namespace = Versions.APPLICATION_ID
+    compileSdk = Versions.COMPILE_SDK
 
     defaultConfig {
-        applicationId "com.movingmaker.commentdiary"
-        minSdk 26
-        targetSdk 32
-        versionCode 19
-        versionName "1.1.3"
+        applicationId = Versions.APPLICATION_ID
+        minSdk = Versions.MIN_SDK
+        targetSdk = Versions.TARGET_SDK
+        versionCode = Versions.ANDROID_VERSION_CODE
+        versionName = Versions.ANDROID_VERSION_NAME
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
 
+        buildConfigField("String", "KAKAO_APP_KEY", getProperty("kakao_app_key"))
         //API keys
-        buildConfigField "String", "KAKAO_APP_KEY", properties['kakao_app_key']
+//        buildConfigField("String", "KAKAO_APP_KEY", properties['kakao_app_key'])
         //manifest에서 사용할 경우
-        manifestPlaceholders["KAKAO_OAUTH_KEY"] = properties['kakao_oauth_key']
+        manifestPlaceholders["KAKAO_OAUTH_KEY"] = getProperty("kakao_oauth_key")
+
     }
     signingConfigs {
-        release {
-            storeFile file(properties['RELEASE_STORE_FILE'])
-            storePassword properties['RELEASE_STORE_PASSWORD']
-            keyAlias properties['RELEASE_KEY_ALIAS']
-            keyPassword properties['RELEASE_KEY_PASSWORD']
+        create("release") {
+            keyAlias = getProperty("RELEASE_KEY_ALIAS")
+            keyPassword = getProperty("RELEASE_KEY_PASSWORD")
+            storePassword = getProperty("RELEASE_STORE_PASSWORD")
+            storeFile = file(getProperty("RELEASE_STORE_FILE"))
         }
     }
 
     buildTypes {
-        release {
-//            프로가드 미사용
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-            //디버그 테스트할 때  사용
-            debuggable false
-
-            manifestPlaceholders = [crashlyticsCollectionEnabled: "true"]
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("release")
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = "false"
         }
-        debug {
-            signingConfig signingConfigs.release
-            manifestPlaceholders = [crashlyticsCollectionEnabled: "false"]
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+            //            프로가드 미사용
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            //디버그 테스트할 때  사용
+            isDebuggable = false
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = "true"
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "1.8"
     }
 
-    dataBinding {
-        enabled = true
-    }
+}
+
+fun getProperty(propertyKey: String): String {
+    return gradleLocalProperties(rootDir).getProperty(propertyKey)
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.android.play:core-ktx:1.8.1'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'// 인앱 업데이트 라이브러리
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":presentation"))
 
-    //ktx
-    implementation "androidx.activity:activity-ktx:$activityKtxVersion"
-    implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
+    implementation(Ktx.CORE)
+    implementation(AndroidX.APP_COMPAT)
+    implementation(Google.MATERIAL)
+    testImplementation(Test.JUNIT)
+    androidTestImplementation(AndroidTest.EXT_JUNIT)
+    androidTestImplementation(AndroidTest.ESPRESSO_CORE)
+    implementation(Google.PLAY_CORE)
+    implementation(Legacy.LEGACY_SUPPORT)// 인앱 업데이트 라이브러리
 
-    //viewpager2
-    implementation "androidx.viewpager2:viewpager2:$viewPager2Version"
-    //indicator for viewpager2
-    implementation "me.relex:circleindicator:$circleIndicatorVersion"
-
-
-    // ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-
-    // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
-
-    //paging
-    implementation "androidx.paging:paging-runtime:$pagingVersion"
-
-    //material-calendarview
-    implementation "com.prolificinteractive:material-calendarview:$materialCalendarviewVersion"
-
-    //Retrofit2
-    implementation "com.squareup.retrofit2:retrofit:$retrofit2Version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit2Version"
-    //scalars
-    implementation "com.squareup.retrofit2:converter-scalars:$scalarsVersion"
-    //okhttp3
-    implementation "com.squareup.okhttp3:logging-interceptor:$okHttp3Version"
-
-    //Room
-    implementation "androidx.room:room-runtime:$roomVersion"
-    // To use Kotlin annotation processing tool (kapt)
-    kapt "androidx.room:room-compiler:$roomVersion"
-
-    //Preferences Datastore
-//    implementation "androidx.datastore:datastore-preferences:1.0.0"
-
-    //Firebase- bom을 이용해 애널리틱스 fcm 등 버전 자동 호환
-    implementation platform("com.google.firebase:firebase-bom:$firebaseBomVersion")
-    implementation 'com.google.firebase:firebase-messaging-ktx'
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
-
-    //Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+    //Firebase
+    implementation(platform(Firebase.FIREBASE_BOM))
+    implementation(Firebase.FIREBASE_MESSAGING)
+    implementation(Firebase.FIREBASE_ANALYTICS)
+    implementation(Firebase.FIREBASE_CRASHLYTICS)
 
     //EncryptedSharedPreferences
-    implementation "androidx.security:security-crypto:$securityVersion"
+    implementation(EncryptedSharedPreferences.SECURITY_CRYPTO)
 
     //kakao login
-    implementation "com.kakao.sdk:v2-user:$kakaoVersion" // 카카오 로그인
+    implementation(Kakao.KAKAO)
 
     //Hilt
-    implementation "com.google.dagger:hilt-android:$hiltVersion"
-    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
+    implementation(Hilt.HILT_ANDROID)
+    kapt(Hilt.HILT_ANDROID_COMPILER)
 
     // Timber
-    implementation "com.jakewharton.timber:timber:$timberVersion"
+    implementation(Timber.TIMBER)
 }

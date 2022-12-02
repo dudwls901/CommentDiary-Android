@@ -1,15 +1,16 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
+    id("kotlinx-serialization")
 }
-
 android {
     namespace = "com.movingmaker.data"
-    compileSdk = 32
+    compileSdk = Versions.COMPILE_SDK
 
     defaultConfig {
-        minSdk = 26
-        targetSdk = 32
+        minSdk = Versions.MIN_SDK
+        targetSdk = Versions.TARGET_SDK
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -18,10 +19,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
@@ -35,10 +33,30 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("com.google.android.material:material:1.7.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.4")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
+    implementation(project(":domain"))
+
+    implementation(Ktx.CORE)
+    implementation(AndroidX.APP_COMPAT)
+    implementation(Google.MATERIAL)
+    testImplementation(Test.JUNIT)
+    androidTestImplementation(AndroidTest.EXT_JUNIT)
+    androidTestImplementation(AndroidTest.ESPRESSO_CORE)
+
+    //Retrofit2
+    implementation(Retrofit.RETROFIT)
+    implementation(Retrofit.CONVERTER_SERIALIZATION)
+    implementation(Retrofit.CONVERTER_GSON)
+    implementation(Retrofit.CONVERTER_SCALARS)
+    //okhttp3
+    implementation(OkHttp.OKHTTP)
+    implementation(OkHttp.LOGGING_INTERCEPTOR)
+
+    //Hilt
+//    implementation(Hilt.HILT_ANDROID)
+//    kapt(Hilt.HILT_ANDROID_COMPILER)
+
+    // Timber
+    implementation(Timber.TIMBER)
+
+
 }

@@ -1,5 +1,6 @@
 object AndroidX {
-    const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:${Versions.CONSTRAINT_LAYOUT}"
+    const val CONSTRAINT_LAYOUT =
+        "androidx.constraintlayout:constraintlayout:${Versions.CONSTRAINT_LAYOUT}"
     const val APP_COMPAT = "androidx.appcompat:appcompat:${Versions.APP_COMPAT}"
 }
 
@@ -11,6 +12,7 @@ object Ktx {
 
 object Google {
     const val MATERIAL = "com.google.android.material:material:${Versions.MATERIAL}"
+    const val PLAY_CORE = "com.google.android.play:core-ktx:${Versions.PLAY_CORE}"
 }
 
 object Test {
@@ -20,6 +22,10 @@ object Test {
 object AndroidTest {
     const val EXT_JUNIT = "androidx.test.ext:junit:${Versions.ANDROID_JUNIT}"
     const val ESPRESSO_CORE = "androidx.test.espresso:espresso-core:${Versions.ESPRESSO_CORE}"
+}
+
+object Legacy {
+    const val LEGACY_SUPPORT = "androidx.legacy:legacy-support-v4:${Versions.LEGACY_SUPPORT_V4}"
 }
 
 object Hilt {
@@ -32,11 +38,24 @@ object Retrofit {
     const val RETROFIT = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"
     const val CONVERTER_SERIALIZATION =
         "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${Versions.RETROFIT_SERIALIZATION_CONVERTER}"
+    const val CONVERTER_SCALARS = "com.squareup.retrofit2:converter-scalars:${Versions.CONVERTER_SCALAR}"
+    const val CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:${Versions.RETROFIT}"
 }
 
 object OkHttp {
     const val OKHTTP = "com.squareup.okhttp3:okhttp:${Versions.OKHTTP}"
     const val LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
+}
+
+object ViewPager2 {
+    const val VIEW_PAGER2 = "androidx.viewpager2:viewpager2:${Versions.VIEW_PAGER2}"
+}
+object Indicator{
+    const val INDICATOR = "me.relex:circleindicator:${Versions.CIRCLE_INDICATOR}"
+}
+
+object MaterialCalendar{
+    const val MATERIAL_CALENDAR_VIEW = "com.prolificinteractive:material-calendarview:${Versions.MATERIAL_CALENDAR_VIEW}"
 }
 
 object Room {
@@ -46,13 +65,26 @@ object Room {
 }
 
 object Coroutines {
-    const val COROUTINES_CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.COROUTINE}"
+    const val COROUTINES_CORE =
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.COROUTINE}"
 }
 
 object Lifecycle {
     const val LIFECYCLE = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.LIFECYCLE}"
-    const val LIFECYCLE_VIEWMODEL_KTX = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.LIFECYCLE}"
-    const val LIFECYCLE_LIVEDATA_KTX = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.LIFECYCLE}"
+    const val LIFECYCLE_VIEWMODEL_KTX =
+        "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.LIFECYCLE}"
+    const val LIFECYCLE_LIVEDATA_KTX =
+        "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.LIFECYCLE}"
+}
+
+object Navigation {
+    const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"
+    const val NAVIGATION_UI = "androidx.navigation:navigation-ui-ktx:${Versions.NAVIGATION}"
+    const val NAVIGATION_DYNAMIC_FEATURES_FRAGMENT = "androidx.navigation:navigation-dynamic-features-fragment:${Versions.NAVIGATION}"
+}
+
+object EncryptedSharedPreferences{
+    const val SECURITY_CRYPTO = "androidx.security:security-crypto:${Versions.SECURITY_CRYPTO}"
 }
 
 object Timber {
@@ -60,13 +92,17 @@ object Timber {
 }
 
 object Serialization {
-    const val SERIALIZATION = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.SERIALIZATION}"
+    const val SERIALIZATION =
+        "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.SERIALIZATION}"
 }
 
-object NaverMap {
-    const val NAVER_MAP = "com.naver.maps:map-sdk:${Versions.NAVER_MAP}"
+object Firebase {
+    const val FIREBASE_BOM = "com.google.firebase:firebase-bom:${Versions.FIREBASE_BOM}"
+    const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging-ktx"
+    const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
+    const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics-ktx"
 }
 
-object GooglePlay {
-    const val location = "com.google.android.gms:play-services-location:${Versions.GMS_LOCATION}"
+object Kakao{
+    const val KAKAO = "com.kakao.sdk:v2-user:${Versions.KAKAO}"
 }

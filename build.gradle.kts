@@ -1,61 +1,29 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-
-    ext {
-        // App dependencies
-        hiltVersion = '2.42'
-        navigationVersion = '2.5.2'
-        retrofit2Version = '2.9.0'
-        okHttp3Version = "4.10.0"
-        lifecycleVersion = '2.5.1'
-        roomVersion = '2.4.3'
-        glideVersion = '4.13.0'
-        pagingVersion = "3.1.1"
-        timberVersion = '5.0.1'
-        chartVersion = "3.1.0"
-        googleServiceVersion = "4.3.14"
-        crashlyticsVersion = "2.9.2"
-        manifestSecretVersion = "2.0.1"
-        circleIndicatorVersion = "2.1.6"
-        viewPager2Version = "1.0.0"
-        activityKtxVersion = "1.5.1"
-        fragmentKtxVersion = "1.5.3"
-        materialCalendarviewVersion = "1.4.3"
-        scalarsVersion = "2.1.0"
-        firebaseBomVersion = "29.2.1"
-        securityVersion = "1.1.0-alpha03"
-        kakaoVersion = "2.10.0"
-    }
-
-
-    repositories {
-        google()
-        mavenCentral()
-        //material-calendarview
-        maven { url 'https://jitpack.io' }
-    }
     dependencies {
 
         //navigation
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.NAVIGATION}")
 
         //firebase
-        classpath "com.google.gms:google-services:$googleServiceVersion"
-        classpath "com.google.firebase:firebase-crashlytics-gradle:$crashlyticsVersion"
+        classpath("com.google.gms:google-services:${Versions.GOOGLE_SERVICES}")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:${Versions.FIREBASE_CRASHLYTICS}")
         //Manifest 보안
-        classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:$manifestSecretVersion"
+        classpath("com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:${Versions.MANIFEST_SECRET}")
         //hilt
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
+        classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}")
+        //serialization
+        classpath("org.jetbrains.kotlin:kotlin-serialization:${Versions.KOTLIN_VERSION}")
     }
 }
 
 plugins {
-    id 'com.android.application' version '7.3.0' apply false
-    id 'com.android.library' version '7.3.0' apply false
-    id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
-    id 'org.jetbrains.kotlin.jvm' version "1.7.10" apply false
+    id("com.android.application") version Versions.GRADLE_VERSION apply false
+    id("com.android.library") version Versions.GRADLE_VERSION apply false
+    id("org.jetbrains.kotlin.android") version Versions.KOTLIN_VERSION apply false
+    id("org.jetbrains.kotlin.jvm") version Versions.KOTLIN_VERSION apply false
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+//task clean (type: Delete) {
+//    delete rootProject . buildDir
+//}
