@@ -7,6 +7,7 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
@@ -140,10 +141,7 @@ fun changeVisibleWithDiaryType(
                         else -> {}
                     }
                 }
-                else -> {
-//                    (view as TextView).setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-//                    view.context.getString(R.string.select_diary_type)
-                }
+                else -> {}
             }
         }
         else -> {
@@ -174,12 +172,6 @@ fun changeVisibleWithDiaryType(
                     view.visibility = View.GONE
                 }
                 else -> {
-//                    (view as TextView).setCompoundDrawablesWithIntrinsicBounds(
-//                        0,
-//                        0,
-//                        R.drawable.ic_arrow_down,
-//                        0
-//                    )
                     (view as TextView)
                     tempSelectedDiaryDate.value?.let {
                         val selectedDiaryDate = DateConverter.ymdToDate(it)
@@ -273,6 +265,7 @@ fun changeButtonState(view: AppCompatButton, currentFragment: LiveData<FRAGMENT_
                 FRAGMENT_NAME.SIGNUP_CODE -> {
                     view.text = view.context.getString(R.string.onboarding_certify)
                 }
+                else -> {}
             }
 
         }
@@ -295,8 +288,11 @@ fun TextView.setColorWithDiaryType(diaryType: LiveData<DIARY_TYPE>) {
 @BindingAdapter("app:sendButtonState")
 fun AppCompatButton.setSendButtonState(canSendCommentDiary: LiveData<Boolean>) {
     background = when (canSendCommentDiary.value) {
-        true -> context.getDrawable(R.drawable.background_green_radius_10)
-        else -> context.getDrawable(R.drawable.background_green_alpha_40_radius_10)
+        true -> AppCompatResources.getDrawable(context, R.drawable.background_green_radius_10)
+        else -> AppCompatResources.getDrawable(
+            context,
+            R.drawable.background_green_alpha_40_radius_10
+        )
     }
 }
 

@@ -49,7 +49,7 @@
         </activity>
         <activity
             android:name="com.movingmaker.commentdiary.presentation.view.onboarding.OnboardingIntroActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
 
         <service
             android:name="com.movingmaker.commentdiary.presentation.service.MyFirebaseMessagingService"

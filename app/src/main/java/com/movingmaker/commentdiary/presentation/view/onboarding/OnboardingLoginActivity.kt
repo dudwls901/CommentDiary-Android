@@ -120,21 +120,14 @@ class OnboardingLoginActivity :
                         signUp()
                     }
                 }
-                FRAGMENT_NAME.SIGNUP_SUCCESS -> {
-//                    binding.onboardingBottomButton.setOnClickListener {
-//                        binding.loadingBar.isVisible = true
-//                        launch(coroutineContext) {
-//                            withContext(Dispatchers.IO) {
-//                                onboardingViewModel.setResponseLogin()
-//                            }
-//                        }
-//                    }
-                }
+                //TODO 안 쓰는 화면 추후 삭제
+                FRAGMENT_NAME.SIGNUP_SUCCESS -> {}
                 FRAGMENT_NAME.FIND_PASSWORD -> {
                     binding.onboardingBottomButton.setOnSingleClickListener {
                         findPassword()
                     }
                 }
+                else -> {}
             }
         }
     }
