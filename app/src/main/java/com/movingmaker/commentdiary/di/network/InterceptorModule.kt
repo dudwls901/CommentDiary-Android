@@ -1,9 +1,10 @@
 package com.movingmaker.commentdiary.di.network
 
-import com.movingmaker.commentdiary.data.remote.datasource.ReIssueTokenDataSource
-import com.movingmaker.commentdiary.domain.model.NetworkResult
-import com.movingmaker.commentdiary.domain.model.getErrorMessage
-import com.movingmaker.commentdiary.presentation.CodaApplication
+import com.movingmaker.commentdiary.CodaApplication
+import com.movingmaker.data.remote.datasource.ReIssueTokenDataSource
+import com.movingmaker.domain.model.NetworkResult
+import com.movingmaker.domain.model.getErrorMessage
+import com.movingmaker.presentation.util.PreferencesUtil
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,8 +34,10 @@ object InterceptorModule {
     @Provides
     @Singleton
     @OneHeaderInterceptor
-    fun provideOneHeaderInterceptor() = Interceptor { chain ->
-        val accessToken = CodaApplication.getInstance().getAccessToken()
+    fun provideOneHeaderInterceptor(
+        preferencesUtil: PreferencesUtil
+    ) = Interceptor { chain ->
+        val accessToken = preferencesUtil.getAccessToken()
         val newRequest =
             chain.request().newBuilder().addHeader("X-AUTH-TOKEN", accessToken).build()
         chain.proceed(newRequest)
@@ -43,11 +46,12 @@ object InterceptorModule {
     @Provides
     @Singleton
     @TwoHeaderInterceptor
-    fun provideTwoHeaderInterceptor() = Interceptor { chain ->
+    fun provideTwoHeaderInterceptor(
+        preferencesUtil: PreferencesUtil
+    ) = Interceptor { chain ->
         //갱신 전 토큰들
-        val refreshToken = CodaApplication.getInstance().getRefreshToken()
-        val accessToken = CodaApplication.getInstance().getAccessToken()
-
+        val refreshToken = preferencesUtil.getRefreshToken()
+        val accessToken = preferencesUtil.getAccessToken()
         val newRequest = chain.request().newBuilder().addHeader("X-AUTH-TOKEN", accessToken)
             .addHeader("REFRESH-TOKEN", refreshToken)
             .build()
@@ -59,8 +63,9 @@ object InterceptorModule {
     @BearerInterceptor
     fun provideBearerInterceptor(
         reIssueTokenDataSource: ReIssueTokenDataSource,
+        preferencesUtil: PreferencesUtil
     ) = Interceptor { chain ->
-        val accessTokenExpiresIn = CodaApplication.getInstance().getAccessExpiresIn()
+        val accessTokenExpiresIn = preferencesUtil.getAccessExpiresIn()
         val accessToken = if (accessTokenExpiresIn <= System.currentTimeMillis()) {
             synchronized(this) {
                 runBlocking {
@@ -71,8 +76,8 @@ object InterceptorModule {
                         when (this) {
                             is NetworkResult.Success -> {
                                 (this.data.result).also { authTokens ->
-                                    CodaApplication.getInstance().insertAuth(
-                                        CodaApplication.getInstance().getLoginType(),
+                                    preferencesUtil.insertAuth(
+                                        preferencesUtil.getLoginType(),
                                         authTokens.accessToken,
                                         authTokens.refreshToken,
                                         //todo 현재 서버에서 받은 만료 시간이 아닌 커스텀 만료 시간 (현재 시간 + 1초) -> release 버전엔 서버 데이터
@@ -83,7 +88,7 @@ object InterceptorModule {
                                 }
                             }
                             is NetworkResult.Fail -> {
-                                CodaApplication.getInstance().logOut()
+                                preferencesUtil.logOut()
                                 Timber.e("Reissue Fail : ${this.message}")
                             }
                             is NetworkResult.Exception -> {
@@ -95,7 +100,7 @@ object InterceptorModule {
                 }
             }
         } else {
-            CodaApplication.getInstance().getAccessToken()
+            preferencesUtil.getAccessToken()
         }
         val newRequest =
             chain.request().newBuilder().addHeader("Authorization", "Bearer $accessToken")

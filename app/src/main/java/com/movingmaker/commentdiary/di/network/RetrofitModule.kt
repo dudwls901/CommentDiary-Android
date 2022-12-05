@@ -1,6 +1,6 @@
 package com.movingmaker.commentdiary.di.network
 
-import com.movingmaker.commentdiary.data.util.BASE_URL
+import com.movingmaker.data.util.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
