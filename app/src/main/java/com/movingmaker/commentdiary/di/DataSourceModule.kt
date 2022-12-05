@@ -1,17 +1,18 @@
 package com.movingmaker.commentdiary.di
 
-import com.movingmaker.commentdiary.data.remote.datasource.ForSignUpDataSource
-import com.movingmaker.commentdiary.data.remote.datasource.GatherDiaryDataSource
-import com.movingmaker.commentdiary.data.remote.datasource.MyDiaryDataSource
-import com.movingmaker.commentdiary.data.remote.datasource.MyPageDataSource
-import com.movingmaker.commentdiary.data.remote.datasource.ReIssueTokenDataSource
-import com.movingmaker.commentdiary.data.remote.datasource.ReceivedDiaryDataSource
-import com.movingmaker.commentdiary.data.remote.datasourceimpl.ForSignUpDataSourceImpl
-import com.movingmaker.commentdiary.data.remote.datasourceimpl.GatherDiaryDataSourceImpl
-import com.movingmaker.commentdiary.data.remote.datasourceimpl.MyDiaryDataSourceImpl
-import com.movingmaker.commentdiary.data.remote.datasourceimpl.MyPageDataSourceImpl
-import com.movingmaker.commentdiary.data.remote.datasourceimpl.ReIssueTokenDataSourceImpl
-import com.movingmaker.commentdiary.data.remote.datasourceimpl.ReceivedDiaryDataSourceImpl
+
+import com.movingmaker.data.remote.datasource.ForSignUpDataSource
+import com.movingmaker.data.remote.datasource.GatherDiaryDataSource
+import com.movingmaker.data.remote.datasource.MyDiaryDataSource
+import com.movingmaker.data.remote.datasource.MyPageDataSource
+import com.movingmaker.data.remote.datasource.ReIssueTokenDataSource
+import com.movingmaker.data.remote.datasource.ReceivedDiaryDataSource
+import com.movingmaker.data.remote.datasourceimpl.ForSignUpDataSourceImpl
+import com.movingmaker.data.remote.datasourceimpl.GatherDiaryDataSourceImpl
+import com.movingmaker.data.remote.datasourceimpl.MyDiaryDataSourceImpl
+import com.movingmaker.data.remote.datasourceimpl.MyPageDataSourceImpl
+import com.movingmaker.data.remote.datasourceimpl.ReIssueTokenDataSourceImpl
+import com.movingmaker.data.remote.datasourceimpl.ReceivedDiaryDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,15 +1,16 @@
 package com.movingmaker.commentdiary.di
 
-import com.movingmaker.commentdiary.data.repositoryimpl.ForSignUpRepositoryImpl
-import com.movingmaker.commentdiary.data.repositoryimpl.GatherDiaryRepositoryImpl
-import com.movingmaker.commentdiary.data.repositoryimpl.MyDiaryRepositoryImpl
-import com.movingmaker.commentdiary.data.repositoryimpl.MyPageRepositoryImpl
-import com.movingmaker.commentdiary.data.repositoryimpl.ReceivedDiaryRepositoryImpl
-import com.movingmaker.commentdiary.domain.repository.ForSignUpRepository
-import com.movingmaker.commentdiary.domain.repository.GatherDiaryRepository
-import com.movingmaker.commentdiary.domain.repository.MyDiaryRepository
-import com.movingmaker.commentdiary.domain.repository.MyPageRepository
-import com.movingmaker.commentdiary.domain.repository.ReceivedDiaryRepository
+
+import com.movingmaker.data.repositoryimpl.ForSignUpRepositoryImpl
+import com.movingmaker.data.repositoryimpl.GatherDiaryRepositoryImpl
+import com.movingmaker.data.repositoryimpl.MyDiaryRepositoryImpl
+import com.movingmaker.data.repositoryimpl.MyPageRepositoryImpl
+import com.movingmaker.data.repositoryimpl.ReceivedDiaryRepositoryImpl
+import com.movingmaker.domain.repository.ForSignUpRepository
+import com.movingmaker.domain.repository.GatherDiaryRepository
+import com.movingmaker.domain.repository.MyDiaryRepository
+import com.movingmaker.domain.repository.MyPageRepository
+import com.movingmaker.domain.repository.ReceivedDiaryRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
