@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.presentation.service
+package com.movingmaker.presentation.service
 
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
@@ -13,21 +13,24 @@ import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.presentation.CodaApplication
-import com.movingmaker.commentdiary.presentation.util.DateConverter
-import com.movingmaker.commentdiary.presentation.view.main.MainActivity
+import com.movingmaker.presentation.R
+import com.movingmaker.presentation.util.DateConverter
+import com.movingmaker.presentation.util.PreferencesUtil
+import com.movingmaker.presentation.view.main.MainActivity
 import timber.log.Timber
+import javax.inject.Inject
 
 
-class MyFirebaseMessagingService : FirebaseMessagingService() {
+class MyFirebaseMessagingService @Inject constructor(
+    private val preferencesUtil: PreferencesUtil
+) : FirebaseMessagingService() {
 
-    private val TAG = "Firebase"
+    private val TAG = "Firebase Cloud Messaging"
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         //토큰 갱신
-        CodaApplication.deviceToken = token
+        preferencesUtil.insertDeviceToken(token)
     }
 
     //애초에 onMessageReceived는 백그라운드일 때는 호출이 안 됨
@@ -55,8 +58,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     private fun sendMessage(messageTitle: String, messageBody: String, state: String) {
 
         val intent = Intent(this, MainActivity::class.java)
-        val yesterDay = DateConverter.getCodaToday().minusDays(1)
-        intent.putExtra("pushDate", DateConverter.ymdFormat(yesterDay))
+        val yesterday = DateConverter.getCodaToday().minusDays(1)
+        intent.putExtra("pushDate", DateConverter.ymdFormat(yesterday))
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
         val pendingIntent =

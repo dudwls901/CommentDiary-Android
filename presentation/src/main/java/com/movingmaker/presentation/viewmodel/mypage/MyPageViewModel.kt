@@ -1,27 +1,28 @@
-package com.movingmaker.commentdiary.presentation.viewmodel.mypage
+package com.movingmaker.presentation.viewmodel.mypage
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.data.model.Comment
-import com.movingmaker.commentdiary.data.remote.request.ChangePasswordRequest
-import com.movingmaker.commentdiary.domain.model.UiState
-import com.movingmaker.commentdiary.domain.usecase.ChangePasswordUseCase
-import com.movingmaker.commentdiary.domain.usecase.GetAllCommentUseCase
-import com.movingmaker.commentdiary.domain.usecase.GetMonthCommentUseCase
-import com.movingmaker.commentdiary.domain.usecase.GetMyPageUseCase
-import com.movingmaker.commentdiary.domain.usecase.LogOutUseCase
-import com.movingmaker.commentdiary.domain.usecase.PatchCommentPushStateUseCase
-import com.movingmaker.commentdiary.domain.usecase.SignOutUseCase
-import com.movingmaker.commentdiary.presentation.CodaApplication
-import com.movingmaker.commentdiary.presentation.base.BaseViewModel
-import com.movingmaker.commentdiary.presentation.util.DateConverter
+import com.movingmaker.domain.model.UiState
+import com.movingmaker.domain.model.request.ChangePasswordModel
+import com.movingmaker.domain.model.response.Comment
+import com.movingmaker.domain.usecase.ChangePasswordUseCase
+import com.movingmaker.domain.usecase.GetAllCommentUseCase
+import com.movingmaker.domain.usecase.GetMonthCommentUseCase
+import com.movingmaker.domain.usecase.GetMyPageUseCase
+import com.movingmaker.domain.usecase.LogOutUseCase
+import com.movingmaker.domain.usecase.PatchCommentPushStateUseCase
+import com.movingmaker.domain.usecase.SignOutUseCase
+import com.movingmaker.presentation.base.BaseViewModel
+import com.movingmaker.presentation.util.DateConverter
+import com.movingmaker.presentation.util.PreferencesUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
+    private val preferencesUtil: PreferencesUtil,
     private val signOutUseCase: SignOutUseCase,
     private val logOutUseCase: LogOutUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
@@ -136,7 +137,7 @@ class MyPageViewModel @Inject constructor(
             when (this) {
                 is UiState.Success -> {
                     setMessage("회원 탈퇴가 완료되었습니다.")
-                    CodaApplication.getInstance().signOut()
+                    preferencesUtil.signOut()
                 }
                 is UiState.Error -> {
                     setMessage(message)
@@ -153,7 +154,7 @@ class MyPageViewModel @Inject constructor(
             onLoading()
             with(
                 changePasswordUseCase(
-                    ChangePasswordRequest(
+                    ChangePasswordModel(
                         password.value!!,
                         passwordCheck.value!!
                     )
@@ -180,7 +181,7 @@ class MyPageViewModel @Inject constructor(
             offLoading()
             when (this) {
                 is UiState.Success -> {
-                    CodaApplication.getInstance().logOut()
+                    preferencesUtil.logOut()
                 }
                 is UiState.Error -> {
                     setMessage(message)

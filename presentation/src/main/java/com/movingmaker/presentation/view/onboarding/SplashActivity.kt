@@ -1,4 +1,4 @@
-package com.movingmaker.commentdiary.presentation.view.onboarding
+package com.movingmaker.presentation.view.onboarding
 
 import android.app.Activity
 import android.content.Intent
@@ -8,22 +8,27 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.movingmaker.commentdiary.R
-import com.movingmaker.commentdiary.databinding.ActivitySplashBinding
-import com.movingmaker.commentdiary.presentation.CodaApplication
-import com.movingmaker.commentdiary.presentation.base.BaseActivity
-import com.movingmaker.commentdiary.presentation.util.DateConverter
-import com.movingmaker.commentdiary.presentation.view.main.MainActivity
-import com.movingmaker.commentdiary.presentation.view.snackbar.CodaSnackBar
+import com.movingmaker.presentation.R
+import com.movingmaker.presentation.base.BaseActivity
+import com.movingmaker.presentation.databinding.ActivitySplashBinding
+import com.movingmaker.presentation.util.DateConverter
+import com.movingmaker.presentation.util.EMPTY_TOKEN
+import com.movingmaker.presentation.util.PreferencesUtil
+import com.movingmaker.presentation.view.main.MainActivity
+import com.movingmaker.presentation.view.snackbar.CodaSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
 
     private var pushDate: String? = null
+
+    @Inject
+    lateinit var preferencesUtil: PreferencesUtil
 
     companion object {
         const val REQUEST_CODE_UPDATE = 999
@@ -31,7 +36,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
         updateVersion()
 
@@ -50,12 +55,16 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
 //        window.statusBarColor = getColor(R.color.onboarding_background)
 
-
         lifecycleScope.launch {
-            val refreshToken = CodaApplication.getInstance().getRefreshToken()
+            if (this@SplashActivity::preferencesUtil.isInitialized.not()) {
+                CodaSnackBar.make(binding.root, "오류가 발생하였습니다.").show()
+                return@launch
+            }
+            val refreshToken = preferencesUtil.getRefreshToken()
+
             delay(1000L)
             //자동 로그인
-            if (refreshToken.isNotEmpty()) {
+            if (refreshToken != EMPTY_TOKEN) {
                 startActivity(loginIntent)
             } else {
                 startActivity(

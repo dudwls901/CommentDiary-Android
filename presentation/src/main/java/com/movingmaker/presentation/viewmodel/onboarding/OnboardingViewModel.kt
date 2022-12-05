@@ -1,27 +1,27 @@
-package com.movingmaker.commentdiary.presentation.viewmodel.onboarding
+package com.movingmaker.presentation.viewmodel.onboarding
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.movingmaker.commentdiary.data.remote.request.EmailCodeCheckRequest
-import com.movingmaker.commentdiary.data.remote.request.KakaoLoginRequest
-import com.movingmaker.commentdiary.data.remote.request.KakaoSignUpRequest
-import com.movingmaker.commentdiary.data.remote.request.LogInRequest
-import com.movingmaker.commentdiary.data.remote.request.SignUpRequest
-import com.movingmaker.commentdiary.domain.model.UiState
-import com.movingmaker.commentdiary.domain.usecase.EmailCodeCheckUseCase
-import com.movingmaker.commentdiary.domain.usecase.FindPasswordUseCase
-import com.movingmaker.commentdiary.domain.usecase.KakaoLogInUseCase
-import com.movingmaker.commentdiary.domain.usecase.KakaoSignUpSetAcceptsUseCase
-import com.movingmaker.commentdiary.domain.usecase.LogInUseCase
-import com.movingmaker.commentdiary.domain.usecase.SendEmailCodeUseCase
-import com.movingmaker.commentdiary.domain.usecase.SignOutUseCase
-import com.movingmaker.commentdiary.domain.usecase.SignUpUseCase
-import com.movingmaker.commentdiary.presentation.CodaApplication
-import com.movingmaker.commentdiary.presentation.base.BaseViewModel
-import com.movingmaker.commentdiary.presentation.util.EMAIL
-import com.movingmaker.commentdiary.presentation.util.FRAGMENT_NAME
-import com.movingmaker.commentdiary.presentation.util.KAKAO
+import com.movingmaker.domain.model.UiState
+import com.movingmaker.domain.model.request.EmailCodeCheckModel
+import com.movingmaker.domain.model.request.KakaoLoginModel
+import com.movingmaker.domain.model.request.KakaoSignUpModel
+import com.movingmaker.domain.model.request.LogInModel
+import com.movingmaker.domain.model.request.SignUpModel
+import com.movingmaker.domain.usecase.EmailCodeCheckUseCase
+import com.movingmaker.domain.usecase.FindPasswordUseCase
+import com.movingmaker.domain.usecase.KakaoLogInUseCase
+import com.movingmaker.domain.usecase.KakaoSignUpSetAcceptsUseCase
+import com.movingmaker.domain.usecase.LogInUseCase
+import com.movingmaker.domain.usecase.SendEmailCodeUseCase
+import com.movingmaker.domain.usecase.SignOutUseCase
+import com.movingmaker.domain.usecase.SignUpUseCase
+import com.movingmaker.presentation.base.BaseViewModel
+import com.movingmaker.presentation.util.EMAIL
+import com.movingmaker.presentation.util.FRAGMENT_NAME
+import com.movingmaker.presentation.util.KAKAO
+import com.movingmaker.presentation.util.PreferencesUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import timber.log.Timber
@@ -29,6 +29,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
+    private val preferencesUtil: PreferencesUtil,
     private val sendEmailCodeUseCase: SendEmailCodeUseCase,
     private val sendEmailCodeCheckUseCase: EmailCodeCheckUseCase,
     private val signUpUseCase: SignUpUseCase,
@@ -315,7 +316,7 @@ class OnboardingViewModel @Inject constructor(
         }
         with(
             sendEmailCodeCheckUseCase(
-                EmailCodeCheckRequest(
+                EmailCodeCheckModel(
                     email.value!!, code.value!!.toInt()
                 )
             )
@@ -349,7 +350,7 @@ class OnboardingViewModel @Inject constructor(
         var successSignUp = false
         with(
             signUpUseCase(
-                SignUpRequest(
+                SignUpModel(
                     email = email.value!!,
                     password = password.value!!,
                     checkPassword = checkPassword.value!!,
@@ -421,8 +422,8 @@ class OnboardingViewModel @Inject constructor(
         }
         var isSuccessLogin = false
         logInUseCase(
-            LogInRequest(
-                email = email.value!!, password = password.value!!, CodaApplication.deviceToken
+            LogInModel(
+                email = email.value!!, password = password.value!!, preferencesUtil.getDeviceToken()
             )
         ).apply {
             offLoading()
@@ -433,7 +434,7 @@ class OnboardingViewModel @Inject constructor(
                     val refreshToken = this.data.refreshToken
                     val accessTokenExpiresIn = this.data.accessTokenExpiresIn
                     Timber.d("login: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}")
-                    CodaApplication.getInstance()
+                    preferencesUtil
                         .insertAuth(EMAIL, accessToken, refreshToken, accessTokenExpiresIn)
                     isSuccessLogin = true
                 }
@@ -454,8 +455,8 @@ class OnboardingViewModel @Inject constructor(
         var isNewMember = false
         with(
             kakaoLogInUseCase(
-                KakaoLoginRequest(
-                    KAKAO, kakaoAccessToken, CodaApplication.deviceToken
+                KakaoLoginModel(
+                    KAKAO, kakaoAccessToken, preferencesUtil.getDeviceToken()
                 )
             )
         ) {
@@ -470,7 +471,7 @@ class OnboardingViewModel @Inject constructor(
                     Timber.d(
                         "kakaoLogin: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}"
                     )
-                    CodaApplication.getInstance()
+                    preferencesUtil
                         .insertAuth(KAKAO, accessToken, refreshToken, accessTokenExpiresIn)
                 }
                 is UiState.Error -> {
@@ -488,7 +489,7 @@ class OnboardingViewModel @Inject constructor(
         onLoading()
         var successSignUp = false
         val kakaoSignUpRequest =
-            if (isPushAccept.value == true) KakaoSignUpRequest('Y') else KakaoSignUpRequest('N')
+            KakaoSignUpModel(if (isPushAccept.value == true) 'Y' else 'N')
         with(kakaoSignUpSetAcceptsUseCase(kakaoSignUpRequest)) {
             offLoading()
             Timber.d("result $this")
@@ -515,7 +516,7 @@ class OnboardingViewModel @Inject constructor(
             when (this) {
                 is UiState.Success -> {
                     successSignOut = true
-                    CodaApplication.getInstance().signOut()
+                    preferencesUtil.signOut()
                 }
                 is UiState.Error -> {
                     setMessage(message)
