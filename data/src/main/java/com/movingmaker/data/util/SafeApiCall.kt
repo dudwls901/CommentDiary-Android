@@ -10,7 +10,7 @@ import timber.log.Timber
 import java.io.IOException
 import java.net.SocketTimeoutException
 
-suspend fun<R,T> safeApiCall(callFunction: suspend () -> Response<BaseResponse<T>>): NetworkResult<com.movingmaker.domain.model.response.BaseResponse<R>> {
+suspend fun <R, T> safeApiCall(callFunction: suspend () -> Response<BaseResponse<T>>): NetworkResult<com.movingmaker.domain.model.response.BaseResponse<R>> {
     return try {
         val response = callFunction.invoke()
         Timber.d("result ${response.body()}")

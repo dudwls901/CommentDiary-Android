@@ -52,8 +52,8 @@ dependencies {
     implementation(OkHttp.LOGGING_INTERCEPTOR)
 
     //Hilt
-//    implementation(Hilt.HILT_ANDROID)
-//    kapt(Hilt.HILT_ANDROID_COMPILER)
+    implementation(Hilt.HILT_ANDROID)
+    kapt(Hilt.HILT_ANDROID_COMPILER)
 
     // Timber
     implementation(Timber.TIMBER)

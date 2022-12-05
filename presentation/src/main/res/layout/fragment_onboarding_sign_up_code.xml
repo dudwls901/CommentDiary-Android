@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="com.movingmaker.presentation.viewmodel.onboarding.OnboardingViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_ivory">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="14dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/backButton"
+            android:src="@drawable/ic_arrow_left"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/signUpTextView"
+            style="@style/BLargetitle"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="52dp"
+            android:layout_marginTop="65dp"
+            android:text="@string/onboarding_makeaccount"
+            android:textColor="@color/text_dark_brown"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/emailTextView"
+            style="@style/MCaption2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="52dp"
+            android:text="@{vm.email}"
+            android:textColor="@color/core_green"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/signUpTextView"
+            app:layout_constraintTop_toBottomOf="@id/signUpTextView"
+            android:visibility="visible"
+            tools:text="test@naver.com" />
+
+        <TextView
+            android:id="@+id/codeSendTextView"
+            style="@style/MCaption2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5.6dp"
+            android:text="@string/onboarding_send_email_notice"
+            app:layout_constraintStart_toStartOf="@id/signUpTextView"
+            app:layout_constraintTop_toBottomOf="@id/emailTextView" />
+
+        <EditText
+            android:id="@+id/codeEditText"
+            style="@style/MCaption2"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginHorizontal="52dp"
+            android:layout_marginTop="21dp"
+            android:autofillHints="no"
+            android:background="@drawable/background_ivory_radius_4_border_green_2"
+            android:hint="@string/write_code"
+            android:inputType="number"
+            android:text="@={vm.code}"
+            android:paddingHorizontal="12dp"
+            android:textColor="@color/text_black"
+            android:textColorHint="@color/text_light_brown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/codeSendTextView"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/codeNoticeTextView"
+            style="@style/MCaption3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/onboarding_code_incorrect"
+            android:textColor="@color/core_notice"
+            android:visibility="@{vm.codeCorrect ? View.GONE : View.VISIBLE}"
+            app:layout_constraintStart_toStartOf="@id/emailTextView"
+            app:layout_constraintTop_toBottomOf="@id/codeEditText"
+            tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/loadingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/core_pure_green"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -3,6 +3,7 @@ package com.movingmaker.domain.model
 sealed class NetworkResult<out T> {
     data class Success<T>(val data: T) : NetworkResult<T>()
     data class Fail(val message: String) : NetworkResult<Nothing>()
+
     //    object TokenExpired : NetworkResult<Nothing>()
     data class Exception(val errorType: ErrorType) :
         NetworkResult<Nothing>()

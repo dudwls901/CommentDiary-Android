@@ -1,15 +1,16 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
-//    id("kotlin-parcelize")
+    id("kotlin-parcelize")
 //    //navigation
-//    id("androidx.navigation.safeargs.kotlin")
+    id("androidx.navigation.safeargs.kotlin")
 //    //Manifest 보안
-//    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 //    //hilt
-//    id("dagger.hilt.android.plugin")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -21,6 +22,11 @@ android {
         targetSdk = Versions.TARGET_SDK
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField("String", "KAKAO_APP_KEY", getProperty("kakao_app_key"))
+
+        //manifest에서 사용할 경우
+        manifestPlaceholders["KAKAO_OAUTH_KEY"] = getProperty("kakao_oauth_key")
     }
 
     buildTypes {
@@ -44,6 +50,9 @@ android {
     }
 }
 
+fun getProperty(propertyKey: String): String {
+    return gradleLocalProperties(rootDir).getProperty(propertyKey)
+}
 
 dependencies {
 

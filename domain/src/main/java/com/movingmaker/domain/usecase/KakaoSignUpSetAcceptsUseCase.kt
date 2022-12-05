@@ -11,6 +11,7 @@ class KakaoSignUpSetAcceptsUseCase @Inject constructor(
     private val signUpRepository: ForSignUpRepository,
 ) {
     suspend operator fun invoke(kakaoSignUpModel: KakaoSignUpModel): UiState<String> =
-        signUpRepository.kakaoSignUpSetAccepts(kakaoSignUpModel).toUiState().mapUiState { it.result }
+        signUpRepository.kakaoSignUpSetAccepts(kakaoSignUpModel).toUiState()
+            .mapUiState { it.result }
 
 }

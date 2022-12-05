@@ -13,14 +13,16 @@ data class BaseResponse<T>(
     @SerializedName(value = "result")
     val result: T
 ) {
-    fun<R> toDomainModel(): BaseResponse<R> {
+    fun <R> toDomainModel(): BaseResponse<R> {
         return BaseResponse(
             code = code,
             message = message,
             result = when (val result = this.result) {
                 is List<*> -> result.map { (it as RemoteModel).toDomainModel() } as R
-                is RemoteModel -> (result as RemoteModel).toDomainModel()  as R
-                else -> { result as R}
+                is RemoteModel -> (result as RemoteModel).toDomainModel() as R
+                else -> {
+                    result as R
+                }
             }
         )
     }

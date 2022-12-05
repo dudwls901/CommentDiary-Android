@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/core_beige"
+    tools:context=".presentation.view.main.MainActivity">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="com.movingmaker.presentation.viewmodel.FragmentViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/mainNavHostFragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navGraph="@navigation/main_graph" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:background="@color/bottomnavigation_background"
+            android:paddingBottom="4dp"
+            android:theme="@style/RCaption3"
+            android:visibility="@{vm.hasBottomNavi ? View.VISIBLE : View.GONE}"
+            app:itemIconSize="32dp"
+            app:itemPaddingBottom="4dp"
+            app:itemRippleColor="@null"
+            app:itemTextAppearanceActive="@dimen/design_bottom_navigation_active_text_size"
+            app:itemTextAppearanceInactive="@dimen/design_bottom_navigation_text_size"
+            app:itemTextColor="@drawable/bottom_text_color"
+            app:labelVisibilityMode="labeled"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_weight="1"
+            app:menu="@menu/bottomnavigation_menu" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

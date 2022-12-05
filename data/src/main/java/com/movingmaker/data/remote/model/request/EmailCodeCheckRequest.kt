@@ -9,7 +9,7 @@ data class EmailCodeCheckRequest(
     val email: String,
     @SerializedName(value = "code")
     val code: Int
-): RemoteModel {
+) : RemoteModel {
     override fun toDomainModel() = EmailCodeCheckModel(
         email, code
     )

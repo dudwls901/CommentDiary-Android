@@ -14,10 +14,6 @@ plugins {
     //hilt
     id("dagger.hilt.android.plugin")
 }
-
-//val properties = Properties().apply {
-//    load(FileInputStream(File(rootProject.rootDir, "local.properties")))
-//}
 android {
     namespace = Versions.APPLICATION_ID
     compileSdk = Versions.COMPILE_SDK
@@ -34,8 +30,6 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField("String", "KAKAO_APP_KEY", getProperty("kakao_app_key"))
-        //API keys
-//        buildConfigField("String", "KAKAO_APP_KEY", properties['kakao_app_key'])
         //manifest에서 사용할 경우
         manifestPlaceholders["KAKAO_OAUTH_KEY"] = getProperty("kakao_oauth_key")
 
@@ -75,6 +69,10 @@ android {
         jvmTarget = "1.8"
     }
 
+    buildFeatures {
+        dataBinding = true
+    }
+
 }
 
 fun getProperty(propertyKey: String): String {
@@ -104,6 +102,15 @@ dependencies {
 
     //EncryptedSharedPreferences
     implementation(EncryptedSharedPreferences.SECURITY_CRYPTO)
+
+    //Retrofit2
+    implementation(Retrofit.RETROFIT)
+    implementation(Retrofit.CONVERTER_SERIALIZATION)
+    implementation(Retrofit.CONVERTER_GSON)
+    implementation(Retrofit.CONVERTER_SCALARS)
+    //okhttp3
+    implementation(OkHttp.OKHTTP)
+    implementation(OkHttp.LOGGING_INTERCEPTOR)
 
     //kakao login
     implementation(Kakao.KAKAO)
