@@ -60,7 +60,7 @@ object Versions {
 
 
     //firebase
-    const val GOOGLE_SERVICES = "4.3.10"
+    const val GOOGLE_SERVICES = "4.3.14"
     const val FIREBASE_BOM = "30.5.0"
     const val FIREBASE_CRASHLYTICS = "2.9.2"
 
