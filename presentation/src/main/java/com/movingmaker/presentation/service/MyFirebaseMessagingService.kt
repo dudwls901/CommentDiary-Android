@@ -21,9 +21,10 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class MyFirebaseMessagingService @Inject constructor(
-    private val preferencesUtil: PreferencesUtil
-) : FirebaseMessagingService() {
+class MyFirebaseMessagingService: FirebaseMessagingService() {
+
+    @Inject
+    lateinit var preferencesUtil: PreferencesUtil
 
     private val TAG = "Firebase Cloud Messaging"
 
