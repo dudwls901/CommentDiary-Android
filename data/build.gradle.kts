@@ -51,6 +51,9 @@ dependencies {
     implementation(OkHttp.OKHTTP)
     implementation(OkHttp.LOGGING_INTERCEPTOR)
 
+    //Serialization
+    implementation(Serialization.SERIALIZATION)
+
     //Hilt
     implementation(Hilt.HILT_ANDROID)
     kapt(Hilt.HILT_ANDROID_COMPILER)
