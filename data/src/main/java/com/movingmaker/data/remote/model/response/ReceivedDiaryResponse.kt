@@ -1,33 +1,27 @@
 package com.movingmaker.data.remote.model.response
 
-import com.google.gson.annotations.SerializedName
 import com.movingmaker.data.remote.model.RemoteModel
 import com.movingmaker.domain.model.response.ReceivedDiary
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ReceivedDiaryResponse(
-    @SerializedName(value = "diaryId")
-    val id: Long?,
-    @SerializedName(value = "title")
+    val diaryId: Long?,
     var title: String,
-    @SerializedName(value = "content")
     var content: String,
-    @SerializedName(value = "date")
     var date: String,
-    @SerializedName(value = "deliveryYn")
-    var deliveryYN: Char,
-    @SerializedName(value = "tempYn")
-    var tempYN: Char,
-    @SerializedName(value = "myCommentResponse")
-    val myComment: MutableList<ReceivedCommentResponse>?
+    var deliveryYn: Char,
+    var tempYn: Char,
+    val myCommentResponse: MutableList<ReceivedCommentResponse>?
 ) : RemoteModel {
     override fun toDomainModel() = ReceivedDiary(
-        id,
+        diaryId,
         title,
         content,
         date,
-        deliveryYN,
-        tempYN,
-        myComment?.map { it.toDomainModel() }?.toMutableList()
+        deliveryYn,
+        tempYn,
+        myCommentResponse?.map { it.toDomainModel() }?.toMutableList()
     )
 }
 

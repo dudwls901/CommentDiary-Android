@@ -1,10 +1,11 @@
 package com.movingmaker.data.util
 
 import com.movingmaker.data.remote.model.response.BaseResponse
+import com.movingmaker.data.remote.model.response.ErrorResponse
 import com.movingmaker.domain.model.ErrorType
 import com.movingmaker.domain.model.NetworkResult
+import kotlinx.serialization.json.Json
 import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Response
 import timber.log.Timber
 import java.io.IOException
@@ -33,15 +34,16 @@ suspend fun <R, T> safeApiCall(callFunction: suspend () -> Response<BaseResponse
     }
 }
 
-fun getErrorMessage(responseBody: ResponseBody?): String {
+private fun getErrorMessage(responseBody: ResponseBody?): String {
     return try {
-        val jsonObject = JSONObject(responseBody!!.string())
-        when {
-            jsonObject.has(MESSAGE_KEY) -> jsonObject.getString(MESSAGE_KEY)
-            jsonObject.has(ERROR_KEY) -> jsonObject.getString(ERROR_KEY)
-            else -> "Something wrong happened"
+        val json = Json {
+            isLenient = true
+            ignoreUnknownKeys = true
+            coerceInputValues = true
         }
+        json.decodeFromString(ErrorResponse.serializer(), responseBody!!.string()).message
     } catch (e: Exception) {
+        Timber.e("$e")
         "Something wrong happened"
     }
 }

@@ -1,17 +1,15 @@
 package com.movingmaker.data.remote.model.response
 
-import com.google.gson.annotations.SerializedName
 import com.movingmaker.data.remote.model.RemoteModel
 import com.movingmaker.domain.model.response.BaseResponse
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Suppress("UNCHECKED_CAST")
 data class BaseResponse<T>(
-    @SerializedName(value = "code")
     val code: Int,
-    @SerializedName(value = "message")
     val message: String,
-    @SerializedName(value = "result")
-    val result: T
+    val result: T? = null
 ) {
     fun <R> toDomainModel(): BaseResponse<R> {
         return BaseResponse(
@@ -25,11 +23,5 @@ data class BaseResponse<T>(
                 }
             }
         )
-    }
-
-    private fun toModel(): T = this.result
-
-    fun <R> mapData(getData: (T) -> R): R {
-        return getData(toModel())
     }
 }

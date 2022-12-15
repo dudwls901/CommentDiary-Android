@@ -8,8 +8,6 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Converter
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -38,16 +36,12 @@ object RetrofitModule {
     @NoHeaderRetrofit
     fun provideNoHeaderRetrofit(
         @OkHttpClientModule.NoHeaderInterceptorHttpClient okHttpClient: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory,
-        scalarsConverterFactory: ScalarsConverterFactory,
-        nullOnEmptyConverterFactory: Converter.Factory
+        converterFactory: Converter.Factory
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(scalarsConverterFactory)
-            .addConverterFactory(nullOnEmptyConverterFactory)
-            .addConverterFactory(gsonConverterFactory)
+            .addConverterFactory(converterFactory)
             .build()
     }
 
@@ -56,16 +50,12 @@ object RetrofitModule {
     @TwoHeaderRetrofit
     fun provideTwoHeaderRetrofit(
         @OkHttpClientModule.TwoHeaderInterceptorHttpClient okHttpClient: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory,
-        scalarsConverterFactory: ScalarsConverterFactory,
-        nullOnEmptyConverterFactory: Converter.Factory
+        converterFactory: Converter.Factory
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(scalarsConverterFactory)
-            .addConverterFactory(nullOnEmptyConverterFactory)
-            .addConverterFactory(gsonConverterFactory)
+            .addConverterFactory(converterFactory)
             .build()
     }
 
@@ -74,16 +64,12 @@ object RetrofitModule {
     @OneHeaderRetrofit
     fun provideOneHeaderRetrofit(
         @OkHttpClientModule.OneHeaderInterceptorHttpClient okHttpClient: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory,
-        scalarsConverterFactory: ScalarsConverterFactory,
-        nullOnEmptyConverterFactory: Converter.Factory
+        converterFactory: Converter.Factory
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(scalarsConverterFactory)
-            .addConverterFactory(nullOnEmptyConverterFactory)
-            .addConverterFactory(gsonConverterFactory)
+            .addConverterFactory(converterFactory)
             .build()
     }
 
@@ -92,16 +78,12 @@ object RetrofitModule {
     @BearerRetrofit
     fun provideBearerRetrofit(
         @OkHttpClientModule.BearerInterceptorHttpClient okHttpClient: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory,
-        scalarsConverterFactory: ScalarsConverterFactory,
-        nullOnEmptyConverterFactory: Converter.Factory
+        converterFactory: Converter.Factory
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(scalarsConverterFactory)
-            .addConverterFactory(nullOnEmptyConverterFactory)
-            .addConverterFactory(gsonConverterFactory)
+            .addConverterFactory(converterFactory)
             .build()
     }
 }
