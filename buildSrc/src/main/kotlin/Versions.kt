@@ -55,7 +55,6 @@ object Versions {
     const val CIRCLE_INDICATOR = "2.1.6"
     const val SERIALIZATION = "1.3.2"
     const val MATERIAL_CALENDAR_VIEW = "1.4.3"
-    const val CONVERTER_SCALAR = "2.1.0"
     const val SECURITY_CRYPTO = "1.1.0-alpha03"
 
 

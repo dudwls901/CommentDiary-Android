@@ -109,8 +109,6 @@ dependencies {
     //Retrofit2
     implementation(Retrofit.RETROFIT)
     implementation(Retrofit.CONVERTER_SERIALIZATION)
-    implementation(Retrofit.CONVERTER_GSON)
-    implementation(Retrofit.CONVERTER_SCALARS)
     //okhttp3
     implementation(OkHttp.OKHTTP)
     implementation(OkHttp.LOGGING_INTERCEPTOR)
