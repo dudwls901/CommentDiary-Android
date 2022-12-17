@@ -70,10 +70,6 @@ class CalendarWithDiaryFragment :
 
     private fun observeData() {
 
-        myDiaryViewModel.loading.observe(viewLifecycleOwner) {
-            binding.loadingBar.isVisible = it
-        }
-
         myDiaryViewModel.pushDate.observe(viewLifecycleOwner) {
             Timber.d("observeData: push ${myDiaryViewModel.pushDate.value}")
             val date = it
