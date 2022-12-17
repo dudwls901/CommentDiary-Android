@@ -161,7 +161,7 @@ class CommentDiaryDetailFragment :
         val dialogView = Dialog(requireContext())
         dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialogView.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialogView.setContentView(com.movingmaker.presentation.R.layout.dialog_common_block)
+        dialogView.setContentView(R.layout.dialog_common_block)
         dialogView.setCancelable(false)
         dialogView.show()
 
