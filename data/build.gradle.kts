@@ -16,12 +16,6 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -45,11 +39,13 @@ dependencies {
     //Retrofit2
     implementation(Retrofit.RETROFIT)
     implementation(Retrofit.CONVERTER_SERIALIZATION)
-    implementation(Retrofit.CONVERTER_GSON)
-    implementation(Retrofit.CONVERTER_SCALARS)
+
     //okhttp3
     implementation(OkHttp.OKHTTP)
     implementation(OkHttp.LOGGING_INTERCEPTOR)
+
+    //Serialization
+    implementation(Serialization.SERIALIZATION)
 
     //Hilt
     implementation(Hilt.HILT_ANDROID)

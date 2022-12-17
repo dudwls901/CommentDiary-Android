@@ -6,6 +6,6 @@ data class Diary(
     var content: String,
     var date: String,
     var deliveryYN: Char,
-    var tempYN: Char,
+    var tempYN: Char? = null,
     val commentList: MutableList<Comment>?
 )

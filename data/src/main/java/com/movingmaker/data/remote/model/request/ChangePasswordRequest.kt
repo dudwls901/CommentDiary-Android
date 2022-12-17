@@ -1,13 +1,12 @@
 package com.movingmaker.data.remote.model.request
 
-import com.google.gson.annotations.SerializedName
 import com.movingmaker.data.remote.model.RemoteModel
 import com.movingmaker.domain.model.request.ChangePasswordModel
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ChangePasswordRequest(
-    @SerializedName(value = "password")
     val password: String,
-    @SerializedName(value = "checkPassword")
     val checkPassword: String
 ) : RemoteModel {
     override fun toDomainModel() =
@@ -16,7 +15,6 @@ data class ChangePasswordRequest(
             checkPassword
         )
 }
-
 fun ChangePasswordModel.toDataModel() = ChangePasswordRequest(
     password, checkPassword
 )
