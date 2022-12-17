@@ -96,8 +96,7 @@ class MyDiaryViewModel @Inject constructor(
             val ymd = selectedDiary.date
             val (year, month, day) = ymd.split('.').map { it.toInt() }
             if (selectedDiary.deliveryYN == 'Y') {
-                if (selectedDiary.tempYN == 'N')
-                    commentDiary.add(CalendarDay.from(year, month - 1, day))
+                commentDiary.add(CalendarDay.from(year, month - 1, day))
             } else {
                 aloneDiary.add(CalendarDay.from(year, month - 1, day))
             }
