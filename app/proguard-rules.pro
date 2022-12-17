@@ -20,6 +20,20 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-#앱 배포 시, 코드 축소, 난독화, 최적화를 하는 경우 kakao SDK 제외
+#앱 배포 시 코드 축소, 난독화, 최적화를 하는 경우 kakao SDK 제외
 -keep class com.kakao.sdk.**.model.* { <fields>; }
--keep class * extends com.google.gson.TypeAdapter
+
+#https://github.com/Kotlin/kotlinx.serialization/issues/1129
+# Kotlin serialization looks up the generated serializer classes through a function on companion
+# objects. The companions are looked up reflectively so we need to explicitly keep these functions.
+-keepclasseswithmembers class **.*$Companion {
+    kotlinx.serialization.KSerializer serializer(...);
+}
+# If a companion has the serializer function, keep the companion field on the original type so that
+# the reflective lookup succeeds.
+-if class **.*$Companion {
+  kotlinx.serialization.KSerializer serializer(...);
+}
+-keepclassmembers class <1>.<2> {
+  <1>.<2>$Companion Companion;
+}
