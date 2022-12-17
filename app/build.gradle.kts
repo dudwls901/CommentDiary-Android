@@ -13,7 +13,10 @@ plugins {
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     //hilt
     id("dagger.hilt.android.plugin")
+    //serialization
+    id("kotlinx-serialization")
 }
+
 android {
     namespace = Versions.APPLICATION_ID
     compileSdk = Versions.COMPILE_SDK
@@ -50,8 +53,8 @@ android {
         }
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
-            //            프로가드 미사용
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -106,11 +109,12 @@ dependencies {
     //Retrofit2
     implementation(Retrofit.RETROFIT)
     implementation(Retrofit.CONVERTER_SERIALIZATION)
-    implementation(Retrofit.CONVERTER_GSON)
-    implementation(Retrofit.CONVERTER_SCALARS)
     //okhttp3
     implementation(OkHttp.OKHTTP)
     implementation(OkHttp.LOGGING_INTERCEPTOR)
+
+    //Serialization
+    implementation(Serialization.SERIALIZATION)
 
     //kakao login
     implementation(Kakao.KAKAO)

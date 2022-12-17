@@ -1,17 +1,16 @@
 package com.movingmaker.data.remote.model.request
 
-import com.google.gson.annotations.SerializedName
 import com.movingmaker.data.remote.model.RemoteModel
 import com.movingmaker.domain.model.request.ReportCommentModel
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ReportCommentRequest(
-    @SerializedName(value = "commentId")
-    val id: Long,
-    @SerializedName(value = "content")
+    val commentId: Long,
     val content: String,
 ) : RemoteModel {
     override fun toDomainModel() = ReportCommentModel(
-        id, content
+        commentId, content
     )
 }
 

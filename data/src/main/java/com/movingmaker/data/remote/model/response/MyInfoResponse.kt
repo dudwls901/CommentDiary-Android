@@ -1,21 +1,18 @@
 package com.movingmaker.data.remote.model.response
 
-import com.google.gson.annotations.SerializedName
 import com.movingmaker.data.remote.model.RemoteModel
 import com.movingmaker.domain.model.response.MyInfo
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class MyInfoResponse(
-    @SerializedName(value = "email")
     val email: String,
-    @SerializedName(value = "loginType")
     val loginType: String,
-    @SerializedName(value = "temperature")
     val temperature: Double,
-    @SerializedName(value = "pushYn")
-    val pushYN: Char
+    val pushYn: Char
 ) : RemoteModel {
     override fun toDomainModel() = MyInfo(
-        email, loginType, temperature, pushYN
+        email, loginType, temperature, pushYn
     )
 }
 
