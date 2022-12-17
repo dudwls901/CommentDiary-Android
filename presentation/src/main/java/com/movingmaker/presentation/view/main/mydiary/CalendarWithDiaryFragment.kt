@@ -81,9 +81,6 @@ class CalendarWithDiaryFragment :
         }
 
         myDiaryViewModel.selectedYearMonth.observe(viewLifecycleOwner) { ym ->
-            Timber.d(
-                "observeData:ym $ym ${binding.materialCalendarView.selectedDate} ${binding.materialCalendarView.currentDate}"
-            )
             ym?.let {
                 myDiaryViewModel.getMonthDiary(it)
             }
@@ -114,7 +111,7 @@ class CalendarWithDiaryFragment :
         myDiaryViewModel.selectedDate.observe(viewLifecycleOwner) { date ->
             binding.materialCalendarView.selectedDate = DateConverter.toCalenderDay(date)
             Timber.d(
-                "observeData: date $date ${binding.materialCalendarView.selectedDate} ${binding.materialCalendarView.currentDate}"
+                "selected Date $date ${binding.materialCalendarView.selectedDate} ${binding.materialCalendarView.currentDate}"
             )
             when (date) {
                 null -> {
@@ -185,19 +182,16 @@ class CalendarWithDiaryFragment :
             val beforeDate = materialCalendarView.currentDate
             val nextDate = CalendarDay.from(beforeDate.year, beforeDate.month - 1, beforeDate.day)
             materialCalendarView.currentDate = nextDate
-            myDiaryViewModel.setSelectedYearMonth(DateConverter.ymFormat(nextDate))
+            myDiaryViewModel.setSelectedYearMonth(DateConverter.ymFormat(materialCalendarView.currentDate))
             myDiaryViewModel.setSelectedDate(null)
             materialCalendarView.selectedDate = null
-            Timber.d(
-                "initCalendar: ${materialCalendarView.currentDate} ${materialCalendarView.selectedDate}"
-            )
         }
 
         rightArrowButton.setOnClickListener {
             val beforeDate = materialCalendarView.currentDate
             val nextDate = CalendarDay.from(beforeDate.year, beforeDate.month + 1, beforeDate.day)
             materialCalendarView.currentDate = nextDate
-            myDiaryViewModel.setSelectedYearMonth(DateConverter.ymFormat(nextDate))
+            myDiaryViewModel.setSelectedYearMonth(DateConverter.ymFormat(materialCalendarView.currentDate))
             myDiaryViewModel.setSelectedDate(null)
             materialCalendarView.selectedDate = null
         }
