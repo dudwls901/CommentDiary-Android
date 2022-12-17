@@ -109,15 +109,12 @@ class CalendarWithDiaryFragment :
 
 
         myDiaryViewModel.selectedDate.observe(viewLifecycleOwner) { date ->
-            binding.materialCalendarView.selectedDate = DateConverter.toCalenderDay(date)
-            Timber.d(
-                "selected Date $date ${binding.materialCalendarView.selectedDate} ${binding.materialCalendarView.currentDate}"
-            )
             when (date) {
                 null -> {
                     checkSelectedDate(null)
                 }
                 else -> {
+                    binding.materialCalendarView.selectedDate = DateConverter.toCalenderDay(date)
                     val (y, m, d) = date.split('.').map { it.toInt() }
                     checkSelectedDate(CalendarDay.from(y, m - 1, d))
                 }
@@ -183,8 +180,10 @@ class CalendarWithDiaryFragment :
             val nextDate = CalendarDay.from(beforeDate.year, beforeDate.month - 1, beforeDate.day)
             materialCalendarView.currentDate = nextDate
             myDiaryViewModel.setSelectedYearMonth(DateConverter.ymFormat(materialCalendarView.currentDate))
-            myDiaryViewModel.setSelectedDate(null)
             materialCalendarView.selectedDate = null
+            Timber.d(" selected Date : ${binding.materialCalendarView.selectedDate} ${binding.materialCalendarView.currentDate}")
+            myDiaryViewModel.setSelectedDate(null)
+
         }
 
         rightArrowButton.setOnClickListener {
@@ -192,8 +191,9 @@ class CalendarWithDiaryFragment :
             val nextDate = CalendarDay.from(beforeDate.year, beforeDate.month + 1, beforeDate.day)
             materialCalendarView.currentDate = nextDate
             myDiaryViewModel.setSelectedYearMonth(DateConverter.ymFormat(materialCalendarView.currentDate))
-            myDiaryViewModel.setSelectedDate(null)
             materialCalendarView.selectedDate = null
+            Timber.d( "selected Date : ${binding.materialCalendarView.selectedDate} ${binding.materialCalendarView.currentDate}")
+            myDiaryViewModel.setSelectedDate(null)
         }
     }
 
