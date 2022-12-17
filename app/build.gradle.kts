@@ -53,8 +53,8 @@ android {
         }
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
-            //            프로가드 미사용
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
