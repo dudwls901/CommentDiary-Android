@@ -29,10 +29,10 @@
             android:layout_width="0dp"
             android:layout_height="3dp"
             android:indeterminateTint="@color/core_green"
-            android:signUpProgress="@{vm.currentFragment}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:signUpProgress="@{vm.currentFragment}" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/onboardingNavHostFragment"
@@ -54,10 +54,10 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="11dp"
             android:background="@drawable/background_green_radius_10"
-            android:buttonState="@{vm.currentFragment}"
             android:text="@string/onboarding_login"
             android:textAlignment="center"
             android:textColor="@color/background_ivory"
+            app:buttonState="@{vm.currentFragment}"
             app:layout_constraintBottom_toTopOf="@id/noAccountTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -112,12 +112,12 @@
             android:layout_height="wrap_content"
             android:indeterminateTint="@color/core_pure_green"
             android:visibility="invisible"
-            app:nonClickableActivity="@{activity}"
-            app:nonClickableLoading="@{vm.loading}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:nonClickableActivity="@{activity}"
+            app:nonClickableLoading="@{vm.loading}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

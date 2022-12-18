@@ -66,7 +66,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="@color/text_black"
-                    android:yearMonth="@{vm.selectedYearMonth}"
+                    app:yearMonth="@{vm.selectedYearMonth}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:text="2022년 3월" />
@@ -243,7 +243,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="2022.02 나의 일기" />
-                    <!--android:text="@{myDiaryviewModel.selectedDiary.title}"-->
+
                     <TextView
                         android:id="@+id/diaryHeadTextView"
                         style="@style/BSubheadline"

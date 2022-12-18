@@ -77,7 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:checkState="@{vm.isAllAccept}"
+                app:checkState="@{vm.isAllAccept}"
                 android:contentDescription="@string/accepts_terms"
                 android:paddingVertical="12dp"
                 android:paddingStart="23dp"
@@ -103,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="11dp"
-                android:checkState="@{vm.isPolicyAccept}"
+                app:checkState="@{vm.isPolicyAccept}"
                 android:contentDescription="@string/policy_accept"
                 android:src="@drawable/ic_check" />
 
@@ -144,7 +144,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="11dp"
-                android:checkState="@{vm.isTermsAccept}"
+                app:checkState="@{vm.isTermsAccept}"
                 android:contentDescription="@string/policy_accept"
                 android:src="@drawable/ic_check" />
 
@@ -185,7 +185,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="11dp"
-                android:checkState="@{vm.isPushAccept}"
+                app:checkState="@{vm.isPushAccept}"
                 android:contentDescription="@string/policy_accept"
                 android:src="@drawable/ic_check" />
 

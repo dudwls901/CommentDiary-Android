@@ -10,7 +10,7 @@ import com.movingmaker.presentation.R
 import com.movingmaker.presentation.util.DIARY_TYPE
 
 
-@BindingAdapter("app:diaryHint")
+@BindingAdapter("diaryHint")
 fun EditText.bindDiaryHint(diaryType: LiveData<DIARY_TYPE>) {
     hint = when (diaryType.value) {
         DIARY_TYPE.COMMENT_DIARY -> context.getString(R.string.write_comment_diary_content_hint)
@@ -18,7 +18,7 @@ fun EditText.bindDiaryHint(diaryType: LiveData<DIARY_TYPE>) {
     }
 }
 
-@BindingAdapter("app:colorWithDiaryType")
+@BindingAdapter("colorWithDiaryType")
 fun TextView.bindColorWithDiaryType(diaryType: LiveData<DIARY_TYPE>) {
     setTextColor(
         when (diaryType.value) {
@@ -28,7 +28,7 @@ fun TextView.bindColorWithDiaryType(diaryType: LiveData<DIARY_TYPE>) {
     )
 }
 
-@BindingAdapter("app:sendButtonState")
+@BindingAdapter("sendButtonState")
 fun AppCompatButton.bindSendButtonState(canSendCommentDiary: LiveData<Boolean>) {
     background = when (canSendCommentDiary.value) {
         true -> AppCompatResources.getDrawable(context, R.drawable.background_green_radius_10)

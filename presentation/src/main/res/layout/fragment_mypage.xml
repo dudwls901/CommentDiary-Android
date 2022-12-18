@@ -41,7 +41,7 @@
             android:paddingHorizontal="14dp"
             android:paddingVertical="0dp"
             android:text="@{vm.myAccount}"
-            android:visibleEmail="@{vm.loginType}"
+            app:visibleEmail="@{vm.loginType}"
             android:textAlignment="center"
             android:textColor="@color/text_black"
             app:layout_constraintEnd_toEndOf="parent"
