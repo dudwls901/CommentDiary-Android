@@ -27,7 +27,7 @@ import com.movingmaker.presentation.util.ymdToCalendarDay
 import com.movingmaker.presentation.util.ymdToDate
 import com.movingmaker.presentation.view.main.mydiary.calendardecorator.AloneDotDecorator
 import com.movingmaker.presentation.view.main.mydiary.calendardecorator.CommentDotDecorator
-import com.movingmaker.presentation.view.main.mydiary.calendardecorator.SelectedDateDecorator
+import com.movingmaker.presentation.view.main.mydiary.calendardecorator.TodayDotDecorator
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -93,6 +93,7 @@ class CalendarWithDiaryFragment :
                 currentDate = toCalenderDay(myDiaryViewModel.selectedYearMonth.value)
                 removeDecorators()
                 addDecorators(
+                    TodayDotDecorator(),
                     AloneDotDecorator(
                         requireContext(),
                         myDiaryViewModel.aloneDiary.value!!
@@ -123,8 +124,8 @@ class CalendarWithDiaryFragment :
 
     private fun initViews() {
         initSwipeRefresh()
-        initCalendar()
         initButtons()
+        initCalendar()
     }
 
     private fun initButtons() = with(binding) {
@@ -200,19 +201,16 @@ class CalendarWithDiaryFragment :
         }
     }
 
-    private fun setCalendarConfig() = with(binding) {
-        materialCalendarView.state().edit()
+    private fun setCalendarConfig() = with(binding.materialCalendarView) {
+        state().edit()
             .setFirstDayOfWeek(Calendar.SUNDAY)
             .setMinimumDate(CalendarDay.from(2021, 0, 1))//캘린더 시작 날짜
             .setMaximumDate(CalendarDay.from(2099, 11, 31))//캘린더 끝 날짜
             .setCalendarDisplayMode(CalendarMode.MONTHS) // 월 달력, 주 달력
             .commit()
-        materialCalendarView.setWeekDayFormatter(ArrayWeekDayFormatter(resources.getStringArray(R.array.custom_weekdays)))
-        materialCalendarView.addDecorator(
-            SelectedDateDecorator(requireContext())
-        )
-        materialCalendarView.isDynamicHeightEnabled = true
-        materialCalendarView.topbarVisible = false
+        setWeekDayFormatter(ArrayWeekDayFormatter(resources.getStringArray(R.array.custom_weekdays)))
+        isDynamicHeightEnabled = true
+        topbarVisible = false
     }
 
     @SuppressLint("ResourceAsColor")
@@ -245,7 +243,7 @@ class CalendarWithDiaryFragment :
 
     private fun adjustCalendarSize() = with(binding) {
 
-        val (widthPixel, heightPixel) = getDisplaySize()
+        val widthPixel = getDisplaySize().first
 
         //1080 이하인 기기 캘린더 사이즈 조정
         //nexus 720 1280

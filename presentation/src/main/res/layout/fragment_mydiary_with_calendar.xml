@@ -34,9 +34,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/calendarTopLayout"
                 app:mcv_dateTextAppearance="@style/CalendarDateText"
-                app:mcv_selectionColor="@color/core_pure_orange"
-                app:mcv_tileSize="45dp"
-                app:mcv_weekDayTextAppearance="@style/CalendarDayOfWeek" />
+                app:mcv_selectionColor="@color/core_beige"
+                app:mcv_tileSize="45dp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/calendarTopLayout"
@@ -105,8 +104,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/calendarTopLayout" />
-            <!--                app:mcv_headerTextAppearance="@style/CalendarViewHeaderCustomText"-->
-
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/bottomLayout"
