@@ -125,7 +125,7 @@ class DiaryListFragment :
             // 전체 보기
             searchPeriod = "all"
             setDiaries()
-            gatherDiaryViewModel.setSelectedMonth(DateConverter.ymFormat(DateConverter.getCodaToday())!!)
+            gatherDiaryViewModel.setSelectedMonth(DateConverter.ymFormatForLocalDate(DateConverter.getCodaToday())!!)
             binding.selectDateTextView.text = getString(R.string.show_all)
             dialogView.dismiss()
         }
@@ -142,10 +142,12 @@ class DiaryListFragment :
             val action = DiaryListFragmentDirections.actionDiaryListFragmentToWriteDiaryFragment()
             findNavController().navigate(action)
         } else {
-            val nextDate = DateConverter.ymdToDate(diary.date)
-            val nextDateToString = nextDate.plusDays(1).toString().replace('-', '.')
-            lifecycleScope.launch {
-                myDiaryViewModel.setResponseGetDayComment(nextDateToString)
+            DateConverter.ymdToDate(diary.date)?.let { date ->
+                DateConverter.ymdFormat(date.plusDays(1))?.let { nextDate ->
+                    lifecycleScope.launch {
+                        myDiaryViewModel.setResponseGetDayComment(nextDate)
+                    }
+                }
             }
             val action =
                 DiaryListFragmentDirections.actionDiaryListFragmentToCommentDiaryDetailFragment()

@@ -64,19 +64,21 @@ class WriteDiaryFragment :
         //저장은 혼자 쓴 일기, 코멘트 일기 둘 다 가능
         myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
             //이전 날짜면은 AlONE_DIARY
-            val selectedDate = myDiaryViewModel.selectedDate.value
-            //다이어리 타입 설정
-            myDiaryViewModel.setSelectedDiaryType(
-                when {
-                    myDiaryViewModel.selectedDate.value != null && DateConverter.ymdToDate(
-                        myDiaryViewModel.selectedDate.value!!
-                    ) < DateConverter.getCodaToday() -> {
-                        DIARY_TYPE.ALONE_DIARY
-                    }
-                    diary == null -> DIARY_TYPE.COMMENT_DIARY
-                    else -> DIARY_TYPE.ALONE_DIARY
+            myDiaryViewModel.selectedDate.value?.let { selectedDate ->
+                DateConverter.ymdToDate(selectedDate)?.let { selectedLocalDate ->
+                    //다이어리 타입 설정
+                    myDiaryViewModel.setSelectedDiaryType(
+                        when {
+                            myDiaryViewModel.selectedDate.value != null && selectedLocalDate < DateConverter.getCodaToday() -> {
+                                DIARY_TYPE.ALONE_DIARY
+                            }
+                            diary == null -> DIARY_TYPE.COMMENT_DIARY
+                            else -> DIARY_TYPE.ALONE_DIARY
+                        }
+                    )
                 }
-            )
+            }
+
         }
 
         myDiaryViewModel.selectDiaryTypeToolbarIsExpanded.observe(viewLifecycleOwner) { isExpand ->

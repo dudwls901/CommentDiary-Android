@@ -13,6 +13,31 @@ object DateConverter {
     fun getToday() = LocalDateTime.now().toLocalDate()
 
     @JvmStatic
+    fun ymdToDate(ymd: String): LocalDate? {
+        return try{
+            val (y, m, d) = ymd.split('.').map { it.toInt() }
+            LocalDate.of(y, m, d)
+        }catch (e: Exception){
+            null
+        }
+    }
+
+    @JvmStatic
+    fun ymdToCalendarDay(date: String): CalendarDay?{
+        return try {
+            val (y, m, d) = date.split('.').map { it.toInt() }
+            CalendarDay.from(y,m-1,d)
+        }catch (e: Exception){
+            null
+        }
+    }
+
+    @JvmStatic
+    fun calenderDayToLocalDate(date: CalendarDay): LocalDate =
+        LocalDate.of(date.year, date.month + 1, date.day)
+
+
+    @JvmStatic
     fun toCalenderDay(date: Any?): CalendarDay {
         return when (date) {
             is String -> {
@@ -58,14 +83,15 @@ object DateConverter {
         }
     }
 
+    //0~11월
     @JvmStatic
-    fun ymFormat(date: Any): String? {
+    fun ymFormatForCalendarDay(date: Any): String? {
         return when (date) {
             is LocalDate -> {
-                "${date.year}.${String.format("%02d", date.monthValue)}"
+                "${date.year}.${String.format("%02d", date.monthValue - 1)}"
             }
             is CalendarDay -> {
-                "${date.year}.${String.format("%02d", date.month + 1)}"
+                "${date.year}.${String.format("%02d", date.month)}"
             }
             else -> {
                 null
@@ -73,10 +99,28 @@ object DateConverter {
         }
     }
 
+    //1~12월
     @JvmStatic
-    fun ymdToDate(ymd: String): LocalDate {
-        val (y, m, d) = ymd.split('.').map { it.toInt() }
-        return LocalDate.of(y, m, d)
+    fun ymFormatForLocalDate(date: Any?): String? {
+        return when (date) {
+            is LocalDate -> {
+                "${date.year}.${String.format("%02d", date.monthValue)}"
+            }
+            is CalendarDay -> {
+                "${date.year}.${String.format("%02d", date.month + 1)}"
+            }
+            is String -> {
+                try {
+                    date.substring(0, 7)
+                } catch (e: Exception) {
+                    null
+                }
+            }
+            else -> {
+                null
+            }
+        }
     }
+
 }
 

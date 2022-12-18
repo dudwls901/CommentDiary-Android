@@ -108,7 +108,7 @@ class SendedCommentListFragment :
             // 전체 보기
             searchPeriod = "all"
             setComments()
-            myPageViewModel.setSelectedMonth(DateConverter.ymFormat(DateConverter.getCodaToday())!!)
+            myPageViewModel.setSelectedMonth(DateConverter.ymFormatForLocalDate(DateConverter.getCodaToday())!!)
             binding.selectDateTextView.text = getString(R.string.show_all)
             dialogView.dismiss()
         }

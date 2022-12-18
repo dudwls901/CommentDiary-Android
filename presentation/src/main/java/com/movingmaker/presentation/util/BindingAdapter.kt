@@ -175,17 +175,19 @@ fun changeVisibleWithDiaryType(
                     (view as TextView)
                     tempSelectedDiaryDate.value?.let {
                         val selectedDiaryDate = DateConverter.ymdToDate(it)
-                        if (selectedDiaryDate < DateConverter.getCodaToday()) {
-                            view.isEnabled = false
-                            view.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-                        } else {
-                            view.isEnabled = true
-                            view.setCompoundDrawablesWithIntrinsicBounds(
-                                0,
-                                0,
-                                R.drawable.ic_arrow_down,
-                                0
-                            )
+                        selectedDiaryDate?.let { selectedDate ->
+                            if (selectedDate < DateConverter.getCodaToday()) {
+                                view.isEnabled = false
+                                view.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                            } else {
+                                view.isEnabled = true
+                                view.setCompoundDrawablesWithIntrinsicBounds(
+                                    0,
+                                    0,
+                                    R.drawable.ic_arrow_down,
+                                    0
+                                )
+                            }
                         }
                     }
                     view.text = when (diaryType.value) {

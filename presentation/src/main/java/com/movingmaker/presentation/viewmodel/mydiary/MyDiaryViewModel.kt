@@ -55,7 +55,7 @@ class MyDiaryViewModel @Inject constructor(
         get() = _dateDiaryText
 
     private var _selectedYearMonth = MutableLiveData<String>().apply {
-        value = DateConverter.ymFormat(DateConverter.getCodaToday())
+        value = DateConverter.ymFormatForLocalDate(DateConverter.getCodaToday())
     }
     val selectedYearMonth: LiveData<String>
         get() = _selectedYearMonth

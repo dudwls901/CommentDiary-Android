@@ -39,7 +39,7 @@ class GatherDiaryViewModel @Inject constructor(
 
     init {
         _diaryList.value = emptyList()
-        _selectedMonth.value = DateConverter.ymFormat(DateConverter.getCodaToday())
+        _selectedMonth.value = DateConverter.ymFormatForLocalDate(DateConverter.getCodaToday())
     }
 
     private fun setDiaryList(list: List<Diary>) {

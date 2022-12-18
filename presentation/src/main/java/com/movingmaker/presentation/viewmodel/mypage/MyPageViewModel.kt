@@ -53,7 +53,7 @@ class MyPageViewModel @Inject constructor(
         get() = _loginType
 
     private var _selectedMonth = MutableLiveData<String>().apply {
-        value = DateConverter.ymFormat(
+        value = DateConverter.ymFormatForLocalDate(
             DateConverter.getCodaToday()
         )
     }
