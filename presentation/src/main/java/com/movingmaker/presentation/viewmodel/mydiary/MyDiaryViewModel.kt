@@ -52,10 +52,6 @@ class MyDiaryViewModel @Inject constructor(
     val selectedDiary: LiveData<Diary?>
         get() = _selectedDiary
 
-    private var _dateDiaryText = MutableLiveData<String>().apply { value = "" }
-    val dateDiaryText: LiveData<String>
-        get() = _dateDiaryText
-
     private var _selectedYearMonth = MutableLiveData<String>().apply {
         value = ymFormatForLocalDate(getCodaToday())
     }
@@ -111,6 +107,7 @@ class MyDiaryViewModel @Inject constructor(
 
     //for diary data
     fun setSelectedDiary(diary: Diary?) {
+        Timber.d("여기2 $diary")
         if (diary == null) {
             _selectedDiary.value = null
             _commentList.value = emptyList()
@@ -137,10 +134,6 @@ class MyDiaryViewModel @Inject constructor(
         _pushDate.value = date
     }
 
-    //for view
-    fun setDateDiaryText(text: String) {
-        _dateDiaryText.value = text
-    }
 
     fun setHaveDayMyComment(isHave: Boolean) {
         _haveDayMyComment.value = isHave

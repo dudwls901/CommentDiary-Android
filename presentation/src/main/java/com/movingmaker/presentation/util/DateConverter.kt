@@ -14,6 +14,14 @@ fun getCodaToday(): LocalDate = LocalDateTime.now().minusHours(7).toLocalDate()
 
 fun getToday() = LocalDateTime.now().toLocalDate()
 
+fun String.getSplitYMD(): Triple<String, String, String> = try {
+    val ret = this.split('.')
+    require(ret.size == 3)
+    Triple(ret[0], ret[1], ret[2])
+} catch (e: Exception) {
+    Triple("", "", "")
+}
+
 fun ymdToDate(ymd: String): LocalDate? {
     return try {
         val (y, m, d) = ymd.split('.').map { it.toInt() }

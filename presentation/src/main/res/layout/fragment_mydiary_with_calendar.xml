@@ -145,13 +145,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="20dp"
                             android:layout_marginTop="19dp"
-                            android:text="@{vm.dateDiaryText}"
-                            android:textColor="@color/core_pure_orange"
+                            app:writeDiaryPreviewHead="@{vm.selectedDate}"
                             app:layout_constraintBottom_toTopOf="@id/writeDiaryTextView"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_chainStyle="packed"
-                            tools:text="12.22일 나의 일기" />
+                            tools:text="12.22일 일기" />
 
                         <TextView
                             android:id="@+id/writeDiaryTextView"
@@ -238,8 +237,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
                         android:layout_marginTop="16dp"
-                        android:text="@{vm.dateDiaryText}"
-                        android:textColor="@color/core_pure_orange"
+                        app:diaryPreviewHead="@{vm.selectedDiary}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="2022.02 나의 일기" />

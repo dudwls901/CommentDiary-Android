@@ -300,10 +300,6 @@ class CalendarWithDiaryFragment :
             noCommentTextView.isVisible = false
             return
         }
-        //시간 남으면 databinding으로 옮기기
-        myDiaryViewModel.setDateDiaryText(
-            "${String.format("%02d", date.month + 1)}월 ${String.format("%02d", date.day)}일 나의 일기"
-        )
 
         //이전 날짜면 검사
         if (myDiaryViewModel.monthDiaries.value?.isNotEmpty() == true) {

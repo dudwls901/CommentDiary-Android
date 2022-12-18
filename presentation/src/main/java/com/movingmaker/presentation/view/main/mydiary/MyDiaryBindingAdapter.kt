@@ -6,9 +6,33 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
+import com.movingmaker.domain.model.response.Diary
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.util.DIARY_TYPE
+import com.movingmaker.presentation.util.getSplitYMD
 
+@BindingAdapter("app:writeDiaryPreviewHead")
+fun TextView.bindWriteDiaryPreviewHead(date: LiveData<String>) {
+    date.value?.let {
+        val (_, m, d) = it.getSplitYMD()
+        text = context.getString(R.string.diary_head_date_text, m, d)
+    }
+}
+
+@BindingAdapter("app:diaryPreviewHead")
+fun TextView.bindDiaryPreviewHeadText(diary: LiveData<Diary?>) {
+    diary.value?.let {
+        this.setTextColor(
+            if (it.deliveryYN == 'Y') {
+                context.getColor(R.color.core_green)
+            } else {
+                context.getColor(R.color.core_orange)
+            }
+        )
+        val (_, m, d) = it.date.getSplitYMD()
+        text = context.getString(R.string.diary_head_date_text, m, d)
+    }
+}
 
 @BindingAdapter("diaryHint")
 fun EditText.bindDiaryHint(diaryType: LiveData<DIARY_TYPE>) {
