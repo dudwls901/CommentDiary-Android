@@ -48,8 +48,8 @@
     <string name="calendar_with_diary_button_write_text">오늘의 일기 쓰기</string>
     <string name="calendar_with_diary_button_text">오늘은 어떤 하루였나요?</string>
     <string name="write_diary_head_hint">제목을 작성해 주세요.</string>
-    <string name="write_diary_content_hint">내용을 작성해 주세요.</string>
-    <string name="write_diary_content_100_hint">내용을 100자 이상 작성해 주세요.</string>
+    <string name="write_alone_diary_content_hint">내용을 작성해 주세요.</string>
+    <string name="write_comment_diary_content_hint">일기를 작성하고, 코멘트를 받을 수 있어요.\n일기전송은 다가오는 오전 7시에 종료돼요.</string>
     <string name="mydiary_text_decoration">오늘은 기록이 없어요. 기록을 하고 코멘트를 받아봐요 :)</string>
     <string name="write_text">작성하기</string>
     <string name="store_text">저장하기</string>
