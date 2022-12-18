@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
+import android.view.WindowManager
+import android.view.WindowMetrics
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -178,7 +180,7 @@ class CalendarWithDiaryFragment :
     }
 
     private fun setMonthMoveListener() = with(binding) {
-        materialCalendarView.setOnMonthChangedListener { widget, date ->
+        materialCalendarView.setOnMonthChangedListener { _, date ->
             if (ymFormatForLocalDate(date) == myDiaryViewModel.selectedYearMonth.value) {
                 return@setOnMonthChangedListener
             }
@@ -228,17 +230,20 @@ class CalendarWithDiaryFragment :
 
     //휴대폰 디스클레이 사이즈 구하기
     private fun getDisplaySize(): Pair<Int, Int> {
-        val outMetrics = DisplayMetrics()
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            val display = requireActivity().display
-            display?.getRealMetrics(outMetrics)
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            val metrics: WindowMetrics =
+                requireContext().getSystemService(WindowManager::class.java).currentWindowMetrics
+            Pair(metrics.bounds.width(), metrics.bounds.height())
         } else {
+            val outMetrics = DisplayMetrics()
+
             @Suppress("DEPRECATION")
             val display = requireActivity().windowManager.defaultDisplay
             @Suppress("DEPRECATION")
             display.getMetrics(outMetrics)
+            Pair(outMetrics.widthPixels, outMetrics.heightPixels)
         }
-        return Pair(outMetrics.widthPixels, outMetrics.heightPixels)
+
     }
 
     private fun adjustCalendarSize() = with(binding) {
