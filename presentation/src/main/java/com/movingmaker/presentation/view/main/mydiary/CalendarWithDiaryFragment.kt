@@ -15,10 +15,16 @@ import androidx.navigation.fragment.findNavController
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentMydiaryWithCalendarBinding
-import com.movingmaker.presentation.util.DateConverter
 import com.movingmaker.presentation.util.Extension.toDp
 import com.movingmaker.presentation.util.Extension.toPx
 import com.movingmaker.presentation.util.FRAGMENT_NAME
+import com.movingmaker.presentation.util.calenderDayToLocalDate
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.toCalenderDay
+import com.movingmaker.presentation.util.ymFormatForLocalDate
+import com.movingmaker.presentation.util.ymdFormat
+import com.movingmaker.presentation.util.ymdToCalendarDay
+import com.movingmaker.presentation.util.ymdToDate
 import com.movingmaker.presentation.view.main.mydiary.calendardecorator.AloneDotDecorator
 import com.movingmaker.presentation.view.main.mydiary.calendardecorator.CommentDotDecorator
 import com.movingmaker.presentation.view.main.mydiary.calendardecorator.SelectedDateDecorator
@@ -52,7 +58,7 @@ class CalendarWithDiaryFragment :
 
     private fun refreshViews() {
         //현재 클릭된 날짜는 그대로, but 내용만 최신화됨
-        DateConverter.ymFormatForLocalDate(myDiaryViewModel.selectedDate.value)?.let {
+        ymFormatForLocalDate(myDiaryViewModel.selectedDate.value)?.let {
             lifecycleScope.launch {
                 myDiaryViewModel.getMonthDiary(it)
             }
@@ -78,13 +84,13 @@ class CalendarWithDiaryFragment :
 
         myDiaryViewModel.monthDiaries.observe(viewLifecycleOwner) {
             myDiaryViewModel.selectedDate.value?.let { selectedDate ->
-                DateConverter.ymdToCalendarDay(selectedDate)?.let { calendarDay ->
+                ymdToCalendarDay(selectedDate)?.let { calendarDay ->
                     //for refresh?
                     checkSelectedDate(calendarDay)
                 }
             }
             with(binding.materialCalendarView) {
-                currentDate = DateConverter.toCalenderDay(myDiaryViewModel.selectedYearMonth.value)
+                currentDate = toCalenderDay(myDiaryViewModel.selectedYearMonth.value)
                 removeDecorators()
                 addDecorators(
                     AloneDotDecorator(
@@ -106,7 +112,7 @@ class CalendarWithDiaryFragment :
                     checkSelectedDate(null)
                 }
                 else -> {
-                    binding.materialCalendarView.selectedDate = DateConverter.toCalenderDay(date)
+                    binding.materialCalendarView.selectedDate = toCalenderDay(date)
                     val (y, m, d) = date.split('.').map { it.toInt() }
                     checkSelectedDate(CalendarDay.from(y, m - 1, d))
                 }
@@ -140,7 +146,7 @@ class CalendarWithDiaryFragment :
 
     private fun initSwipeRefresh() = with(binding) {
         swipeRefreshLayout.setOnRefreshListener {
-            val codaToday = DateConverter.ymdFormat(DateConverter.getCodaToday())
+            val codaToday = ymdFormat(getCodaToday())
             //오늘 날짜로 이동
             val (y, m, d) = codaToday!!.split('.').map { it.toInt() }
             materialCalendarView.currentDate = CalendarDay.from(y, m - 1, d)
@@ -166,16 +172,16 @@ class CalendarWithDiaryFragment :
 
     private fun setDateMoveListener() {
         binding.materialCalendarView.setOnDateChangedListener { _, date, _ ->
-            myDiaryViewModel.setSelectedDate(DateConverter.ymdFormat(date))
+            myDiaryViewModel.setSelectedDate(ymdFormat(date))
         }
     }
 
     private fun setMonthMoveListener() = with(binding) {
         materialCalendarView.setOnMonthChangedListener { widget, date ->
-            if (DateConverter.ymFormatForLocalDate(date) == myDiaryViewModel.selectedYearMonth.value) {
+            if (ymFormatForLocalDate(date) == myDiaryViewModel.selectedYearMonth.value) {
                 return@setOnMonthChangedListener
             }
-            myDiaryViewModel.setSelectedYearMonth(DateConverter.ymFormatForLocalDate(date))
+            myDiaryViewModel.setSelectedYearMonth(ymFormatForLocalDate(date))
             myDiaryViewModel.setSelectedDate(null)
         }
 
@@ -276,17 +282,17 @@ class CalendarWithDiaryFragment :
 
         //아래 부분은 날짜를 캘린더에서 선택한 경우
         //calendar date는 month가 0부터 시작하기 때문에 이를 다시 localDate로 바꿀 땐 +1
-        val selectedDate = DateConverter.calenderDayToLocalDate(date)
+        val selectedDate = calenderDayToLocalDate(date)
         val nextDate = selectedDate.plusDays(1)
 
         //오늘 내가 코멘트를 받은 경우 어제 일기를 선택했을 때 오늘 내가 코멘트를 쓴 상태인지 확인 -> Day+1
         lifecycleScope.launch {
-            DateConverter.ymdFormat(nextDate)?.let { date ->
+            ymdFormat(nextDate)?.let { date ->
                 myDiaryViewModel.setResponseGetDayComment(date)
             }
         }
 
-        val codaToday = DateConverter.getCodaToday()
+        val codaToday = getCodaToday()
         //미래 날짜면 일기 작성 불가, 조회 불가
         if (selectedDate > codaToday) {
             writeDiaryWrapLayout.isVisible = true
@@ -322,7 +328,7 @@ class CalendarWithDiaryFragment :
 
                         if (diary.commentList == null || diary.commentList!!.size == 0) {
                             //코멘트가 도착하지 않았는데 이틀 지난 경우
-                            val curDiaryDate = DateConverter.ymdToDate(diary.date)
+                            val curDiaryDate = ymdToDate(diary.date)
                             if (curDiaryDate != null && curDiaryDate <= codaToday.minusDays(2)) {
                                 sendDiaryBeforeAfterTextView.isVisible = false
                                 noCommentTextView.isVisible = diary.tempYN == 'N'

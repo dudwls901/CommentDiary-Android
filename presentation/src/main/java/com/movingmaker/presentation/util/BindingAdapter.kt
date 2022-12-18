@@ -174,9 +174,9 @@ fun changeVisibleWithDiaryType(
                 else -> {
                     (view as TextView)
                     tempSelectedDiaryDate.value?.let {
-                        val selectedDiaryDate = DateConverter.ymdToDate(it)
+                        val selectedDiaryDate = ymdToDate(it)
                         selectedDiaryDate?.let { selectedDate ->
-                            if (selectedDate < DateConverter.getCodaToday()) {
+                            if (selectedDate < getCodaToday()) {
                                 view.isEnabled = false
                                 view.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
                             } else {

@@ -14,8 +14,9 @@ import com.movingmaker.domain.usecase.LogOutUseCase
 import com.movingmaker.domain.usecase.PatchCommentPushStateUseCase
 import com.movingmaker.domain.usecase.SignOutUseCase
 import com.movingmaker.presentation.base.BaseViewModel
-import com.movingmaker.presentation.util.DateConverter
 import com.movingmaker.presentation.util.PreferencesUtil
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.ymFormatForLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -53,8 +54,8 @@ class MyPageViewModel @Inject constructor(
         get() = _loginType
 
     private var _selectedMonth = MutableLiveData<String>().apply {
-        value = DateConverter.ymFormatForLocalDate(
-            DateConverter.getCodaToday()
+        value = ymFormatForLocalDate(
+            getCodaToday()
         )
     }
     val selectedMonth: LiveData<String>

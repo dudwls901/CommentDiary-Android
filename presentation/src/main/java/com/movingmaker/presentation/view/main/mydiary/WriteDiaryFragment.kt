@@ -19,8 +19,9 @@ import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentMydiaryWritediaryBinding
 import com.movingmaker.presentation.util.DIARY_TYPE
-import com.movingmaker.presentation.util.DateConverter
 import com.movingmaker.presentation.util.FRAGMENT_NAME
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.ymdToDate
 import com.movingmaker.presentation.view.snackbar.CodaSnackBar
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
@@ -65,11 +66,11 @@ class WriteDiaryFragment :
         myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
             //이전 날짜면은 AlONE_DIARY
             myDiaryViewModel.selectedDate.value?.let { selectedDate ->
-                DateConverter.ymdToDate(selectedDate)?.let { selectedLocalDate ->
+                ymdToDate(selectedDate)?.let { selectedLocalDate ->
                     //다이어리 타입 설정
                     myDiaryViewModel.setSelectedDiaryType(
                         when {
-                            myDiaryViewModel.selectedDate.value != null && selectedLocalDate < DateConverter.getCodaToday() -> {
+                            myDiaryViewModel.selectedDate.value != null && selectedLocalDate < getCodaToday() -> {
                                 DIARY_TYPE.ALONE_DIARY
                             }
                             diary == null -> DIARY_TYPE.COMMENT_DIARY

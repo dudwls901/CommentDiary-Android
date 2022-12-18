@@ -17,7 +17,9 @@ import com.movingmaker.domain.usecase.SaveDiaryUseCase
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseViewModel
 import com.movingmaker.presentation.util.DIARY_TYPE
-import com.movingmaker.presentation.util.DateConverter
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.ymFormatForLocalDate
+import com.movingmaker.presentation.util.ymdFormat
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -55,13 +57,13 @@ class MyDiaryViewModel @Inject constructor(
         get() = _dateDiaryText
 
     private var _selectedYearMonth = MutableLiveData<String>().apply {
-        value = DateConverter.ymFormatForLocalDate(DateConverter.getCodaToday())
+        value = ymFormatForLocalDate(getCodaToday())
     }
     val selectedYearMonth: LiveData<String>
         get() = _selectedYearMonth
 
     private var _selectedDate = MutableLiveData<String>().apply {
-        value = DateConverter.ymdFormat(DateConverter.getCodaToday())
+        value = ymdFormat(getCodaToday())
     }
     val selectedDate: LiveData<String>
         get() = _selectedDate

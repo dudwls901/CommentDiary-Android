@@ -11,7 +11,8 @@ import com.movingmaker.domain.usecase.GetReceivedDiaryUseCase
 import com.movingmaker.domain.usecase.ReportDiaryUseCase
 import com.movingmaker.domain.usecase.SaveCommentUseCase
 import com.movingmaker.presentation.base.BaseViewModel
-import com.movingmaker.presentation.util.DateConverter
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.ymdFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -43,7 +44,7 @@ class ReceivedDiaryViewModel @Inject constructor(
     //오늘 날짜로 받은 일기 조회
     fun getReceiveDiary() = viewModelScope.launch {
         onLoading()
-        val date = DateConverter.ymdFormat(DateConverter.getCodaToday())!!
+        val date = ymdFormat(getCodaToday())!!
         with(receivedDiaryUseCase(date)) {
             offLoading()
             Timber.d("result $this")
@@ -64,7 +65,7 @@ class ReceivedDiaryViewModel @Inject constructor(
     //코멘트 저장
     fun saveComment(content: String) = viewModelScope.launch {
         onLoading()
-        val date = DateConverter.ymdFormat(DateConverter.getCodaToday())!!
+        val date = ymdFormat(getCodaToday())!!
         with(
             saveCommentUseCase(
                 SaveCommentModel(

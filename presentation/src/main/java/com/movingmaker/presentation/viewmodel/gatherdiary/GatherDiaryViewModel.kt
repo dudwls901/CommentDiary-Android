@@ -11,7 +11,8 @@ import com.movingmaker.domain.usecase.GetMonthDiaryUseCase
 import com.movingmaker.domain.usecase.LikeCommentUseCase
 import com.movingmaker.domain.usecase.ReportCommentUseCase
 import com.movingmaker.presentation.base.BaseViewModel
-import com.movingmaker.presentation.util.DateConverter
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.ymFormatForLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -39,7 +40,7 @@ class GatherDiaryViewModel @Inject constructor(
 
     init {
         _diaryList.value = emptyList()
-        _selectedMonth.value = DateConverter.ymFormatForLocalDate(DateConverter.getCodaToday())
+        _selectedMonth.value = ymFormatForLocalDate(getCodaToday())!!
     }
 
     private fun setDiaryList(list: List<Diary>) {
