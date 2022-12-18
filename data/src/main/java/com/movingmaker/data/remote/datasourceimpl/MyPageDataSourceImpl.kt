@@ -28,8 +28,8 @@ class MyPageDataSourceImpl @Inject constructor(
     override suspend fun getAllComment(): NetworkResult<BaseResponse<List<Comment>>> =
         safeApiCall { myPageApiService.getAllComment() }
 
-    override suspend fun getMonthComment(date: String): NetworkResult<BaseResponse<List<Comment>>> =
-        safeApiCall { myPageApiService.getMonthComment(date) }
+    override suspend fun getPeriodComment(date: String): NetworkResult<BaseResponse<List<Comment>>> =
+        safeApiCall { myPageApiService.getPeriodComment(date) }
 
     override suspend fun patchCommentPushState(): NetworkResult<BaseResponse<Map<String, Char>>> =
         safeApiCall { myPageApiService.patchCommentPushState() }

@@ -29,8 +29,9 @@ interface MyPageApiService {
     @GET(COMMENT + ALL)
     suspend fun getAllComment(): Response<BaseResponse<List<CommentResponse>>>
 
+    //ymd format이면 하루 코멘트, ym format이면 한 달 코멘트
     @GET(COMMENT)
-    suspend fun getMonthComment(@Query("date") date: String): Response<BaseResponse<List<CommentResponse>>>
+    suspend fun getPeriodComment(@Query("date") date: String): Response<BaseResponse<List<CommentResponse>>>
 
     @PATCH(MEMBERS + PUSH)
     suspend fun patchCommentPushState(): Response<BaseResponse<Map<String, Char>>>

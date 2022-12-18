@@ -8,8 +8,8 @@ import com.movingmaker.domain.model.request.ChangePasswordModel
 import com.movingmaker.domain.model.response.Comment
 import com.movingmaker.domain.usecase.ChangePasswordUseCase
 import com.movingmaker.domain.usecase.GetAllCommentUseCase
-import com.movingmaker.domain.usecase.GetMonthCommentUseCase
 import com.movingmaker.domain.usecase.GetMyPageUseCase
+import com.movingmaker.domain.usecase.GetPeriodCommentUseCase
 import com.movingmaker.domain.usecase.LogOutUseCase
 import com.movingmaker.domain.usecase.PatchCommentPushStateUseCase
 import com.movingmaker.domain.usecase.SignOutUseCase
@@ -29,7 +29,7 @@ class MyPageViewModel @Inject constructor(
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val getMyPageUseCase: GetMyPageUseCase,
     private val getAllCommentUseCase: GetAllCommentUseCase,
-    private val getMonthCommentUseCase: GetMonthCommentUseCase,
+    private val getPeriodCommentUseCase: GetPeriodCommentUseCase,
     private val patchCommentPushStateUseCase: PatchCommentPushStateUseCase
 ) : BaseViewModel() {
 
@@ -220,7 +220,7 @@ class MyPageViewModel @Inject constructor(
         val response = if (date == "all") {
             getAllCommentUseCase()
         } else {
-            getMonthCommentUseCase(date)
+            getPeriodCommentUseCase(date)
         }
         with(response) {
             offLoading()
