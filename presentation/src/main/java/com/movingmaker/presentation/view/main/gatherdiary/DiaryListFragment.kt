@@ -148,7 +148,7 @@ class DiaryListFragment :
             ymdToDate(diary.date)?.let { date ->
                 ymdFormat(date.plusDays(1))?.let { nextDate ->
                     lifecycleScope.launch {
-                        myDiaryViewModel.setResponseGetDayComment(nextDate)
+                        myDiaryViewModel.getDayWrittenComment(nextDate)
                     }
                 }
             }

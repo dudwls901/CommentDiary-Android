@@ -7,5 +7,5 @@ data class Diary(
     var date: String,
     var deliveryYN: Char,
     var tempYN: Char? = null,
-    val commentList: MutableList<Comment>?
+    val commentList: MutableList<Comment>
 )
