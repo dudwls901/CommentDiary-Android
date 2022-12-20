@@ -69,7 +69,7 @@ class ReceivedDiaryViewModel @Inject constructor(
         with(
             saveCommentUseCase(
                 SaveCommentModel(
-                    id = receivedDiary.value!!.id!!,
+                    id = receivedDiary.value!!.id,
                     date = date,
                     content = content
                 )
@@ -99,7 +99,7 @@ class ReceivedDiaryViewModel @Inject constructor(
         with(
             reportDiaryUseCase(
                 ReportDiaryModel(
-                    id = receivedDiary.value!!.id!!,
+                    id = receivedDiary.value!!.id,
                     content = content
                 )
             )

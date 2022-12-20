@@ -4,5 +4,5 @@ data class Comment(
     val id: Long,
     val content: String,
     val date: String,
-    var like: Boolean
+    val like: Boolean
 )

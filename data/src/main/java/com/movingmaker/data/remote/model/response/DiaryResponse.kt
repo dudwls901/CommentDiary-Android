@@ -6,12 +6,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DiaryResponse(
-    val id: Long?,
-    var title: String,
-    var content: String,
-    var date: String,
-    var deliveryYn: Char,
-    val commentResponseList: MutableList<CommentResponse>
+    val id: Long,
+    val title: String,
+    val content: String,
+    val date: String,
+    val deliveryYn: Char,
+    val commentResponseList: List<CommentResponse>
 ) : RemoteModel {
     override fun toDomainModel() = Diary(
         id = id,

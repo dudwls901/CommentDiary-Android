@@ -62,19 +62,19 @@ class CommentDiaryDetailFragment :
         myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
             Timber.d("observeDatas: --> $diary ")
             diary?.let {
-                commentListAdapter.submitList(diary.commentList?.toMutableList())
+                commentListAdapter.submitList(diary.commentList.toMutableList())
             }
         }
 
         myDiaryViewModel.haveDayMyComment.observe(viewLifecycleOwner) {
             val diary = myDiaryViewModel.selectedDiary.value!!
-            if (diary.id == null) return@observe
+//            if (diary.id == null) return@observe
             val codaToday = getCodaToday()
 //            Timber.d( "observeDatas:converter before $diary ${diary.date}")
             val selectedDate = ymdToDate(diary.date)
 
             //코멘트 없는 경우
-            if (diary.commentList?.isEmpty() == true || diary.commentList == null) {
+            if (diary.commentList.isEmpty()) {
                 binding.goToWriteCommentButton.isVisible = false
                 binding.goToWriteCommentTextView.isVisible = false
                 binding.noWriteCommentTextView.isVisible = false
