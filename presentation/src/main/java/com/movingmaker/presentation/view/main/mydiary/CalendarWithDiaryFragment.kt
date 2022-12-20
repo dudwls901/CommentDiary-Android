@@ -86,11 +86,11 @@ class CalendarWithDiaryFragment :
                     TodayDotDecorator(),
                     AloneDotDecorator(
                         requireContext(),
-                        myDiaryViewModel.aloneDiary.value!!
+                        myDiaryViewModel.aloneDiaryDates.value!!
                     ),
                     CommentDotDecorator(
                         requireContext(),
-                        myDiaryViewModel.commentDiary.value!!
+                        myDiaryViewModel.commentDiaryDates.value!!
                     ),
                 )
             }
