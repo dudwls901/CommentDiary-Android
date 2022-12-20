@@ -31,7 +31,7 @@ class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener) :
     }
 
     override fun getItemId(position: Int): Long {
-        return currentList[position].id!!
+        return currentList[position].id
     }
 
     inner class ItemViewHolder(private val binding: RvItemGatherdiaryDiaryBinding) :

@@ -19,8 +19,9 @@ import androidx.navigation.fragment.findNavController
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentMypageSendedCommentListBinding
-import com.movingmaker.presentation.util.DateConverter
 import com.movingmaker.presentation.util.FRAGMENT_NAME
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.ymFormatForLocalDate
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.mypage.MyPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -108,7 +109,7 @@ class SendedCommentListFragment :
             // 전체 보기
             searchPeriod = "all"
             setComments()
-            myPageViewModel.setSelectedMonth(DateConverter.ymFormat(DateConverter.getCodaToday())!!)
+            myPageViewModel.setSelectedMonth(ymFormatForLocalDate(getCodaToday())!!)
             binding.selectDateTextView.text = getString(R.string.show_all)
             dialogView.dismiss()
         }

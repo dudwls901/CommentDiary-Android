@@ -14,8 +14,9 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.movingmaker.presentation.R
-import com.movingmaker.presentation.util.DateConverter
 import com.movingmaker.presentation.util.PreferencesUtil
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.ymdFormat
 import com.movingmaker.presentation.view.main.MainActivity
 import timber.log.Timber
 import javax.inject.Inject
@@ -59,8 +60,8 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
     private fun sendMessage(messageTitle: String, messageBody: String, state: String) {
 
         val intent = Intent(this, MainActivity::class.java)
-        val yesterday = DateConverter.getCodaToday().minusDays(1)
-        intent.putExtra("pushDate", DateConverter.ymdFormat(yesterday))
+        val yesterday = getCodaToday().minusDays(1)
+        intent.putExtra("pushDate", ymdFormat(yesterday))
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
         val pendingIntent =

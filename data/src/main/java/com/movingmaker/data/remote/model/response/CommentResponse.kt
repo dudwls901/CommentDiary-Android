@@ -9,7 +9,7 @@ data class CommentResponse(
     val id: Long,
     val content: String,
     val date: String,
-    var like: Boolean
+    val like: Boolean
 ) : RemoteModel {
     override fun toDomainModel() = Comment(
         id, content, date, like

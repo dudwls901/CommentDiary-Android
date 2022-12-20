@@ -34,9 +34,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/calendarTopLayout"
                 app:mcv_dateTextAppearance="@style/CalendarDateText"
-                app:mcv_selectionColor="@color/core_pure_orange"
-                app:mcv_tileSize="45dp"
-                app:mcv_weekDayTextAppearance="@style/CalendarDayOfWeek" />
+                app:mcv_selectionColor="@color/core_beige"
+                app:mcv_tileSize="45dp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/calendarTopLayout"
@@ -67,7 +66,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="@color/text_black"
-                    android:yearMonth="@{vm.selectedYearMonth}"
+                    app:yearMonth="@{vm.selectedYearMonth}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:text="2022년 3월" />
@@ -105,8 +104,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/calendarTopLayout" />
-            <!--                app:mcv_headerTextAppearance="@style/CalendarViewHeaderCustomText"-->
-
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/bottomLayout"
@@ -148,13 +145,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="20dp"
                             android:layout_marginTop="19dp"
-                            android:text="@{vm.dateDiaryText}"
-                            android:textColor="@color/core_pure_orange"
+                            app:writeDiaryPreviewHead="@{vm.selectedDate}"
                             app:layout_constraintBottom_toTopOf="@id/writeDiaryTextView"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_chainStyle="packed"
-                            tools:text="12.22일 나의 일기" />
+                            tools:text="12.22일 일기" />
 
                         <TextView
                             android:id="@+id/writeDiaryTextView"
@@ -241,12 +237,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
                         android:layout_marginTop="16dp"
-                        android:text="@{vm.dateDiaryText}"
-                        android:textColor="@color/core_pure_orange"
+                        app:diaryPreviewHead="@{vm.selectedDiary}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="2022.02 나의 일기" />
-                    <!--android:text="@{myDiaryviewModel.selectedDiary.title}"-->
+
                     <TextView
                         android:id="@+id/diaryHeadTextView"
                         style="@style/BSubheadline"
@@ -308,14 +303,14 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="16dp"
                         android:text="@{vm.selectedDiary.content}"
-                        app:layout_constraintBottom_toTopOf="@id/sendDiaryBeforeAfterTextView"
+                        app:layout_constraintBottom_toTopOf="@id/beforeCommentTextView"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line"
                         tools:text="@string/diary_test_text" />
 
                     <TextView
-                        android:id="@+id/sendDiaryBeforeAfterTextView"
+                        android:id="@+id/beforeCommentTextView"
                         style="@style/MCaption3"
                         android:layout_width="0dp"
                         android:layout_height="42dp"

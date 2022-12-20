@@ -18,8 +18,9 @@ import com.movingmaker.domain.model.request.ReportCommentModel
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentGatherdiaryCommentdiaryDetailBinding
-import com.movingmaker.presentation.util.DateConverter
 import com.movingmaker.presentation.util.FRAGMENT_NAME
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.ymdToDate
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
@@ -61,24 +62,24 @@ class CommentDiaryDetailFragment :
         myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
             Timber.d("observeDatas: --> $diary ")
             diary?.let {
-                commentListAdapter.submitList(diary.commentList?.toMutableList())
+                commentListAdapter.submitList(diary.commentList.toMutableList())
             }
         }
 
         myDiaryViewModel.haveDayMyComment.observe(viewLifecycleOwner) {
             val diary = myDiaryViewModel.selectedDiary.value!!
-            if (diary.id == null) return@observe
-            val codaToday = DateConverter.getCodaToday()
+//            if (diary.id == null) return@observe
+            val codaToday = getCodaToday()
 //            Timber.d( "observeDatas:converter before $diary ${diary.date}")
-            val selectedDate = DateConverter.ymdToDate(diary.date)
+            val selectedDate = ymdToDate(diary.date)
 
             //코멘트 없는 경우
-            if (diary.commentList?.isEmpty() == true || diary.commentList == null) {
+            if (diary.commentList.isEmpty()) {
                 binding.goToWriteCommentButton.isVisible = false
                 binding.goToWriteCommentTextView.isVisible = false
                 binding.noWriteCommentTextView.isVisible = false
                 binding.recyclerView.isVisible = false
-                if (selectedDate <= codaToday.minusDays(2)) {
+                if (selectedDate != null && selectedDate <= codaToday.minusDays(2)) {
                     //이틀이 지나 영영 코멘트를 받을 수 없음
                     binding.emptyCommentTextView.isVisible = true
                     binding.diaryUploadServerYetTextView.isVisible = false
@@ -103,7 +104,7 @@ class CommentDiaryDetailFragment :
                     binding.noWriteCommentTextView.isVisible = false
                 } else {
                     //내가 코멘트를 작성 안 한 경우
-                    if (selectedDate <= codaToday.minusDays(2)) {
+                    if (selectedDate != null && selectedDate <= codaToday.minusDays(2)) {
                         binding.goToWriteCommentButton.isVisible = false
                         binding.goToWriteCommentTextView.isVisible = false
                         binding.noWriteCommentTextView.isVisible = true
@@ -161,7 +162,7 @@ class CommentDiaryDetailFragment :
         val dialogView = Dialog(requireContext())
         dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialogView.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialogView.setContentView(com.movingmaker.presentation.R.layout.dialog_common_block)
+        dialogView.setContentView(R.layout.dialog_common_block)
         dialogView.setCancelable(false)
         dialogView.show()
 

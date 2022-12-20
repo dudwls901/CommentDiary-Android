@@ -30,8 +30,8 @@ class MyPageRepositoryImpl @Inject constructor(
         myPageDataSource.getAllComment()
 
 
-    override suspend fun getMonthComment(date: String): NetworkResult<BaseResponse<List<Comment>>> =
-        myPageDataSource.getMonthComment(date)
+    override suspend fun getPeriodComment(date: String): NetworkResult<BaseResponse<List<Comment>>> =
+        myPageDataSource.getPeriodComment(date)
 
 
     override suspend fun patchCommentPushState(): NetworkResult<BaseResponse<Map<String, Char>>> =

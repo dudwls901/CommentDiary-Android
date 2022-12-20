@@ -22,8 +22,11 @@ import com.movingmaker.domain.model.response.Diary
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentGatherdiaryDiarylistBinding
-import com.movingmaker.presentation.util.DateConverter
 import com.movingmaker.presentation.util.FRAGMENT_NAME
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.ymFormatForLocalDate
+import com.movingmaker.presentation.util.ymdFormat
+import com.movingmaker.presentation.util.ymdToDate
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
@@ -125,7 +128,7 @@ class DiaryListFragment :
             // 전체 보기
             searchPeriod = "all"
             setDiaries()
-            gatherDiaryViewModel.setSelectedMonth(DateConverter.ymFormat(DateConverter.getCodaToday())!!)
+            gatherDiaryViewModel.setSelectedMonth(ymFormatForLocalDate(getCodaToday())!!)
             binding.selectDateTextView.text = getString(R.string.show_all)
             dialogView.dismiss()
         }
@@ -142,10 +145,12 @@ class DiaryListFragment :
             val action = DiaryListFragmentDirections.actionDiaryListFragmentToWriteDiaryFragment()
             findNavController().navigate(action)
         } else {
-            val nextDate = DateConverter.ymdToDate(diary.date)
-            val nextDateToString = nextDate.plusDays(1).toString().replace('-', '.')
-            lifecycleScope.launch {
-                myDiaryViewModel.setResponseGetDayComment(nextDateToString)
+            ymdToDate(diary.date)?.let { date ->
+                ymdFormat(date.plusDays(1))?.let { nextDate ->
+                    lifecycleScope.launch {
+                        myDiaryViewModel.getDayWrittenComment(nextDate)
+                    }
+                }
             }
             val action =
                 DiaryListFragmentDirections.actionDiaryListFragmentToCommentDiaryDetailFragment()

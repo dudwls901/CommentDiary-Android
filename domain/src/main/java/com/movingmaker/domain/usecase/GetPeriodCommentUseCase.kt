@@ -7,9 +7,9 @@ import com.movingmaker.domain.model.toUiState
 import com.movingmaker.domain.repository.MyPageRepository
 import javax.inject.Inject
 
-class GetMonthCommentUseCase @Inject constructor(
+class GetPeriodCommentUseCase @Inject constructor(
     private val myPageRepository: MyPageRepository,
 ) {
     suspend operator fun invoke(date: String): UiState<List<Comment>> =
-        myPageRepository.getMonthComment(date).toUiState().mapUiState { it.result }
+        myPageRepository.getPeriodComment(date).toUiState().mapUiState { it.result }
 }

@@ -37,7 +37,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
-                <!--                android:text="@{@string/comment_diary_text_limit(myDiaryviewModel.commentDiaryTextCount)}"-->
+
                 <TextView
                     android:id="@+id/selectDateTextView"
                     style="@style/RCaption"

@@ -16,7 +16,7 @@ interface MyPageRepository {
 
     suspend fun getAllComment(): NetworkResult<BaseResponse<List<Comment>>>
 
-    suspend fun getMonthComment(date: String): NetworkResult<BaseResponse<List<Comment>>>
+    suspend fun getPeriodComment(date: String): NetworkResult<BaseResponse<List<Comment>>>
 
     suspend fun patchCommentPushState(): NetworkResult<BaseResponse<Map<String, Char>>>
 
