@@ -11,7 +11,6 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -54,32 +53,35 @@ class WriteDiaryFragment :
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.WRITE_DIARY)
 
         //selectedDiary는 Null, selectedDate는 있음
-        Timber.d("onViewCreated: writeDiary " + myDiaryViewModel.selectedDiary.value + " " + myDiaryViewModel.selectedDate.value + " " + myDiaryViewModel.selectedYearMonth.value)
+        Timber.d("여기 onViewCreated: writeDiary " + myDiaryViewModel.selectedDiary.value + " " + myDiaryViewModel.selectedDate.value + " " + myDiaryViewModel.selectedYearMonth.value)
+        setDiaryType()
         initViews()
         initToolbar()
         observeDatas()
+    }
+
+    private fun setDiaryType() {
+        //이전 날짜면은 AlONE_DIARY
+        myDiaryViewModel.selectedDate.value?.let { selectedDate ->
+            ymdToDate(selectedDate)?.let { selectedLocalDate ->
+                //다이어리 타입 설정
+                myDiaryViewModel.setSelectedDiaryType(
+                    when {
+                        selectedLocalDate < getCodaToday() -> {
+                            DIARY_TYPE.ALONE_DIARY
+                        }
+                        else -> DIARY_TYPE.COMMENT_DIARY
+                    }
+                )
+            }
+        }
     }
 
     private fun observeDatas() = with(binding) {
 
         //저장은 혼자 쓴 일기, 코멘트 일기 둘 다 가능
         myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
-            //이전 날짜면은 AlONE_DIARY
-            myDiaryViewModel.selectedDate.value?.let { selectedDate ->
-                ymdToDate(selectedDate)?.let { selectedLocalDate ->
-                    //다이어리 타입 설정
-                    myDiaryViewModel.setSelectedDiaryType(
-                        when {
-                            myDiaryViewModel.selectedDate.value != null && selectedLocalDate < getCodaToday() -> {
-                                DIARY_TYPE.ALONE_DIARY
-                            }
-                            diary == null -> DIARY_TYPE.COMMENT_DIARY
-                            else -> DIARY_TYPE.ALONE_DIARY
-                        }
-                    )
-                }
-            }
-
+            Timber.d("여기 selectedDiaryObserve $diary")
         }
 
         myDiaryViewModel.selectDiaryTypeToolbarIsExpanded.observe(viewLifecycleOwner) { isExpand ->
@@ -96,21 +98,13 @@ class WriteDiaryFragment :
 
     private fun initViews() = with(binding) {
 
-        diaryHeadEditText.addTextChangedListener {
-            myDiaryViewModel.setDiaryHeadText(it.toString())
-        }
-
-        diaryContentEditText.addTextChangedListener {
-            myDiaryViewModel.setDiaryContentText(it.toString())
-        }
-
         backButton.setOnClickListener {
             when (myDiaryViewModel.selectedDiaryType.value) {
                 DIARY_TYPE.ALONE_DIARY -> {
-                    Timber.d(
-                        "initViews: ${myDiaryViewModel.diaryContentText.value} ${myDiaryViewModel.diaryHeadText.value}"
-                    )
-                    if (myDiaryViewModel.diaryContentText.value.isNullOrEmpty() && myDiaryViewModel.diaryHeadText.value.isNullOrEmpty()) {
+//                    Timber.d(
+//                        "initViews: ${myDiaryViewModel.diaryContentText.value} ${myDiaryViewModel.diaryHeadText.value}"
+//                    )
+                    if (myDiaryViewModel.diaryContent.value.isNullOrEmpty() && myDiaryViewModel.diaryHead.value.isNullOrEmpty()) {
                         findNavController().popBackStack()
                     } else {
                         showBackDialog()
@@ -138,6 +132,7 @@ class WriteDiaryFragment :
         }
 
         sendButton.setOnClickListener {
+            //todo 100자 이상 채웠는지 검사
             lifecycleScope.launch {
                 when (myDiaryViewModel.saveDiary('Y')) {
                     true -> showCircleDialog()
@@ -210,8 +205,8 @@ class WriteDiaryFragment :
     }
 
     override fun onDestroyView() {
-        myDiaryViewModel.setDiaryHeadText("")
-        myDiaryViewModel.setDiaryContentText("")
+//        myDiaryViewModel.setDiaryHeadText("")
+//        myDiaryViewModel.setDiaryContentText("")
         myDiaryViewModel.closeSelectDiaryTypeToolbarIsExpanded()
         super.onDestroyView()
     }

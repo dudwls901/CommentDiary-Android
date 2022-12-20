@@ -20,6 +20,7 @@ import com.movingmaker.presentation.util.DIARY_TYPE
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.ymFormatForLocalDate
 import com.movingmaker.presentation.util.ymdFormat
+import com.movingmaker.presentation.util.ymdToCalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -35,13 +36,13 @@ class MyDiaryViewModel @Inject constructor(
     private val getPeriodCommentUseCase: GetPeriodCommentUseCase,
 ) : BaseViewModel() {
 
-    private var _aloneDiary = MutableLiveData<List<CalendarDay>>()
-    val aloneDiary: LiveData<List<CalendarDay>>
-        get() = _aloneDiary
+    private var _aloneDiaryDates = MutableLiveData<List<CalendarDay>>()
+    val aloneDiaryDates: LiveData<List<CalendarDay>>
+        get() = _aloneDiaryDates
 
-    private var _commentDiary = MutableLiveData<List<CalendarDay>>()
-    val commentDiary: LiveData<List<CalendarDay>>
-        get() = _commentDiary
+    private var _commentDiaryDates = MutableLiveData<List<CalendarDay>>()
+    val commentDiaryDates: LiveData<List<CalendarDay>>
+        get() = _commentDiaryDates
 
     private var _monthDiaries = MutableLiveData<List<Diary>>()
     val monthDiaries: LiveData<List<Diary>>
@@ -87,13 +88,8 @@ class MyDiaryViewModel @Inject constructor(
     val selectDiaryTypeToolbarIsExpanded: LiveData<Boolean>
         get() = _selectDiaryTypeToolbarIsExpanded
 
-    private var _diaryContentText = MutableLiveData<String>()
-    val diaryContentText: LiveData<String>
-        get() = _diaryContentText
-
-    private var _diaryHeadText = MutableLiveData<String>()
-    val diaryHeadText: LiveData<String>
-        get() = _diaryHeadText
+    var diaryHead = MutableLiveData<String>().apply { value ="" }
+    var diaryContent = MutableLiveData<String>().apply { value ="" }
 
     private var _canSendCommentDiary = MutableLiveData<Boolean>().apply { value = false }
     val canSendCommentDiary: LiveData<Boolean>
@@ -103,30 +99,22 @@ class MyDiaryViewModel @Inject constructor(
         getMonthDiary(ymFormatForLocalDate(getCodaToday())!!)
     }
 
-    private fun setAloneDiary(list: List<CalendarDay>) {
-        _aloneDiary.value = list
-    }
-
-    private fun setCommentDiary(list: List<CalendarDay>) {
-        _commentDiary.value = list
-    }
-
     private fun setMonthDiaries(list: List<Diary>) {
         val aloneDiary = ArrayList<CalendarDay>()
         val commentDiary = ArrayList<CalendarDay>()
 
         for (selectedDiary in list) {
-            val ymd = selectedDiary.date
-            val (year, month, day) = ymd.split('.').map { it.toInt() }
-            if (selectedDiary.deliveryYN == 'Y') {
-                commentDiary.add(CalendarDay.from(year, month - 1, day))
-            } else {
-                aloneDiary.add(CalendarDay.from(year, month - 1, day))
+            ymdToCalendarDay(selectedDiary.date)?.let { date ->
+                if (selectedDiary.deliveryYN == 'Y') {
+                    commentDiary.add(date)
+                } else {
+                    aloneDiary.add(date)
+                }
             }
         }
 
-        setCommentDiary(commentDiary.toList())
-        setAloneDiary(aloneDiary.toList())
+        _commentDiaryDates.value = commentDiary.toList()
+        _aloneDiaryDates.value = aloneDiary.toList()
         _monthDiaries.value = list
     }
 
@@ -136,6 +124,11 @@ class MyDiaryViewModel @Inject constructor(
             _selectedDiary.value = null
             _commentList.value = emptyList()
         } else {
+//            if(diary.date == ymdFormat(getCodaToday())){
+//                viewModelScope.launch {
+//                    deleteDiary()
+//                }
+//            }
             _selectedDiary.value = diary
             _commentList.value = diary.commentList
         }
@@ -143,7 +136,7 @@ class MyDiaryViewModel @Inject constructor(
 
 
     fun setDeliveryYN(type: Char) {
-        _selectedDiary.value!!.deliveryYN = type
+//        _selectedDiary.value!!.deliveryYN = type
     }
 
     fun setSelectedDate(date: String?) {
@@ -156,16 +149,6 @@ class MyDiaryViewModel @Inject constructor(
 
     fun setPushDate(date: String) {
         _pushDate.value = date
-    }
-
-    fun setDiaryContentText(text: String) {
-        _diaryContentText.value = text
-        setCanSendCommentDiary()
-    }
-
-    fun setDiaryHeadText(text: String) {
-        _diaryHeadText.value = text
-        setCanSendCommentDiary()
     }
 
     fun setSelectedDiaryType(type: DIARY_TYPE) {
@@ -192,7 +175,6 @@ class MyDiaryViewModel @Inject constructor(
             selectedDiary.value!!.content,
             selectedDiary.value!!.date,
             selectedDiary.value!!.deliveryYN,
-            selectedDiary.value!!.tempYN,
             selectedDiary.value!!.commentList
         )
         for (idx in _selectedDiary.value!!.commentList.indices) {
@@ -207,10 +189,10 @@ class MyDiaryViewModel @Inject constructor(
 
     private fun setCanSendCommentDiary() {
         _canSendCommentDiary.value =
-            if (diaryHeadText.value == null || _diaryContentText.value == null) {
+            if (diaryHead.value == null || diaryContent.value == null) {
                 false
             } else {
-                diaryHeadText.value!!.isNotBlank() && diaryContentText.value!!.length >= 100
+                diaryHead.value!!.isNotBlank() && diaryContent.value!!.length >= 100
             }
     }
 
@@ -229,7 +211,6 @@ class MyDiaryViewModel @Inject constructor(
             selectedDiary.value!!.content,
             selectedDiary.value!!.date,
             selectedDiary.value!!.deliveryYN,
-            selectedDiary.value!!.tempYN,
             selectedDiary.value!!.commentList
         )
         //신고한 코멘트 삭제
@@ -273,11 +254,10 @@ class MyDiaryViewModel @Inject constructor(
         var isSuccess = false
         onLoading()
         val saveDiaryRequest = SaveDiaryModel(
-            title = diaryHeadText.value ?: "",
-            content = diaryContentText.value ?: "",
+            title = diaryHead.value ?: "",
+            content = diaryContent.value ?: "",
             date = selectedDate.value ?: "",
             deliveryYN = deliveryYN,
-            tempYN = 'N',
         )
         with(saveDiaryUseCase(saveDiaryRequest)) {
             offLoading()
@@ -289,7 +269,6 @@ class MyDiaryViewModel @Inject constructor(
                         saveDiaryRequest.content,
                         saveDiaryRequest.date,
                         saveDiaryRequest.deliveryYN,
-                        saveDiaryRequest.tempYN,
                         emptyList<Comment>().toMutableList()
                     )
                     setSelectedDiary(newDiary)
@@ -320,7 +299,6 @@ class MyDiaryViewModel @Inject constructor(
                             editDiaryRequest.content,
                             selectedDiary.value!!.date,
                             selectedDiary.value!!.deliveryYN,
-                            selectedDiary.value!!.tempYN,
                             selectedDiary.value!!.commentList
                         )
                         setSelectedDiary(newDiary)
@@ -340,7 +318,7 @@ class MyDiaryViewModel @Inject constructor(
         var isSuccess = false
         onLoading()
         if (selectedDiary.value?.id != null) {
-            with(deleteDiaryUseCase(selectedDiary.value!!.id!!)) {
+            with(deleteDiaryUseCase(selectedDiary.value!!.id)) {
                 offLoading()
                 when (this) {
                     is UiState.Success -> {
