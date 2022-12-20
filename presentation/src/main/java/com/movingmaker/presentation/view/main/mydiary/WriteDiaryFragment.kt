@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentMydiaryWritediaryBinding
+import com.movingmaker.presentation.util.DIARY_CONTENT_MINIMUM_LENGTH
 import com.movingmaker.presentation.util.DIARY_TYPE
 import com.movingmaker.presentation.util.FRAGMENT_NAME
 import com.movingmaker.presentation.util.getCodaToday
@@ -132,11 +133,16 @@ class WriteDiaryFragment :
         }
 
         sendButton.setOnClickListener {
-            //todo 100자 이상 채웠는지 검사
-            lifecycleScope.launch {
-                when (myDiaryViewModel.saveDiary('Y')) {
-                    true -> showCircleDialog()
-                    else -> {}
+            if(myDiaryViewModel.diaryHead.value.isNullOrBlank()){
+                CodaSnackBar.make(binding.root, getString(R.string.write_diary_head_hint)).show()
+            }else if(myDiaryViewModel.diaryContent.value!!.length  < DIARY_CONTENT_MINIMUM_LENGTH ){
+                CodaSnackBar.make(binding.root, getString(R.string.write_comment_diary_notice)).show()
+            }else{
+                lifecycleScope.launch {
+                    when (myDiaryViewModel.saveDiary('Y')) {
+                        true -> showCircleDialog()
+                        else -> {}
+                    }
                 }
             }
         }
