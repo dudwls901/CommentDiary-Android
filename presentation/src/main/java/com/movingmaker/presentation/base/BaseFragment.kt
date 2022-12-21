@@ -39,42 +39,42 @@ abstract class BaseFragment<VB : ViewDataBinding>(@LayoutRes val layoutRes: Int)
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-        Timber.tag(binding.javaClass.simpleName).i("onCreateView")
+        Timber.i("onCreateView")
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
-        Timber.tag(binding.javaClass.simpleName).i("onResume")
+        Timber.i("onResume")
     }
 
     override fun onStart() {
         super.onStart()
-        Timber.tag(binding.javaClass.simpleName).i("onStart")
+        Timber.i("onStart")
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        Timber.tag(binding.javaClass.simpleName).i("onViewStateRestored: ")
+        Timber.i("onViewStateRestored: ")
     }
 
     override fun onPause() {
         super.onPause()
-        Timber.tag(binding.javaClass.simpleName).i("onPause ")
+        Timber.i("onPause ")
     }
 
     override fun onStop() {
         super.onStop()
-        Timber.tag(binding.javaClass.simpleName).i("onStop")
+        Timber.i("onStop")
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Timber.tag(binding.javaClass.simpleName).i("onSaveInstanceState: ")
+        Timber.i("onSaveInstanceState: ")
     }
 
     override fun onDestroyView() {
-        Timber.tag(binding.javaClass.simpleName).i("onDestroyView")
+        Timber.i("onDestroyView")
         _binding = null
         super.onDestroyView()
     }
