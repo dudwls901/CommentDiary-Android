@@ -22,6 +22,7 @@ interface GatherDiaryApiService {
     @GET(DIARY + MY + ALL)
     suspend fun getAllDiary(): Response<BaseResponse<MutableList<DiaryResponse>>>
 
+    //date = ym인 경우 한 달 일기, date = ymd인 경우 하루 이릭
     @GET(DIARY + MY)
     suspend fun getMonthDiary(@Query("date") date: String): Response<BaseResponse<MutableList<DiaryResponse>>>
 
