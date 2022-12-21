@@ -11,7 +11,7 @@ data class SaveDiaryRequest(
     val date: String,
     val deliveryYn: Char,
     //tempYn api에서 제거될 예정
-    val tempYn: Char = 'N',
+    val tempYn: Char,
 ) : RemoteModel {
     override fun toDomainModel() = SaveDiaryModel(
         title, content, date, deliveryYn, tempYn
