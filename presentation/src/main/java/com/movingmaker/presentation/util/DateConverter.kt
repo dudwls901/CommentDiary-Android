@@ -88,6 +88,11 @@ fun ymdFormat(date: Any): String? {
     }
 }
 
+fun String.ymFormatForString(): String? {
+    val (y, m, _) = getSplitYMD()
+    return if (y == "") null else "$y.$m"
+}
+
 //0~11월
 fun ymFormatForCalendarDay(date: Any): String? {
     return when (date) {
