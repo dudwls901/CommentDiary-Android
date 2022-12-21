@@ -2,6 +2,7 @@ package com.movingmaker.presentation.viewmodel.mydiary
 
 import android.view.View
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.movingmaker.domain.model.UiState
@@ -23,8 +24,8 @@ import com.movingmaker.presentation.util.ymdFormat
 import com.movingmaker.presentation.util.ymdToCalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -88,8 +89,8 @@ class MyDiaryViewModel @Inject constructor(
     val selectDiaryTypeToolbarIsExpanded: LiveData<Boolean>
         get() = _selectDiaryTypeToolbarIsExpanded
 
-    var diaryHead = MutableLiveData<String>().apply { value ="" }
-    var diaryContent = MutableLiveData<String>().apply { value ="" }
+    var diaryHead = MutableLiveData<String>().apply { value = "" }
+    var diaryContent = MutableLiveData<String>().apply { value = "" }
 
     private var _canSendCommentDiary = MutableLiveData<Boolean>().apply { value = false }
     val canSendCommentDiary: LiveData<Boolean>
@@ -97,6 +98,88 @@ class MyDiaryViewModel @Inject constructor(
 
     init {
         getMonthDiary(ymFormatForLocalDate(getCodaToday())!!)
+    }
+
+    /*
+    * head, content 통합 한 글자라도 있으면 Save
+    * 1. 현재 선택된 일기가 없다면 신규 작성 -> SaveDiaryModel
+    * 2. 현재 선택된 일기가 있다면 수정 -> EditDiaryModel
+    * 1에서 2로 가는 로직
+    * head, content 통합 한 글자라도 없다면 delete
+    * */
+    val aloneDiary = MediatorLiveData<Any>().apply {
+        addSource(selectedDiaryType) { diaryType ->
+            removeSource(diaryHead)
+            removeSource(diaryContent)
+            combineDiaryHead(this)
+            combineDiaryContent(this, diaryType)
+        }
+    }
+
+    private fun combineDiaryHead(aloneDiary: MediatorLiveData<Any>) = with(aloneDiary) {
+        addSource(diaryHead) { head ->
+            //신규 작성
+            value = if (selectedDiary.value == null) {
+                getSaveAloneDiary(
+                    head,
+                    diaryContent.value ?: ""
+                )
+            } else {
+                //수정
+                getEditAloneDiary(
+                    head,
+                    diaryContent.value ?: ""
+                )
+            }
+        }
+    }
+
+    private fun combineDiaryContent(
+        aloneDiary: MediatorLiveData<Any>,
+        diaryType: DIARY_TYPE
+    ) = with(aloneDiary) {
+        if (diaryType == DIARY_TYPE.ALONE_DIARY) {
+            addSource(diaryContent) { content ->
+                //신규 작성
+                value = if (selectedDiary.value == null) {
+                    getSaveAloneDiary(
+                        diaryHead.value ?: "",
+                        content
+                    )
+                } else {
+                    //수정
+                    getEditAloneDiary(
+                        diaryHead.value ?: "",
+                        content
+                    )
+                }
+            }
+        }
+    }
+
+    private fun getSaveAloneDiary(
+        head: String,
+        content: String
+    ): SaveDiaryModel? {
+        selectedDate.value?.let { date ->
+            return SaveDiaryModel(
+                head,
+                content,
+                date,
+                'N'
+            )
+        }
+        return null
+    }
+
+    private fun getEditAloneDiary(
+        head: String,
+        content: String
+    ): EditDiaryModel {
+        return EditDiaryModel(
+            head,
+            content,
+        )
     }
 
     private fun setMonthDiaries(list: List<Diary>) {
@@ -238,6 +321,7 @@ class MyDiaryViewModel @Inject constructor(
             offLoading()
             when (this) {
                 is UiState.Success -> {
+                    Timber.e("여기 몇개 ${data.size}")
                     setMonthDiaries(data)
                 }
                 is UiState.Error -> {
@@ -250,30 +334,39 @@ class MyDiaryViewModel @Inject constructor(
         }
     }
 
-    suspend fun saveDiary(deliveryYN: Char) = viewModelScope.async {
-        var isSuccess = false
-        onLoading()
-        val saveDiaryRequest = SaveDiaryModel(
-            title = diaryHead.value ?: "",
-            content = diaryContent.value ?: "",
-            date = selectedDate.value ?: "",
-            deliveryYN = deliveryYN,
-        )
-        with(saveDiaryUseCase(saveDiaryRequest)) {
+    fun handleAloneDiary() {
+        if (aloneDiary.value == null) return
+        when (val request = aloneDiary.value) {
+            //id 없는 경우 저장
+            is SaveDiaryModel -> {
+                saveAloneDiary(request)
+            }
+            is EditDiaryModel -> {
+                //글자 없는 경우 삭제
+                if (request.content.isBlank() && request.title.isBlank()) {
+                    deleteAloneDiary()
+                } else {
+                    //글자 있는 경우 수정
+                    editAloneDiary(request)
+                }
+            }
+        }
+    }
+
+    private fun saveAloneDiary(request: SaveDiaryModel) = viewModelScope.launch {
+        with(saveDiaryUseCase(request)) {
             offLoading()
             when (this) {
                 is UiState.Success -> {
                     val newDiary = Diary(
                         this.data.id,
-                        saveDiaryRequest.title,
-                        saveDiaryRequest.content,
-                        saveDiaryRequest.date,
-                        saveDiaryRequest.deliveryYN,
+                        request.title,
+                        request.content,
+                        request.date,
+                        request.deliveryYN,
                         emptyList<Comment>().toMutableList()
                     )
                     setSelectedDiary(newDiary)
-                    setMessage("일기가 저장되었습니다.")
-                    isSuccess = true
                 }
                 is UiState.Error -> {
                     setMessage(message)
@@ -283,26 +376,24 @@ class MyDiaryViewModel @Inject constructor(
                 }
             }
         }
-        return@async isSuccess
-    }.await()
+    }
 
-    fun editDiary(diaryId: Long, editDiaryRequest: EditDiaryModel) =
-        viewModelScope.launch {
-            onLoading()
-            with(editDiaryUseCase(diaryId, editDiaryRequest)) {
+    private fun editAloneDiary(request: EditDiaryModel) = viewModelScope.launch {
+        selectedDiary.value?.let { diary ->
+            if (diary.content == request.content && diary.title == request.title) return@launch
+            with(editDiaryUseCase(diary.id, request)) {
                 offLoading()
                 when (this) {
                     is UiState.Success -> {
                         val newDiary = Diary(
-                            selectedDiary.value!!.id,
-                            editDiaryRequest.title,
-                            editDiaryRequest.content,
-                            selectedDiary.value!!.date,
-                            selectedDiary.value!!.deliveryYN,
-                            selectedDiary.value!!.commentList
+                            diary.id,
+                            request.title,
+                            request.content,
+                            diary.date,
+                            diary.deliveryYN,
+                            diary.commentList
                         )
                         setSelectedDiary(newDiary)
-                        setMessage("일기가 수정되었습니다.")
                     }
                     is UiState.Error -> {
                         setMessage(message)
@@ -313,17 +404,15 @@ class MyDiaryViewModel @Inject constructor(
                 }
             }
         }
+    }
 
-    suspend fun deleteDiary() = viewModelScope.async {
-        var isSuccess = false
-        onLoading()
+    private fun deleteAloneDiary() = viewModelScope.launch {
         if (selectedDiary.value?.id != null) {
             with(deleteDiaryUseCase(selectedDiary.value!!.id)) {
                 offLoading()
                 when (this) {
                     is UiState.Success -> {
-                        setMessage("일기가 삭제되었습니다.")
-                        isSuccess = true
+                        setSelectedDiary(null)
                     }
                     is UiState.Error -> {
                         setMessage(message)
@@ -334,8 +423,95 @@ class MyDiaryViewModel @Inject constructor(
                 }
             }
         }
-        return@async isSuccess
-    }.await()
+    }
+
+
+//    suspend fun saveDiary(deliveryYN: Char) = viewModelScope.async {
+//        var isSuccess = false
+//        onLoading()
+//        val saveDiaryRequest = SaveDiaryModel(
+//            title = diaryHead.value ?: "",
+//            content = diaryContent.value ?: "",
+//            date = selectedDate.value ?: "",
+//            deliveryYN = deliveryYN,
+//        )
+//        with(saveDiaryUseCase(saveDiaryRequest)) {
+//            offLoading()
+//            when (this) {
+//                is UiState.Success -> {
+//                    val newDiary = Diary(
+//                        this.data.id,
+//                        saveDiaryRequest.title,
+//                        saveDiaryRequest.content,
+//                        saveDiaryRequest.date,
+//                        saveDiaryRequest.deliveryYN,
+//                        emptyList<Comment>().toMutableList()
+//                    )
+//                    setSelectedDiary(newDiary)
+//                    setMessage("일기가 저장되었습니다.")
+//                    isSuccess = true
+//                }
+//                is UiState.Error -> {
+//                    setMessage(message)
+//                }
+//                is UiState.Fail -> {
+//                    setMessage(message)
+//                }
+//            }
+//        }
+//        return@async isSuccess
+//    }.await()
+
+//    fun editDiary(diaryId: Long, editDiaryRequest: EditDiaryModel) =
+//        viewModelScope.launch {
+//            onLoading()
+//            with(editDiaryUseCase(diaryId, editDiaryRequest)) {
+//                offLoading()
+//                when (this) {
+//                    is UiState.Success -> {
+//                        val newDiary = Diary(
+//                            selectedDiary.value!!.id,
+//                            editDiaryRequest.title,
+//                            editDiaryRequest.content,
+//                            selectedDiary.value!!.date,
+//                            selectedDiary.value!!.deliveryYN,
+//                            selectedDiary.value!!.commentList
+//                        )
+//                        setSelectedDiary(newDiary)
+//                        setMessage("일기가 수정되었습니다.")
+//                    }
+//                    is UiState.Error -> {
+//                        setMessage(message)
+//                    }
+//                    is UiState.Fail -> {
+//                        setMessage(message)
+//                    }
+//                }
+//            }
+//        }
+//
+//    suspend fun deleteDiary() = viewModelScope.async {
+//        var isSuccess = false
+//        onLoading()
+//        if (selectedDiary.value?.id != null) {
+//            with(deleteDiaryUseCase(selectedDiary.value!!.id)) {
+//                offLoading()
+//                when (this) {
+//                    is UiState.Success -> {
+//                        setMessage("일기가 삭제되었습니다.")
+//                        isSuccess = true
+//                    }
+//                    is UiState.Error -> {
+//                        setMessage(message)
+//                    }
+//                    is UiState.Fail -> {
+//                        setMessage(message)
+//                    }
+//                }
+//            }
+//        }
+//        return@async isSuccess
+//    }.await()
 
     fun getDayWrittenComment(date: String) = viewModelScope.launch {
         onLoading()

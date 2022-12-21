@@ -94,23 +94,6 @@
                 app:sendButtonState="@{vm.canSendCommentDiary}"
                 tools:ignore="TouchTargetSizeCheck" />
 
-            <TextView
-                android:id="@+id/saveButton"
-                style="@style/BHeadline2"
-                diaryType="@{vm.selectedDiaryType}"
-                isExpand="@{vm.selectDiaryTypeToolbarIsExpanded}"
-                selectedDate="@{vm.selectedDate}"
-                android:layout_width="37.6dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="25dp"
-                android:text="@string/store"
-                android:textAlignment="center"
-                android:textColor="@color/core_green"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="@id/diaryTypeTextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/diaryTypeTextView" />
-
             <View
                 android:id="@+id/line1"
                 android:layout_width="0dp"

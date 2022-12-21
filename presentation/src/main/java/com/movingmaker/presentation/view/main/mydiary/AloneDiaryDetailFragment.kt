@@ -9,7 +9,6 @@ import android.view.Window
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
@@ -18,8 +17,6 @@ import com.movingmaker.presentation.util.FRAGMENT_NAME
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class AloneDiaryDetailFragment :
@@ -67,19 +64,19 @@ class AloneDiaryDetailFragment :
                 noticeTextView.text = getString(R.string.diary_delete_warning)
             }
         }
-        submitButton.setOnClickListener {
-            lifecycleScope.launch {
-                when (myDiaryViewModel.deleteDiary()) {
-                    true -> {
-                        findNavController().navigateUp()
-                    }
-                    else -> {
-                        Timber.e("showDialog: 삭제되지 않음")
-                    }
-                }
-                dialogView.dismiss()
-            }
-        }
+//        submitButton.setOnClickListener {
+//            lifecycleScope.launch {
+//                when (myDiaryViewModel.deleteDiary()) {
+//                    true -> {
+//                        findNavController().navigateUp()
+//                    }
+//                    else -> {
+//                        Timber.e("showDialog: 삭제되지 않음")
+//                    }
+//                }
+//                dialogView.dismiss()
+//            }
+//        }
         cancelButton.setOnClickListener {
             dialogView.dismiss()
         }
