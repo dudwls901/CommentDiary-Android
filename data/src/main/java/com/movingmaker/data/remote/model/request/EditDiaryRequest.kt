@@ -9,7 +9,7 @@ data class EditDiaryRequest(
     val title: String,
     val content: String,
     //tempYn api에서 제거될 예정
-    val tempYn: Char = 'N',
+    val tempYn: Char
 ) : RemoteModel {
     override fun toDomainModel() = EditDiaryModel(
         title, content, tempYn
