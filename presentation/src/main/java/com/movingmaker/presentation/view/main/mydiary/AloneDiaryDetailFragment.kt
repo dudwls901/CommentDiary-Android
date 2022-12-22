@@ -47,7 +47,7 @@ class AloneDiaryDetailFragment :
         val dialogView = Dialog(requireContext())
         dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialogView.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialogView.setContentView(R.layout.dialog_mydiary_writediary)
+        dialogView.setContentView(R.layout.dialog_mydiary_send_diary)
         dialogView.setCancelable(false)
 
         dialogView.show()
