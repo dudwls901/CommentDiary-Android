@@ -8,14 +8,15 @@ import kotlinx.serialization.Serializable
 data class EditDiaryRequest(
     val title: String,
     val content: String,
+    val deliveryYn: Char,
     //tempYn api에서 제거될 예정
     val tempYn: Char
 ) : RemoteModel {
     override fun toDomainModel() = EditDiaryModel(
-        title, content, tempYn
+        title, content, deliveryYn, tempYn
     )
 }
 
 fun EditDiaryModel.toDataModel() = EditDiaryRequest(
-    title, content, tempYN
+    title, content, deliveryYN, tempYN
 )
