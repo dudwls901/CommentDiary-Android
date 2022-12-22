@@ -104,6 +104,9 @@ class CalendarWithDiaryFragment :
                 }
             }
         }
+        myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner){
+            Timber.e("여기 $it")
+        }
     }
 
     private fun initViews() {
@@ -133,7 +136,7 @@ class CalendarWithDiaryFragment :
             val action = if (myDiaryViewModel.selectedDiary.value?.deliveryYN == 'Y') {
                 CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToCommentDiaryDetailFragment()
             } else { //혼자쓴 일기인 경우
-                CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToAloneDiaryDetailFragment()
+                CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToWriteDiaryFragment()
             }
             findNavController().navigate(action)
         }

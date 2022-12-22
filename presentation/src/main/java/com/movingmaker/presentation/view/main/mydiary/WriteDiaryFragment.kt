@@ -18,10 +18,12 @@ import androidx.navigation.fragment.findNavController
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentMydiaryWritediaryBinding
+import com.movingmaker.presentation.util.DIARY_CONTENT_MINIMUM_LENGTH
 import com.movingmaker.presentation.util.DIARY_TYPE
 import com.movingmaker.presentation.util.FRAGMENT_NAME
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.ymdToDate
+import com.movingmaker.presentation.view.snackbar.CodaSnackBar
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,32 +55,49 @@ class WriteDiaryFragment :
         binding.vm = myDiaryViewModel
         binding.selectDiaryTypeSheet.vm = myDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.WRITE_DIARY)
-
-        //selectedDiary는 Null, selectedDate는 있음
+        initDatas()
         setDiaryType()
         initViews()
         initToolbar()
         observeDatas()
     }
 
+    private fun initDatas() = with(myDiaryViewModel) {
+        diaryHead.value = if (selectedDiary.value == null) "" else selectedDiary.value!!.title
+        diaryContent.value = if (selectedDiary.value == null) "" else selectedDiary.value!!.content
+    }
+
     override fun onStop() {
         super.onStop()
-        coroutineLifecycleScope.launch{
+        coroutineLifecycleScope.launch {
             myDiaryViewModel.handleAloneDiary()
         }
     }
 
-    private fun setDiaryType() {
-        //이전 날짜면은 AlONE_DIARY
-        myDiaryViewModel.selectedDate.value?.let { selectedDate ->
+    private fun setDiaryType() = with(myDiaryViewModel) {
+        selectedDate.value?.let { selectedDate ->
             ymdToDate(selectedDate)?.let { selectedLocalDate ->
                 //다이어리 타입 설정
-                myDiaryViewModel.setSelectedDiaryType(
+                setSelectedDiaryType(
                     when {
+                        //이전 날짜면 AlONE_DIARY
                         selectedLocalDate < getCodaToday() -> {
                             DIARY_TYPE.ALONE_DIARY
                         }
-                        else -> DIARY_TYPE.COMMENT_DIARY
+                        else -> {
+                            //오늘 날짜인 경우
+                            selectedDiary.value?.let { diary ->
+                                //작성한 경우 deliveryYN에 따라 다름
+                                if (diary.deliveryYN == 'N') {
+                                    DIARY_TYPE.ALONE_DIARY
+                                } else {
+                                    DIARY_TYPE.COMMENT_DIARY
+                                }
+                                return@with
+                            }
+                            //작성 안 한 경우
+                            DIARY_TYPE.COMMENT_DIARY
+                        }
                     }
                 )
             }
@@ -87,7 +106,7 @@ class WriteDiaryFragment :
 
     private fun observeDatas() = with(binding) {
 
-        myDiaryViewModel.aloneDiary.observe(viewLifecycleOwner){
+        myDiaryViewModel.aloneDiary.observe(viewLifecycleOwner) {
             Timber.d("aloneDiary ${it}")
         }
         //저장은 혼자 쓴 일기, 코멘트 일기 둘 다 가능
@@ -109,6 +128,7 @@ class WriteDiaryFragment :
 
     private fun initViews() = with(binding) {
 
+        //todo 코멘트 일기인 경우 임시저장
         backButton.setOnClickListener {
             when (myDiaryViewModel.selectedDiaryType.value) {
                 DIARY_TYPE.ALONE_DIARY -> {
@@ -116,7 +136,7 @@ class WriteDiaryFragment :
 //                        "initViews: ${myDiaryViewModel.diaryContentText.value} ${myDiaryViewModel.diaryHeadText.value}"
 //                    )
 //                    if (myDiaryViewModel.diaryContent.value.isNullOrEmpty() && myDiaryViewModel.diaryHead.value.isNullOrEmpty()) {
-                        findNavController().popBackStack()
+                    findNavController().popBackStack()
 //                    } else {
 //                        showBackDialog()
 //                    }
@@ -125,31 +145,53 @@ class WriteDiaryFragment :
             }
         }
 
-//        sendButton.setOnClickListener {
-//            if(myDiaryViewModel.diaryHead.value.isNullOrBlank()){
-//                CodaSnackBar.make(binding.root, getString(R.string.write_diary_head_hint)).show()
-//            }else if(myDiaryViewModel.diaryContent.value!!.length  < DIARY_CONTENT_MINIMUM_LENGTH ){
-//                CodaSnackBar.make(binding.root, getString(R.string.write_comment_diary_notice)).show()
-//            }else{
-//                coroutineLifecycleScope.launch {
-//                    when (myDiaryViewModel.saveDiary('Y')) {
-//                        true -> showCircleDialog()
-//                        else -> {}
-//                    }
-//                }
-//            }
-//        }
+        sendButton.setOnClickListener {
+            if (myDiaryViewModel.diaryHead.value.isNullOrBlank()) {
+                CodaSnackBar.make(binding.root, getString(R.string.write_diary_head_hint)).show()
+            } else if (myDiaryViewModel.diaryContent.value!!.length < DIARY_CONTENT_MINIMUM_LENGTH) {
+                CodaSnackBar.make(binding.root, getString(R.string.write_comment_diary_notice))
+                    .show()
+            } else {
+                showSendCommentDiaryDialog()
+            }
+        }
     }
 
+    private fun showSendCommentDiaryDialog() {
+        val dialogView = Dialog(requireContext()).apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setContentView(R.layout.dialog_mydiary_send_diary)
+            setCancelable(false)
+            show()
+        }
+        val submitButton = dialogView.findViewById<Button>(R.id.submitButton)
+        val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+
+        submitButton.setOnClickListener {
+            coroutineLifecycleScope.launch {
+                dialogView.dismiss()
+//                todo await시키기
+                Timber.e("저장 이전")
+                myDiaryViewModel.sendCommentDiary()
+                Timber.e("저장 이후")
+                showCircleDialog()
+            }
+        }
+
+        cancelButton.setOnClickListener {
+            dialogView.dismiss()
+        }
+    }
 
     private fun showBackDialog() {
-        val dialogView = Dialog(requireContext())
-        dialogView.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialogView.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialogView.setContentView(R.layout.dialog_mydiary_writediary)
-        dialogView.setCancelable(false)
-
-        dialogView.show()
+        val dialogView = Dialog(requireContext()).apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setContentView(R.layout.dialog_mydiary_send_diary)
+            setCancelable(false)
+            show()
+        }
 
 
         val submitButton = dialogView.findViewById<Button>(R.id.submitButton)
