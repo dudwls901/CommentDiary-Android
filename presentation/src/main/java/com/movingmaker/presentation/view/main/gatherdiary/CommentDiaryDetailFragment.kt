@@ -1,6 +1,5 @@
 package com.movingmaker.presentation.view.main.gatherdiary
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -11,20 +10,20 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ConcatAdapter
 import com.movingmaker.domain.model.request.ReportCommentModel
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentGatherdiaryCommentdiaryDetailBinding
 import com.movingmaker.presentation.util.FRAGMENT_NAME
-import com.movingmaker.presentation.util.getCodaToday
-import com.movingmaker.presentation.util.ymdToDate
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -36,6 +35,20 @@ class CommentDiaryDetailFragment :
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val gatherDiaryViewModel: GatherDiaryViewModel by activityViewModels()
     private lateinit var commentListAdapter: CommentListAdapter
+    private lateinit var concatAdapter: ConcatAdapter
+    private val commentDiaryContentAdapter by lazy {
+        CommentDiaryContentAdapter()
+    }
+    private val commentDiaryOpenYetAdapter by lazy {
+        CommentDiaryOpenYetAdapter()
+    }
+    private val commentDiaryEmptyCommentAdapter by lazy {
+        CommentDiaryEmptyCommentAdapter()
+    }
+    private val commentDiaryCommentYetAdapter by lazy {
+        CommentDiaryCommentYetAdapter()
+    }
+
     private var reportedCommentId = -1L
     private var likedCommentId = -1L
 
@@ -46,9 +59,18 @@ class CommentDiaryDetailFragment :
         observeDatas()
         initViews()
         initToolBar()
+        binding.recyclerView.apply {
+            concatAdapter = ConcatAdapter(
+                commentDiaryContentAdapter,
+                commentListAdapter,
+                commentDiaryOpenYetAdapter,
+                commentDiaryEmptyCommentAdapter,
+                commentDiaryCommentYetAdapter
+            )
+            adapter = concatAdapter
+        }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun observeDatas() {
 
         gatherDiaryViewModel.handleComment.observe(viewLifecycleOwner) {
@@ -62,71 +84,25 @@ class CommentDiaryDetailFragment :
         myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
             Timber.d("observeDatas: --> $diary ")
             diary?.let {
+                commentDiaryContentAdapter.submitList(listOf(diary))
                 commentListAdapter.submitList(diary.commentList.toMutableList())
             }
         }
 
         myDiaryViewModel.haveDayMyComment.observe(viewLifecycleOwner) {
             val diary = myDiaryViewModel.selectedDiary.value!!
-//            if (diary.id == null) return@observe
-            val codaToday = getCodaToday()
-//            Timber.d( "observeDatas:converter before $diary ${diary.date}")
-            val selectedDate = ymdToDate(diary.date)
-
-            //코멘트 없는 경우
-            if (diary.commentList.isEmpty()) {
-                binding.goToWriteCommentButton.isVisible = false
-                binding.goToWriteCommentTextView.isVisible = false
-                binding.noWriteCommentTextView.isVisible = false
-                binding.recyclerView.isVisible = false
-                if (selectedDate != null && selectedDate <= codaToday.minusDays(2)) {
-                    //이틀이 지나 영영 코멘트를 받을 수 없음
-                    binding.emptyCommentTextView.isVisible = true
-                    binding.diaryUploadServerYetTextView.isVisible = false
-                    binding.sendCompleteTextView.isVisible = false
-                } else {
-                    //아직 코멘트를 받지 못한 경우
-                    binding.emptyCommentTextView.isVisible = false
-                    binding.diaryUploadServerYetTextView.isVisible = true
-                    binding.sendCompleteTextView.isVisible = true
-                }
-            }
-            //코멘트 있는 경우 리사이클러뷰 띄우기
-            else {
-                binding.emptyCommentTextView.isVisible = false
-                binding.diaryUploadServerYetTextView.isVisible = false
-                binding.sendCompleteTextView.isVisible = false
-                //내가 코멘트를 작성 한 경우
-                if (myDiaryViewModel.haveDayMyComment.value == true) {
-                    binding.recyclerView.isVisible = true
-                    binding.goToWriteCommentButton.isVisible = false
-                    binding.goToWriteCommentTextView.isVisible = false
-                    binding.noWriteCommentTextView.isVisible = false
-                } else {
-                    //내가 코멘트를 작성 안 한 경우
-                    if (selectedDate != null && selectedDate <= codaToday.minusDays(2)) {
-                        binding.goToWriteCommentButton.isVisible = false
-                        binding.goToWriteCommentTextView.isVisible = false
-                        binding.noWriteCommentTextView.isVisible = true
-                    } else {
-                        binding.goToWriteCommentButton.isVisible = true
-                        binding.goToWriteCommentTextView.isVisible = true
-                        binding.noWriteCommentTextView.isVisible = false
-                    }
-                    binding.recyclerView.isVisible = false
-                }
-            }
         }
     }
 
     private fun initViews() = with(binding) {
 
-        binding.goToWriteCommentButton.setOnClickListener {
-            findNavController().navigate(CommentDiaryDetailFragmentDirections.actionCommentDiaryDetailFragmentToReceivedDiaryFragment())
-        }
+//        binding.goToWriteCommentButton.setOnClickListener {
+//            findNavController().navigate(CommentDiaryDetailFragmentDirections.actionCommentDiaryDetailFragmentToReceivedDiaryFragment())
+//        }
         commentListAdapter = CommentListAdapter(this@CommentDiaryDetailFragment)
         commentListAdapter.setHasStableIds(true)
-        binding.recyclerView.adapter = commentListAdapter
+
+//        binding.recyclerView.adapter = commentListAdapter
     }
 
     private fun initToolBar() = with(binding) {
@@ -142,6 +118,13 @@ class CommentDiaryDetailFragment :
 //                fragmentViewModel.setFragmentState("myDiary")
 //                findNavController().popBackStack()
 //            }
+        }
+        deleteButton.setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                if (myDiaryViewModel.deleteDiary()) {
+                    findNavController().popBackStack()
+                }
+            }
         }
     }
 

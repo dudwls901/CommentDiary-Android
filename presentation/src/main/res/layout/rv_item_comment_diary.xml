@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="selectedDiary"
+            type="com.movingmaker.domain.model.response.Diary" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/diaryLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="18dp"
+        android:layout_marginBottom="84dp"
+        android:paddingTop="12dp">
+
+        <TextView
+            android:id="@+id/diaryDateTextView"
+            style="@style/BHeadline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="@{selectedDiary.date}"
+            android:textColor="@color/core_green"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2022.2.21" />
+
+        <TextView
+            android:id="@+id/diaryHeadEditText"
+            style="@style/BHeadline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@{selectedDiary.title}"
+            android:textColor="@color/text_black"
+            android:textColorHint="@color/text_light_brown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/diaryDateTextView"
+            tools:text="abkmdkoamfiokdmafiod" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="6dp"
+            android:background="@color/text_light_brown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/diaryHeadEditText" />
+
+        <TextView
+            android:id="@+id/diaryContentTextView"
+            style="@style/RCaption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:text="@{selectedDiary.content}"
+            android:textColor="@color/text_black"
+            android:textColorHint="@color/text_light_brown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="@string/diary_content_dummy_data" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

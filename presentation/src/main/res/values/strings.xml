@@ -81,7 +81,7 @@
     <string name="comment_content">괜찮아. 우리는 모두 처음 사는 인생이잖아.\n너무 서툰 것에 마음 쓰지마. 너만의 어려움이\n있겠지만, 그걸 내가 다 이해할 수는 없겠지만,\n그래도 응원을 보내. 힘내.</string>
     <string name="comment_head">누군가의 코멘트</string>
     <string name="comment_report">신고하기</string>
-    <string name="already_pass_diary_send_time">일기전송 시간이 지났어요..</string>
+    <string name="pass_diary_send_time">※ 일기전송 시간이 지났어요. ※</string>
     <string name="arrived_comment">코멘트가 도착했어요. 확인해 주세요!</string>
     <string name="write_diary_yet">아직 일기를 쓸 날이 오지 않았어요!</string>
     <string name="no_comment">아쉽게도 코멘트가 도착하지 않았어요.\n그래도 오늘의 기록은 내일의 기억이 될 거예요 :)</string>
@@ -95,6 +95,7 @@
     <string name="send_text1">보내기</string>
     <string name="comment_write_hint">일기를 읽고, 따뜻한 코멘트를 달아주세요</string>
     <string name="no_received_diary_yet">매일 아침 7시에 누군가의 일기가 도착합니다.\n 도착한 일기를 읽고 따뜻한 코멘트를 남겨주세요 :)</string>
+    <string name="comment_yet">\'누군가의 코멘트\'가 곧 도착합니다.</string>
     <string name="comment_write_limit">%s/20자 이상 작성</string>
     <string name="diary_head_date_text">"%s월 %s일 일기"</string>
     <string name="send_comment_notice">코멘트를 전송합니다.\n 전송 후에는 수정 및 삭제가 어렵습니다.\n 전송하시겠어요?</string>
@@ -118,7 +119,7 @@
     <string name="change">변경하기</string>
     <string name="write_comment">코멘트 작성하기</string>
     <string name="yet_write_comment">‘도착한 일기’의 코멘트를 작성해야\n내게 온 코멘트를 확인할 수 있어요.</string>
-    <string name="no_write_comment">‘도착한 일기’의 코멘트를 작성하지 않아서\n코멘트를 놓쳤어요. 다음에는 꼭 작성해주세요.</string>
+    <string name="no_write_comment">‘도착한 일기’의 코멘트를 작성하지 않아서\n코멘트를 놓쳤어요.</string>
     <string name="logo">로고</string>
     <string name="push_arrived_comment">코멘트 도착</string>
     <string name="block">차단하기</string>
@@ -164,4 +165,5 @@
     <string name="send">전송</string>
     <string name="select_diary_type">일기 유형 선택</string>
     <string name="diary_type_alone">혼자 쓰는 일기</string>
+    <string name="someones_comment">누군가의 코멘트</string>
 </resources>
