@@ -60,6 +60,7 @@ dependencies {
     androidTestImplementation(AndroidTest.ESPRESSO_CORE)
     implementation(Google.PLAY_CORE)
     implementation(Legacy.LEGACY_SUPPORT)// 인앱 업데이트 라이브러리
+    implementation(AndroidX.RECYCLERVIEW)
 
     //ktx
     implementation(Ktx.ACTIVITY)
