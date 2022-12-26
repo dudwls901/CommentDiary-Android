@@ -26,5 +26,5 @@ const val COMMENT = "comment"
 const val LIKE = "like"
 const val PUSH = "/push"
 
-const val MESSAGE_KEY = "message"
-const val ERROR_KEY = "error"
+const val DB_NAME = "comment_diary_database"
+const val COMMENT_DIARY_TABLE = "comment_diary_table"
