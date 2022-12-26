@@ -10,7 +10,6 @@ data class ReceivedDiaryResponse(
     val title: String,
     val content: String,
     val date: String,
-    val deliveryYn: Char,
     val myCommentResponse: List<ReceivedCommentResponse>
 ) : RemoteModel {
     override fun toDomainModel() = ReceivedDiary(
@@ -18,7 +17,7 @@ data class ReceivedDiaryResponse(
         title,
         content,
         date,
-        deliveryYn,
+        'N',
         myCommentResponse.map { it.toDomainModel() }.toMutableList()
     )
 }
@@ -28,6 +27,5 @@ fun ReceivedDiary.toDataModel() = ReceivedDiaryResponse(
     title,
     content,
     date,
-    deliveryYN,
     myComment.map { it.toDataModel() }.toMutableList()
 )
