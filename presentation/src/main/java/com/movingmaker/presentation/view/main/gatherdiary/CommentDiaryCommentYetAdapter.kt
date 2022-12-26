@@ -2,11 +2,15 @@ package com.movingmaker.presentation.view.main.gatherdiary
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import com.movingmaker.domain.model.response.Diary
 import com.movingmaker.presentation.databinding.RvItemCommentDiaryCommentYetBinding
 
-class CommentDiaryCommentYetAdapter() :
-    RecyclerView.Adapter<CommentDiaryDetailViewHolders.CommentDiaryCommentYetViewHolder>() {
+class CommentDiaryCommentYetAdapter :
+    ListAdapter<Diary, CommentDiaryDetailViewHolders.CommentDiaryCommentYetViewHolder>(
+        diffUtil
+    ) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -25,15 +29,17 @@ class CommentDiaryCommentYetAdapter() :
         holder: CommentDiaryDetailViewHolders.CommentDiaryCommentYetViewHolder,
         position: Int
     ) {
-        holder.bind()
+        holder.bind(currentList[position])
     }
 
-    override fun getItemCount(): Int {
-        return 1
-    }
+    companion object {
 
-//    fun setData(userName: String, repositoryName: String) {
-//        Log.d(TAG, "setData: ")
-//        headerText = "$userName / $repositoryName"
-//    }
+        val diffUtil = object : DiffUtil.ItemCallback<Diary>() {
+            override fun areItemsTheSame(oldItem: Diary, newItem: Diary) =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: Diary, newItem: Diary) =
+                oldItem.hashCode() == newItem.hashCode()
+        }
+    }
 }

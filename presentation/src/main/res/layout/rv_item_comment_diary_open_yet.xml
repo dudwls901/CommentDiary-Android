@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -55,9 +56,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="6dp"
                     android:gravity="center"
-                    android:text="n"
+                    android:text="@{String.valueOf(selectedDiary.commentList.size())}"
                     android:textAlignment="center"
                     android:textColor="@color/background_ivory" />
             </LinearLayout>
@@ -72,6 +73,7 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/background_green_radius_10"
             android:gravity="center"
+            app:openYetCommentNotice="@{selectedDiary}"
             android:text="@string/write_comment"
             android:textColor="@color/background_ivory"
             app:layout_constraintEnd_toEndOf="parent"
@@ -84,14 +86,51 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="38dp"
-            android:text="@string/yet_write_comment"
+            app:openYetCommentNotice="@{selectedDiary}"
+            tools:text="@string/yet_write_comment"
             android:textAlignment="center"
             android:textColor="@color/text_brown"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/goToWriteCommentButton" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/background_parent_border_radius_20"
+            android:backgroundTint="@color/text_brown"
+            android:paddingVertical="4dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/writeCommentNoticeTextView">
+
+            <TextView
+                android:id="@+id/openTextView"
+                style="@style/BCaption3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/open_comment"
+                android:textColor="@color/background_ivory"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:contentDescription="@string/lock"
+                android:src="@drawable/ic_lock"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/openTextView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/background_ivory" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -118,8 +118,8 @@
     <string name="change_password">비밀번호 변경</string>
     <string name="change">변경하기</string>
     <string name="write_comment">코멘트 작성하기</string>
-    <string name="yet_write_comment">‘도착한 일기’의 코멘트를 작성해야\n내게 온 코멘트를 확인할 수 있어요.</string>
-    <string name="no_write_comment">‘도착한 일기’의 코멘트를 작성하지 않아서\n코멘트를 놓쳤어요.</string>
+    <string name="yet_write_comment">\'도착한 일기\'의 코멘트를 작성해야\n내게 온 코멘트를 확인할 수 있어요.</string>
+    <string name="no_write_comment">\'도착한 일기\'의 코멘트를 작성하지 않아서\n코멘트를 놓쳤어요.</string>
     <string name="logo">로고</string>
     <string name="push_arrived_comment">코멘트 도착</string>
     <string name="block">차단하기</string>
@@ -166,4 +166,6 @@
     <string name="select_diary_type">일기 유형 선택</string>
     <string name="diary_type_alone">혼자 쓰는 일기</string>
     <string name="someones_comment">누군가의 코멘트</string>
+    <string name="open_comment">코멘트 열어보기</string>
+    <string name="lock">lock</string>
 </resources>

@@ -29,7 +29,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -129,7 +128,7 @@ class MyDiaryViewModel @Inject constructor(
             if (diaryType == DIARY_TYPE.ALONE_DIARY) {
                 combineDiaryHead(this)
                 combineDiaryContent(this)
-            }else{
+            } else {
                 value = null
             }
         }
@@ -380,9 +379,7 @@ class MyDiaryViewModel @Inject constructor(
         }
     }
 
-//    todo deliveryYn 서버에서 수정 못하게 막아놓음
     private fun editDiary(request: EditDiaryModel) = viewModelScope.launch {
-        Timber.e("수정 request $request")
         selectedDiary.value?.let { diary ->
             if (diary.content == request.content && diary.title == request.title) return@launch
             with(editDiaryUseCase(diary.id, request)) {
@@ -485,7 +482,7 @@ class MyDiaryViewModel @Inject constructor(
             offLoading()
             when (this) {
                 is UiState.Success -> {
-                    _haveDayWrittenComment.value = data.isEmpty()
+                    _haveDayWrittenComment.value = data.isNotEmpty()
                 }
                 is UiState.Error -> {
                     setMessage(message)

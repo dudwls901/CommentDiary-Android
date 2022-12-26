@@ -19,6 +19,8 @@ import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentGatherdiaryCommentdiaryDetailBinding
 import com.movingmaker.presentation.util.FRAGMENT_NAME
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.ymdToDate
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
@@ -34,21 +36,7 @@ class CommentDiaryDetailFragment :
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val gatherDiaryViewModel: GatherDiaryViewModel by activityViewModels()
-    private lateinit var commentListAdapter: CommentListAdapter
-    private lateinit var concatAdapter: ConcatAdapter
-    private val commentDiaryContentAdapter by lazy {
-        CommentDiaryContentAdapter()
-    }
-    private val commentDiaryOpenYetAdapter by lazy {
-        CommentDiaryOpenYetAdapter()
-    }
-    private val commentDiaryEmptyCommentAdapter by lazy {
-        CommentDiaryEmptyCommentAdapter()
-    }
-    private val commentDiaryCommentYetAdapter by lazy {
-        CommentDiaryCommentYetAdapter()
-    }
-
+    private val concatAdapter by lazy { ConcatAdapter() }
     private var reportedCommentId = -1L
     private var likedCommentId = -1L
 
@@ -57,19 +45,10 @@ class CommentDiaryDetailFragment :
         binding.vm = myDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.COMMENT_DIARY_DETAIL)
         observeDatas()
-        initViews()
         initToolBar()
-        binding.recyclerView.apply {
-            concatAdapter = ConcatAdapter(
-                commentDiaryContentAdapter,
-                commentListAdapter,
-                commentDiaryOpenYetAdapter,
-                commentDiaryEmptyCommentAdapter,
-                commentDiaryCommentYetAdapter
-            )
-            adapter = concatAdapter
-        }
+        binding.recyclerView.adapter = concatAdapter
     }
+
 
     private fun observeDatas() {
 
@@ -81,11 +60,55 @@ class CommentDiaryDetailFragment :
             }
         }
 
+        /*
+        * - 임시저장만 하고 전송을 하지 않은 경우 -> emptyComment(일기 전송 시간이 지났어요)
+        * - 코멘트 도착한 경우
+        *   - 내가 코멘트 작성한 경우 -> commentList
+        *   - 내가 코멘트 작성하지 않은 경우 -> openYet
+        *     - 작성 가능 날짜인 경우 -> 코멘트 작성하러 가기
+        *     - 작성 가능 날짜 지난 경우 -> '온도' 사용하여 코멘트 조회하기
+        * - 코멘트 없는 경우
+        *   - 코멘트 기다리는 경우 (일기 작성 당일 ~ 다음 날) -> commentYet
+        *   - 코멘트 못 받은 경우 (일기 작성 다다음날 ~) -> emptyComment
+        * */
         myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
             Timber.d("observeDatas: --> $diary ")
             diary?.let {
-                commentDiaryContentAdapter.submitList(listOf(diary))
-                commentListAdapter.submitList(diary.commentList.toMutableList())
+                val list = listOf(diary)
+                concatAdapter.addAdapter(
+                    CommentDiaryContentAdapter().also { it.submitList(list) }
+                )
+                //코멘트 없는 경우
+                if (diary.commentList.isEmpty()) {
+                    ymdToDate(diary.date)?.let { diaryDate ->
+                        //코멘트 못 받은 경우
+                        if (diaryDate <= getCodaToday().minusDays(2)) {
+                            concatAdapter.addAdapter(
+                                CommentDiaryEmptyCommentAdapter().also { it.submitList(list) }
+                            )
+                        } else { // 코멘트 기다리는 경우
+                            concatAdapter.addAdapter(
+                                CommentDiaryCommentYetAdapter().also { it.submitList(list) }
+                            )
+                        }
+                    }
+                } else { //코멘트 있는 경우
+                    //내가 코멘트 작성한 경우
+                    if (myDiaryViewModel.haveDayMyComment.value == true) {
+                        concatAdapter.addAdapter(
+                            CommentListAdapter(this@CommentDiaryDetailFragment).also {
+                                it.submitList(
+                                    diary.commentList
+                                )
+                            }
+                        )
+                    } else { //내가 코멘트 작성하지 않은 경우
+                        concatAdapter.addAdapter(
+                            CommentDiaryOpenYetAdapter().also { it.submitList(list) }
+                        )
+                    }
+
+                }
             }
         }
 
@@ -94,30 +117,10 @@ class CommentDiaryDetailFragment :
         }
     }
 
-    private fun initViews() = with(binding) {
-
-//        binding.goToWriteCommentButton.setOnClickListener {
-//            findNavController().navigate(CommentDiaryDetailFragmentDirections.actionCommentDiaryDetailFragmentToReceivedDiaryFragment())
-//        }
-        commentListAdapter = CommentListAdapter(this@CommentDiaryDetailFragment)
-        commentListAdapter.setHasStableIds(true)
-
-//        binding.recyclerView.adapter = commentListAdapter
-    }
-
     private fun initToolBar() = with(binding) {
 
         backButton.setOnClickListener {
             findNavController().popBackStack()
-//            if (fragmentViewModel.beforeFragment.value == "writeDiary") {
-//                fragmentViewModel.setFragmentState("myDiary")
-//            } else if (fragmentViewModel.beforeFragment.value == "gatherDiary") {
-//                fragmentViewModel.setFragmentState("gatherDiary")
-//                findNavController().popBackStack()
-//            } else {
-//                fragmentViewModel.setFragmentState("myDiary")
-//                findNavController().popBackStack()
-//            }
         }
         deleteButton.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
