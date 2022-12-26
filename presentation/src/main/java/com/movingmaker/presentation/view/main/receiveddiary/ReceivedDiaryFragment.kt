@@ -23,6 +23,7 @@ import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.receiveddiary.ReceivedDiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+//todo commentDiaryDetail에서 온 경우 뒤로 가기시 이전 화면으로 돌아가기
 @AndroidEntryPoint
 class ReceivedDiaryFragment :
     BaseFragment<FragmentReceiveddiaryBinding>(R.layout.fragment_receiveddiary) {
