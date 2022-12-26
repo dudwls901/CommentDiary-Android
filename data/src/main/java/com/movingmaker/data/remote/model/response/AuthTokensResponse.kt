@@ -10,13 +10,14 @@ data class AuthTokensResponse(
     val accessToken: String,
     val refreshToken: String,
     val accessTokenExpiresIn: Long,
-    val newMember: Boolean? = null
+    val newMember: Boolean? = null,
+    val userId: Long
 ) : RemoteModel {
     override fun toDomainModel() = AuthTokens(
-        grantType, accessToken, refreshToken, accessTokenExpiresIn, newMember
+        grantType, accessToken, refreshToken, accessTokenExpiresIn, newMember, userId
     )
 }
 
 fun AuthTokens.toDataModel() = AuthTokensResponse(
-    grantType, accessToken, refreshToken, accessTokenExpiresIn, isNewMember
+    grantType, accessToken, refreshToken, accessTokenExpiresIn, isNewMember, userId
 )
