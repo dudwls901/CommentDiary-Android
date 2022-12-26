@@ -103,7 +103,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main),
 
         receivedDiaryViewModel.receivedDiary.observe(this) {
             if (it != null) {
-                if (it.myComment?.isNotEmpty() == true) {
+                if (it.myComment.isNotEmpty()) {
                     binding.bottomNavigationView.menu[1].icon =
                         ContextCompat.getDrawable(this, R.drawable.bottom_ic_received)
                 } else {
@@ -125,20 +125,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main),
             Timber.d("observerFragments: nav ${navController.currentDestination?.label}")
             Timber.d("observerFragments: frag $fragment")
             //마이페이지만 스테이터스바 흰색
-            if (fragment == FRAGMENT_NAME.MY_PAGE ||
-                fragment == FRAGMENT_NAME.MY_ACCOUNT ||
-                fragment == FRAGMENT_NAME.SIGN_OUT ||
-                fragment == FRAGMENT_NAME.TERMS ||
-                fragment == FRAGMENT_NAME.SENDED_COMMENT_LIST ||
-                fragment == FRAGMENT_NAME.CHANGE_PASSWORD ||
-                fragment == FRAGMENT_NAME.PUSHALARM_ONOFF ||
-                fragment == FRAGMENT_NAME.WRITE_DIARY ||
-                fragment == FRAGMENT_NAME.ALONE_DIARY_DETAIL
-            ) {
-                window.statusBarColor = getColor(R.color.background_ivory)
-            } else {
-                window.statusBarColor = getColor(R.color.core_beige)
-            }
+            window.statusBarColor = getColor(
+                when (fragment) {
+                    FRAGMENT_NAME.MY_PAGE,
+                    FRAGMENT_NAME.MY_ACCOUNT,
+                    FRAGMENT_NAME.SIGN_OUT,
+                    FRAGMENT_NAME.TERMS,
+                    FRAGMENT_NAME.SENDED_COMMENT_LIST,
+                    FRAGMENT_NAME.CHANGE_PASSWORD,
+                    FRAGMENT_NAME.PUSHALARM_ONOFF,
+                    FRAGMENT_NAME.WRITE_DIARY,
+                    FRAGMENT_NAME.ALONE_DIARY_DETAIL,
+                    FRAGMENT_NAME.COMMENT_DIARY_DETAIL -> {
+                        R.color.background_ivory
+                    }
+                    else -> {
+                        R.color.core_beige
+                    }
+                }
+            )
         }
     }
 
