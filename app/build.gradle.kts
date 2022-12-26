@@ -125,4 +125,9 @@ dependencies {
 
     // Timber
     implementation(Timber.TIMBER)
+
+    //Room
+    implementation(Room.ROOM_KTX)
+    implementation(Room.ROOM_RUNTIME)
+    kapt(Room.ROOM_COMPILER)
 }
