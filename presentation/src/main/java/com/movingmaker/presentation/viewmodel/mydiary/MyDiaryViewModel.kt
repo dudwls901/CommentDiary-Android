@@ -477,6 +477,7 @@ class MyDiaryViewModel @Inject constructor(
     }
 
     suspend fun sendCommentDiary() = withContext(viewModelScope.coroutineContext) {
+        //서버에 저장하는 코멘트 다이어리는 userId 필요 x
         if (selectedDiary.value != null) {
             editDiary(
                 EditDiaryModel(

@@ -140,7 +140,8 @@ class CalendarWithDiaryFragment :
             findNavController().navigate(action)
         }
         readDiaryLayout.setOnClickListener { //일기가 있는 경우
-            val action = if (myDiaryViewModel.selectedDiary.value?.deliveryYN == 'Y') {
+            //임시 저장 아닌 코멘트 일기인 경우
+            val action = if (myDiaryViewModel.selectedDiary.value?.deliveryYN == 'Y' && myDiaryViewModel.selectedDiary.value?.userId == -1L) {
                 CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToCommentDiaryDetailFragment()
             } else { //혼자쓴 일기인 경우
                 CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToWriteDiaryFragment()
