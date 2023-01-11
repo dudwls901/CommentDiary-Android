@@ -28,6 +28,6 @@ class CommentDiaryLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun clearCommentDiaries() {
-        commentDiaryDao.clearCommentDiaries()
+        commentDiaryDao.clearCommentDiaries(listOf(-1L))
     }
 }
