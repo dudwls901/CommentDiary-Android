@@ -10,15 +10,24 @@ class CommentDiaryLocalDataSourceImpl @Inject constructor(
     private val commentDiaryDao: CommentDiaryDao,
 ) : CommentDiaryLocalDataSource {
 
-    override fun getPeriodDiaries(date: String): Flow<List<DiaryEntity>> =
-        commentDiaryDao.getPeriodDiaries(date)
+    override fun getPeriodDiaries(date: String): Flow<List<DiaryEntity>> {
+//        val ret = commentDiaryDao.getPeriodDiaries("%$date%")
+        return commentDiaryDao.getPeriodDiaries()
+    }
 
+    override suspend fun insertTempDiary(tempDiary: DiaryEntity) {
+        commentDiaryDao.insertTempDiary(tempDiary)
+    }
 
-    override suspend fun insertCommentDiary(vararg commentDiaryEntity: DiaryEntity) {
-        commentDiaryDao.insertCommentDiary(*commentDiaryEntity)
+    override suspend fun insertCommentDiaries(vararg commentDiaryEntity: DiaryEntity) {
+        commentDiaryDao.insertCommentDiaries(*commentDiaryEntity)
     }
 
     override suspend fun deleteCommentDiary(commentDiaryEntity: DiaryEntity) {
         commentDiaryDao.deleteCommentDiary(commentDiaryEntity)
+    }
+
+    override suspend fun clearCommentDiaries() {
+        commentDiaryDao.clearCommentDiaries()
     }
 }

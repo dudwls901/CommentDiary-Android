@@ -70,7 +70,16 @@ class WriteDiaryFragment :
     override fun onStop() {
         super.onStop()
         coroutineLifecycleScope.launch {
-            myDiaryViewModel.handleAloneDiary()
+            when (myDiaryViewModel.selectedDiaryType.value) {
+                DIARY_TYPE.ALONE_DIARY -> {
+                    myDiaryViewModel.handleAloneDiary()
+                }
+                DIARY_TYPE.COMMENT_DIARY -> {
+                    myDiaryViewModel.saveTempCommentDiary()
+                }
+                else -> { /*no op*/
+                }
+            }
         }
     }
 

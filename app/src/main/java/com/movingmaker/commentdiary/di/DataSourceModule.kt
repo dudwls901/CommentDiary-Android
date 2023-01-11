@@ -1,6 +1,8 @@
 package com.movingmaker.commentdiary.di
 
 
+import com.movingmaker.data.local.datasource.CommentDiaryLocalDataSource
+import com.movingmaker.data.local.datasourceimpl.CommentDiaryLocalDataSourceImpl
 import com.movingmaker.data.remote.datasource.ForSignUpDataSource
 import com.movingmaker.data.remote.datasource.GatherDiaryDataSource
 import com.movingmaker.data.remote.datasource.MyDiaryDataSource
@@ -59,4 +61,10 @@ abstract class DataSourceModule {
     abstract fun bindReIssueTokenDataSource(
         reIssueTokenDataSourceImpl: ReIssueTokenDataSourceImpl,
     ): ReIssueTokenDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindCommentDiaryLocalDataSource(
+        commentDiaryLocalDataSourceImpl: CommentDiaryLocalDataSourceImpl
+    ): CommentDiaryLocalDataSource
 }

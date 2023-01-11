@@ -2,12 +2,18 @@ package com.movingmaker.data.local.dto
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
 import com.movingmaker.data.util.COMMENT_DIARY_TABLE
 import com.movingmaker.domain.model.response.Comment
+import com.movingmaker.domain.model.response.Diary
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 
 @Entity(tableName = COMMENT_DIARY_TABLE)
 data class DiaryEntity(
-    @PrimaryKey val id: Long,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long,
     val userId: Long,
     val title: String,
     val content: String,
@@ -15,27 +21,42 @@ data class DiaryEntity(
     val deliveryYN: Char,
     val commentList: MutableList<Comment>
 ) {
-//    fun toDomainModel(): CoronaCenter = CoronaCenter(
-//        id = id,
-//        address = address,
-//        centerName = centerName,
-//        centerType = parseToCenterTypeEnum(centerType),
-//        facilityName = facilityName,
-//        lat = lat.toDouble(),
-//        lng = lng.toDouble(),
-//        phoneNumber = phoneNumber,
-//        updatedAt = updatedAt
-//    )
+    fun toDomainModel(): Diary = Diary(
+        id = id,
+        userId = userId,
+        title = title,
+        content = content,
+        date = date,
+        deliveryYN = deliveryYN,
+        commentList = commentList
+    )
 }
 
-//fun CoronaCenter.toEntity(): CoronaCenterEntity = CoronaCenterEntity(
-//    id = id,
-//    address = address,
-//    centerName = centerName,
-//    centerType = centerType.type,
-//    facilityName = facilityName,
-//    lat = lat.toString(),
-//    lng = lng.toString(),
-//    phoneNumber = phoneNumber,
-//    updatedAt = updatedAt
-//)
+fun Diary.toEntity(): DiaryEntity = DiaryEntity(
+    id = id,
+    userId = userId,
+    title = title,
+    content = content,
+    date = date,
+    deliveryYN = deliveryYN,
+    commentList = commentList
+)
+
+class CommentListTypeConverter {
+
+    private val json = Json {
+        isLenient = true
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+    }
+
+    @TypeConverter
+    fun jsonToList(value: String): List<Comment> {
+        return json.decodeFromString(ListSerializer(Comment.serializer()), value)
+    }
+
+    @TypeConverter
+    fun listToJson(type: List<Comment>): String {
+        return json.encodeToJsonElement(type).toString()
+    }
+}

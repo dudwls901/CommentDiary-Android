@@ -12,12 +12,21 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CommentDiaryDao {
 
+    //    @Query("SELECT * FROM $COMMENT_DIARY_TABLE WHERE date like :date")
+//    fun getPeriodDiaries(date: String): Flow<List<DiaryEntity>>)
     @Query("SELECT * FROM $COMMENT_DIARY_TABLE")
-    fun getPeriodDiaries(date: String): Flow<List<DiaryEntity>>
+    fun getPeriodDiaries(): Flow<List<DiaryEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCommentDiary(vararg commentDiaryEntity: DiaryEntity)
+    suspend fun insertTempDiary(commentDiaryEntity: DiaryEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCommentDiaries(vararg commentDiaryEntity: DiaryEntity)
 
     @Delete
     suspend fun deleteCommentDiary(commentDiaryEntity: DiaryEntity)
+
+    @Query("DELETE FROM $COMMENT_DIARY_TABLE")
+    suspend fun clearCommentDiaries()
+
 }

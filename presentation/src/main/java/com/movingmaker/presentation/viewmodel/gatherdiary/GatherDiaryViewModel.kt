@@ -52,28 +52,28 @@ class GatherDiaryViewModel @Inject constructor(
     }
 
     fun getDiaries(date: String) = viewModelScope.launch {
-        onLoading()
-        val response = if (date == "all") {
-            getAllDiaryUseCase()
-        } else {
-            getMonthDiaryUseCase(date)
-        }
-        offLoading()
-        with(response) {
-            offLoading()
-            Timber.d("result $this")
-            when (this) {
-                is UiState.Success -> {
-                    setDiaryList(data)
-                }
-                is UiState.Error -> {
-                    setMessage(message)
-                }
-                is UiState.Fail -> {
-                    setMessage(message)
-                }
-            }
-        }
+//        onLoading()
+//        val response = if (date == "all") {
+//            getAllDiaryUseCase()
+//        } else {
+//            getMonthDiaryUseCase(date)
+//        }
+//        offLoading()
+//        with(response) {
+//            offLoading()
+//            Timber.d("result $this")
+//            when (this) {
+//                is UiState.Success -> {
+//                    setDiaryList(data)
+//                }
+//                is UiState.Error -> {
+//                    setMessage(message)
+//                }
+//                is UiState.Fail -> {
+//                    setMessage(message)
+//                }
+//            }
+//        }
     }
 
     fun reportComment(reportCommentRequest: ReportCommentModel) =

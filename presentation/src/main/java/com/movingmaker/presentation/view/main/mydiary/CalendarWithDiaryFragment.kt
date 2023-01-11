@@ -43,6 +43,7 @@ import java.time.LocalDate
 import java.util.Calendar
 import kotlin.math.roundToInt
 
+//todo 삭제 이후 화면 동기화, 일기 상세 후 뒤돌아올 때 화면 유지
 @AndroidEntryPoint
 class CalendarWithDiaryFragment :
     BaseFragment<FragmentMydiaryWithCalendarBinding>(R.layout.fragment_mydiary_with_calendar) {
@@ -62,12 +63,18 @@ class CalendarWithDiaryFragment :
 
     private fun observeData() {
 
-        /*
-        * 코멘트 받아서 푸시로 들어온 경우
-        * 1. selectedDate 해당 일기 날짜로 설정
-        * 2. 달력 이동 로직 (getMonthDiary -> 해당 일기 check -> selectedDiary 해당 일기로 설정)
-        * 3. 해당 일기 detail 화면으로 이동
-        * */
+        myDiaryViewModel.localDiaries.observe(viewLifecycleOwner) {
+            //개수가 0인 경우는 캐싱할 때 clear한 경우
+            if (it.isNotEmpty()) {
+                myDiaryViewModel.setMonthDiaries(it)
+            }
+        }
+        /**
+         * 코멘트 받아서 푸시로 들어온 경우
+         * 1. selectedDate 해당 일기 날짜로 설정
+         * 2. 달력 이동 로직 (getMonthDiary -> 해당 일기 check -> selectedDiary 해당 일기로 설정)
+         * 3. 해당 일기 detail 화면으로 이동
+         * */
         myDiaryViewModel.pushDate.observe(viewLifecycleOwner) {
             viewLifecycleOwner.lifecycleScope.launch {
                 Timber.d("observeData: push ${myDiaryViewModel.pushDate.value}")
@@ -104,7 +111,7 @@ class CalendarWithDiaryFragment :
                 }
             }
         }
-        myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner){
+        myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) {
             Timber.e("여기 $it")
         }
     }
@@ -121,7 +128,7 @@ class CalendarWithDiaryFragment :
         binding.materialCalendarView.currentDate = toCalenderDay(date)
         ymFormatForLocalDate(myDiaryViewModel.selectedDate.value)?.let { ymDate ->
             //이번 달 화면에서 refresh 하는 경우 달력 이동x, Month Diary 갱신, 일기 상태 변경
-            myDiaryViewModel.getMonthDiary(ymDate)
+            myDiaryViewModel.getRemoteCommentDiaries(ymDate)
         }
     }
 
@@ -185,7 +192,7 @@ class CalendarWithDiaryFragment :
                 myDiaryViewModel.setSelectedDate(null)
                 myDiaryViewModel.setSelectedYearMonth(ymFormatForLocalDate(date))
                 viewLifecycleOwner.lifecycleScope.launch {
-                    myDiaryViewModel.getMonthDiary(ymDate)
+                    myDiaryViewModel.getRemoteCommentDiaries(ymDate)
                 }
             }
         }
