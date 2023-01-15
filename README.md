@@ -19,33 +19,49 @@
 + AOS 1명
 + Server 1명
 ## 개발 환경
-+ Android Studio
-  + targetSdkVersion : 32
-  + minSdkVersion : 26
-+ CI/CD (Github Actions)
-+ Figma, Zeplin, Slack, PostMan
-+ Kotlin
-+ Clean Architecture, MVVM
-+ DataBinding, ViewModel, LiveData, Navigation
-+ EncryptedSharedPreferences
-+ Coroutines
-+ Retrofit2, OkHttp3
-+ RecyclerView (DiffUtil + ListAdapter)
-+ ViewPager2
-+ material-calendarview
-+ Kakao Login API
-+ Hilt
+- Application Version
+  - targetSdkVersion : 32
+  - minSdkVersion : 26
+- CI/CD (Github Actions)
+- Tools
+  - Figma, Zeplin, Slack, PostMan
+- Language
+    - Kotlin : 1.7.10
+- Gradle
+    - kts
+- Architecture
+    - Clean Architecture (Multi-Module)
+- Design Pattern
+    - MVVM, Repository, Singleton, Observer ...
+- UI Layout
+    - XML
+- Network
+    - Retrofit2, OkHttp3
+- Jetpack
+    - ViewBinding
+    - LiveData
+    - Lifecycle
+    - ViewModel
+    - Navigation
+    - Room
+- Serialization
+    - Kotlinx Serialzation
+- DI
+    - Dagger-Hilt
+- Asynchronous
+    - Coroutines, Coroutines Flow
+- etc
+  - EncryptedSharedPreferences
+  - ViewPager2
+  - material-calendarview
+  - Kakao Login API
 + Firebase
     + FCM
     + Analytics
     + Crashritics
 + For Refactoring & Develop
     + Paging3
-    + Multi-Module
     + MotionLayout
-    + Room (caching, transient storage)
-    + Flow
 ## 📝 License
 Copyright © 2021 dudwls901. <br>
 This project is MIT licensed.
-
