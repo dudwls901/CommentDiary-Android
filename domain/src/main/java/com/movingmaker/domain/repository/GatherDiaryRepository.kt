@@ -20,7 +20,7 @@ interface GatherDiaryRepository {
 
     suspend fun insertTempDiary(tempDiary: Diary)
 
-    suspend fun deleteCommentDiary(commentDiary: Diary)
+    suspend fun deleteTempCommentDiary(commentDiary: Diary): Int
 
     suspend fun clearCommentDiaries()
 

@@ -12,6 +12,7 @@ import com.movingmaker.domain.model.request.SaveDiaryModel
 import com.movingmaker.domain.model.response.Comment
 import com.movingmaker.domain.model.response.Diary
 import com.movingmaker.domain.usecase.DeleteDiaryUseCase
+import com.movingmaker.domain.usecase.DeleteTempCommentDiaryUseCase
 import com.movingmaker.domain.usecase.EditDiaryUseCase
 import com.movingmaker.domain.usecase.GetMonthDiaryUseCase
 import com.movingmaker.domain.usecase.GetPeriodCommentUseCase
@@ -42,7 +43,8 @@ class MyDiaryViewModel @Inject constructor(
     getMonthDiaryUseCase: GetMonthDiaryUseCase,
     private val getPeriodCommentUseCase: GetPeriodCommentUseCase,
     private val getRemoteMonthDiaryUseCase: GetRemoteMonthDiaryUseCase,
-    private val saveTempDiaryUseCase: SaveTempDiaryUseCase
+    private val saveTempDiaryUseCase: SaveTempDiaryUseCase,
+    private val deleteTempCommentDiaryUseCase: DeleteTempCommentDiaryUseCase
 ) : BaseViewModel() {
 
     //    val monthDiaries: LiveData<List<Diary>?> =
@@ -130,13 +132,13 @@ class MyDiaryViewModel @Inject constructor(
         getRemoteCommentDiaries(ymFormatForLocalDate(getCodaToday())!!)
     }
 
-    /*
-    * head, content 통합 한 글자라도 있으면 Save
-    * 1. 현재 선택된 일기가 없다면 신규 작성 -> SaveDiaryModel
-    * 2. 현재 선택된 일기가 있다면 수정 -> EditDiaryModel
-    * 1에서 2로 가는 로직
-    * head, content 통합 한 글자라도 없다면 delete
-    * */
+    /**
+     * head, content 통합 한 글자라도 있으면 Save
+     * 1. 현재 선택된 일기가 없다면 신규 작성 -> SaveDiaryModel
+     * 2. 현재 선택된 일기가 있다면 수정 -> EditDiaryModel
+     * 1에서 2로 가는 로직
+     * head, content 통합 한 글자라도 없다면 delete
+     * */
     val aloneDiary = MediatorLiveData<Any>().apply {
         addSource(selectedDiaryType) { diaryType ->
             removeSource(diaryHead)
@@ -353,7 +355,29 @@ class MyDiaryViewModel @Inject constructor(
         }
     }
 
-    fun handleAloneDiary() {
+    suspend fun handleDiary(selectedDiaryType: DIARY_TYPE?) {
+        when (selectedDiaryType) {
+            DIARY_TYPE.ALONE_DIARY -> {
+                handleAloneDiary()
+            }
+            DIARY_TYPE.COMMENT_DIARY -> {
+                handleCommentDiary()
+            }
+            else -> { /*no op*/
+            }
+        }
+    }
+
+    private suspend fun handleCommentDiary() {
+        //비어있으면 삭제
+        if (diaryHead.value!!.isBlank() && diaryContent.value!!.isBlank()) {
+            deleteTempCommentDiary()
+        } else {//한 글자라도 있으면 임시 저장
+            saveTempCommentDiary()
+        }
+    }
+
+    private fun handleAloneDiary() {
         if (aloneDiary.value == null) return
         when (val request = aloneDiary.value) {
             //id 없는 경우 저장
@@ -457,25 +481,6 @@ class MyDiaryViewModel @Inject constructor(
         }
     }
 
-    /**
-     * head, content 한 글자라도 있는 경우 임시 저장
-     * */
-    suspend fun saveTempCommentDiary() {
-        if (diaryHead.value!!.isNotBlank() && diaryContent.value!!.isNotBlank()) {
-            saveTempDiaryUseCase(
-                Diary(
-                    id = -100,
-                    userId = 30,
-                    title = diaryHead.value!!,
-                    content = diaryContent.value!!,
-                    date = selectedDate.value!!,
-                    deliveryYN = 'Y',
-                    commentList = emptyList<Comment>().toMutableList()
-                )
-            )
-        }
-    }
-
     suspend fun sendCommentDiary() = withContext(viewModelScope.coroutineContext) {
         //서버에 저장하는 코멘트 다이어리는 userId 필요 x
         if (selectedDiary.value != null) {
@@ -495,6 +500,43 @@ class MyDiaryViewModel @Inject constructor(
                     'Y'
                 )
             )
+        }
+    }
+
+    /**
+     * head, content 한 글자라도 있는 경우 임시 저장
+     * */
+    private suspend fun saveTempCommentDiary() {
+        if (diaryHead.value!!.isNotBlank() || diaryContent.value!!.isNotBlank()) {
+            saveTempDiaryUseCase(
+                Diary(
+                    id = -100,
+                    userId = 30,
+                    title = diaryHead.value!!,
+                    content = diaryContent.value!!,
+                    date = selectedDate.value!!,
+                    deliveryYN = 'Y',
+                    commentList = emptyList<Comment>().toMutableList()
+                )
+            )
+        }
+    }
+
+    private suspend fun deleteTempCommentDiary() = withContext(viewModelScope.coroutineContext) {
+        onLoading()
+        if (selectedDiary.value != null) {
+            with(deleteTempCommentDiaryUseCase(selectedDiary.value!!)) {
+                when (this) {
+                    1 -> {
+                        setMessage("일기가 삭제되었습니다.")
+                    }
+                    else -> {
+                        setMessage("오류가 발생했습니다.")
+                    }
+                }
+            }
+        } else {
+            offLoading()
         }
     }
 

@@ -45,7 +45,7 @@ class WriteDiaryFragment :
     * 코멘트 일기는 onStop에서 room에 임시저장시키기
     * 혼자 쓰는 일기 저장
     * 코멘트 일기 전송 임시 저장
-    * 오늘 날짜인 경우만 topsheet 가능 지난 날짜는 혼자 쓴 일기 저장만 가능능    * */
+    * 오늘 날짜인 경우만 topsheet 가능 지난 날짜는 혼자 쓴 일기 저장만 가능능    */
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,16 +70,7 @@ class WriteDiaryFragment :
     override fun onStop() {
         super.onStop()
         coroutineLifecycleScope.launch {
-            when (myDiaryViewModel.selectedDiaryType.value) {
-                DIARY_TYPE.ALONE_DIARY -> {
-                    myDiaryViewModel.handleAloneDiary()
-                }
-                DIARY_TYPE.COMMENT_DIARY -> {
-                    myDiaryViewModel.saveTempCommentDiary()
-                }
-                else -> { /*no op*/
-                }
-            }
+            myDiaryViewModel.handleDiary(myDiaryViewModel.selectedDiaryType.value)
         }
     }
 
@@ -102,7 +93,6 @@ class WriteDiaryFragment :
                                 } else {
                                     DIARY_TYPE.COMMENT_DIARY
                                 }
-                                return@with
                             }
                             //작성 안 한 경우
                             DIARY_TYPE.COMMENT_DIARY
@@ -137,18 +127,10 @@ class WriteDiaryFragment :
 
     private fun initViews() = with(binding) {
 
-        //todo 코멘트 일기인 경우 임시저장
         backButton.setOnClickListener {
             when (myDiaryViewModel.selectedDiaryType.value) {
                 DIARY_TYPE.ALONE_DIARY -> {
-//                    Timber.d(
-//                        "initViews: ${myDiaryViewModel.diaryContentText.value} ${myDiaryViewModel.diaryHeadText.value}"
-//                    )
-//                    if (myDiaryViewModel.diaryContent.value.isNullOrEmpty() && myDiaryViewModel.diaryHead.value.isNullOrEmpty()) {
                     findNavController().popBackStack()
-//                    } else {
-//                        showBackDialog()
-//                    }
                 }
                 else -> findNavController().popBackStack()
             }

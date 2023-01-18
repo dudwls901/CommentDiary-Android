@@ -24,7 +24,7 @@ interface CommentDiaryDao {
     suspend fun insertCommentDiaries(vararg commentDiaryEntity: DiaryEntity)
 
     @Delete
-    suspend fun deleteCommentDiary(commentDiaryEntity: DiaryEntity)
+    suspend fun deleteTempCommentDiary(commentDiaryEntity: DiaryEntity): Int
 
     @Query("DELETE FROM $COMMENT_DIARY_TABLE WHERE userId in (:userIdList)")
     suspend fun clearCommentDiaries(userIdList: List<Long>)

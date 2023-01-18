@@ -69,9 +69,8 @@ class GatherDiaryRepositoryImpl @Inject constructor(
     /**
      * 로컬 일기 삭제하기
      * */
-    override suspend fun deleteCommentDiary(commentDiary: Diary) {
-        commentDiaryLocalDataSource.deleteCommentDiary(commentDiary.toEntity())
-    }
+    override suspend fun deleteTempCommentDiary(commentDiary: Diary): Int =
+        commentDiaryLocalDataSource.deleteTempCommentDiary(commentDiary.toEntity())
 
 
     /**

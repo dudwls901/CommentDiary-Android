@@ -23,9 +23,9 @@ class CommentDiaryLocalDataSourceImpl @Inject constructor(
         commentDiaryDao.insertCommentDiaries(*commentDiaryEntity)
     }
 
-    override suspend fun deleteCommentDiary(commentDiaryEntity: DiaryEntity) {
-        commentDiaryDao.deleteCommentDiary(commentDiaryEntity)
-    }
+    override suspend fun deleteTempCommentDiary(commentDiaryEntity: DiaryEntity): Int =
+        commentDiaryDao.deleteTempCommentDiary(commentDiaryEntity)
+
 
     override suspend fun clearCommentDiaries() {
         commentDiaryDao.clearCommentDiaries(listOf(-1L))

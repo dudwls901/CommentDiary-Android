@@ -139,13 +139,15 @@ class CalendarWithDiaryFragment :
                 CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToWriteDiaryFragment()
             findNavController().navigate(action)
         }
+        //todo 임시저장 일기 화면 대응
         readDiaryLayout.setOnClickListener { //일기가 있는 경우
             //임시 저장 아닌 코멘트 일기인 경우
-            val action = if (myDiaryViewModel.selectedDiary.value?.deliveryYN == 'Y' && myDiaryViewModel.selectedDiary.value?.userId == -1L) {
-                CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToCommentDiaryDetailFragment()
-            } else { //혼자쓴 일기인 경우
-                CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToWriteDiaryFragment()
-            }
+            val action =
+                if (myDiaryViewModel.selectedDiary.value?.deliveryYN == 'Y' && myDiaryViewModel.selectedDiary.value?.userId == -1L) {
+                    CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToCommentDiaryDetailFragment()
+                } else { //혼자쓴 일기인 경우
+                    CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToWriteDiaryFragment()
+                }
             findNavController().navigate(action)
         }
     }
