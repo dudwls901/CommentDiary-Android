@@ -63,7 +63,7 @@ class MyDiaryViewModel @Inject constructor(
 
     private var _tempDiaryDates = MutableLiveData<List<CalendarDay>>()
     val tempDiaryDates: LiveData<List<CalendarDay>>
-        get() = _commentDiaryDates
+        get() = _tempDiaryDates
 
     private var _monthDiaries = MutableLiveData<List<Diary>>()
     val monthDiaries: LiveData<List<Diary>>
@@ -221,16 +221,16 @@ class MyDiaryViewModel @Inject constructor(
         val tempDiary = ArrayList<CalendarDay>()
         for (selectedDiary in list) {
             ymdToCalendarDay(selectedDiary.date)?.let { date ->
-                when (selectedDiary.userId) {
-                    -1L -> {
-                        if (selectedDiary.deliveryYN == 'Y') {
-                            commentDiary.add(date)
+                when (selectedDiary.deliveryYN) {
+                    'Y' -> {
+                        if (selectedDiary.userId == -1L) {
+                            tempDiary.add(date)
                         } else {
-                            aloneDiary.add(date)
+                            commentDiary.add(date)
                         }
                     }
                     else -> {
-                        tempDiary.add(date)
+                        aloneDiary.add(date)
                     }
                 }
             }
