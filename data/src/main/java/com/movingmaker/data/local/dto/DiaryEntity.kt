@@ -1,6 +1,7 @@
 package com.movingmaker.data.local.dto
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import com.movingmaker.data.util.COMMENT_DIARY_TABLE
@@ -10,7 +11,12 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 
-@Entity(tableName = COMMENT_DIARY_TABLE)
+@Entity(
+    tableName = COMMENT_DIARY_TABLE,
+    indices = [
+        Index(value = ["userId", "date"], unique = true)
+    ]
+)
 data class DiaryEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
