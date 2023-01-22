@@ -1,5 +1,5 @@
 package com.movingmaker.data.remote.model
 
-interface RemoteModel {
+interface RemoteResponse {
     fun toDomainModel(): Any
 }

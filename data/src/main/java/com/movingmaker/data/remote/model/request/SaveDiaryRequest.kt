@@ -1,6 +1,5 @@
 package com.movingmaker.data.remote.model.request
 
-import com.movingmaker.data.remote.model.RemoteModel
 import com.movingmaker.domain.model.request.SaveDiaryModel
 import kotlinx.serialization.Serializable
 
@@ -12,11 +11,7 @@ data class SaveDiaryRequest(
     val deliveryYn: Char,
     //tempYn api에서 제거될 예정
     val tempYn: Char,
-) : RemoteModel {
-    override fun toDomainModel() = SaveDiaryModel(
-        title, content, date, deliveryYn, tempYn
-    )
-}
+)
 
 fun SaveDiaryModel.toDataModel() = SaveDiaryRequest(
     title, content, date, deliveryYN, tempYN

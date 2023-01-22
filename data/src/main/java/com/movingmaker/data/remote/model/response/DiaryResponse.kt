@@ -1,6 +1,6 @@
 package com.movingmaker.data.remote.model.response
 
-import com.movingmaker.data.remote.model.RemoteModel
+import com.movingmaker.data.remote.model.RemoteResponse
 import com.movingmaker.domain.model.response.Diary
 import kotlinx.serialization.Serializable
 
@@ -12,7 +12,7 @@ data class DiaryResponse(
     val date: String,
     val deliveryYn: Char,
     val commentResponseList: List<CommentResponse>
-) : RemoteModel {
+) : RemoteResponse {
     override fun toDomainModel() = Diary(
         id = id,
         title = title,
@@ -22,12 +22,3 @@ data class DiaryResponse(
         commentList = commentResponseList.map { it.toDomainModel() }.toMutableList()
     )
 }
-
-fun Diary.toDataModel() = DiaryResponse(
-    id,
-    title,
-    content,
-    date,
-    deliveryYN,
-    commentList.map { it.toDataModel() }.toMutableList()
-)

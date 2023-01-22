@@ -1,6 +1,6 @@
 package com.movingmaker.data.remote.model.response
 
-import com.movingmaker.data.remote.model.RemoteModel
+import com.movingmaker.data.remote.model.RemoteResponse
 import com.movingmaker.domain.model.response.BaseResponse
 import kotlinx.serialization.Serializable
 
@@ -16,8 +16,8 @@ data class BaseResponse<T>(
             code = code,
             message = message,
             result = when (val result = this.result) {
-                is List<*> -> result.map { (it as RemoteModel).toDomainModel() } as R
-                is RemoteModel -> (result as RemoteModel).toDomainModel() as R
+                is List<*> -> result.map { (it as RemoteResponse).toDomainModel() } as R
+                is RemoteResponse -> result.toDomainModel() as R
                 else -> {
                     result as R
                 }

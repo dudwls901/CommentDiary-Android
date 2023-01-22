@@ -1,6 +1,6 @@
 package com.movingmaker.data.remote.model.response
 
-import com.movingmaker.data.remote.model.RemoteModel
+import com.movingmaker.data.remote.model.RemoteResponse
 import com.movingmaker.domain.model.response.ReceivedComment
 import kotlinx.serialization.Serializable
 
@@ -10,12 +10,8 @@ data class ReceivedCommentResponse(
     val content: String,
     val date: String,
     val like: Boolean
-) : RemoteModel {
+) : RemoteResponse {
     override fun toDomainModel() = ReceivedComment(
         commentId, content, date, like
     )
 }
-
-fun ReceivedComment.toDataModel() = ReceivedCommentResponse(
-    id, content, date, like
-)
