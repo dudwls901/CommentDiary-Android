@@ -55,7 +55,7 @@ class ReceivedDiaryFragment :
                 binding.commentLayout.isVisible = true
                 binding.diaryLayout.isVisible = true
                 binding.noReceivedDiaryYet.isVisible = false
-                if (receivedDiary.myComment?.isNotEmpty() == true) {
+                if (receivedDiary.myComment.isNotEmpty()) {
                     binding.sendCommentButton.background = ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.background_ivory_radius_15_border_brown_1
@@ -68,7 +68,7 @@ class ReceivedDiaryFragment :
                         )
                     )
                     binding.commentLimitTextView.isVisible = false
-                    binding.commentEditTextView.setText(receivedDiary.myComment!![0].content)
+                    binding.commentEditTextView.setText(receivedDiary.myComment[0].content)
                     binding.commentEditTextView.isEnabled = false
                 } else {
                     binding.sendCommentButton.background = ContextCompat.getDrawable(

@@ -5,6 +5,5 @@ data class ReceivedDiary(
     val title: String,
     val content: String,
     val date: String,
-    val deliveryYN: Char,
     val myComment: MutableList<ReceivedComment>
 )
