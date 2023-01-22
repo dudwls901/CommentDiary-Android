@@ -21,6 +21,7 @@ import com.movingmaker.presentation.util.Extension.toDp
 import com.movingmaker.presentation.util.Extension.toPx
 import com.movingmaker.presentation.util.FRAGMENT_NAME
 import com.movingmaker.presentation.util.calenderDayToLocalDate
+import com.movingmaker.presentation.util.combineList
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.toCalenderDay
 import com.movingmaker.presentation.util.ymFormatForLocalDate
@@ -44,6 +45,7 @@ import java.util.Calendar
 import kotlin.math.roundToInt
 
 //todo 삭제 이후 화면 동기화, 일기 상세 후 뒤돌아올 때 화면 유지
+//todo 코멘트 일기 전송, 삭제, 화면 대응
 @AndroidEntryPoint
 class CalendarWithDiaryFragment :
     BaseFragment<FragmentMydiaryWithCalendarBinding>(R.layout.fragment_mydiary_with_calendar) {
@@ -55,18 +57,17 @@ class CalendarWithDiaryFragment :
         super.onViewCreated(view, savedInstanceState)
         binding.vm = myDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.CALENDAR_WITH_DIARY)
-
         initViews()
         observeData()
     }
 
 
-    private fun observeData() {
+    private fun observeData() = with(myDiaryViewModel) {
 
-        myDiaryViewModel.localDiaries.observe(viewLifecycleOwner) {
+        localDiaries.observe(viewLifecycleOwner) {
             //개수가 0인 경우는 캐싱할 때 clear한 경우
             if (it.isNotEmpty()) {
-                myDiaryViewModel.setMonthDiaries(it)
+                setMonthDiaries(it)
             }
         }
         /**
@@ -75,33 +76,36 @@ class CalendarWithDiaryFragment :
          * 2. 달력 이동 로직 (getMonthDiary -> 해당 일기 check -> selectedDiary 해당 일기로 설정)
          * 3. 해당 일기 detail 화면으로 이동
          * */
-        myDiaryViewModel.pushDate.observe(viewLifecycleOwner) {
+        pushDate.observe(viewLifecycleOwner) {
             viewLifecycleOwner.lifecycleScope.launch {
-                Timber.d("observeData: push ${myDiaryViewModel.pushDate.value}")
+                Timber.d("observeData: push ${pushDate.value}")
                 val date = it
-                myDiaryViewModel.setSelectedDate(date)
+                setSelectedDate(date)
                 refreshViews(date)
                 findNavController().navigate(CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToCommentDiaryDetailFragment())
             }
         }
 
         //monthDiary 받아온 후 클릭한 날짜 하단 일기뷰 상태 처리
-        myDiaryViewModel.monthDiaries.observe(viewLifecycleOwner) {
+        monthDiaries.observe(viewLifecycleOwner) {
             with(binding.materialCalendarView) {
                 removeDecorators()
                 addDecorators(
                     TodayDotDecorator(),
                     AloneDotDecorator(
                         requireContext(),
-                        myDiaryViewModel.aloneDiaryDates.value!!
+                        aloneDiaryDates.value!!
                     ),
                     CommentDotDecorator(
                         requireContext(),
-                        myDiaryViewModel.commentDiaryDates.value!!
+                        combineList(
+                            commentDiaryDates.value!!,
+                            tempDiaryDates.value!!
+                        )
                     ),
                 )
             }
-            when (val selectedDate = myDiaryViewModel.selectedDate.value) {
+            when (val selectedDate = selectedDate.value) {
                 null -> {
                     checkSelectedDate(null)
                 }
@@ -111,8 +115,8 @@ class CalendarWithDiaryFragment :
                 }
             }
         }
-        myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) {
-            Timber.e("여기 $it")
+        selectedDiary.observe(viewLifecycleOwner) {
+            Timber.e("여기 selectedDiary : $it")
         }
     }
 
