@@ -23,6 +23,9 @@ interface CommentDiaryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCommentDiaries(vararg commentDiaryEntity: DiaryEntity)
 
+    /**
+     * 삭제된 행의 수 return
+     * */
     @Delete
     suspend fun deleteTempCommentDiary(commentDiaryEntity: DiaryEntity): Int
 
