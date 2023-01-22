@@ -433,9 +433,10 @@ class OnboardingViewModel @Inject constructor(
                     val accessToken = this.data.accessToken
                     val refreshToken = this.data.refreshToken
                     val accessTokenExpiresIn = this.data.accessTokenExpiresIn
+                    val userId = this.data.userId
                     Timber.d("login: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}")
                     preferencesUtil
-                        .insertAuth(EMAIL, accessToken, refreshToken, accessTokenExpiresIn)
+                        .insertAuth(EMAIL, accessToken, refreshToken, accessTokenExpiresIn, userId)
                     isSuccessLogin = true
                 }
                 is UiState.Error -> {
@@ -467,12 +468,13 @@ class OnboardingViewModel @Inject constructor(
                     val accessToken = this.data.accessToken
                     val refreshToken = this.data.refreshToken
                     val accessTokenExpiresIn = this.data.accessTokenExpiresIn
+                    val userId = this.data.userId
                     isNewMember = this.data.isNewMember == true
                     Timber.d(
                         "kakaoLogin: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}"
                     )
                     preferencesUtil
-                        .insertAuth(KAKAO, accessToken, refreshToken, accessTokenExpiresIn)
+                        .insertAuth(KAKAO, accessToken, refreshToken, accessTokenExpiresIn, userId)
                 }
                 is UiState.Error -> {
                     setMessage(message)

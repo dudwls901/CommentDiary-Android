@@ -12,7 +12,8 @@ class PreferencesUtil @Inject constructor(
         loginType: String,
         accessToken: String,
         refreshToken: String,
-        accessTokenExpiresIn: Long
+        accessTokenExpiresIn: Long,
+        userId: Long
     ) {
         // 자동 로그인 데이터 저장
         sharedPreferences.edit().apply {
@@ -20,6 +21,7 @@ class PreferencesUtil @Inject constructor(
             putString(ACCESS_TOKEN, accessToken)
             putString(REFRESH_TOKEN, refreshToken)
             putLong(ACCESS_TOKEN_EXPIRES_IN, accessTokenExpiresIn)
+            putLong(USER_ID, userId)
         }.apply()
     }
 
@@ -60,6 +62,12 @@ class PreferencesUtil @Inject constructor(
         return loginType ?: EMPTY_TYPE
     }
 
+    fun getUserId(): Long {
+        return sharedPreferences.getLong(
+            USER_ID, EMPTY_USER
+        )
+    }
+
     fun signOut() {
         if (getLoginType() == KAKAO) {
             // 연결 끊기
@@ -85,7 +93,7 @@ class PreferencesUtil @Inject constructor(
                 }
             }
         }
-        insertAuth(EMPTY_TOKEN, EMPTY_TOKEN, EMPTY_TOKEN, 1L)
+        insertAuth(EMPTY_TOKEN, EMPTY_TOKEN, EMPTY_TOKEN, 1L, EMPTY_USER)
     }
 
 }
