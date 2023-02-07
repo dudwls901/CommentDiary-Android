@@ -63,7 +63,6 @@
                 android:background="@color/transparent"
                 android:contentDescription="@string/deleteButton"
                 android:src="@drawable/ic_delete"
-                app:commentYetState="@{vm.selectedDiary}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -75,7 +74,6 @@
                 android:layout_marginEnd="27.8dp"
                 android:text="@string/diary_send_complete"
                 android:textColor="@color/text_brown"
-                app:commentYetState="@{vm.selectedDiary}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -4,7 +4,6 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.movingmaker.domain.model.UiState
 import com.movingmaker.domain.model.request.EditDiaryModel
@@ -29,13 +28,27 @@ import com.movingmaker.presentation.util.ymFormatForLocalDate
 import com.movingmaker.presentation.util.ymFormatForString
 import com.movingmaker.presentation.util.ymdFormat
 import com.movingmaker.presentation.util.ymdToCalendarDay
+import com.movingmaker.presentation.util.ymdToDate
+import com.movingmaker.presentation.view.main.mydiary.DiaryState
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
+//todo edit, delete 등 viewmodel 분리하기
 @HiltViewModel
 class MyDiaryViewModel @Inject constructor(
     private val preferencesUtil: PreferencesUtil,
@@ -48,8 +61,22 @@ class MyDiaryViewModel @Inject constructor(
     private val saveTempDiaryUseCase: SaveTempDiaryUseCase,
     private val deleteTempCommentDiaryUseCase: DeleteTempCommentDiaryUseCase
 ) : BaseViewModel() {
-
-    val localDiaries = getMonthDiaryUseCase("null").asLiveData()
+    //    val localDiaries = getMonthDiaryUseCase("null").map { diaries ->
+//        selectedYearMonth.value?.let { yearMonth ->
+//            diaries.filter { diary ->
+//                diary.date.contains(yearMonth)
+//            }
+//        }
+//    }.stateIn(
+//        viewModelScope,
+//        SharingStarted.WhileSubscribed(5000L),
+//        emptyList()
+//    )
+    private val localDiaries = getMonthDiaryUseCase("null").stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000L),
+        emptyList()
+    )
 
     private var _aloneDiaryDates = MutableLiveData<List<CalendarDay>>()
     val aloneDiaryDates: LiveData<List<CalendarDay>>
@@ -67,9 +94,18 @@ class MyDiaryViewModel @Inject constructor(
     val monthDiaries: LiveData<List<Diary>>
         get() = _monthDiaries
 
-    private var _selectedDiary = MutableLiveData<Diary?>()
-    val selectedDiary: LiveData<Diary?>
+    private var _selectedDiary = MutableStateFlow<Diary?>(null)
+    val selectedDiary: StateFlow<Diary?>
         get() = _selectedDiary
+
+    private var _haveDayWrittenComment =
+        MutableStateFlow<Boolean>(false)
+    val haveDayWrittenComment: StateFlow<Boolean>
+        get() = _haveDayWrittenComment
+
+    private var _selectedDate = MutableStateFlow<String?>(ymdFormat(getCodaToday())!!)
+    val selectedDate: StateFlow<String?>
+        get() = _selectedDate
 
     private var _selectedYearMonth = MutableLiveData<String>().apply {
         value = ymFormatForLocalDate(getCodaToday())
@@ -77,20 +113,9 @@ class MyDiaryViewModel @Inject constructor(
     val selectedYearMonth: LiveData<String>
         get() = _selectedYearMonth
 
-    private var _selectedDate = MutableLiveData<String>().apply {
-        value = ymdFormat(getCodaToday())
-    }
-    val selectedDate: LiveData<String>
-        get() = _selectedDate
-
-
     private var _commentList = MutableLiveData<List<Comment>>()
     val commentList: LiveData<List<Comment>>
         get() = _commentList
-
-    private var _haveDayWrittenComment = MutableLiveData<Boolean>()
-    val haveDayMyComment: LiveData<Boolean>
-        get() = _haveDayWrittenComment
 
     private var _pushDate = MutableLiveData<String>()
     val pushDate: LiveData<String>
@@ -129,6 +154,116 @@ class MyDiaryViewModel @Inject constructor(
     init {
         getRemoteCommentDiaries(ymFormatForLocalDate(getCodaToday())!!)
     }
+
+    private var cachedLocalDiaries: List<Diary> = emptyList()
+    val selectedDateWithMonthDiaries = selectedDate.combine(localDiaries) { date, diaries ->
+        //date만 변경된 경우
+        //개수가 0인 경우는 캐싱할 때 clear한 경우
+        if (diaries == cachedLocalDiaries || diaries.isEmpty()) {
+            Pair(date, null)
+        } else { // date + month 모두 변경된 경우
+            setMonthDiaries(diaries)
+            cachedLocalDiaries = diaries
+            Pair(date, diaries)
+        }
+    }
+
+    //selectedDate -> selectedDiary -> diaryState
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    val diaryState: Flow<DiaryState> = combine(
+        selectedDate, selectedDiary, _haveDayWrittenComment
+    ) { ymdDate, diary, haveWrittenComment ->
+        Timber.e("여기 diaryState zip date: ${ymdDate} diary: ${diary} writtenCOmeent: ${haveWrittenComment}")
+        if (ymdDate == null) {
+            //선택한 날짜 없는 경우
+            DiaryState.NoneSelectedDiary
+        } else {
+            val date = ymdToDate(ymdDate)
+            if (date == null) {
+                //선택한 날짜 없는 경우
+                DiaryState.NoneSelectedDiary
+            } else if (date > getCodaToday()) {
+                //미래 날짜 선택한 경우
+                DiaryState.SelectedFutureDiary
+            } else if (date == getCodaToday()) { //오늘 날짜 선택한 경우
+                when {
+                    //일기 없는 경우
+                    diary == null -> {
+                        DiaryState.EmptyDiary(ymdDate)
+                    }
+                    //혼자 일기인 경우
+                    diary.deliveryYN == 'N' -> {
+                        DiaryState.AloneDiary(diary)
+                    }
+                    // 코멘트 일기인 경우
+                    //임시 저장인 경우
+                    diary.userId != -1L -> {
+                        DiaryState.CommentDiary.TempDiaryInTime(diary)
+                    }
+                    else -> { //임시 저장 아닌 경우
+                        DiaryState.CommentDiary.HaveNotCommentInTime(diary)
+                    }
+                }
+            } else {
+                //과거 날짜 선택한 경우
+                when {
+                    //일기 없는 경우
+                    diary == null -> {
+                        DiaryState.EmptyDiary(ymdDate)
+                    }
+                    //혼자 일기인 경우
+                    diary.deliveryYN == 'N' -> {
+                        DiaryState.AloneDiary(diary)
+                    }
+                    //임시 저장인 경우
+                    diary.userId != -1L -> {
+                        DiaryState.CommentDiary.TempDiaryOutTime(diary)
+                    }
+                    else -> { //임시 저장 아닌 경우
+                        when (date) { //하루 지난 일기인 경우
+                            getCodaToday().minusDays(1) -> {
+                                when {
+                                    //코멘트 없는 경우
+                                    diary.commentList.isEmpty() -> {
+                                        DiaryState.CommentDiary.HaveNotCommentInTime(diary)
+                                    }
+                                    //코멘트 있고 열 수 있는 경우
+                                    haveWrittenComment -> {
+                                        DiaryState.CommentDiary.HaveCommentInTimeCanOpen(diary)
+                                    }
+                                    //코멘트 있는데 못 여는 경우
+                                    else -> {
+                                        DiaryState.CommentDiary.HaveCommentInTimeCannotOpen(diary)
+                                    }
+                                }
+                            }
+                            else -> { // 이틀 이상 지난 일기인 경우
+                                when {
+                                    diary.commentList.isEmpty() -> {
+                                        DiaryState.CommentDiary.HaveNotCommentOutTime(diary)
+                                    }
+                                    haveWrittenComment -> {
+                                        DiaryState.CommentDiary.HaveCommentOutTimeCanOpen(diary)
+                                    }
+                                    else -> {
+                                        DiaryState.CommentDiary.HaveCommentOutTimeCannotOpen(diary)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+//        .debounce(100L)
+        .mapLatest {
+        it
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000L),
+        DiaryState.Init
+    )
 
     /**
      * head, content 통합 한 글자라도 있으면 Save
@@ -213,7 +348,7 @@ class MyDiaryViewModel @Inject constructor(
         )
     }
 
-    fun setMonthDiaries(list: List<Diary>) {
+    private fun setMonthDiaries(list: List<Diary>) {
         val aloneDiary = ArrayList<CalendarDay>()
         val commentDiary = ArrayList<CalendarDay>()
         val tempDiary = ArrayList<CalendarDay>()
@@ -242,11 +377,10 @@ class MyDiaryViewModel @Inject constructor(
 
     //for diary data
     fun setSelectedDiary(diary: Diary?) {
+        _selectedDiary.value = diary
         if (diary == null) {
-            _selectedDiary.value = null
             _commentList.value = emptyList()
         } else {
-            _selectedDiary.value = diary
             _commentList.value = diary.commentList
         }
     }
@@ -278,6 +412,13 @@ class MyDiaryViewModel @Inject constructor(
             }
         }
     }
+
+    suspend fun getDiaryInMonth(selectedDateYMD: String): Diary? =
+        withContext(Dispatchers.Default) {
+            monthDiaries.value?.let { monthDiaries ->
+                monthDiaries.find { it.date == selectedDateYMD }
+            }
+        }
 
     fun deleteLocalReportedComment(commentId: Long) {
         //신고/차단 코멘트 삭제
@@ -340,8 +481,7 @@ class MyDiaryViewModel @Inject constructor(
         with(getRemoteMonthDiaryUseCase(date)) {
             offLoading()
             when (this) {
-                is UiState.Success -> {
-//                    setMonthDiaries(data)
+                is UiState.Success -> {/*no-op*/
                 }
                 is UiState.Error -> {
                     setMessage(message)
@@ -563,7 +703,11 @@ class MyDiaryViewModel @Inject constructor(
         return@async isSuccess
     }.await()
 
-    fun getDayWrittenComment(date: String) = viewModelScope.launch {
+    fun getDayWrittenComment(date: String?) = viewModelScope.launch {
+        if (date == null) {
+            _haveDayWrittenComment.value = false
+            return@launch
+        }
         onLoading()
         with(getPeriodCommentUseCase(date)) {
             offLoading()

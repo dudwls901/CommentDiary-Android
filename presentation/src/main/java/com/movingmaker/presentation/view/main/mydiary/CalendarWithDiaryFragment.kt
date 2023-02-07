@@ -11,16 +11,16 @@ import androidx.core.view.isVisible
 import androidx.core.view.marginEnd
 import androidx.core.view.marginTop
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.movingmaker.domain.model.response.Diary
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentMydiaryWithCalendarBinding
 import com.movingmaker.presentation.util.Extension.toDp
 import com.movingmaker.presentation.util.Extension.toPx
 import com.movingmaker.presentation.util.FRAGMENT_NAME
-import com.movingmaker.presentation.util.calenderDayToLocalDate
 import com.movingmaker.presentation.util.combineList
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.toCalenderDay
@@ -30,17 +30,17 @@ import com.movingmaker.presentation.util.ymdToDate
 import com.movingmaker.presentation.view.main.mydiary.calendardecorator.AloneDotDecorator
 import com.movingmaker.presentation.view.main.mydiary.calendardecorator.CommentDotDecorator
 import com.movingmaker.presentation.view.main.mydiary.calendardecorator.TodayDotDecorator
+import com.movingmaker.presentation.view.snackbar.CodaSnackBar
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.time.LocalDate
 import java.util.Calendar
 import kotlin.math.roundToInt
 
@@ -63,11 +63,25 @@ class CalendarWithDiaryFragment :
 
 
     private fun observeData() = with(myDiaryViewModel) {
-
-        localDiaries.observe(viewLifecycleOwner) {
-            //개수가 0인 경우는 캐싱할 때 clear한 경우
-            if (it.isNotEmpty()) {
-                setMonthDiaries(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                selectedDateWithMonthDiaries.collectLatest { (date, diaries) ->
+                    Timber.e("여기 selectedDateWithMonthDiaries date: $date diaries.size: ${diaries?.size}")
+                    when (date) {
+                        null -> {
+                            setSelectedDiary(null)
+                            getDayWrittenComment(null)
+                        }
+                        else -> {
+                            binding.materialCalendarView.selectedDate = toCalenderDay(date)
+                            viewLifecycleOwner.lifecycleScope.launch {
+                                myDiaryViewModel.setSelectedDiary(getDiaryInMonth(date))
+                            }
+                            //오늘 내가 코멘트를 받은 경우 어제 일기를 선택했을 때 오늘 내가 코멘트를 쓴 상태인지 확인 -> Day+1
+                            getDayWrittenComment(ymdFormat(ymdToDate(date)!!.plusDays(1)))
+                        }
+                    }
+                }
             }
         }
         /**
@@ -86,7 +100,12 @@ class CalendarWithDiaryFragment :
             }
         }
 
-        //monthDiary 받아온 후 클릭한 날짜 하단 일기뷰 상태 처리
+
+        /**
+         * 기존에는 monthdiary받아올 동안 selectedDate를 바꿔놓고 monthdiary 다 받아오면 그동안 바꿔놓은 selectedDate로 처리했음
+         * 이제는 selectedDate, selectedDiary, haveWrittenComment로 화면 상태 정의하려고 하니 이 monthDiary는 미리 선행되어야 함이 확실해야 함
+         * monthDiary 받아온 후 클릭한 날짜 하단 일기뷰 상태 처리
+         * */
         monthDiaries.observe(viewLifecycleOwner) {
             with(binding.materialCalendarView) {
                 removeDecorators()
@@ -105,18 +124,81 @@ class CalendarWithDiaryFragment :
                     ),
                 )
             }
-            when (val selectedDate = selectedDate.value) {
-                null -> {
-                    checkSelectedDate(null)
-                }
-                else -> {
-                    binding.materialCalendarView.selectedDate = toCalenderDay(selectedDate)
-                    checkSelectedDate(ymdToDate(selectedDate))
+        }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                selectedDiary.collectLatest { diary ->
+//                    Timber.d("여기 selectedDiary : ${diary?.title}")
+//                }
+//            }
+//        }
+//
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                myDiaryViewModel.selectedDate.collectLatest {
+//                    Timber.d("여기 selectedDate: $it")
+//                }
+//            }
+//        }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                haveDayWrittenComment.collectLatest {
+//                    Timber.d("여기 haveDayWrittenComment: $it")
+//                }
+//            }
+//        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myDiaryViewModel.diaryState.collectLatest { diaryState ->
+                    Timber.e("여기 diaryState: ${diaryState.javaClass.simpleName} selectedDate: ${myDiaryViewModel.selectedDate.value} haveDayMyWrittenComment: ${myDiaryViewModel.haveDayWrittenComment.first()} selectedDiary: ${myDiaryViewModel.selectedDiary.value}")
+                    when (diaryState) {
+                        DiaryState.Init -> {/*no-op*/
+                        }
+                        DiaryState.NoneSelectedDiary -> {
+                            setNoneSelectedDiaryUI()
+                        }
+                        DiaryState.SelectedFutureDiary -> {
+                            setFutureDiaryDateUI()
+                        }
+                        is DiaryState.AloneDiary -> {
+                            setAloneDiaryDateUI()
+                            diaryState.diary
+                        }
+                        is DiaryState.EmptyDiary -> {
+                            setEmptyDiaryDateUI()
+                        }
+                        is DiaryState.CommentDiary -> {
+                            setCommentDiaryDateUI()
+                            when (diaryState) {
+                                is DiaryState.CommentDiary.HaveNotCommentInTime -> {
+                                    setHaveNotCommentInTimeUI()
+                                }
+                                is DiaryState.CommentDiary.HaveCommentInTimeCanOpen -> {
+                                    setHaveCommentInTimeCanOpenUI()
+                                }
+                                is DiaryState.CommentDiary.HaveCommentInTimeCannotOpen -> {
+                                    setHaveCommentInTimeCannotOpenUI()
+                                }
+                                is DiaryState.CommentDiary.HaveNotCommentOutTime -> {
+                                    setHaveNotCommentOutTimeUI()
+                                }
+                                is DiaryState.CommentDiary.HaveCommentOutTimeCanOpen -> {
+                                    setHaveCommentOutTimeCanOpenUI()
+                                }
+                                is DiaryState.CommentDiary.HaveCommentOutTimeCannotOpen -> {
+                                    setHaveCommentOutTimeCannotOpenUI()
+                                }
+                                is DiaryState.CommentDiary.TempDiaryInTime -> {
+                                    CodaSnackBar.make(binding.root, "tempDiaryInTime")
+                                }
+                                is DiaryState.CommentDiary.TempDiaryOutTime -> {
+                                    CodaSnackBar.make(binding.root, "tempDiaryOutTime")
+                                }
+                            }
+                        }
+                    }
                 }
             }
-        }
-        selectedDiary.observe(viewLifecycleOwner) {
-            Timber.e("여기 selectedDiary : $it")
         }
     }
 
@@ -177,8 +259,10 @@ class CalendarWithDiaryFragment :
     private fun setDateMoveListener() {
         //selectDate 직접 변경시 트리거 x date 클릭시에만 트리거 o
         binding.materialCalendarView.setOnDateChangedListener { _, date, _ ->
-            myDiaryViewModel.setSelectedDate(ymdFormat(date))
-            checkSelectedDate(calenderDayToLocalDate(date))
+            viewLifecycleOwner.lifecycleScope.launch {
+                val ymdDate = ymdFormat(date)!!
+                myDiaryViewModel.setSelectedDate(ymdDate)
+            }
         }
     }
 
@@ -219,42 +303,15 @@ class CalendarWithDiaryFragment :
         }
     }
 
-    private fun checkSelectedDate(date: LocalDate?) = with(binding) {
-        //달 이동한 경우 포커스 해제
-        if (date == null) {
-            materialCalendarView.selectedDate = null
-            readDiaryLayout.isVisible = false
-            writeDiaryWrapLayout.isVisible = false
-            noCommentTextView.isVisible = false
-        } else {
-            changeDiaryViewState(date)
-        }
+
+    private fun setNoneSelectedDiaryUI() = with(binding) {
+        materialCalendarView.selectedDate = null
+        readDiaryLayout.isVisible = false
+        writeDiaryWrapLayout.isVisible = false
+        noCommentTextView.isVisible = false
     }
 
-    private fun changeDiaryViewState(selectedDate: LocalDate) = with(binding) {
-        //미래 날짜면 일기 작성 불가, 조회 불가
-        if (selectedDate > getCodaToday()) {
-            setFutureDiaryDate()
-        } else {
-            //이전 날짜면 검사
-            viewLifecycleOwner.lifecycleScope.launch {
-                ymdFormat(selectedDate)?.let { selectedDateYMD ->
-                    when (val diary = getDiaryInMonth(selectedDateYMD)) {
-                        null -> {
-                            //해당 날짜에 일기 없는 경우
-                            setEmptyDiaryDate()
-                        }
-                        else -> {
-                            //해당 날짜에 일기 있는 경우
-                            setExistDiaryDate(diary)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun setFutureDiaryDate() = with(binding) {
+    private fun setFutureDiaryDateUI() = with(binding) {
         writeDiaryWrapLayout.isVisible = true
         writeDiaryLayout.isVisible = false
         lineDecorationTextView.text = getString(R.string.write_diary_yet)
@@ -262,8 +319,7 @@ class CalendarWithDiaryFragment :
         noCommentTextView.isVisible = false
     }
 
-    private fun setEmptyDiaryDate() = with(binding) {
-        myDiaryViewModel.setSelectedDiary(null)
+    private fun setEmptyDiaryDateUI() = with(binding) {
         writeDiaryWrapLayout.isVisible = true
         writeDiaryLayout.isVisible = true
         lineDecorationTextView.text = getString(R.string.mydiary_text_decoration)
@@ -271,47 +327,51 @@ class CalendarWithDiaryFragment :
         noCommentTextView.isVisible = false
     }
 
-    private fun setExistDiaryDate(diary: Diary) = with(binding) {
-        //일기 있는 경우 selectedDiary 설정
-        myDiaryViewModel.setSelectedDiary(diary)
+    private fun setAloneDiaryDateUI() = with(binding) {
         readDiaryLayout.isVisible = true
         writeDiaryWrapLayout.isVisible = false
-        //해당 날짜에 일기 있는 경우
-        when (diary.deliveryYN) {
-            'Y' -> {
-                setCommentDiaryDate(diary)
-            }
-            else -> {
-                setAloneDiaryDate()
-            }
-        }
-    }
-
-    private fun setAloneDiaryDate() = with(binding) {
         beforeCommentTextView.isVisible = false
         noCommentTextView.isVisible = false
     }
 
-    private fun setCommentDiaryDate(diary: Diary) = with(binding) {
-        ymdToDate(diary.date)?.let { diaryDate ->
-            beforeCommentTextView.isVisible = true
-
-            val nextDate = diaryDate.plusDays(1)
-            //오늘 내가 코멘트를 받은 경우 어제 일기를 선택했을 때 오늘 내가 코멘트를 쓴 상태인지 확인 -> Day+1
-            viewLifecycleOwner.lifecycleScope.launch {
-                ymdFormat(nextDate)?.let { date ->
-                    myDiaryViewModel.getDayWrittenComment(date)
-                }
-            }
-            if (diary.commentList.isEmpty()) {
-                setEmptyComment(diaryDate)
-            } else {
-                setExistComment()
-            }
-        }
+    private fun setCommentDiaryDateUI() = with(binding) {
+        beforeCommentTextView.isVisible = true
+        readDiaryLayout.isVisible = true
+        writeDiaryWrapLayout.isVisible = false
     }
 
-    private fun setExistComment() = with(binding) {
+    private fun setHaveNotCommentInTimeUI() = with(binding) {
+        noCommentTextView.isVisible = false
+        beforeCommentTextView.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.text_brown
+            )
+        )
+        beforeCommentTextView.text =
+            getString(R.string.calendar_with_diary_comment_soon)
+        beforeCommentTextView.setBackgroundResource(R.drawable.background_light_brown_radius_bottom_10)
+    }
+
+    private fun setHaveNotCommentOutTimeUI() = with(binding) {
+        beforeCommentTextView.isVisible = false
+        noCommentTextView.isVisible = true
+    }
+
+    private fun setHaveCommentInTimeCanOpenUI() = with(binding) {
+        beforeCommentTextView.isVisible = true
+        beforeCommentTextView.text = getString(R.string.arrived_comment)
+        beforeCommentTextView.setBackgroundResource(R.drawable.background_pure_green_radius_bottom_10)
+        beforeCommentTextView.setTextColor(
+            requireContext().getColor(
+                R.color.background_ivory
+            )
+        )
+        noCommentTextView.isVisible = false
+        //todo
+    }
+
+    private fun setHaveCommentOutTimeCanOpenUI() = with(binding) {
         beforeCommentTextView.isVisible = true
         beforeCommentTextView.text = getString(R.string.arrived_comment)
         beforeCommentTextView.setBackgroundResource(R.drawable.background_pure_green_radius_bottom_10)
@@ -323,32 +383,30 @@ class CalendarWithDiaryFragment :
         noCommentTextView.isVisible = false
     }
 
-    private fun setEmptyComment(diaryDate: LocalDate) = with(binding) {
-        //코멘트가 도착하지 않았는데 이틀 지난 경우 : 더 이상 코멘트를 받을 수 없는 상태
-        if (diaryDate <= getCodaToday().minusDays(2)) {
-            beforeCommentTextView.isVisible = false
-            noCommentTextView.isVisible = true
-        } else { //아직 코멘트 기다리는 경우 : 아직 코멘트를 받을 수 있는 상태
-            noCommentTextView.isVisible = false
-            beforeCommentTextView.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.text_brown
-                )
+    private fun setHaveCommentOutTimeCannotOpenUI() = with(binding) {
+        beforeCommentTextView.isVisible = true
+        beforeCommentTextView.text = getString(R.string.arrived_comment)
+        beforeCommentTextView.setBackgroundResource(R.drawable.background_pure_green_radius_bottom_10)
+        beforeCommentTextView.setTextColor(
+            requireContext().getColor(
+                R.color.background_ivory
             )
-            beforeCommentTextView.text =
-                getString(R.string.calendar_with_diary_comment_soon)
-            beforeCommentTextView.setBackgroundResource(R.drawable.background_light_brown_radius_bottom_10)
-        }
-
+        )
+        noCommentTextView.isVisible = false
     }
 
-    private suspend fun getDiaryInMonth(selectedDateYMD: String): Diary? =
-        withContext(Dispatchers.Default) {
-            myDiaryViewModel.monthDiaries.value?.let { monthDiaries ->
-                monthDiaries.find { it.date == selectedDateYMD }
-            }
-        }
+    private fun setHaveCommentInTimeCannotOpenUI() = with(binding) {
+        beforeCommentTextView.isVisible = true
+        beforeCommentTextView.text = getString(R.string.arrived_comment)
+        beforeCommentTextView.setBackgroundResource(R.drawable.background_pure_green_radius_bottom_10)
+        beforeCommentTextView.setTextColor(
+            requireContext().getColor(
+                R.color.background_ivory
+            )
+        )
+        noCommentTextView.isVisible = false
+        //todo
+    }
 
     private fun setCalendarConfig() = with(binding.materialCalendarView) {
         state().edit()

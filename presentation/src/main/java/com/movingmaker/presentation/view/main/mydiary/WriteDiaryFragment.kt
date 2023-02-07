@@ -12,8 +12,10 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
@@ -28,6 +30,7 @@ import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -109,9 +112,16 @@ class WriteDiaryFragment :
             Timber.d("aloneDiary ${it}")
         }
         //저장은 혼자 쓴 일기, 코멘트 일기 둘 다 가능
-        myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
-            Timber.d(" selectedDiaryObserve $diary")
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myDiaryViewModel.selectedDiary.collectLatest {
+                    Timber.d(" selectedDiaryObserve $it")
+                }
+            }
         }
+//        myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
+//            Timber.d(" selectedDiaryObserve $diary")
+//        }
 
         myDiaryViewModel.selectDiaryTypeToolbarIsExpanded.observe(viewLifecycleOwner) { isExpand ->
             handleDiarySheet(isExpand)

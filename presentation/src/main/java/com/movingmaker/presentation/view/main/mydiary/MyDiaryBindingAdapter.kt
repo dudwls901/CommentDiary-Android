@@ -13,9 +13,10 @@ import com.movingmaker.presentation.util.DIARY_TYPE
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.getSplitYMD
 import com.movingmaker.presentation.util.ymdToDate
+import kotlinx.coroutines.flow.StateFlow
 
 @BindingAdapter("app:writeDiaryPreviewHead")
-fun TextView.bindWriteDiaryPreviewHead(date: LiveData<String>) {
+fun TextView.bindWriteDiaryPreviewHead(date: StateFlow<String?>) {
     date.value?.let {
         val (_, m, d) = it.getSplitYMD()
         text = context.getString(R.string.diary_head_date_text, m, d)
@@ -23,7 +24,7 @@ fun TextView.bindWriteDiaryPreviewHead(date: LiveData<String>) {
 }
 
 @BindingAdapter("app:diaryPreviewHead")
-fun TextView.bindDiaryPreviewHeadText(diary: LiveData<Diary?>) {
+fun TextView.bindDiaryPreviewHeadText(diary: StateFlow<Diary?>) {
     diary.value?.let {
         this.setTextColor(
             if (it.deliveryYN == 'Y') {
@@ -76,7 +77,7 @@ fun bindVisibleWithDiaryType(
     view: View,
     diaryType: LiveData<DIARY_TYPE>,
     isExpand: LiveData<Boolean>,
-    tempSelectedDiaryDate: LiveData<String>
+    tempSelectedDiaryDate: StateFlow<String?>
 ) {
     when (isExpand.value) {
         true -> {

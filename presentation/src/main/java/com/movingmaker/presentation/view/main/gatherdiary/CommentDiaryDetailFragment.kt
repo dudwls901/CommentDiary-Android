@@ -11,7 +11,9 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import com.movingmaker.domain.model.request.ReportCommentModel
@@ -25,6 +27,7 @@ import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -71,50 +74,101 @@ class CommentDiaryDetailFragment :
         *   - 코멘트 기다리는 경우 (일기 작성 당일 ~ 다음 날) -> commentYet
         *   - 코멘트 못 받은 경우 (일기 작성 다다음날 ~) -> emptyComment
         * */
-        myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
-            Timber.d("observeDatas: --> $diary ")
-            diary?.let {
-                val list = listOf(diary)
-                concatAdapter.addAdapter(
-                    CommentDiaryContentAdapter().also { it.submitList(list) }
-                )
-                //코멘트 없는 경우
-                if (diary.commentList.isEmpty()) {
-                    ymdToDate(diary.date)?.let { diaryDate ->
-                        //코멘트 못 받은 경우
-                        if (diaryDate <= getCodaToday().minusDays(2)) {
-                            concatAdapter.addAdapter(
-                                CommentDiaryEmptyCommentAdapter().also { it.submitList(list) }
-                            )
-                        } else { // 코멘트 기다리는 경우
-                            concatAdapter.addAdapter(
-                                CommentDiaryCommentYetAdapter().also { it.submitList(list) }
-                            )
-                        }
-                    }
-                } else { //코멘트 있는 경우
-                    //내가 코멘트 작성한 경우
-                    if (myDiaryViewModel.haveDayMyComment.value == true) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                myDiaryViewModel.selectedDiary.collectLatest { diary ->
+                    Timber.d("observeDatas: --> $diary ")
+                    diary?.let {
+                        val list = listOf(diary)
                         concatAdapter.addAdapter(
-                            CommentListAdapter(this@CommentDiaryDetailFragment).also {
-                                it.submitList(
-                                    diary.commentList
+                            CommentDiaryContentAdapter().also { it.submitList(list) }
+                        )
+                        //코멘트 없는 경우
+                        if (diary.commentList.isEmpty()) {
+                            ymdToDate(diary.date)?.let { diaryDate ->
+                                //코멘트 못 받은 경우
+                                if (diaryDate <= getCodaToday().minusDays(2)) {
+                                    concatAdapter.addAdapter(
+                                        CommentDiaryEmptyCommentAdapter().also { it.submitList(list) }
+                                    )
+                                } else { // 코멘트 기다리는 경우
+                                    concatAdapter.addAdapter(
+                                        CommentDiaryCommentYetAdapter().also { it.submitList(list) }
+                                    )
+                                }
+                            }
+                        } else { //코멘트 있는 경우
+                            //내가 코멘트 작성한 경우
+                            if (myDiaryViewModel.haveDayWrittenComment.value) {
+                                concatAdapter.addAdapter(
+                                    CommentListAdapter(this@CommentDiaryDetailFragment).also {
+                                        it.submitList(
+                                            diary.commentList
+                                        )
+                                    }
+                                )
+                            } else { //내가 코멘트 작성하지 않은 경우
+                                concatAdapter.addAdapter(
+                                    CommentDiaryOpenYetAdapter().also { it.submitList(list) }
                                 )
                             }
-                        )
-                    } else { //내가 코멘트 작성하지 않은 경우
-                        concatAdapter.addAdapter(
-                            CommentDiaryOpenYetAdapter().also { it.submitList(list) }
-                        )
+
+                        }
                     }
+                }
+            }
+        }
+//        myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
+//            Timber.d("observeDatas: --> $diary ")
+//            diary?.let {
+//                val list = listOf(diary)
+//                concatAdapter.addAdapter(
+//                    CommentDiaryContentAdapter().also { it.submitList(list) }
+//                )
+//                //코멘트 없는 경우
+//                if (diary.commentList.isEmpty()) {
+//                    ymdToDate(diary.date)?.let { diaryDate ->
+//                        //코멘트 못 받은 경우
+//                        if (diaryDate <= getCodaToday().minusDays(2)) {
+//                            concatAdapter.addAdapter(
+//                                CommentDiaryEmptyCommentAdapter().also { it.submitList(list) }
+//                            )
+//                        } else { // 코멘트 기다리는 경우
+//                            concatAdapter.addAdapter(
+//                                CommentDiaryCommentYetAdapter().also { it.submitList(list) }
+//                            )
+//                        }
+//                    }
+//                } else { //코멘트 있는 경우
+//                    //내가 코멘트 작성한 경우
+//                    if (myDiaryViewModel.haveDayWrittenComment.value == true) {
+//                        concatAdapter.addAdapter(
+//                            CommentListAdapter(this@CommentDiaryDetailFragment).also {
+//                                it.submitList(
+//                                    diary.commentList
+//                                )
+//                            }
+//                        )
+//                    } else { //내가 코멘트 작성하지 않은 경우
+//                        concatAdapter.addAdapter(
+//                            CommentDiaryOpenYetAdapter().also { it.submitList(list) }
+//                        )
+//                    }
+//
+//                }
+//            }
+//        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                myDiaryViewModel.selectedDiary.collectLatest {
 
                 }
             }
         }
-
-        myDiaryViewModel.haveDayMyComment.observe(viewLifecycleOwner) {
-            val diary = myDiaryViewModel.selectedDiary.value!!
-        }
+//        myDiaryViewModel.haveDayWrittenComment.observe(viewLifecycleOwner) {
+//            val diary = myDiaryViewModel.selectedDiary.value!!
+//        }
     }
 
     private fun initToolBar() = with(binding) {
