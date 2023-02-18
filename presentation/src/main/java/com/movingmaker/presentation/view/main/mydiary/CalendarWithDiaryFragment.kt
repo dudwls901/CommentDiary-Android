@@ -5,8 +5,8 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.view.WindowManager
 import android.view.WindowMetrics
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.marginEnd
 import androidx.core.view.marginTop
@@ -30,7 +30,6 @@ import com.movingmaker.presentation.util.ymdToDate
 import com.movingmaker.presentation.view.main.mydiary.calendardecorator.AloneDotDecorator
 import com.movingmaker.presentation.view.main.mydiary.calendardecorator.CommentDotDecorator
 import com.movingmaker.presentation.view.main.mydiary.calendardecorator.TodayDotDecorator
-import com.movingmaker.presentation.view.snackbar.CodaSnackBar
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -189,10 +188,10 @@ class CalendarWithDiaryFragment :
                                     setHaveCommentOutTimeCannotOpenUI()
                                 }
                                 is DiaryState.CommentDiary.TempDiaryInTime -> {
-                                    CodaSnackBar.make(binding.root, "tempDiaryInTime")
+                                    setTempDiaryInTimeUI()
                                 }
                                 is DiaryState.CommentDiary.TempDiaryOutTime -> {
-                                    CodaSnackBar.make(binding.root, "tempDiaryOutTime")
+                                    setTempDiaryOutTimeUI()
                                 }
                             }
                         }
@@ -305,107 +304,157 @@ class CalendarWithDiaryFragment :
 
 
     private fun setNoneSelectedDiaryUI() = with(binding) {
-        materialCalendarView.selectedDate = null
+        writeDiaryLayout.isVisible = false
         readDiaryLayout.isVisible = false
-        writeDiaryWrapLayout.isVisible = false
+        futureTextView.isVisible = false
+        bottomDecoImageView.isVisible = false
         noCommentTextView.isVisible = false
     }
 
     private fun setFutureDiaryDateUI() = with(binding) {
-        writeDiaryWrapLayout.isVisible = true
+        context?.let {
+            bottomDecoImageView.setImageDrawable(
+                AppCompatResources.getDrawable(
+                    it,
+                    R.drawable.img_brick
+                )
+            )
+        }
         writeDiaryLayout.isVisible = false
-        lineDecorationTextView.text = getString(R.string.write_diary_yet)
-        readDiaryLayout.isVisible = false
-        noCommentTextView.isVisible = false
+        futureTextView.isVisible = true
+        bottomDecoImageView.isVisible = true
     }
 
     private fun setEmptyDiaryDateUI() = with(binding) {
-        writeDiaryWrapLayout.isVisible = true
+        context?.let {
+            writeDiaryHeaderTextView.setTextColor(it.getColor(R.color.core_orange))
+            bottomDecoImageView.setImageDrawable(
+                AppCompatResources.getDrawable(
+                    it,
+                    R.drawable.img_brick_with_pen
+                )
+            )
+        }
         writeDiaryLayout.isVisible = true
-        lineDecorationTextView.text = getString(R.string.mydiary_text_decoration)
+        futureTextView.isVisible = false
         readDiaryLayout.isVisible = false
         noCommentTextView.isVisible = false
+        bottomDecoImageView.isVisible = true
     }
 
     private fun setAloneDiaryDateUI() = with(binding) {
         readDiaryLayout.isVisible = true
-        writeDiaryWrapLayout.isVisible = false
-        beforeCommentTextView.isVisible = false
+        writeDiaryLayout.isVisible = false
+        bottomDecoImageView.isVisible = false
+        tempDiaryLineBeforeCommentTextView.isVisible = false
         noCommentTextView.isVisible = false
+        futureTextView.isVisible = false
     }
 
     private fun setCommentDiaryDateUI() = with(binding) {
-        beforeCommentTextView.isVisible = true
         readDiaryLayout.isVisible = true
-        writeDiaryWrapLayout.isVisible = false
+        writeDiaryLayout.isVisible = false
+        bottomDecoImageView.isVisible = false
+        futureTextView.isVisible = false
     }
 
     private fun setHaveNotCommentInTimeUI() = with(binding) {
+        context?.let {
+            diaryDateTextView.setTextColor(it.getColor(R.color.core_green))
+            commentDiaryNoticeTextView.setBackgroundColor(it.getColor(R.color.text_light_brown))
+            commentDiaryNoticeTextView.setTextColor(it.getColor(R.color.text_dark_brown))
+            commentDiaryNoticeTextView.text = getText(R.string.calendar_with_diary_comment_soon)
+        }
+        commentDiaryNoticeTextView.isVisible = true
+        tempDiaryLineBeforeCommentTextView.isVisible = false
         noCommentTextView.isVisible = false
-        beforeCommentTextView.setTextColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.text_brown
-            )
-        )
-        beforeCommentTextView.text =
-            getString(R.string.calendar_with_diary_comment_soon)
-        beforeCommentTextView.setBackgroundResource(R.drawable.background_light_brown_radius_bottom_10)
+        futureTextView.isVisible = false
     }
 
     private fun setHaveNotCommentOutTimeUI() = with(binding) {
-        beforeCommentTextView.isVisible = false
+        context?.let {
+            diaryDateTextView.setTextColor(it.getColor(R.color.core_green))
+        }
+        commentDiaryNoticeTextView.isVisible = false
         noCommentTextView.isVisible = true
+        tempDiaryLineBeforeCommentTextView.isVisible = false
+        futureTextView.isVisible = false
     }
 
     private fun setHaveCommentInTimeCanOpenUI() = with(binding) {
-        beforeCommentTextView.isVisible = true
-        beforeCommentTextView.text = getString(R.string.arrived_comment)
-        beforeCommentTextView.setBackgroundResource(R.drawable.background_pure_green_radius_bottom_10)
-        beforeCommentTextView.setTextColor(
-            requireContext().getColor(
-                R.color.background_ivory
-            )
-        )
+        context?.let {
+            diaryDateTextView.setTextColor(it.getColor(R.color.core_green))
+            commentDiaryNoticeTextView.setBackgroundColor(it.getColor(R.color.core_green))
+            commentDiaryNoticeTextView.setTextColor(it.getColor(R.color.background_ivory))
+            commentDiaryNoticeTextView.text = getText(R.string.arrived_comment)
+        }
+        commentDiaryNoticeTextView.isVisible = true
+        tempDiaryLineBeforeCommentTextView.isVisible = false
         noCommentTextView.isVisible = false
+        futureTextView.isVisible = false
         //todo
     }
 
     private fun setHaveCommentOutTimeCanOpenUI() = with(binding) {
-        beforeCommentTextView.isVisible = true
-        beforeCommentTextView.text = getString(R.string.arrived_comment)
-        beforeCommentTextView.setBackgroundResource(R.drawable.background_pure_green_radius_bottom_10)
-        beforeCommentTextView.setTextColor(
-            requireContext().getColor(
-                R.color.background_ivory
-            )
-        )
+        context?.let {
+            diaryDateTextView.setTextColor(it.getColor(R.color.core_green))
+            commentDiaryNoticeTextView.setBackgroundColor(it.getColor(R.color.core_green))
+            commentDiaryNoticeTextView.setTextColor(it.getColor(R.color.background_ivory))
+            commentDiaryNoticeTextView.text = getText(R.string.arrived_comment)
+        }
+        commentDiaryNoticeTextView.isVisible = true
+        tempDiaryLineBeforeCommentTextView.isVisible = false
         noCommentTextView.isVisible = false
+        futureTextView.isVisible = false
     }
 
     private fun setHaveCommentOutTimeCannotOpenUI() = with(binding) {
-        beforeCommentTextView.isVisible = true
-        beforeCommentTextView.text = getString(R.string.arrived_comment)
-        beforeCommentTextView.setBackgroundResource(R.drawable.background_pure_green_radius_bottom_10)
-        beforeCommentTextView.setTextColor(
-            requireContext().getColor(
-                R.color.background_ivory
-            )
-        )
+        context?.let {
+            diaryDateTextView.setTextColor(it.getColor(R.color.core_green))
+            commentDiaryNoticeTextView.setBackgroundColor(it.getColor(R.color.core_green))
+            commentDiaryNoticeTextView.setTextColor(it.getColor(R.color.background_ivory))
+            commentDiaryNoticeTextView.text = getText(R.string.arrived_comment)
+        }
+        commentDiaryNoticeTextView.isVisible = true
+        tempDiaryLineBeforeCommentTextView.isVisible = false
         noCommentTextView.isVisible = false
+        futureTextView.isVisible = false
     }
 
     private fun setHaveCommentInTimeCannotOpenUI() = with(binding) {
-        beforeCommentTextView.isVisible = true
-        beforeCommentTextView.text = getString(R.string.arrived_comment)
-        beforeCommentTextView.setBackgroundResource(R.drawable.background_pure_green_radius_bottom_10)
-        beforeCommentTextView.setTextColor(
-            requireContext().getColor(
-                R.color.background_ivory
-            )
-        )
+        context?.let {
+            diaryDateTextView.setTextColor(it.getColor(R.color.core_green))
+            commentDiaryNoticeTextView.setBackgroundColor(it.getColor(R.color.core_green))
+            commentDiaryNoticeTextView.setTextColor(it.getColor(R.color.background_ivory))
+            commentDiaryNoticeTextView.text = getText(R.string.arrived_comment)
+        }
+        commentDiaryNoticeTextView.isVisible = true
+        tempDiaryLineBeforeCommentTextView.isVisible = false
         noCommentTextView.isVisible = false
-        //todo
+        futureTextView.isVisible = false
+    }
+
+    private fun setTempDiaryInTimeUI() = with(binding) {
+        context?.let {
+            diaryDateTextView.setTextColor(it.getColor(R.color.core_green))
+            commentDiaryNoticeTextView.setBackgroundColor(it.getColor(R.color.background_ivory))
+            commentDiaryNoticeTextView.setTextColor(it.getColor(R.color.text_gray_brown))
+            commentDiaryNoticeTextView.text = getText(R.string.temp_diary_before_send)
+        }
+        commentDiaryNoticeTextView.isVisible = true
+        tempDiaryLineBeforeCommentTextView.isVisible = true
+        noCommentTextView.isVisible = false
+        futureTextView.isVisible = false
+    }
+
+    private fun setTempDiaryOutTimeUI() = with(binding) {
+        context?.let {
+            diaryDateTextView.setTextColor(it.getColor(R.color.core_green))
+        }
+        commentDiaryNoticeTextView.isVisible = false
+        tempDiaryLineBeforeCommentTextView.isVisible = false
+        noCommentTextView.isVisible = false
+        futureTextView.isVisible = false
     }
 
     private fun setCalendarConfig() = with(binding.materialCalendarView) {
@@ -418,6 +467,7 @@ class CalendarWithDiaryFragment :
         setWeekDayFormatter(ArrayWeekDayFormatter(resources.getStringArray(R.array.custom_weekdays)))
         isDynamicHeightEnabled = true
         topbarVisible = false
+        binding.bottomDecoImageView.setOnClickListener { }
     }
 
 

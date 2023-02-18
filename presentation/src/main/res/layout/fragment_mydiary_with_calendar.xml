@@ -16,8 +16,7 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="16dp">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -27,6 +26,7 @@
                 android:id="@+id/materialCalendarView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
                 android:background="@drawable/background_ivory_side_bottom_border_green_4"
                 android:paddingBottom="22dp"
                 android:theme="@style/MCaption2"
@@ -41,6 +41,7 @@
                 android:id="@+id/calendarTopLayout"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="24dp"
                 android:background="@drawable/background_ivory_top_radius_60_border_green_4"
                 android:clipChildren="false"
@@ -66,9 +67,9 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="@color/text_black"
-                    app:yearMonth="@{vm.selectedYearMonth}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:yearMonth="@{vm.selectedYearMonth}"
                     tools:text="2022년 3월" />
 
                 <androidx.appcompat.widget.AppCompatImageButton
@@ -106,239 +107,216 @@
                 app:layout_constraintTop_toBottomOf="@id/calendarTopLayout" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/bottomLayout"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:id="@+id/writeDiaryLayout"
+                android:layout_width="match_parent"
+                android:layout_height="97dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/background_ivory_radius_10"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="16dp"
+                android:paddingEnd="10dp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/materialCalendarView">
 
-                <LinearLayout
-                    android:id="@+id/writeDiaryWrapLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="parent"
+                <TextView
+                    android:id="@+id/writeDiaryHeaderTextView"
+                    style="@style/BCaption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="19dp"
+                    app:layout_constraintBottom_toTopOf="@id/writeDiaryTextView"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/writeDiaryLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="97dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/background_ivory_radius_10"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="10dp"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:id="@+id/writeDiaryHeaderTextView"
-                            style="@style/BCaption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="20dp"
-                            android:layout_marginTop="19dp"
-                            app:writeDiaryPreviewHead="@{vm.selectedDate}"
-                            app:layout_constraintBottom_toTopOf="@id/writeDiaryTextView"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_chainStyle="packed"
-                            tools:text="12.22일 일기" />
-
-                        <TextView
-                            android:id="@+id/writeDiaryTextView"
-                            style="@style/BHeadline"
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:layout_marginTop="2dp"
-                            android:text="@string/write_text"
-                            android:textColor="@color/text_black"
-                            app:layout_constraintStart_toStartOf="@+id/writeDiaryHeaderTextView"
-                            app:layout_constraintTop_toBottomOf="@id/writeDiaryHeaderTextView" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="write"
-                            android:src="@drawable/ic_arrow_right"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:ignore="HardcodedText" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <TextView
-                        android:id="@+id/lineDecorationTextView"
-                        style="@style/MCaption3"
-                        android:layout_width="match_parent"
-                        android:layout_height="22dp"
-                        android:layout_marginTop="17dp"
-                        android:gravity="center"
-                        android:text="@string/mydiary_text_decoration"
-                        android:textColor="@color/text_light_beige" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="3dp"
-                        android:background="@color/text_light_brown" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="28dp"
-                        android:background="@color/text_light_brown" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="28dp"
-                        android:background="@color/text_light_brown" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="28dp"
-                        android:background="@color/text_light_brown" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="28dp"
-                        android:background="@color/text_light_brown" />
-
-                </LinearLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/readDiaryLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="14dp"
-                    android:background="@drawable/background_ivory_radius_10"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@id/noCommentTextView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/diaryDateTextView"
-                        style="@style/BHeadline2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:layout_marginTop="16dp"
-                        app:diaryPreviewHead="@{vm.selectedDiary}"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="2022.02 나의 일기" />
-
-                    <TextView
-                        android:id="@+id/diaryHeadTextView"
-                        style="@style/BSubheadline"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="24dp"
-                        android:layout_marginTop="5dp"
-                        android:ellipsize="end"
-                        android:maxLines="2"
-                        android:text="@{vm.selectedDiary.title}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/diaryDateTextView"
-                        tools:text="!ㅊㄹ야마르애ㅑㅁ르ㅑㅐㅇ머ㅡ랴ㅐ으ㅑㅐㅁ르ㅑㅐ알머이ㅏ럼어ㅏㅣ크랴ㅐ으ㅑㅐㅂ러ㅑㅐ어베ㅑ9러야ㅐㅔ버랴ㅐㅓ뱌ㅐ러ㅑㅐㅇ버랴ㅐㅇ버ㅑㅐ러얍3ㅐ러ㅑ버ㅑ량버랴ㅐ어ㅑㅂㄹ" />
-
-                    <LinearLayout
-                        android:id="@+id/diaryDetailLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
-                        android:layout_marginEnd="5dp"
-                        android:orientation="horizontal"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="UseCompoundDrawables">
-
-                        <TextView
-                            style="@style/MCaption3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="24dp"
-                            android:gravity="center"
-                            android:text="@string/show_all"
-                            android:textColor="@color/text_brown" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="@string/show_all"
-                            android:src="@drawable/ic_s_arrow_24" />
-                    </LinearLayout>
-
-                    <View
-                        android:id="@+id/line"
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="24dp"
-                        android:background="@color/text_light_brown"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/diaryDateTextView"
-                        app:layout_constraintTop_toBottomOf="@id/diaryHeadTextView" />
-
-                    <TextView
-                        android:id="@+id/diaryContentsTextView"
-                        style="@style/RCaption"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginHorizontal="24dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="16dp"
-                        android:text="@{vm.selectedDiary.content}"
-                        app:layout_constraintBottom_toTopOf="@id/beforeCommentTextView"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/line"
-                        tools:text="@string/diary_test_text" />
-
-                    <TextView
-                        android:id="@+id/beforeCommentTextView"
-                        style="@style/MCaption3"
-                        android:layout_width="0dp"
-                        android:layout_height="42dp"
-                        android:background="@drawable/background_pure_green_radius_bottom_10"
-                        android:gravity="center"
-                        android:text="@string/calendar_with_diary_comment_soon"
-                        android:textColor="@color/background_ivory"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:writeDiaryPreviewHead="@{vm.selectedDate}"
+                    tools:text="12.22일 일기" />
 
                 <TextView
-                    android:id="@+id/noCommentTextView"
-                    style="@style/MCaption3"
+                    android:id="@+id/writeDiaryTextView"
+                    style="@style/BHeadline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/write_text"
+                    android:textColor="@color/text_black"
+                    app:layout_constraintStart_toStartOf="@+id/writeDiaryHeaderTextView"
+                    app:layout_constraintTop_toBottomOf="@id/writeDiaryHeaderTextView" />
+
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:text="@string/no_comment"
-                    android:textAlignment="center"
-                    android:textColor="@color/text_brown"
-                    android:visibility="gone"
+                    android:contentDescription="write"
+                    android:src="@drawable/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/readDiaryLayout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="14dp"
+                android:background="@drawable/background_ivory_radius_10"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/noCommentTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/materialCalendarView">
+
+                <TextView
+                    android:id="@+id/diaryDateTextView"
+                    style="@style/BHeadline2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="16dp"
+                    app:diaryPreviewHead="@{vm.selectedDiary}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="2022.02 나의 일기" />
+
+                <TextView
+                    android:id="@+id/diaryHeadTextView"
+                    style="@style/BSubheadline"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="@{vm.selectedDiary.title}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/diaryDateTextView"
+                    tools:text="!ㅊㄹ야마르애ㅑㅁ르ㅑㅐㅇ머ㅡ랴ㅐ으ㅑㅐㅁ르ㅑㅐ알머이ㅏ럼어ㅏㅣ크랴ㅐ으ㅑㅐㅂ러ㅑㅐ어베ㅑ9러야ㅐㅔ버랴ㅐㅓ뱌ㅐ러ㅑㅐㅇ버랴ㅐㅇ버ㅑㅐ러얍3ㅐ러ㅑ버ㅑ량버랴ㅐ어ㅑㅂㄹ" />
+
+                <LinearLayout
+                    android:id="@+id/diaryDetailLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginEnd="5dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <TextView
+                        style="@style/MCaption3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:gravity="center"
+                        android:text="@string/show_all"
+                        android:textColor="@color/text_brown" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/show_all"
+                        android:src="@drawable/ic_s_arrow_24" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@color/text_light_brown"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/diaryDateTextView"
+                    app:layout_constraintTop_toBottomOf="@id/diaryHeadTextView" />
+
+                <TextView
+                    android:id="@+id/diaryContentsTextView"
+                    style="@style/RCaption"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@{vm.selectedDiary.content}"
+                    app:layout_constraintBottom_toTopOf="@id/commentDiaryNoticeTextView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/line"
+                    tools:text="@string/diary_test_text" />
+
+                <!--임시저장일기이고 TempDiaryInTime visible true, TempDiaryOutTime visible false-->
+                <View
+                    android:id="@+id/tempDiaryLineBeforeCommentTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:background="@drawable/dotted_line_horizontal"
+                    android:layerType="software"
+                    app:layout_constraintBottom_toTopOf="@id/commentDiaryNoticeTextView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <!--일기 있을 때 밑에 텍스트 박스-->
+                <!--텍스트 변경, 백그라운드도 변경-->
+                <TextView
+                    android:id="@+id/commentDiaryNoticeTextView"
+                    style="@style/MCaption3"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:gravity="center"
+                    android:text="@string/calendar_with_diary_comment_soon"
+                    android:textColor="@color/background_ivory"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--일기 있을 때 코멘트 없을 때 Visible true-->
+            <TextView
+                android:id="@+id/noCommentTextView"
+                style="@style/MCaption3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="@string/no_comment"
+                android:textAlignment="center"
+                android:textColor="@color/text_brown"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/futureTextView"
+                style="@style/MCaption3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="48dp"
+                android:text="@string/write_diary_yet"
+                android:textColor="@color/text_light_beige"
+                app:layout_constraintBottom_toTopOf="@id/bottomDecoImageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/materialCalendarView" />
+
+            <ImageView
+                android:id="@+id/bottomDecoImageView"
+                android:layout_width="0dp"
+                android:layout_height="129dp"
+                android:contentDescription="deco"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:src="@drawable/img_brick" />
 
             <ProgressBar
                 android:id="@+id/loadingBar"

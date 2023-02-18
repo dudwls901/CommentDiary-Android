@@ -57,7 +57,8 @@
     <string name="send_text">전송하기</string>
     <string name="temp_store_text">임시저장</string>
     <string name="show_all">전체보기</string>
-    <string name="calendar_with_diary_comment_soon">코멘트가 곧 도착해요 :) 조금만 기다려주세요.</string>
+    <string name="temp_diary_before_send">임시저장된 일기에요. 일기를 전송해주세요.</string>
+    <string name="calendar_with_diary_comment_soon">코멘트가 곧 도착해요. 조금만 기다려주세요.</string>
     <string name="bottom_sheet_type_comment_text">다른 누군가에게 전송하고 코멘트를 받아볼게요.</string>
     <string name="bottom_sheet_type_alone_text">전송하지 않고 혼자 볼게요.</string>
     <string name="bottom_sheet_head_text">일기 저장유형을 선택해 주세요.</string>
@@ -82,9 +83,9 @@
     <string name="comment_head">누군가의 코멘트</string>
     <string name="comment_report">신고하기</string>
     <string name="pass_diary_send_time">※ 일기전송 시간이 지났어요. ※</string>
-    <string name="arrived_comment">코멘트가 도착했어요. 확인해 주세요!</string>
+    <string name="arrived_comment">코멘트가 도착했어요. 확인해보세요!</string>
     <string name="write_diary_yet">아직 일기를 쓸 날이 오지 않았어요!</string>
-    <string name="no_comment">아쉽게도 코멘트가 도착하지 않았어요.\n그래도 오늘의 기록은 내일의 기억이 될 거예요 :)</string>
+    <string name="no_comment">아쉽게도 코멘트가 도착하지 않았어요.</string>
     <string name="gatherdiary_nodiary">작성해둔 일기가 없어요!</string>
     <string name="binding_date_format">%s년 %월</string>
     <string name="look_period">기간별 보기</string>
