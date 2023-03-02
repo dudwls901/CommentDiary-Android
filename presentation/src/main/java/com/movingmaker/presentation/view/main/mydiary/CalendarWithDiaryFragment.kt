@@ -51,11 +51,13 @@ class CalendarWithDiaryFragment :
 
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
+    private var defenceFirstMonthMoveListener = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = myDiaryViewModel
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.CALENDAR_WITH_DIARY)
+        defenceFirstMonthMoveListener = true
         initViews()
         observeData()
     }
@@ -65,7 +67,7 @@ class CalendarWithDiaryFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 selectedDateWithMonthDiaries.collectLatest { (date, diaries) ->
-                    Timber.e("여기 selectedDateWithMonthDiaries date: $date diaries.size: ${diaries?.size}")
+//                    Timber.e("여기 selectedDateWithMonthDiaries date: $date diaries.size: ${diaries?.size}")
                     when (date) {
                         null -> {
                             setSelectedDiary(null)
@@ -98,7 +100,6 @@ class CalendarWithDiaryFragment :
                 findNavController().navigate(CalendarWithDiaryFragmentDirections.actionCalendarWithDiaryFragmentToCommentDiaryDetailFragment())
             }
         }
-
 
         /**
          * 기존에는 monthdiary받아올 동안 selectedDate를 바꿔놓고 monthdiary 다 받아오면 그동안 바꿔놓은 selectedDate로 처리했음
@@ -146,10 +147,32 @@ class CalendarWithDiaryFragment :
 //                }
 //            }
 //        }
+
+        /*
+        * todo 2번 로직 변경하기
+        * 1. 외부에서 달력 이둥
+        * 2. 화면 재진입 포커싱 유지 / 달력 이동 포커싱 해제
+        * 3. Month Diary 가져오기
+        * 4. Month Diary 가져온 후 선택한 날짜에 대한 하단 일기 프리뷰 상태 변경
+        * */
+        selectedYearMonth.observe(viewLifecycleOwner) {
+            Timber.e("?? $it $defenceFirstMonthMoveListener")
+            //화면 재진입시 포커싱 해제 대응
+            if(!defenceFirstMonthMoveListener){
+                myDiaryViewModel.setSelectedDate(null)
+                binding.materialCalendarView.selectedDate = null
+                viewLifecycleOwner.lifecycleScope.launch {
+                    myDiaryViewModel.getRemoteCommentDiaries(it)
+                }
+            }
+            defenceFirstMonthMoveListener = false
+        }
+
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 myDiaryViewModel.diaryState.collectLatest { diaryState ->
-                    Timber.e("여기 diaryState: ${diaryState.javaClass.simpleName} selectedDate: ${myDiaryViewModel.selectedDate.value} haveDayMyWrittenComment: ${myDiaryViewModel.haveDayWrittenComment.first()} selectedDiary: ${myDiaryViewModel.selectedDiary.value}")
+                    Timber.e("여기 diaryState: {diaryState.javaClass.simpleName} selectedDate: ${myDiaryViewModel.selectedDate.value} haveDayMyWrittenComment: ${myDiaryViewModel.haveDayWrittenComment.first()} selectedDiary: ${myDiaryViewModel.selectedDiary.value}")
                     when (diaryState) {
                         DiaryState.Init -> {/*no-op*/
                         }
@@ -266,25 +289,9 @@ class CalendarWithDiaryFragment :
     }
 
     private fun setMonthMoveListener() = with(binding) {
-        /*
-        * 달력 이동 최종 트리거, 현 달력에 따른 전체 뷰 상태 변환
-        * 1. 외부에서 달력 이둥
-        * 2. 화면 재진입 포커싱 유지 / 달력 이동 포커싱 해제
-        * 3. Month Diary 가져오기
-        * 4. Month Diary 가져온 후 선택한 날짜에 대한 하단 일기 프리뷰 상태 변경
-        * */
+
         materialCalendarView.setOnMonthChangedListener { _, date ->
-            //화면 재진입시 포커싱 해제 대응
-            ymFormatForLocalDate(date)?.let { ymDate ->
-                if (ymDate == myDiaryViewModel.selectedYearMonth.value) {
-                    return@setOnMonthChangedListener
-                }
-                myDiaryViewModel.setSelectedDate(null)
-                myDiaryViewModel.setSelectedYearMonth(ymFormatForLocalDate(date))
-                viewLifecycleOwner.lifecycleScope.launch {
-                    myDiaryViewModel.getRemoteCommentDiaries(ymDate)
-                }
-            }
+            myDiaryViewModel.setSelectedYearMonth(ymFormatForLocalDate(date))
         }
 
         // -> monthChangeListener
@@ -486,7 +493,6 @@ class CalendarWithDiaryFragment :
             display.getMetrics(outMetrics)
             Pair(outMetrics.widthPixels, outMetrics.heightPixels)
         }
-
     }
 
     private fun adjustCalendarSize() = with(binding) {
