@@ -22,7 +22,7 @@ import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseViewModel
 import com.movingmaker.presentation.util.DIARY_CONTENT_MINIMUM_LENGTH
 import com.movingmaker.presentation.util.DIARY_TYPE
-import com.movingmaker.presentation.util.PreferencesUtil
+import com.movingmaker.presentation.util.EMPTY_USER
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.ymFormatForLocalDate
 import com.movingmaker.presentation.util.ymFormatForString
@@ -51,7 +51,6 @@ import javax.inject.Inject
 //todo edit, delete 등 viewmodel 분리하기
 @HiltViewModel
 class MyDiaryViewModel @Inject constructor(
-    private val preferencesUtil: PreferencesUtil,
     private val saveDiaryUseCase: SaveDiaryUseCase,
     private val editDiaryUseCase: EditDiaryUseCase,
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
@@ -72,6 +71,9 @@ class MyDiaryViewModel @Inject constructor(
 //        SharingStarted.WhileSubscribed(5000L),
 //        emptyList()
 //    )
+
+    private var userId = EMPTY_USER
+
     private val localDiaries = getMonthDiaryUseCase("null").stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
@@ -258,12 +260,12 @@ class MyDiaryViewModel @Inject constructor(
     }
 //        .debounce(100L)
         .mapLatest {
-        it
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000L),
-        DiaryState.Init
-    )
+            it
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000L),
+            DiaryState.Init
+        )
 
     /**
      * head, content 통합 한 글자라도 있으면 Save
@@ -356,10 +358,10 @@ class MyDiaryViewModel @Inject constructor(
             ymdToCalendarDay(selectedDiary.date)?.let { date ->
                 when (selectedDiary.deliveryYN) {
                     'Y' -> {
-                        if (selectedDiary.userId == -1L) {
-                            commentDiary.add(date)
-                        } else {
+                        if (selectedDiary.userId == userId) {
                             tempDiary.add(date)
+                        } else {
+                            commentDiary.add(date)
                         }
                     }
                     else -> {
@@ -399,6 +401,10 @@ class MyDiaryViewModel @Inject constructor(
 
     fun setSelectedDiaryType(type: DIARY_TYPE) {
         _selectedDiaryType.value = type
+    }
+
+    fun setUserId(id: Long) {
+        userId = id
     }
 
     fun selectDiaryType(view: View) {
@@ -650,7 +656,7 @@ class MyDiaryViewModel @Inject constructor(
             saveTempDiaryUseCase(
                 Diary(
                     id = -100,
-                    userId = preferencesUtil.getUserId(),
+                    userId = userId,
                     title = diaryHead.value!!,
                     content = diaryContent.value!!,
                     date = selectedDate.value!!,

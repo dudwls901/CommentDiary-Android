@@ -21,6 +21,7 @@ import com.movingmaker.presentation.databinding.FragmentMydiaryWithCalendarBindi
 import com.movingmaker.presentation.util.Extension.toDp
 import com.movingmaker.presentation.util.Extension.toPx
 import com.movingmaker.presentation.util.FRAGMENT_NAME
+import com.movingmaker.presentation.util.PreferencesUtil
 import com.movingmaker.presentation.util.combineList
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.toCalenderDay
@@ -41,6 +42,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.Calendar
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
 //todo 삭제 이후 화면 동기화, 일기 상세 후 뒤돌아올 때 화면 유지
@@ -53,9 +55,13 @@ class CalendarWithDiaryFragment :
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private var defenceFirstMonthMoveListener = true
 
+    @Inject
+    lateinit var preferencesUtil: PreferencesUtil
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = myDiaryViewModel
+        myDiaryViewModel.setUserId(preferencesUtil.getUserId())
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.CALENDAR_WITH_DIARY)
         defenceFirstMonthMoveListener = true
         initViews()
@@ -172,7 +178,7 @@ class CalendarWithDiaryFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 myDiaryViewModel.diaryState.collectLatest { diaryState ->
-                    Timber.e("여기 diaryState: {diaryState.javaClass.simpleName} selectedDate: ${myDiaryViewModel.selectedDate.value} haveDayMyWrittenComment: ${myDiaryViewModel.haveDayWrittenComment.first()} selectedDiary: ${myDiaryViewModel.selectedDiary.value}")
+                    Timber.e("여기 diaryState: ${diaryState.javaClass.simpleName} selectedDate: ${myDiaryViewModel.selectedDate.value} haveDayMyWrittenComment: ${myDiaryViewModel.haveDayWrittenComment.first()} selectedDiary: ${myDiaryViewModel.selectedDiary.value}")
                     when (diaryState) {
                         DiaryState.Init -> {/*no-op*/
                         }
@@ -327,6 +333,7 @@ class CalendarWithDiaryFragment :
                 )
             )
         }
+        readDiaryLayout.isVisible = false
         writeDiaryLayout.isVisible = false
         futureTextView.isVisible = true
         bottomDecoImageView.isVisible = true
