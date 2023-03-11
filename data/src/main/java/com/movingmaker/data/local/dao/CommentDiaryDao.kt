@@ -1,7 +1,6 @@
 package com.movingmaker.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -26,8 +25,11 @@ interface CommentDiaryDao {
     /**
      * 삭제된 행의 수 return
      * */
-    @Delete
-    suspend fun deleteTempCommentDiary(commentDiaryEntity: DiaryEntity): Int
+    @Query("DELETE FROM $COMMENT_DIARY_TABLE WHERE userId = :userId AND date = :date")
+    suspend fun deleteTempCommentDiary(
+        userId: Long,
+        date: String
+    ): Int
 
     @Query("DELETE FROM $COMMENT_DIARY_TABLE WHERE userId in (:userIdList)")
     suspend fun clearCommentDiaries(userIdList: List<Long>)

@@ -3,6 +3,7 @@ package com.movingmaker.data.local.datasourceimpl
 import com.movingmaker.data.local.dao.CommentDiaryDao
 import com.movingmaker.data.local.datasource.CommentDiaryLocalDataSource
 import com.movingmaker.data.local.dto.DiaryEntity
+import com.movingmaker.domain.model.response.Diary
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -23,8 +24,11 @@ class CommentDiaryLocalDataSourceImpl @Inject constructor(
         commentDiaryDao.insertCommentDiaries(*commentDiaryEntity)
     }
 
-    override suspend fun deleteTempCommentDiary(commentDiaryEntity: DiaryEntity): Int =
-        commentDiaryDao.deleteTempCommentDiary(commentDiaryEntity)
+    override suspend fun deleteTempCommentDiary(commentDiary: Diary): Int =
+        commentDiaryDao.deleteTempCommentDiary(
+            commentDiary.userId,
+            commentDiary.date
+        )
 
 
     override suspend fun clearCommentDiaries() {
