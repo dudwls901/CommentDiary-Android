@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="selectedDiary"
-            type="com.movingmaker.domain.model.response.Diary" />
+            name="message"
+            type="java.lang.String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,9 +18,9 @@
         <TextView
             android:id="@+id/emptyCommentTextView"
             style="@style/RCaption"
+            android:text="@{message}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:emptyCommentNotice="@{selectedDiary}"
             android:textColor="@color/text_gray_brown"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

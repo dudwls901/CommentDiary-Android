@@ -36,11 +36,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -60,17 +60,6 @@ class MyDiaryViewModel @Inject constructor(
     private val saveTempDiaryUseCase: SaveTempDiaryUseCase,
     private val deleteTempCommentDiaryUseCase: DeleteTempCommentDiaryUseCase
 ) : BaseViewModel() {
-    //    val localDiaries = getMonthDiaryUseCase("null").map { diaries ->
-//        selectedYearMonth.value?.let { yearMonth ->
-//            diaries.filter { diary ->
-//                diary.date.contains(yearMonth)
-//            }
-//        }
-//    }.stateIn(
-//        viewModelScope,
-//        SharingStarted.WhileSubscribed(5000L),
-//        emptyList()
-//    )
 
     private var userId = EMPTY_USER
 
@@ -170,12 +159,12 @@ class MyDiaryViewModel @Inject constructor(
         }
     }
 
-    //selectedDate -> selectedDiary -> diaryState
+    //todo activity에서 collect하기 고민
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    val diaryState: Flow<DiaryState> = combine(
+    val diaryState: StateFlow<DiaryState> = combine(
         selectedDate, selectedDiary, _haveDayWrittenComment
     ) { ymdDate, diary, haveWrittenComment ->
-        Timber.e("여기 diaryState zip date: ${ymdDate} diary: ${diary} writtenCOmeent: ${haveWrittenComment}")
+        Timber.e("여기 diaryState combine date: ${ymdDate} diary: ${diary} writtenCOmeent: ${haveWrittenComment}")
         if (ymdDate == null) {
             //선택한 날짜 없는 경우
             DiaryState.NoneSelectedDiary
@@ -199,7 +188,7 @@ class MyDiaryViewModel @Inject constructor(
                     }
                     // 코멘트 일기인 경우
                     //임시 저장인 경우
-                    diary.userId != -1L -> {
+                    diary.userId == userId -> {
                         DiaryState.CommentDiary.TempDiaryInTime(diary)
                     }
                     else -> { //임시 저장 아닌 경우
@@ -218,7 +207,7 @@ class MyDiaryViewModel @Inject constructor(
                         DiaryState.AloneDiary(diary)
                     }
                     //임시 저장인 경우
-                    diary.userId != -1L -> {
+                    diary.userId == userId -> {
                         DiaryState.CommentDiary.TempDiaryOutTime(diary)
                     }
                     else -> { //임시 저장 아닌 경우
@@ -257,15 +246,16 @@ class MyDiaryViewModel @Inject constructor(
                 }
             }
         }
-    }
+    }.filter {//본인 or 서버 저장된 일기 아닌경우 filter
+        (it is DiaryState.CommentDiary && it.diary.userId != -1L && it.diary.userId != userId).not()
 //        .debounce(100L)
-        .mapLatest {
-            it
-        }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
-            DiaryState.Init
-        )
+    }.mapLatest {
+        it
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000L),
+        DiaryState.Init
+    )
 
     /**
      * head, content 통합 한 글자라도 있으면 Save
@@ -628,7 +618,8 @@ class MyDiaryViewModel @Inject constructor(
 
     suspend fun sendCommentDiary() = withContext(viewModelScope.coroutineContext) {
         //서버에 저장하는 코멘트 다이어리는 userId 필요 x
-        if (selectedDiary.value != null) {
+        // 임시저장 일기인 경우 저장, 혼자 쓴 일기 -> 코멘트 일기인 경우 edit
+        if (selectedDiary.value != null && diaryState.value !is DiaryState.CommentDiary.TempDiaryInTime) {
             editDiary(
                 EditDiaryModel(
                     diaryHead.value!!,
@@ -637,6 +628,8 @@ class MyDiaryViewModel @Inject constructor(
                 )
             )
         } else {
+//            임시 저장 일기 삭제 후 리모트에 저장 -> 리모트 일기 로컬에 캐시
+            deleteTempCommentDiary()
             saveDiary(
                 SaveDiaryModel(
                     diaryHead.value!!,
@@ -653,28 +646,33 @@ class MyDiaryViewModel @Inject constructor(
      * */
     private suspend fun saveTempCommentDiary() {
         if (diaryHead.value!!.isNotBlank() || diaryContent.value!!.isNotBlank()) {
+            val newDiary = Diary.buildTempDiary(
+                userId,
+                diaryHead.value!!,
+                diaryContent.value!!,
+                selectedDate.value!!
+            )
+            setSelectedDiary(newDiary)
             saveTempDiaryUseCase(
-                Diary(
-                    id = -100,
-                    userId = userId,
-                    title = diaryHead.value!!,
-                    content = diaryContent.value!!,
-                    date = selectedDate.value!!,
-                    deliveryYN = 'Y',
-                    commentList = emptyList<Comment>().toMutableList()
-                )
+                newDiary
             )
         }
     }
 
-    private suspend fun deleteTempCommentDiary() = withContext(viewModelScope.coroutineContext) {
+    suspend fun deleteTempCommentDiary() = withContext(viewModelScope.coroutineContext) {
         onLoading()
-        if (selectedDiary.value != null) {
-            with(deleteTempCommentDiaryUseCase(selectedDiary.value!!)) {
+        selectedDiary.value?.let { diary ->
+            with(deleteTempCommentDiaryUseCase(diary)) {
                 when (this) {
                     //삭제된 행의 수
                     1 -> {
-                        setMessage("일기가 삭제되었습니다.")
+                        if (diaryState.value is DiaryState.CommentDiary.TempDiaryOutTime) {
+                            setMessage("일기가 삭제되었습니다.")
+                        }
+                        diary.date.ymFormatForString()?.let {
+                            getRemoteCommentDiaries(it)
+                        }
+                        setSelectedDiary(null)
                     }
                     else -> {
                         setMessage("오류가 발생했습니다.")
@@ -688,11 +686,15 @@ class MyDiaryViewModel @Inject constructor(
     suspend fun deleteDiary() = viewModelScope.async {
         var isSuccess = false
         onLoading()
-        if (selectedDiary.value?.id != null) {
-            with(deleteDiaryUseCase(selectedDiary.value!!.id)) {
+        selectedDiary.value?.let { diary ->
+            with(deleteDiaryUseCase(diary.id)) {
                 offLoading()
                 when (this) {
                     is UiState.Success -> {
+                        diary.date.ymFormatForString()?.let {
+                            getRemoteCommentDiaries(it)
+                        }
+                        setSelectedDiary(null)
                         setMessage("일기가 삭제되었습니다.")
                         isSuccess = true
                     }

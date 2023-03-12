@@ -21,7 +21,7 @@ sealed interface DiaryState {
     sealed interface CommentDiary : DiaryState {
         val diary: Diary
 
-        //일기 작성 후 오늘 + 다음 날
+        //일기 작성 후 오늘 + 다음 날태 (전송 완료)
         data class HaveNotCommentInTime(override val diary: Diary) : CommentDiary
 
         //일기 작성 후 다음 날 코멘트 있는데 열 수 있는 경우

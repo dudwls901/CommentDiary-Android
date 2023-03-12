@@ -4,11 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.movingmaker.domain.model.response.Diary
 import com.movingmaker.presentation.databinding.RvItemCommentDiaryEmptyCommentBinding
 
 class CommentDiaryEmptyCommentAdapter() :
-    ListAdapter<Diary, CommentDiaryDetailViewHolders.CommentDiaryEmptyCommentViewHolder>(
+    ListAdapter<String, CommentDiaryDetailViewHolders.CommentDiaryEmptyCommentViewHolder>(
         diffUtil
     ) {
 
@@ -34,11 +33,11 @@ class CommentDiaryEmptyCommentAdapter() :
 
     companion object {
 
-        val diffUtil = object : DiffUtil.ItemCallback<Diary>() {
-            override fun areItemsTheSame(oldItem: Diary, newItem: Diary) =
-                oldItem.id == newItem.id
+        val diffUtil = object : DiffUtil.ItemCallback<String>() {
+            override fun areItemsTheSame(oldItem: String, newItem: String) =
+                oldItem.hashCode() == newItem.hashCode()
 
-            override fun areContentsTheSame(oldItem: Diary, newItem: Diary) =
+            override fun areContentsTheSame(oldItem: String, newItem: String) =
                 oldItem.hashCode() == newItem.hashCode()
         }
     }

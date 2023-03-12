@@ -12,10 +12,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
@@ -30,7 +28,6 @@ import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -41,6 +38,7 @@ class WriteDiaryFragment :
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
     private lateinit var coroutineLifecycleScope: LifecycleCoroutineScope
+    private var isSendedDiary = false
 
     /*
     * 혼자 쓰는 일기 수정
@@ -72,8 +70,23 @@ class WriteDiaryFragment :
 
     override fun onStop() {
         super.onStop()
-        coroutineLifecycleScope.launch {
-            myDiaryViewModel.handleDiary(myDiaryViewModel.selectedDiaryType.value)
+        with(myDiaryViewModel) {
+            Timber.e(
+                "임시저장 여부 ${
+                    isSendedDiary.not() &&
+                            (selectedDiary.value?.title == diaryHead.value && selectedDiary.value?.content == diaryContent.value).not()
+                }"
+            )
+            //서버에 저장시켜서 화면 나가는 경우 임시저장 방지
+            //글자 안 바뀐 경우 임시저장 방지
+            if (
+                isSendedDiary.not() &&
+                (selectedDiary.value?.title == diaryHead.value && selectedDiary.value?.content == diaryContent.value).not()
+            ) {
+                coroutineLifecycleScope.launch {
+                    myDiaryViewModel.handleDiary(myDiaryViewModel.selectedDiaryType.value)
+                }
+            }
         }
     }
 
@@ -88,17 +101,19 @@ class WriteDiaryFragment :
                             DIARY_TYPE.ALONE_DIARY
                         }
                         else -> {
+                            val diary = selectedDiary.value
                             //오늘 날짜인 경우
-                            selectedDiary.value?.let { diary ->
+                            if (diary != null) {
                                 //작성한 경우 deliveryYN에 따라 다름
                                 if (diary.deliveryYN == 'N') {
                                     DIARY_TYPE.ALONE_DIARY
                                 } else {
                                     DIARY_TYPE.COMMENT_DIARY
                                 }
+                            } else {
+                                //작성 안 한 경우
+                                DIARY_TYPE.COMMENT_DIARY
                             }
-                            //작성 안 한 경우
-                            DIARY_TYPE.COMMENT_DIARY
                         }
                     }
                 )
@@ -106,27 +121,14 @@ class WriteDiaryFragment :
         }
     }
 
-    private fun observeDatas() = with(binding) {
-
-        myDiaryViewModel.aloneDiary.observe(viewLifecycleOwner) {
-            Timber.d("aloneDiary ${it}")
-        }
-        //저장은 혼자 쓴 일기, 코멘트 일기 둘 다 가능
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myDiaryViewModel.selectedDiary.collectLatest {
-                    Timber.d(" selectedDiaryObserve $it")
-                }
-            }
-        }
-//        myDiaryViewModel.selectedDiary.observe(viewLifecycleOwner) { diary ->
-//            Timber.d(" selectedDiaryObserve $diary")
-//        }
-
+    private fun observeDatas() {
         myDiaryViewModel.selectDiaryTypeToolbarIsExpanded.observe(viewLifecycleOwner) { isExpand ->
             handleDiarySheet(isExpand)
         }
-
+        //observe하지 않으면 항상 null
+        myDiaryViewModel.aloneDiary.observe(viewLifecycleOwner) {
+            /*no-op*/
+        }
     }
 
     private fun initToolbar() = with(binding) {
@@ -171,11 +173,9 @@ class WriteDiaryFragment :
 
         submitButton.setOnClickListener {
             coroutineLifecycleScope.launch {
+                isSendedDiary = true
                 dialogView.dismiss()
-//                todo await시키기
-                Timber.e("저장 이전")
                 myDiaryViewModel.sendCommentDiary()
-                Timber.e("저장 이후")
                 showCircleDialog()
             }
         }

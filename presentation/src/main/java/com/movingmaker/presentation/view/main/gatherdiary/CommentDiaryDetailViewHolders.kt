@@ -34,8 +34,8 @@ sealed class CommentDiaryDetailViewHolders(binding: ViewDataBinding) :
 
     class CommentDiaryEmptyCommentViewHolder(private val binding: RvItemCommentDiaryEmptyCommentBinding) :
         CommentDiaryDetailViewHolders(binding) {
-        fun bind(selectedDiary: Diary) {
-            binding.selectedDiary = selectedDiary
+        fun bind(message: String) {
+            binding.message = message
         }
     }
 
