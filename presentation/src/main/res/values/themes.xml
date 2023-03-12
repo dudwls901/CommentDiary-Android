@@ -39,6 +39,18 @@
         <item name="android:dateTextAppearance">@style/TextAppearance.Material3.BodyMedium</item>
     </style>
 
+    <!-- 달력 안의 숫자들에 적용되는 스타일 -->
+    <style name="CalenderViewDateCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:weekNumberColor">@android:color/holo_red_light</item>
+    </style>
+
+    <!-- 달력 안의 요일들에 적용되는 스타일 -->
+    <style name="CalenderViewWeekCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:weekNumberColor">@android:color/holo_red_light</item>
+    </style>
+
     <!-- 달력에 사용하는 스타일 -->
     <style name="CustomTextAppearance" parent="TextAppearance.Material3.BodyMedium">
         <item name="android:textSize" tools:ignore="SpUsage">20dp</item>
@@ -47,7 +59,6 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
-    <!--    todo 폰트 적용 안됨-->
     <!-- 여기서 요일, 달력 안 숫자들의 폰트 설정을 수행할 수 있다 -->
     <!-- 달력 안의 숫자들에 적용되는 스타일 -->
     <style name="CalendarDateText" parent="Theme.MaterialComponents">
