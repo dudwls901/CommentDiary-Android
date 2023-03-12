@@ -90,7 +90,7 @@
                 android:layout_height="14dp"
                 android:layout_marginHorizontal="18dp"
                 android:layout_marginBottom="11dp"
-                android:background="@drawable/background_green_radius_10"
+                android:background="@drawable/background_light_brown_radius_10"
                 android:clipChildren="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
