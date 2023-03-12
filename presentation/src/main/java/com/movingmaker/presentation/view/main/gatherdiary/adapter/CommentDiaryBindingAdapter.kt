@@ -1,4 +1,4 @@
-package com.movingmaker.presentation.view.main.gatherdiary
+package com.movingmaker.presentation.view.main.gatherdiary.adapter
 
 import android.view.View
 import android.widget.Button

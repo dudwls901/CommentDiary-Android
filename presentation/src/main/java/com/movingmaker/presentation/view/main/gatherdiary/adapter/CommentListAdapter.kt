@@ -1,4 +1,4 @@
-package com.movingmaker.presentation.view.main.gatherdiary
+package com.movingmaker.presentation.view.main.gatherdiary.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.movingmaker.domain.model.response.Comment
 import com.movingmaker.presentation.databinding.RvItemMydiaryCommentBinding
+import com.movingmaker.presentation.view.main.gatherdiary.CommentDiaryDetailViewHolders
+import com.movingmaker.presentation.view.main.gatherdiary.OnCommentSelectListener
 
 class CommentListAdapter(private val onCommentSelectListener: OnCommentSelectListener) :
     ListAdapter<Comment, CommentDiaryDetailViewHolders.CommentViewHolder>(

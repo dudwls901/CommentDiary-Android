@@ -1,4 +1,4 @@
-package com.movingmaker.presentation.view.main.gatherdiary
+package com.movingmaker.presentation.view.main.gatherdiary.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,13 +7,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.movingmaker.domain.model.response.Diary
 import com.movingmaker.presentation.databinding.RvItemGatherdiaryDiaryBinding
+import com.movingmaker.presentation.view.main.gatherdiary.OnDiarySelectListener
 
 class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener) :
     ListAdapter<Diary, DiaryListAdapter.ItemViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): DiaryListAdapter.ItemViewHolder = ItemViewHolder(
+    ): ItemViewHolder = ItemViewHolder(
         RvItemGatherdiaryDiaryBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -21,7 +22,7 @@ class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener) :
         )
     )
 
-    override fun onBindViewHolder(holder: DiaryListAdapter.ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bind(currentList[position])
 
     }

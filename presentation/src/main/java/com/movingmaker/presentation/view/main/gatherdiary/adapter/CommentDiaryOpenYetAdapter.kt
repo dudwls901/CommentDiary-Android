@@ -1,31 +1,36 @@
-package com.movingmaker.presentation.view.main.gatherdiary
+package com.movingmaker.presentation.view.main.gatherdiary.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.movingmaker.domain.model.response.Diary
-import com.movingmaker.presentation.databinding.RvItemCommentDiaryBinding
+import com.movingmaker.presentation.databinding.RvItemCommentDiaryOpenYetBinding
+import com.movingmaker.presentation.view.main.gatherdiary.CommentDiaryDetailViewHolders
 
-class CommentDiaryContentAdapter :
-    ListAdapter<Diary, CommentDiaryDetailViewHolders.CommentDiaryContentViewHolder>(diffUtil) {
-
+class CommentDiaryOpenYetAdapter :
+    ListAdapter<Diary, CommentDiaryDetailViewHolders.CommentDiaryOpenYetViewHolder>(
+        diffUtil
+    ) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): CommentDiaryDetailViewHolders.CommentDiaryContentViewHolder {
-        return CommentDiaryDetailViewHolders.CommentDiaryContentViewHolder(
-            RvItemCommentDiaryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    ): CommentDiaryDetailViewHolders.CommentDiaryOpenYetViewHolder {
+        return CommentDiaryDetailViewHolders.CommentDiaryOpenYetViewHolder(
+            RvItemCommentDiaryOpenYetBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
     }
 
     override fun onBindViewHolder(
-        holder: CommentDiaryDetailViewHolders.CommentDiaryContentViewHolder,
+        holder: CommentDiaryDetailViewHolders.CommentDiaryOpenYetViewHolder,
         position: Int
     ) {
         holder.bind(currentList[position])
     }
-
 
     companion object {
 

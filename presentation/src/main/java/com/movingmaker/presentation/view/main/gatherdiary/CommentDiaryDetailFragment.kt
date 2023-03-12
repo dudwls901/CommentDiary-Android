@@ -23,6 +23,11 @@ import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentGatherdiaryCommentdiaryDetailBinding
 import com.movingmaker.presentation.util.FRAGMENT_NAME
+import com.movingmaker.presentation.view.main.gatherdiary.adapter.CommentDiaryCommentYetAdapter
+import com.movingmaker.presentation.view.main.gatherdiary.adapter.CommentDiaryContentAdapter
+import com.movingmaker.presentation.view.main.gatherdiary.adapter.CommentDiaryEmptyCommentAdapter
+import com.movingmaker.presentation.view.main.gatherdiary.adapter.CommentDiaryOpenYetAdapter
+import com.movingmaker.presentation.view.main.gatherdiary.adapter.CommentListAdapter
 import com.movingmaker.presentation.view.main.mydiary.DiaryState
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
