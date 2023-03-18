@@ -1,13 +1,13 @@
 package com.movingmaker.commentdiary.di.network
 
 
-import com.movingmaker.data.remote.api.GatherDiaryApiService
-import com.movingmaker.data.remote.api.LogOutApiService
-import com.movingmaker.data.remote.api.MyDiaryApiService
+import com.movingmaker.data.remote.api.CommentApiService
+import com.movingmaker.data.remote.api.DiaryApiService
+import com.movingmaker.data.remote.api.MemberApiService
 import com.movingmaker.data.remote.api.MyPageApiService
-import com.movingmaker.data.remote.api.OnboardingApiService
 import com.movingmaker.data.remote.api.ReIssueTokenApiService
 import com.movingmaker.data.remote.api.ReceivedDiaryApiService
+import com.movingmaker.data.remote.api.ReportApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,10 +21,10 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideOnboardingApiService(
+    fun provideMemberApiService(
         @RetrofitModule.NoHeaderRetrofit retrofit: Retrofit
-    ): OnboardingApiService {
-        return retrofit.create(OnboardingApiService::class.java)
+    ): MemberApiService {
+        return retrofit.create(MemberApiService::class.java)
     }
 
     @Provides
@@ -32,24 +32,8 @@ object ApiModule {
     fun provideMyPageApiService(
         @RetrofitModule.BearerRetrofit retrofit: Retrofit
     ): MyPageApiService {
-        return retrofit.create(MyPageApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideLogOutApiService(
-        @RetrofitModule.OneHeaderRetrofit retrofit: Retrofit
-    ): LogOutApiService {
-        return retrofit.create(LogOutApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideMyDiaryApiService(
-        @RetrofitModule.BearerRetrofit retrofit: Retrofit
-    ): MyDiaryApiService {
         return retrofit
-            .create(MyDiaryApiService::class.java)
+            .create(MyPageApiService::class.java)
     }
 
     @Provides
@@ -62,10 +46,11 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideGatherDiaryApiService(
+    fun provideDiaryApiService(
         @RetrofitModule.BearerRetrofit retrofit: Retrofit
-    ): GatherDiaryApiService {
-        return retrofit.create(GatherDiaryApiService::class.java)
+    ): DiaryApiService {
+        return retrofit
+            .create(DiaryApiService::class.java)
     }
 
     @Provides
@@ -74,5 +59,21 @@ object ApiModule {
         @RetrofitModule.BearerRetrofit retrofit: Retrofit
     ): ReceivedDiaryApiService {
         return retrofit.create(ReceivedDiaryApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCommentApiService(
+        @RetrofitModule.BearerRetrofit retrofit: Retrofit
+    ): CommentApiService{
+        return retrofit.create(CommentApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReportApiService(
+        @RetrofitModule.BearerRetrofit retrofit: Retrofit
+    ): ReportApiService{
+        return retrofit.create(ReportApiService::class.java)
     }
 }
