@@ -14,7 +14,7 @@ class DiaryLocalDataSourceImpl @Inject constructor(
     override suspend fun getAllDiaries(): List<DiaryEntity> =
         diaryDao.getAllDiaries()
 
-    override suspend fun gePeriodDiaries(date: String): List<DiaryEntity> =
+    override suspend fun getPeriodDiaries(date: String): List<DiaryEntity> =
         diaryDao.getPeriodDiaries(date)
 
     override fun getPeriodDiariesFlow(date: String): Flow<List<DiaryEntity>> =

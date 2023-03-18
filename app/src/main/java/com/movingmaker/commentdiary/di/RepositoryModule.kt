@@ -1,22 +1,23 @@
 package com.movingmaker.commentdiary.di
 
 
-import com.movingmaker.data.repositoryimpl.ForSignUpRepositoryImpl
-import com.movingmaker.data.repositoryimpl.GatherDiaryRepositoryImpl
-import com.movingmaker.data.repositoryimpl.MyDiaryRepositoryImpl
+import com.movingmaker.data.repositoryimpl.CommentRepositoryImpl
+import com.movingmaker.data.repositoryimpl.DiaryRepositoryImpl
+import com.movingmaker.data.repositoryimpl.MemberRepositoryImpl
 import com.movingmaker.data.repositoryimpl.MyPageRepositoryImpl
 import com.movingmaker.data.repositoryimpl.ReceivedDiaryRepositoryImpl
-import com.movingmaker.domain.repository.ForSignUpRepository
-import com.movingmaker.domain.repository.GatherDiaryRepository
-import com.movingmaker.domain.repository.MyDiaryRepository
+import com.movingmaker.data.repositoryimpl.ReportRepositoryImpl
+import com.movingmaker.domain.repository.CommentRepository
+import com.movingmaker.domain.repository.DiaryRepository
+import com.movingmaker.domain.repository.MemberRepository
 import com.movingmaker.domain.repository.MyPageRepository
 import com.movingmaker.domain.repository.ReceivedDiaryRepository
+import com.movingmaker.domain.repository.ReportRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -24,21 +25,27 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindForSignUpRepository(
-        forSignUpRepositoryImpl: ForSignUpRepositoryImpl,
-    ): ForSignUpRepository
+    abstract fun bindMemberRepository(
+        memberRepositoryImpl: MemberRepositoryImpl,
+    ): MemberRepository
 
     @Binds
     @Singleton
-    abstract fun bindGatherDiaryRepository(
-        gatherDiaryRepositoryImpl: GatherDiaryRepositoryImpl,
-    ): GatherDiaryRepository
+    abstract fun bindCommentRepository(
+        commentRepositoryImpl: CommentRepositoryImpl
+    ): CommentRepository
 
     @Binds
     @Singleton
-    abstract fun bindMyDiaryRepository(
-        myDiaryRepositoryImpl: MyDiaryRepositoryImpl,
-    ): MyDiaryRepository
+    abstract fun bindReportRepository(
+        reportRepositoryImpl: ReportRepositoryImpl,
+    ): ReportRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindDiaryRepository(
+        diaryRepositoryImpl: DiaryRepositoryImpl,
+    ): DiaryRepository
 
     @Binds
     @Singleton
