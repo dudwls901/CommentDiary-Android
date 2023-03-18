@@ -4,6 +4,7 @@ import com.movingmaker.data.local.dao.DiaryDao
 import com.movingmaker.data.local.datasource.DiaryLocalDataSource
 import com.movingmaker.data.local.dto.DiaryEntity
 import com.movingmaker.domain.model.response.Diary
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class DiaryLocalDataSourceImpl @Inject constructor(
@@ -15,6 +16,9 @@ class DiaryLocalDataSourceImpl @Inject constructor(
 
     override suspend fun gePeriodDiaries(date: String): List<DiaryEntity> =
         diaryDao.getPeriodDiaries(date)
+
+    override fun getPeriodDiariesFlow(date: String): Flow<List<DiaryEntity>> =
+        diaryDao.getPeriodDiariesFlow(date)
 
     override suspend fun insertTempDiary(tempDiary: DiaryEntity) {
         diaryDao.insertTempDiary(tempDiary)

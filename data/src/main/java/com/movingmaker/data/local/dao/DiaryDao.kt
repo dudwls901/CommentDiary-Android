@@ -6,12 +6,13 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.movingmaker.data.local.dto.DiaryEntity
 import com.movingmaker.data.util.DIARY_TABLE
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DiaryDao {
 
-//    @Query("SELECT * FROM $COMMENT_DIARY_TABLE WHERE date like :date ORDER BY date DESC")
-//    fun getMonthDiaries(date: String): Flow<List<DiaryEntity>>
+    @Query("SELECT * FROM $DIARY_TABLE WHERE date like :date ORDER BY date DESC")
+    fun getPeriodDiariesFlow(date: String): Flow<List<DiaryEntity>>
 
     @Query("SELECT * FROM $DIARY_TABLE WHERE date like :date ORDER BY date DESC")
     suspend fun getPeriodDiaries(date: String): List<DiaryEntity>
