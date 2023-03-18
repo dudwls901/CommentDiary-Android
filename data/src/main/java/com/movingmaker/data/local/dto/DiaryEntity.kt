@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
-import com.movingmaker.data.util.COMMENT_DIARY_TABLE
+import com.movingmaker.data.util.DIARY_TABLE
 import com.movingmaker.domain.model.response.Comment
 import com.movingmaker.domain.model.response.Diary
 import kotlinx.serialization.builtins.ListSerializer
@@ -12,7 +12,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 
 @Entity(
-    tableName = COMMENT_DIARY_TABLE,
+    tableName = DIARY_TABLE,
 //    edit TempDiary 중복 제거
     indices = [
         Index(value = ["userId", "date"], unique = true)
