@@ -1,7 +1,8 @@
 package com.movingmaker.data.remote.datasourceimpl
 
-import com.movingmaker.data.remote.api.OnboardingApiService
-import com.movingmaker.data.remote.datasource.ForSignUpDataSource
+import com.movingmaker.data.remote.api.MemberApiService
+import com.movingmaker.data.remote.datasource.MemberRemoteDataSource
+import com.movingmaker.data.remote.model.request.ChangePasswordRequest
 import com.movingmaker.data.remote.model.request.EmailCodeCheckRequest
 import com.movingmaker.data.remote.model.request.KakaoLoginRequest
 import com.movingmaker.data.remote.model.request.KakaoSignUpRequest
@@ -13,28 +14,30 @@ import com.movingmaker.domain.model.response.AuthTokens
 import com.movingmaker.domain.model.response.BaseResponse
 import javax.inject.Inject
 
-class ForSignUpDataSourceImpl @Inject constructor(
-    private val onboardingApiService: OnboardingApiService
-) : ForSignUpDataSource {
+class MemberRemoteDataSourceImpl @Inject constructor(
+    private val memberApiService: MemberApiService
+) : MemberRemoteDataSource {
     override suspend fun sendEmailCode(email: String): NetworkResult<BaseResponse<String>> =
-        safeApiCall { onboardingApiService.sendEmailCode(email) }
+        safeApiCall { memberApiService.sendEmailCode(email) }
 
-    override suspend fun emailCodeCheck(emailCodeCheckRequest: EmailCodeCheckRequest): NetworkResult<BaseResponse<String>> =
-        safeApiCall { onboardingApiService.emailCodeCheck(emailCodeCheckRequest) }
+    override suspend fun checkEmailCode(emailCodeCheckRequest: EmailCodeCheckRequest): NetworkResult<BaseResponse<String>> =
+        safeApiCall { memberApiService.checkEmailCode(emailCodeCheckRequest) }
 
     override suspend fun signUp(signUpRequest: SignUpRequest): NetworkResult<BaseResponse<String>> =
-        safeApiCall { onboardingApiService.signUp(signUpRequest) }
+        safeApiCall { memberApiService.signUp(signUpRequest) }
 
     override suspend fun kakaoLogIn(kakaoLoginRequest: KakaoLoginRequest): NetworkResult<BaseResponse<AuthTokens>> =
-        safeApiCall { onboardingApiService.kakaoLogIn(kakaoLoginRequest) }
+        safeApiCall { memberApiService.kakaoLogIn(kakaoLoginRequest) }
 
     override suspend fun findPassword(email: String): NetworkResult<BaseResponse<String>> =
-        safeApiCall { onboardingApiService.findPassword(email) }
+        safeApiCall { memberApiService.findPassword(email) }
+
+    override suspend fun changePassword(changePasswordRequest: ChangePasswordRequest): NetworkResult<BaseResponse<String>> =
+        safeApiCall { memberApiService.changePassword(changePasswordRequest) }
 
     override suspend fun logIn(logInRequest: LogInRequest): NetworkResult<BaseResponse<AuthTokens>> =
-        safeApiCall { onboardingApiService.logIn(logInRequest) }
+        safeApiCall { memberApiService.logIn(logInRequest) }
 
     override suspend fun kakaoSignUpSetAccepts(kakaoSignUpRequest: KakaoSignUpRequest): NetworkResult<BaseResponse<String>> =
-        safeApiCall { onboardingApiService.kakaoSignUpSetAccepts(kakaoSignUpRequest) }
-
+        safeApiCall { memberApiService.kakaoSignUpSetAccepts(kakaoSignUpRequest) }
 }

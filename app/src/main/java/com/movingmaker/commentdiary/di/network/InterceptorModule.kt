@@ -1,7 +1,7 @@
 package com.movingmaker.commentdiary.di.network
 
 import com.movingmaker.commentdiary.CodaApplication
-import com.movingmaker.data.remote.datasource.ReIssueTokenDataSource
+import com.movingmaker.data.remote.datasource.ReIssueTokenRemoteDataSource
 import com.movingmaker.domain.model.NetworkResult
 import com.movingmaker.domain.model.getErrorMessage
 import com.movingmaker.presentation.util.PreferencesUtil
@@ -62,7 +62,7 @@ object InterceptorModule {
     @Singleton
     @BearerInterceptor
     fun provideBearerInterceptor(
-        reIssueTokenDataSource: ReIssueTokenDataSource,
+        reIssueTokenRemoteDataSource: ReIssueTokenRemoteDataSource,
         preferencesUtil: PreferencesUtil
     ) = Interceptor { chain ->
         val accessTokenExpiresIn = preferencesUtil.getAccessExpiresIn()
@@ -70,7 +70,7 @@ object InterceptorModule {
             synchronized(this) {
                 runBlocking {
                     //토큰 갱신 api 호출
-                    val response = reIssueTokenDataSource.reIssueToken()
+                    val response = reIssueTokenRemoteDataSource.reIssueToken()
                     var ret = "EMPTY"
                     with(response) {
                         when (this) {

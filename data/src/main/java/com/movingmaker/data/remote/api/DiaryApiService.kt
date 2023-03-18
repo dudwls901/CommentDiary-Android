@@ -32,15 +32,15 @@ interface DiaryApiService {
     suspend fun deleteDiary(@Path("diaryId") diaryId: Long): Response<BaseResponse<String>>
 
     @GET(DIARY + MY + ALL)
-    suspend fun getAllDiaries(): Response<BaseResponse<MutableList<DiaryResponse>>>
+    suspend fun getAllDiaries(): Response<BaseResponse<List<DiaryResponse>>>
 
     /**
      * date = ym인 경우 한 달 일기, date = ymd인 경우 하루 일기
      * */
     @GET(DIARY + MY)
-    suspend fun getPeriodDiaries(@Query("date") date: String): Response<BaseResponse<MutableList<DiaryResponse>>>
+    suspend fun getPeriodDiaries(@Query("date") date: String): Response<BaseResponse<List<DiaryResponse>>>
 
     @GET("${DIARY}/{diaryId}")
-    suspend fun getDiary(@Path("diaryId") diaryId: Long): Response<BaseResponse<String>>
+    suspend fun getDiary(@Path("diaryId") diaryId: Long): Response<BaseResponse<DiaryResponse>>
 
 }
