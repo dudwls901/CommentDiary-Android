@@ -4,13 +4,13 @@ import com.movingmaker.domain.model.UiState
 import com.movingmaker.domain.model.mapUiState
 import com.movingmaker.domain.model.request.EmailCodeCheckModel
 import com.movingmaker.domain.model.toUiState
-import com.movingmaker.domain.repository.ForSignUpRepository
+import com.movingmaker.domain.repository.MemberRepository
 import javax.inject.Inject
 
-class EmailCodeCheckUseCase @Inject constructor(
-    private val forSignUpRepository: ForSignUpRepository,
+class CheckEmailCodeUseCase @Inject constructor(
+    private val memberRepository: MemberRepository,
 ) {
     suspend operator fun invoke(emailCodeCheckModel: EmailCodeCheckModel): UiState<String> =
-        forSignUpRepository.emailCodeCheck(emailCodeCheckModel).toUiState()
+        memberRepository.checkEmailCode(emailCodeCheckModel).toUiState()
             .mapUiState { it.result }
 }

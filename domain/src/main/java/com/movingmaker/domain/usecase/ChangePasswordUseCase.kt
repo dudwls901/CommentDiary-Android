@@ -4,13 +4,13 @@ import com.movingmaker.domain.model.UiState
 import com.movingmaker.domain.model.mapUiState
 import com.movingmaker.domain.model.request.ChangePasswordModel
 import com.movingmaker.domain.model.toUiState
-import com.movingmaker.domain.repository.MyPageRepository
+import com.movingmaker.domain.repository.MemberRepository
 import javax.inject.Inject
 
 class ChangePasswordUseCase @Inject constructor(
-    private val myPageRepository: MyPageRepository,
+    private val memberRepository: MemberRepository
 ) {
     suspend operator fun invoke(changePasswordModel: ChangePasswordModel): UiState<String> =
-        myPageRepository.changePassword(changePasswordModel).toUiState().mapUiState { it.result }
+        memberRepository.changePassword(changePasswordModel).toUiState().mapUiState { it.result }
 
 }

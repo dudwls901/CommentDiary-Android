@@ -2,12 +2,12 @@ package com.movingmaker.domain.usecase
 
 import com.movingmaker.domain.model.response.Diary
 import com.movingmaker.domain.repository.DiaryRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class SaveTempDiaryUseCase @Inject constructor(
+class GetPeriodDiariesFlowUseCase @Inject constructor(
     private val diaryRepository: DiaryRepository
 ) {
-    suspend operator fun invoke(tempDiary: Diary) {
-        diaryRepository.insertTempDiary(tempDiary)
-    }
+    operator fun invoke(date: String): Flow<List<Diary>> =
+        diaryRepository.getPeriodDiariesFlow(date)
 }
