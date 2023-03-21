@@ -142,7 +142,7 @@ class CalendarWithDiaryFragment :
                 myDiaryViewModel.setSelectedDate(null)
                 binding.materialCalendarView.selectedDate = null
                 viewLifecycleOwner.lifecycleScope.launch {
-                    myDiaryViewModel.getRemoteCommentDiaries(it)
+                    myDiaryViewModel.updatePeriodDiaries(it)
                 }
             }
             defenceFirstMonthMoveListener = false
@@ -215,7 +215,7 @@ class CalendarWithDiaryFragment :
         binding.materialCalendarView.currentDate = toCalenderDay(date)
         ymFormatForLocalDate(myDiaryViewModel.selectedDate.value)?.let { ymDate ->
             //이번 달 화면에서 refresh 하는 경우 달력 이동x, Month Diary 갱신, 일기 상태 변경
-            myDiaryViewModel.getRemoteCommentDiaries(ymDate)
+            myDiaryViewModel.updatePeriodDiaries(ymDate)
         }
     }
 

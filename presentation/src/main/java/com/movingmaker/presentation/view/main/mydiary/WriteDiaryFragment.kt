@@ -83,9 +83,7 @@ class WriteDiaryFragment :
                 isSendedDiary.not() &&
                 (selectedDiary.value?.title == diaryHead.value && selectedDiary.value?.content == diaryContent.value).not()
             ) {
-                coroutineLifecycleScope.launch {
-                    myDiaryViewModel.handleDiary(myDiaryViewModel.selectedDiaryType.value)
-                }
+                myDiaryViewModel.handleDiary(myDiaryViewModel.selectedDiaryType.value)
             }
         }
     }

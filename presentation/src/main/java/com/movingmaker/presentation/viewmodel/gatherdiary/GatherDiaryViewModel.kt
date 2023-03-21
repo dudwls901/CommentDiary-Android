@@ -6,22 +6,28 @@ import androidx.lifecycle.viewModelScope
 import com.movingmaker.domain.model.UiState
 import com.movingmaker.domain.model.request.ReportCommentModel
 import com.movingmaker.domain.model.response.Diary
-import com.movingmaker.domain.usecase.GetAllDiaryUseCase
-import com.movingmaker.domain.usecase.GetMonthDiaryUseCase
+import com.movingmaker.domain.usecase.GetAllDiariesUseCase
+import com.movingmaker.domain.usecase.GetPeriodDiariesUseCase
 import com.movingmaker.domain.usecase.LikeCommentUseCase
 import com.movingmaker.domain.usecase.ReportCommentUseCase
+import com.movingmaker.domain.usecase.UpdateAllDiariesUseCase
+import com.movingmaker.domain.usecase.UpdatePeriodDiariesUseCase
 import com.movingmaker.presentation.base.BaseViewModel
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.ymFormatForLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class GatherDiaryViewModel @Inject constructor(
-    private val getAllDiaryUseCase: GetAllDiaryUseCase,
-    private val getMonthDiaryUseCase: GetMonthDiaryUseCase,
+    private val getAllDiariesUseCase: GetAllDiariesUseCase,
+    private val getPeriodDiariesUseCase: GetPeriodDiariesUseCase,
+    private val updateAllDiariesUseCase: UpdateAllDiariesUseCase,
+    private val updatePeriodDiariesUseCase: UpdatePeriodDiariesUseCase,
     private val reportCommentUseCase: ReportCommentUseCase,
     private val likeCommentUseCase: LikeCommentUseCase
 ) : BaseViewModel() {
@@ -30,21 +36,19 @@ class GatherDiaryViewModel @Inject constructor(
     val handleComment: LiveData<Pair<Long, String>>
         get() = _handleComment
 
-    private var _diaryList = MutableLiveData<List<Diary>>()
-    val diaryList: LiveData<List<Diary>>
-        get() = _diaryList
+    private var _diaries = MutableStateFlow<List<Diary>>(emptyList())
+    val diaries = _diaries.asStateFlow()
 
     private var _selectedMonth = MutableLiveData<String>()
     val selectedMonth: LiveData<String>
         get() = _selectedMonth
 
     init {
-        _diaryList.value = emptyList()
         _selectedMonth.value = ymFormatForLocalDate(getCodaToday())!!
     }
 
-    private fun setDiaryList(list: List<Diary>) {
-        _diaryList.value = list
+    private fun setDiaries(list: List<Diary>) {
+        _diaries.value = list
     }
 
     fun setSelectedMonth(date: String) {
@@ -52,28 +56,28 @@ class GatherDiaryViewModel @Inject constructor(
     }
 
     fun getDiaries(date: String) = viewModelScope.launch {
-//        onLoading()
-//        val response = if (date == "all") {
-//            getAllDiaryUseCase()
-//        } else {
-//            getMonthDiaryUseCase(date)
-//        }
-//        offLoading()
-//        with(response) {
-//            offLoading()
-//            Timber.d("result $this")
-//            when (this) {
-//                is UiState.Success -> {
-//                    setDiaryList(data)
-//                }
-//                is UiState.Error -> {
-//                    setMessage(message)
-//                }
-//                is UiState.Fail -> {
-//                    setMessage(message)
-//                }
-//            }
-//        }
+        onLoading()
+        val response = if (date == "all") {
+            updateAllDiariesUseCase()
+        } else {
+            updatePeriodDiariesUseCase(date)
+        }
+        offLoading()
+        with(response) {
+            offLoading()
+            Timber.d("result $this")
+            when (this) {
+                is UiState.Success -> {
+                    setDiaries(data)
+                }
+                is UiState.Error -> {
+                    setMessage(message)
+                }
+                is UiState.Fail -> {
+                    setMessage(message)
+                }
+            }
+        }
     }
 
     fun reportComment(reportCommentRequest: ReportCommentModel) =

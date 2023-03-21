@@ -9,7 +9,7 @@ import com.movingmaker.domain.model.request.KakaoLoginModel
 import com.movingmaker.domain.model.request.KakaoSignUpModel
 import com.movingmaker.domain.model.request.LogInModel
 import com.movingmaker.domain.model.request.SignUpModel
-import com.movingmaker.domain.usecase.EmailCodeCheckUseCase
+import com.movingmaker.domain.usecase.CheckEmailCodeUseCase
 import com.movingmaker.domain.usecase.FindPasswordUseCase
 import com.movingmaker.domain.usecase.KakaoLogInUseCase
 import com.movingmaker.domain.usecase.KakaoSignUpSetAcceptsUseCase
@@ -31,7 +31,7 @@ import javax.inject.Inject
 class OnboardingViewModel @Inject constructor(
     private val preferencesUtil: PreferencesUtil,
     private val sendEmailCodeUseCase: SendEmailCodeUseCase,
-    private val sendEmailCodeCheckUseCase: EmailCodeCheckUseCase,
+    private val sendCheckEmailCodeUseCase: CheckEmailCodeUseCase,
     private val signUpUseCase: SignUpUseCase,
     private val findPasswordUseCase: FindPasswordUseCase,
     private val logInUseCase: LogInUseCase,
@@ -315,7 +315,7 @@ class OnboardingViewModel @Inject constructor(
             return@async false
         }
         with(
-            sendEmailCodeCheckUseCase(
+            sendCheckEmailCodeUseCase(
                 EmailCodeCheckModel(
                     email.value!!, code.value!!.toInt()
                 )

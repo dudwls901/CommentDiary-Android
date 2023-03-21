@@ -16,7 +16,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.domain.model.response.Diary
 import com.movingmaker.presentation.R
@@ -27,13 +29,20 @@ import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.ymFormatForLocalDate
 import com.movingmaker.presentation.util.ymdFormat
 import com.movingmaker.presentation.util.ymdToDate
+import com.movingmaker.presentation.view.main.gatherdiary.adapter.DiaryListAdapter
+import com.movingmaker.presentation.view.snackbar.CodaSnackBar
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+/*
+* diary state 필요
+* diary state actvitiy viewmodel로 분리
+* */
 @AndroidEntryPoint
 class DiaryListFragment :
     BaseFragment<FragmentGatherdiaryDiarylistBinding>(R.layout.fragment_gatherdiary_diarylist),
@@ -59,15 +68,18 @@ class DiaryListFragment :
         initViews()
     }
 
-    private fun observeDatas() {
+    private fun observeDatas() = with(gatherDiaryViewModel) {
 
-        gatherDiaryViewModel.loading.observe(viewLifecycleOwner) {
+        loading.observe(viewLifecycleOwner) {
             binding.loadingBar.isVisible = it
         }
-
-        gatherDiaryViewModel.diaryList.observe(viewLifecycleOwner) { list ->
-            binding.noDiaryTextView.isVisible = list.isEmpty()
-            diaryListAdapter.submitList(list.toMutableList())
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                diaries.collectLatest { list ->
+                    binding.noDiaryTextView.isVisible = list.isEmpty()
+                    diaryListAdapter.submitList(list.toMutableList())
+                }
+            }
         }
     }
 
@@ -191,6 +203,7 @@ class DiaryListFragment :
                         (selectionDividerField.get(numberPicker) as Paint).typeface = typeface
                         numberPicker.invalidate()
                     } catch (exception: Exception) {
+                        CodaSnackBar.make(binding.root,getString(R.string.common_error)).show()
                     }
                 }
             }

@@ -127,6 +127,9 @@
     <string name="block_notice">차단한 글은 다시 볼 수 없습니다.\n정말 차단하시겠어요?</string>
     <string name="find_password_notice">임시 비밀번호를 발급하시겠어요?</string>
     <string name="temp_diary_out_time_notice">일기 전송 시간이 지났어요</string>
+
+    <string name="common_error">오류가 발생했습니다.</string>
+
     <!--todo 당구장 기호 깨짐-->
     <string-array name="custom_weekdays">※ 일기 전송 시간이 지났어요. ※
         <item>일</item>
