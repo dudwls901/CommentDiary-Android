@@ -4,10 +4,11 @@ import com.movingmaker.data.remote.model.request.SaveCommentRequest
 import com.movingmaker.domain.model.NetworkResult
 import com.movingmaker.domain.model.response.BaseResponse
 import com.movingmaker.domain.model.response.Comment
+import com.movingmaker.domain.model.response.SavedComment
 
 interface CommentRemoteDataSource {
 
-    suspend fun saveComment(saveCommentRequest: SaveCommentRequest): NetworkResult<BaseResponse<String>>
+    suspend fun saveComment(saveCommentRequest: SaveCommentRequest): NetworkResult<BaseResponse<SavedComment>>
 
     suspend fun likeComment(commentId: Long): NetworkResult<BaseResponse<String>>
 

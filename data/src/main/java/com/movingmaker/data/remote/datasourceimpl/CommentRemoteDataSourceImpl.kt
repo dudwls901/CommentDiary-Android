@@ -7,12 +7,13 @@ import com.movingmaker.data.util.safeApiCall
 import com.movingmaker.domain.model.NetworkResult
 import com.movingmaker.domain.model.response.BaseResponse
 import com.movingmaker.domain.model.response.Comment
+import com.movingmaker.domain.model.response.SavedComment
 import javax.inject.Inject
 
 class CommentRemoteDataSourceImpl @Inject constructor(
     private val commentApiService: CommentApiService
 ) : CommentRemoteDataSource {
-    override suspend fun saveComment(saveCommentRequest: SaveCommentRequest): NetworkResult<BaseResponse<String>> =
+    override suspend fun saveComment(saveCommentRequest: SaveCommentRequest): NetworkResult<BaseResponse<SavedComment>> =
         safeApiCall { commentApiService.saveComment(saveCommentRequest) }
 
     override suspend fun likeComment(commentId: Long): NetworkResult<BaseResponse<String>> =

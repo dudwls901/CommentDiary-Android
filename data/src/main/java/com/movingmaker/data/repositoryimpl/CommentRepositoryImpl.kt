@@ -6,13 +6,14 @@ import com.movingmaker.domain.model.NetworkResult
 import com.movingmaker.domain.model.request.SaveCommentModel
 import com.movingmaker.domain.model.response.BaseResponse
 import com.movingmaker.domain.model.response.Comment
+import com.movingmaker.domain.model.response.SavedComment
 import com.movingmaker.domain.repository.CommentRepository
 import javax.inject.Inject
 
 class CommentRepositoryImpl @Inject constructor(
     private val commentRemoteDataSource: CommentRemoteDataSource
 ) : CommentRepository {
-    override suspend fun saveComment(saveCommentModel: SaveCommentModel): NetworkResult<BaseResponse<String>> =
+    override suspend fun saveComment(saveCommentModel: SaveCommentModel): NetworkResult<BaseResponse<SavedComment>> =
         commentRemoteDataSource.saveComment(saveCommentModel.toDataModel())
 
     /**

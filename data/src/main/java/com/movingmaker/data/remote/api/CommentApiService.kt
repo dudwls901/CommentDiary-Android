@@ -3,6 +3,7 @@ package com.movingmaker.data.remote.api
 import com.movingmaker.data.remote.model.request.SaveCommentRequest
 import com.movingmaker.data.remote.model.response.BaseResponse
 import com.movingmaker.data.remote.model.response.CommentResponse
+import com.movingmaker.data.remote.model.response.SavedCommentResponse
 import com.movingmaker.data.util.ALL
 import com.movingmaker.data.util.COMMENT
 import com.movingmaker.data.util.LIKE
@@ -20,7 +21,7 @@ interface CommentApiService {
     suspend fun likeComment(@Path("commentId") commentId: Long): Response<BaseResponse<String>>
 
     @POST(COMMENT)
-    suspend fun saveComment(@Body saveCommentRequest: SaveCommentRequest): Response<BaseResponse<String>>
+    suspend fun saveComment(@Body saveCommentRequest: SaveCommentRequest): Response<BaseResponse<SavedCommentResponse>>
 
     @GET(COMMENT + ALL)
     suspend fun getAllComments(): Response<BaseResponse<List<CommentResponse>>>
