@@ -6,12 +6,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ReceivedCommentResponse(
-    val commentId: Long,
+    val id: Long,
     val content: String,
     val date: String,
     val like: Boolean
 ) : RemoteResponse {
     override fun toDomainModel() = ReceivedComment(
-        commentId, content, date, like
+        id, content, date, like
     )
 }
