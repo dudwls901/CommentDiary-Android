@@ -80,13 +80,14 @@ class ReceivedDiaryViewModel @Inject constructor(
             when (this) {
                 is UiState.Success -> {
                     setMessage("코멘트가 전송되었습니다.")
+                    getReceiveDiary()
                 }
                 is UiState.Error -> {
-                    setReceivedDiary(null)
+//                    setReceivedDiary(null)
                     setMessage(message)
                 }
                 is UiState.Fail -> {
-                    setReceivedDiary(null)
+//                    setReceivedDiary(null)
                     setMessage(message)
                 }
             }
