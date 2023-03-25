@@ -10,6 +10,7 @@ import com.movingmaker.domain.model.request.KakaoSignUpModel
 import com.movingmaker.domain.model.request.LogInModel
 import com.movingmaker.domain.model.request.SignUpModel
 import com.movingmaker.domain.usecase.CheckEmailCodeUseCase
+import com.movingmaker.domain.usecase.ClearCachedDiariesUseCase
 import com.movingmaker.domain.usecase.FindPasswordUseCase
 import com.movingmaker.domain.usecase.KakaoLogInUseCase
 import com.movingmaker.domain.usecase.KakaoSignUpSetAcceptsUseCase
@@ -19,6 +20,7 @@ import com.movingmaker.domain.usecase.SignOutUseCase
 import com.movingmaker.domain.usecase.SignUpUseCase
 import com.movingmaker.presentation.base.BaseViewModel
 import com.movingmaker.presentation.util.EMAIL
+import com.movingmaker.presentation.util.EMPTY_USER
 import com.movingmaker.presentation.util.FRAGMENT_NAME
 import com.movingmaker.presentation.util.KAKAO
 import com.movingmaker.presentation.util.PreferencesUtil
@@ -37,7 +39,8 @@ class OnboardingViewModel @Inject constructor(
     private val logInUseCase: LogInUseCase,
     private val kakaoLogInUseCase: KakaoLogInUseCase,
     private val kakaoSignUpSetAcceptsUseCase: KakaoSignUpSetAcceptsUseCase,
-    private val signOutUseCase: SignOutUseCase
+    private val signOutUseCase: SignOutUseCase,
+    private val clearCachedDiariesUseCase: ClearCachedDiariesUseCase
 ) : BaseViewModel() {
 
     private var _emailCorrect = MutableLiveData<Boolean>()
@@ -289,7 +292,6 @@ class OnboardingViewModel @Inject constructor(
         var successCodeSend = false
         with(sendEmailCodeUseCase(email = email.value!!)) {
             offLoading()
-            Timber.d("result $this")
             when (this) {
                 is UiState.Success -> {
                     successCodeSend = true
@@ -322,7 +324,6 @@ class OnboardingViewModel @Inject constructor(
             )
         ) {
             offLoading()
-            Timber.d("result $this")
             when (this) {
                 is UiState.Success -> {
                     setCodeCorrect(true)
@@ -359,7 +360,6 @@ class OnboardingViewModel @Inject constructor(
             )
         ) {
             offLoading()
-            Timber.d("result $this")
             when (this) {
                 is UiState.Success -> {
                     successSignUp = true
@@ -385,7 +385,6 @@ class OnboardingViewModel @Inject constructor(
         onLoading()
         with(findPasswordUseCase(findPasswordEmail.value!!)) {
             offLoading()
-            Timber.d("result $this")
             when (this) {
                 is UiState.Success -> {
                     _successFindPassword.value = true
@@ -427,7 +426,6 @@ class OnboardingViewModel @Inject constructor(
             )
         ).apply {
             offLoading()
-            Timber.d("result $this")
             when (this) {
                 is UiState.Success -> {
                     val accessToken = this.data.accessToken
@@ -435,6 +433,7 @@ class OnboardingViewModel @Inject constructor(
                     val accessTokenExpiresIn = this.data.accessTokenExpiresIn
                     val userId = this.data.userId
                     Timber.d("login: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}")
+                    clearCachedDiaries(userId)
                     preferencesUtil
                         .insertAuth(EMAIL, accessToken, refreshToken, accessTokenExpiresIn, userId)
                     isSuccessLogin = true
@@ -451,6 +450,7 @@ class OnboardingViewModel @Inject constructor(
         isSuccessLogin
     }.await()
 
+
     suspend fun kakaoLogin(kakaoAccessToken: String) = viewModelScope.async {
         var successLogin = false
         var isNewMember = false
@@ -461,7 +461,6 @@ class OnboardingViewModel @Inject constructor(
                 )
             )
         ) {
-            Timber.d("result $this")
             when (this) {
                 is UiState.Success -> {
                     successLogin = true
@@ -473,6 +472,7 @@ class OnboardingViewModel @Inject constructor(
                     Timber.d(
                         "kakaoLogin: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}"
                     )
+                    clearCachedDiaries(userId)
                     preferencesUtil
                         .insertAuth(KAKAO, accessToken, refreshToken, accessTokenExpiresIn, userId)
                 }
@@ -486,6 +486,13 @@ class OnboardingViewModel @Inject constructor(
         }
         Pair(successLogin, isNewMember)
     }.await()
+
+    private suspend fun clearCachedDiaries(userId: Long) {
+        val beforeUserId = preferencesUtil.getUserId()
+        if (beforeUserId != EMPTY_USER && beforeUserId != userId) {
+            clearCachedDiariesUseCase()
+        }
+    }
 
     suspend fun kakaoSignUpSetAccepts() = viewModelScope.async {
         onLoading()
@@ -514,7 +521,6 @@ class OnboardingViewModel @Inject constructor(
         onLoading()
         var successSignOut = false
         with(signOutUseCase()) {
-            Timber.d("result $this")
             when (this) {
                 is UiState.Success -> {
                     successSignOut = true
