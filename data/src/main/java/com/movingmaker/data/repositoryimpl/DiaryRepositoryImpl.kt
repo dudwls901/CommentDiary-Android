@@ -55,7 +55,6 @@ class DiaryRepositoryImpl @Inject constructor(
             val remoteDiaries = diaryRemoteDataSource.getAllDiaries()
             when (remoteDiaries) {
                 is NetworkResult.Success -> {
-//                    clearCachedDiaries()
                     cachingDiaries(remoteDiaries.data.result)
                 }
                 else -> {
@@ -71,6 +70,13 @@ class DiaryRepositoryImpl @Inject constructor(
     override suspend fun getAllDiaries(): List<Diary> =
         diaryLocalDataSource.getAllDiaries().map { it.toDomainModel() }
 
+    override fun getAllDiariesFlow(): Flow<List<Diary>> =
+        diaryLocalDataSource.getAllDiariesFlow().map { diaryList ->
+            diaryList.map {
+                it.toDomainModel()
+            }
+        }
+
     override suspend fun getPeriodDiaries(date: String): List<Diary> =
         diaryLocalDataSource.getPeriodDiaries(date).map { it.toDomainModel() }
 
@@ -80,6 +86,7 @@ class DiaryRepositoryImpl @Inject constructor(
                 it.toDomainModel()
             }
         }
+
     /**
      * 임시 저장 일기 로컬에 넣기
      * */

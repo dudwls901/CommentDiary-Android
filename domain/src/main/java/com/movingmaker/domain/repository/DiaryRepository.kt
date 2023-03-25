@@ -25,6 +25,8 @@ interface DiaryRepository {
 
     suspend fun getAllDiaries(): List<Diary>
 
+    fun getAllDiariesFlow(): Flow<List<Diary>>
+
     suspend fun getPeriodDiaries(date: String): List<Diary>
 
     fun getPeriodDiariesFlow(date: String): Flow<List<Diary>>

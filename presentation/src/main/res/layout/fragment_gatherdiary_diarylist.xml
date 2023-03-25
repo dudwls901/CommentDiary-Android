@@ -45,7 +45,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:gravity="center"
-                    android:text="@string/show_all"
+                    spinnerPeriodText="@{vm.selectedMonth}"
+                    tools:text="@string/show_all"
                     android:textColor="@color/text_black" />
 
                 <ImageView

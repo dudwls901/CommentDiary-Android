@@ -5,9 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.movingmaker.domain.model.UiState
 import com.movingmaker.domain.model.request.ReportCommentModel
-import com.movingmaker.domain.model.response.Diary
-import com.movingmaker.domain.usecase.GetAllDiariesUseCase
-import com.movingmaker.domain.usecase.GetPeriodDiariesUseCase
+import com.movingmaker.domain.usecase.GetAllDiariesFlowUseCase
+import com.movingmaker.domain.usecase.GetPeriodDiariesFlowUseCase
 import com.movingmaker.domain.usecase.LikeCommentUseCase
 import com.movingmaker.domain.usecase.ReportCommentUseCase
 import com.movingmaker.domain.usecase.UpdateAllDiariesUseCase
@@ -16,16 +15,21 @@ import com.movingmaker.presentation.base.BaseViewModel
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.ymFormatForLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class GatherDiaryViewModel @Inject constructor(
-    private val getAllDiariesUseCase: GetAllDiariesUseCase,
-    private val getPeriodDiariesUseCase: GetPeriodDiariesUseCase,
+    private val getAllDiariesFlowUseCase: GetAllDiariesFlowUseCase,
+    private val getPeriodDiariesFlowUseCase: GetPeriodDiariesFlowUseCase,
     private val updateAllDiariesUseCase: UpdateAllDiariesUseCase,
     private val updatePeriodDiariesUseCase: UpdatePeriodDiariesUseCase,
     private val reportCommentUseCase: ReportCommentUseCase,
@@ -36,48 +40,51 @@ class GatherDiaryViewModel @Inject constructor(
     val handleComment: LiveData<Pair<Long, String>>
         get() = _handleComment
 
-    private var _diaries = MutableStateFlow<List<Diary>>(emptyList())
-    val diaries = _diaries.asStateFlow()
+   private var _selectedMonth = MutableStateFlow<String>("all")
+    val selectedMonth: StateFlow<String> = _selectedMonth.asStateFlow()
 
-    private var _selectedMonth = MutableLiveData<String>()
-    val selectedMonth: LiveData<String>
-        get() = _selectedMonth
-
+    @ExperimentalCoroutinesApi
+    val diaries = selectedMonth.filterNotNull().flatMapLatest { period ->
+        when(period){
+            "all" ->{
+                getAllDiariesFlowUseCase()
+            }
+            else ->{
+                getPeriodDiariesFlowUseCase(period)
+            }
+        }
+    }
     init {
         _selectedMonth.value = ymFormatForLocalDate(getCodaToday())!!
-    }
-
-    private fun setDiaries(list: List<Diary>) {
-        _diaries.value = list
-    }
-
-    fun setSelectedMonth(date: String) {
-        _selectedMonth.value = date
-    }
-
-    fun getDiaries(date: String) = viewModelScope.launch {
-        onLoading()
-        val response = if (date == "all") {
-            updateAllDiariesUseCase()
-        } else {
-            updatePeriodDiariesUseCase(date)
-        }
-        offLoading()
-        with(response) {
-            offLoading()
-            Timber.d("result $this")
-            when (this) {
-                is UiState.Success -> {
-                    setDiaries(data)
+        viewModelScope.launch {
+            selectedMonth.collectLatest { period ->
+                onLoading()
+                val response = if (period == "all") {
+                    updateAllDiariesUseCase()
+                } else {
+                    updatePeriodDiariesUseCase(period)
                 }
-                is UiState.Error -> {
-                    setMessage(message)
-                }
-                is UiState.Fail -> {
-                    setMessage(message)
+                offLoading()
+                with(response) {
+                    offLoading()
+                    when (this) {
+                        is UiState.Success -> {/*no-op*/
+                        }
+                        is UiState.Error -> {
+                            setMessage(message)
+                        }
+                        is UiState.Fail -> {
+                            setMessage(message)
+                        }
+                    }
                 }
             }
         }
+    }
+
+
+    fun setSelectedMonth(date: String) {
+        _selectedMonth.value = date
     }
 
     fun reportComment(reportCommentRequest: ReportCommentModel) =
@@ -118,5 +125,4 @@ class GatherDiaryViewModel @Inject constructor(
             }
         }
     }
-
 }

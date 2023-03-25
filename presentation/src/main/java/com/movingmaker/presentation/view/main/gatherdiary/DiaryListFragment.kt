@@ -35,6 +35,7 @@ import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -48,26 +49,28 @@ class DiaryListFragment :
     BaseFragment<FragmentGatherdiaryDiarylistBinding>(R.layout.fragment_gatherdiary_diarylist),
     OnDiarySelectListener {
 
-    private val fragmentViewModel: FragmentViewModel by activityViewModels()
-    private val gatherDiaryViewModel: GatherDiaryViewModel by activityViewModels()
-    private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
-    private lateinit var diaryListAdapter: DiaryListAdapter
-    private var searchPeriod = "all"
-
     companion object {
         private const val MAX_YEAR = 2099
         private const val MIN_YEAR = 1980
     }
 
+    private val fragmentViewModel: FragmentViewModel by activityViewModels()
+    private val gatherDiaryViewModel: GatherDiaryViewModel by activityViewModels()
+    private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
+    private lateinit var diaryListAdapter: DiaryListAdapter
+
+
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = gatherDiaryViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.GATHER_DIARY)
-        setDiaries()
         observeDatas()
         initViews()
     }
 
+    @ExperimentalCoroutinesApi
     private fun observeDatas() = with(gatherDiaryViewModel) {
 
         loading.observe(viewLifecycleOwner) {
@@ -81,10 +84,6 @@ class DiaryListFragment :
                 }
             }
         }
-    }
-
-    private fun setDiaries() {
-        gatherDiaryViewModel.getDiaries(searchPeriod)
     }
 
     private fun initViews() = with(binding) {
@@ -118,7 +117,11 @@ class DiaryListFragment :
         monthPicker.maxValue = 12
         yearPicker.minValue = MIN_YEAR
         yearPicker.maxValue = MAX_YEAR
-        val (y, m) = gatherDiaryViewModel.selectedMonth.value!!.split('.')
+        val (y, m) = if (gatherDiaryViewModel.selectedMonth.value == "all") {
+            ymFormatForLocalDate(getCodaToday())!!.split('.')
+        } else {
+            gatherDiaryViewModel.selectedMonth.value.split('.')
+        }
         yearPicker.value = y.toInt()
         monthPicker.value = m.toInt()
 
@@ -128,20 +131,13 @@ class DiaryListFragment :
         saveButton.setOnClickListener {
             // 날짜로 일기 불러오기 검색
             val date = "${yearPicker.value}.${String.format("%02d", monthPicker.value)}"
-            searchPeriod = date
-            setDiaries()
             gatherDiaryViewModel.setSelectedMonth(date)
-            binding.selectDateTextView.text =
-                "${yearPicker.value}년 ${String.format("%02d", monthPicker.value)}월"
             dialogView.dismiss()
         }
 
         allPeriodButton.setOnClickListener {
             // 전체 보기
-            searchPeriod = "all"
-            setDiaries()
-            gatherDiaryViewModel.setSelectedMonth(ymFormatForLocalDate(getCodaToday())!!)
-            binding.selectDateTextView.text = getString(R.string.show_all)
+            gatherDiaryViewModel.setSelectedMonth("all")
             dialogView.dismiss()
         }
 
@@ -203,7 +199,7 @@ class DiaryListFragment :
                         (selectionDividerField.get(numberPicker) as Paint).typeface = typeface
                         numberPicker.invalidate()
                     } catch (exception: Exception) {
-                        CodaSnackBar.make(binding.root,getString(R.string.common_error)).show()
+                        CodaSnackBar.make(binding.root, getString(R.string.common_error)).show()
                     }
                 }
             }
@@ -221,6 +217,7 @@ class DiaryListFragment :
                         numberPicker.invalidate()
                     }
                 } catch (exception: Exception) {
+                    CodaSnackBar.make(binding.root,getString(R.string.common_error)).show()
                 }
 
                 numberPicker.invalidate()

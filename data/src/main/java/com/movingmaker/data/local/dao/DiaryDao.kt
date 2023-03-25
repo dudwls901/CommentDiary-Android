@@ -17,11 +17,11 @@ interface DiaryDao {
     @Query("SELECT * FROM $DIARY_TABLE WHERE date like :date ORDER BY date DESC")
     suspend fun getPeriodDiaries(date: String): List<DiaryEntity>
 
-//    @Query("SELECT * FROM $COMMENT_DIARY_TABLE ORDER BY date DESC")
-//    fun getAllDiaries(): Flow<List<DiaryEntity>>
-
     @Query("SELECT * FROM $DIARY_TABLE ORDER BY date DESC")
     suspend fun getAllDiaries(): List<DiaryEntity>
+
+    @Query("SELECT * FROM $DIARY_TABLE ORDER BY date DESC")
+    fun getAllDiariesFlow(): Flow<List<DiaryEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTempDiary(commentDiaryEntity: DiaryEntity)

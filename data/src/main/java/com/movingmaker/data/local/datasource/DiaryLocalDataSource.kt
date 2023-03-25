@@ -8,6 +8,8 @@ interface DiaryLocalDataSource {
 
     suspend fun getAllDiaries(): List<DiaryEntity>
 
+    fun getAllDiariesFlow(): Flow<List<DiaryEntity>>
+
     suspend fun getPeriodDiaries(date: String): List<DiaryEntity>
 
     fun getPeriodDiariesFlow(date: String): Flow<List<DiaryEntity>>

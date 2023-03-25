@@ -20,6 +20,15 @@ fun View.bindCommentYetButtonState(selectedDiary: Diary) {
     }
 }
 
+@BindingAdapter("spinnerPeriodText")
+fun TextView.bindSpinnerPeriodText(period: String){
+    text = if(period == "all"){
+        context.getString(R.string.show_all)
+    } else {
+        "${period.replace(".","년")}월"
+    }
+}
+
 private fun handleCommentYetButton(view: View, isLater: Boolean) = with(view) {
     if (isLater) {
         visibility = when (this) {
