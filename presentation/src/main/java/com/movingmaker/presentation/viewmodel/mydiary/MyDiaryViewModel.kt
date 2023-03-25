@@ -4,6 +4,7 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.movingmaker.domain.model.UiState
 import com.movingmaker.domain.model.request.EditDiaryModel
@@ -14,7 +15,7 @@ import com.movingmaker.domain.usecase.DeleteDiaryUseCase
 import com.movingmaker.domain.usecase.DeleteTempDiaryUseCase
 import com.movingmaker.domain.usecase.EditDiaryUseCase
 import com.movingmaker.domain.usecase.GetPeriodCommentsUseCase
-import com.movingmaker.domain.usecase.GetPeriodDiariesUseCase
+import com.movingmaker.domain.usecase.GetPeriodDiariesFlowUseCase
 import com.movingmaker.domain.usecase.SaveDiaryUseCase
 import com.movingmaker.domain.usecase.SaveTempDiaryUseCase
 import com.movingmaker.domain.usecase.UpdatePeriodDiariesUseCase
@@ -41,6 +42,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -54,17 +57,16 @@ class MyDiaryViewModel @Inject constructor(
     private val saveDiaryUseCase: SaveDiaryUseCase,
     private val editDiaryUseCase: EditDiaryUseCase,
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
-    private val getPeriodDiariesUseCase: GetPeriodDiariesUseCase,
     private val getPeriodCommentsUseCase: GetPeriodCommentsUseCase,
     private val updatePeriodDiariesUseCase: UpdatePeriodDiariesUseCase,
     private val saveTempDiaryUseCase: SaveTempDiaryUseCase,
+    getPeriodDiariesFlowUseCase: GetPeriodDiariesFlowUseCase,
     private val deleteTempDiaryUseCase: DeleteTempDiaryUseCase
 ) : BaseViewModel() {
 
     private var userId = EMPTY_USER
 
-    private val localDiaries = MutableStateFlow<List<Diary>>(emptyList())
-
+//    private val localDiaries = MutableStateFlow<List<Diary>>(emptyList())
 //    private val monthDiaries = getPeriodDiariesFlowUseCase("")
 
     private var _aloneDiaryDates = MutableLiveData<List<CalendarDay>>()
@@ -102,9 +104,15 @@ class MyDiaryViewModel @Inject constructor(
     val selectedYearMonth: LiveData<String>
         get() = _selectedYearMonth
 
-    private var _commentList = MutableLiveData<List<Comment>>()
-    val commentList: LiveData<List<Comment>>
-        get() = _commentList
+    @ExperimentalCoroutinesApi
+    private val localDiaries = selectedYearMonth.asFlow().filterNotNull().flatMapLatest {
+        getPeriodDiariesFlowUseCase(it)
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000L),
+        emptyList()
+    )
+
 
     private var _pushDate = MutableLiveData<String>()
     val pushDate: LiveData<String>
@@ -145,9 +153,9 @@ class MyDiaryViewModel @Inject constructor(
     }
 
     private var cachedLocalDiaries: List<Diary> = emptyList()
+    @ExperimentalCoroutinesApi
     val selectedDateWithMonthDiaries = selectedDate.combine(localDiaries) { date, diaries ->
-        //date만 변경된 경우
-        //개수가 0인 경우는 캐싱할 때 clear한 경우
+        //date만 변경되었거나 일기가 없는 경우 화면 갱신 필요 x
         if (diaries == cachedLocalDiaries || diaries.isEmpty()) {
             Pair(date, null)
         } else { // date + month 모두 변경된 경우
@@ -368,11 +376,6 @@ class MyDiaryViewModel @Inject constructor(
     //for diary data
     fun setSelectedDiary(diary: Diary?) {
         _selectedDiary.value = diary
-        if (diary == null) {
-            _commentList.value = emptyList()
-        } else {
-            _commentList.value = diary.commentList
-        }
     }
 
     fun setSelectedDate(date: String?) {
@@ -393,10 +396,6 @@ class MyDiaryViewModel @Inject constructor(
 
     fun setUserId(id: Long) {
         userId = id
-    }
-
-    private suspend fun setLocalPeriodDiaries(date: String) {
-        localDiaries.value = getPeriodDiariesUseCase(date)
     }
 
     fun selectDiaryType(view: View) {
@@ -480,7 +479,7 @@ class MyDiaryViewModel @Inject constructor(
             offLoading()
             when (this) {
                 is UiState.Success -> {/*no-op*/
-                    setLocalPeriodDiaries(date)
+                    Timber.e("영진 remote 일기 ${this.data}")
                 }
                 is UiState.Error -> {
                     setMessage(message)
@@ -553,9 +552,6 @@ class MyDiaryViewModel @Inject constructor(
                         deliveryYN = request.deliveryYN,
                         commentList = emptyList<Comment>().toMutableList()
                     )
-                    request.date.ymFormatForString()?.let {
-                        setLocalPeriodDiaries(it)
-                    }
                     setSelectedDiary(newDiary)
                 }
                 is UiState.Error -> {
@@ -583,9 +579,6 @@ class MyDiaryViewModel @Inject constructor(
                             deliveryYN = request.deliveryYN,
                             commentList = diary.commentList
                         )
-                        diary.date.ymFormatForString()?.let {
-                            setLocalPeriodDiaries(it)
-                        }
                         setSelectedDiary(newDiary)
                     }
                     is UiState.Error -> {
@@ -606,9 +599,6 @@ class MyDiaryViewModel @Inject constructor(
             with(deleteDiaryUseCase(diary.id, date)) {
                 when (this) {
                     is UiState.Success -> {
-                        diary.date.ymFormatForString()?.let {
-                            setLocalPeriodDiaries(it)
-                        }
                         setSelectedDiary(null)
                     }
                     is UiState.Error -> {
@@ -663,9 +653,6 @@ class MyDiaryViewModel @Inject constructor(
             saveTempDiaryUseCase(
                 newDiary
             )
-            selectedDate.value!!.ymFormatForString()?.let {
-                setLocalPeriodDiaries(it)
-            }
         }
     }
 
@@ -678,9 +665,6 @@ class MyDiaryViewModel @Inject constructor(
                     1 -> {
                         if (diaryState.value is DiaryState.CommentDiary.TempDiaryOutTime) {
                             setMessage("일기가 삭제되었습니다.")
-                        }
-                        diary.date.ymFormatForString()?.let {
-                            setLocalPeriodDiaries(it)
                         }
                         setSelectedDiary(null)
                     }
@@ -702,7 +686,6 @@ class MyDiaryViewModel @Inject constructor(
                 offLoading()
                 when (this) {
                     is UiState.Success -> {
-                        setLocalPeriodDiaries(date)
                         setSelectedDiary(null)
                         setMessage("일기가 삭제되었습니다.")
                         isSuccess = true

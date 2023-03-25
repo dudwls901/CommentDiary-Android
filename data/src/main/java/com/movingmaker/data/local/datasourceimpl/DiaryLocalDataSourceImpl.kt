@@ -14,11 +14,11 @@ class DiaryLocalDataSourceImpl @Inject constructor(
     override suspend fun getAllDiaries(): List<DiaryEntity> =
         diaryDao.getAllDiaries()
 
-    override suspend fun getPeriodDiaries(date: String): List<DiaryEntity> =
-        diaryDao.getPeriodDiaries(date)
+    override suspend fun getPeriodDiaries(date: String): List<DiaryEntity>  =
+        diaryDao.getPeriodDiaries("%$date%")
 
     override fun getPeriodDiariesFlow(date: String): Flow<List<DiaryEntity>> =
-        diaryDao.getPeriodDiariesFlow(date)
+        diaryDao.getPeriodDiariesFlow("%$date%")
 
     override suspend fun insertTempDiary(tempDiary: DiaryEntity) {
         diaryDao.insertTempDiary(tempDiary)

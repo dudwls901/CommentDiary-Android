@@ -37,6 +37,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -56,6 +57,7 @@ class CalendarWithDiaryFragment :
     @Inject
     lateinit var preferencesUtil: PreferencesUtil
 
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = myDiaryViewModel
@@ -67,26 +69,9 @@ class CalendarWithDiaryFragment :
     }
 
 
+    @ExperimentalCoroutinesApi
     private fun observeData() = with(myDiaryViewModel) {
-//      내가 쓴 코멘트 확인하기
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                selectedDateWithMonthDiaries.collectLatest { (date, _) ->
-                    when (date) {
-                        null -> {
-                            setSelectedDiary(null)
-                            getDayWrittenComment(null)
-                        }
-                        else -> {
-                            binding.materialCalendarView.selectedDate = toCalenderDay(date)
-                            myDiaryViewModel.setSelectedDiary(getDiaryInMonth(date))
-                            //오늘 내가 코멘트를 받은 경우 어제 일기를 선택했을 때 오늘 내가 코멘트를 쓴 상태인지 확인 -> Day+1
-                            getDayWrittenComment(ymdFormat(ymdToDate(date)!!.plusDays(1)))
-                        }
-                    }
-                }
-            }
-        }
+
         /**
          * 코멘트 받아서 푸시로 들어온 경우
          * 1. selectedDate 해당 일기 날짜로 설정
@@ -151,49 +136,68 @@ class CalendarWithDiaryFragment :
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myDiaryViewModel.diaryState.collectLatest { diaryState ->
-                    Timber.e("여기 diaryState: ${diaryState.javaClass.simpleName} selectedDate: ${myDiaryViewModel.selectedDate.value} haveDayMyWrittenComment: ${myDiaryViewModel.haveDayWrittenComment.first()} selectedDiary: ${myDiaryViewModel.selectedDiary.value}")
-                    when (diaryState) {
-                        DiaryState.Init -> {/*no-op*/
+
+                launch {
+                    selectedDateWithMonthDiaries.collectLatest { (date, _) ->
+                        when (date) {
+                            null -> {
+                                setSelectedDiary(null)
+                                getDayWrittenComment(null)
+                            }
+                            else -> {
+                                binding.materialCalendarView.selectedDate = toCalenderDay(date)
+                                myDiaryViewModel.setSelectedDiary(getDiaryInMonth(date))
+                                //오늘 내가 코멘트를 받은 경우 어제 일기를 선택했을 때 오늘 내가 코멘트를 쓴 상태인지 확인 -> Day+1
+                                getDayWrittenComment(ymdFormat(ymdToDate(date)!!.plusDays(1)))
+                            }
                         }
-                        DiaryState.NoneSelectedDiary -> {
-                            setNoneSelectedDiaryUI()
-                        }
-                        DiaryState.SelectedFutureDiary -> {
-                            setFutureDiaryDateUI()
-                        }
-                        is DiaryState.AloneDiary -> {
-                            setAloneDiaryDateUI()
-                        }
-                        is DiaryState.EmptyDiary -> {
-                            setEmptyDiaryDateUI()
-                        }
-                        is DiaryState.CommentDiary -> {
-                            setCommentDiaryDateUI()
-                            when (diaryState) {
-                                is DiaryState.CommentDiary.HaveNotCommentInTime -> {
-                                    setHaveNotCommentInTimeUI()
-                                }
-                                is DiaryState.CommentDiary.HaveCommentInTimeCanOpen -> {
-                                    setHaveCommentInTimeCanOpenUI()
-                                }
-                                is DiaryState.CommentDiary.HaveCommentInTimeCannotOpen -> {
-                                    setHaveCommentInTimeCannotOpenUI()
-                                }
-                                is DiaryState.CommentDiary.HaveNotCommentOutTime -> {
-                                    setHaveNotCommentOutTimeUI()
-                                }
-                                is DiaryState.CommentDiary.HaveCommentOutTimeCanOpen -> {
-                                    setHaveCommentOutTimeCanOpenUI()
-                                }
-                                is DiaryState.CommentDiary.HaveCommentOutTimeCannotOpen -> {
-                                    setHaveCommentOutTimeCannotOpenUI()
-                                }
-                                is DiaryState.CommentDiary.TempDiaryInTime -> {
-                                    setTempDiaryInTimeUI()
-                                }
-                                is DiaryState.CommentDiary.TempDiaryOutTime -> {
-                                    setTempDiaryOutTimeUI()
+                    }
+                }
+                launch {
+                    myDiaryViewModel.diaryState.collectLatest { diaryState ->
+                        Timber.e("여기 diaryState: ${diaryState.javaClass.simpleName} selectedDate: ${myDiaryViewModel.selectedDate.value} haveDayMyWrittenComment: ${myDiaryViewModel.haveDayWrittenComment.first()} selectedDiary: ${myDiaryViewModel.selectedDiary.value}")
+                        when (diaryState) {
+                            DiaryState.Init -> {/*no-op*/
+                            }
+                            DiaryState.NoneSelectedDiary -> {
+                                setNoneSelectedDiaryUI()
+                            }
+                            DiaryState.SelectedFutureDiary -> {
+                                setFutureDiaryDateUI()
+                            }
+                            is DiaryState.AloneDiary -> {
+                                setAloneDiaryDateUI()
+                            }
+                            is DiaryState.EmptyDiary -> {
+                                setEmptyDiaryDateUI()
+                            }
+                            is DiaryState.CommentDiary -> {
+                                setCommentDiaryDateUI()
+                                when (diaryState) {
+                                    is DiaryState.CommentDiary.HaveNotCommentInTime -> {
+                                        setHaveNotCommentInTimeUI()
+                                    }
+                                    is DiaryState.CommentDiary.HaveCommentInTimeCanOpen -> {
+                                        setHaveCommentInTimeCanOpenUI()
+                                    }
+                                    is DiaryState.CommentDiary.HaveCommentInTimeCannotOpen -> {
+                                        setHaveCommentInTimeCannotOpenUI()
+                                    }
+                                    is DiaryState.CommentDiary.HaveNotCommentOutTime -> {
+                                        setHaveNotCommentOutTimeUI()
+                                    }
+                                    is DiaryState.CommentDiary.HaveCommentOutTimeCanOpen -> {
+                                        setHaveCommentOutTimeCanOpenUI()
+                                    }
+                                    is DiaryState.CommentDiary.HaveCommentOutTimeCannotOpen -> {
+                                        setHaveCommentOutTimeCannotOpenUI()
+                                    }
+                                    is DiaryState.CommentDiary.TempDiaryInTime -> {
+                                        setTempDiaryInTimeUI()
+                                    }
+                                    is DiaryState.CommentDiary.TempDiaryOutTime -> {
+                                        setTempDiaryOutTimeUI()
+                                    }
                                 }
                             }
                         }

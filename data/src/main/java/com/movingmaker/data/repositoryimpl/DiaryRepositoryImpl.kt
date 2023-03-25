@@ -74,14 +74,12 @@ class DiaryRepositoryImpl @Inject constructor(
     override suspend fun getPeriodDiaries(date: String): List<Diary> =
         diaryLocalDataSource.getPeriodDiaries(date).map { it.toDomainModel() }
 
-    override fun getPeriodDiariesFlow(date: String): Flow<List<Diary>> {
-        return diaryLocalDataSource.getPeriodDiariesFlow(date).map { diaryList ->
+    override fun getPeriodDiariesFlow(date: String): Flow<List<Diary>> =
+        diaryLocalDataSource.getPeriodDiariesFlow(date).map { diaryList ->
             diaryList.map {
                 it.toDomainModel()
             }
         }
-    }
-
     /**
      * 임시 저장 일기 로컬에 넣기
      * */
@@ -94,9 +92,9 @@ class DiaryRepositoryImpl @Inject constructor(
         diaryLocalDataSource.deleteDiary(commentDiary)
 
     /**
-     * 로컬 일기 모두 삭제하기
+     * 캐시된 일기 모두 삭제하기
      * */
-    private suspend fun clearCachedDiaries() {
+    override suspend fun clearCachedDiaries() {
         diaryLocalDataSource.clearCachedDiaries()
     }
 
@@ -104,6 +102,7 @@ class DiaryRepositoryImpl @Inject constructor(
      * 리모트에서 받아온 일기 로컬에 넣기 (캐싱)
      * */
     private suspend fun cachingDiaries(commentDiaries: List<Diary>) {
+        clearCachedDiaries()
         diaryLocalDataSource.cachingDiaries(*commentDiaries.map { it.toEntity() }
             .toTypedArray())
     }

@@ -10,4 +10,7 @@ class GetPeriodDiariesFlowUseCase @Inject constructor(
 ) {
     operator fun invoke(date: String): Flow<List<Diary>> =
         diaryRepository.getPeriodDiariesFlow(date)
+//        flow {
+//            emit(diaryRepository.getPeriodDiaries(date))
+//        }
 }

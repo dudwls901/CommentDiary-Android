@@ -35,4 +35,6 @@ interface DiaryRepository {
 
 //    suspend fun cachingCommentDiaries(commentDiaries: List<Diary>)
 
+    suspend fun clearCachedDiaries()
+
 }
