@@ -109,7 +109,6 @@ class DiaryRepositoryImpl @Inject constructor(
      * 리모트에서 받아온 일기 로컬에 넣기 (캐싱)
      * */
     private suspend fun cachingDiaries(commentDiaries: List<Diary>) {
-        clearCachedDiaries()
         diaryLocalDataSource.cachingDiaries(*commentDiaries.map { it.toEntity() }
             .toTypedArray())
     }
