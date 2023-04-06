@@ -4,6 +4,8 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+//TODO Refactoring
+
 //sealed class CodaDate{
 //    data class RealDate(val date: LocalDate): CodaDate()
 //    data class CalendarDate(val date: CalendarDay): CodaDate()

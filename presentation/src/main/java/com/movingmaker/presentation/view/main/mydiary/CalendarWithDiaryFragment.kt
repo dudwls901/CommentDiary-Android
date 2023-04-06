@@ -52,7 +52,6 @@ class CalendarWithDiaryFragment :
 
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private val fragmentViewModel: FragmentViewModel by activityViewModels()
-    private var defenceFirstMonthMoveListener = true
 
     @Inject
     lateinit var preferencesUtil: PreferencesUtil
@@ -63,7 +62,6 @@ class CalendarWithDiaryFragment :
         binding.vm = myDiaryViewModel
         myDiaryViewModel.setUserId(preferencesUtil.getUserId())
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.CALENDAR_WITH_DIARY)
-        defenceFirstMonthMoveListener = true
         initViews()
         observeData()
     }
@@ -114,23 +112,17 @@ class CalendarWithDiaryFragment :
         }
 
         /*
-        * todo 2번 로직 변경하기
         * 1. 외부에서 달력 이둥
         * 2. 화면 재진입 포커싱 유지 / 달력 이동 포커싱 해제
         * 3. Month Diary 가져오기
         * 4. Month Diary 가져온 후 선택한 날짜에 대한 하단 일기 프리뷰 상태 변경
         * */
         selectedYearMonth.observe(viewLifecycleOwner) {
-            Timber.e("?? $it $defenceFirstMonthMoveListener")
             //화면 재진입시 포커싱 해제 대응
-            if (!defenceFirstMonthMoveListener) {
-                myDiaryViewModel.setSelectedDate(null)
-                binding.materialCalendarView.selectedDate = null
-                viewLifecycleOwner.lifecycleScope.launch {
-                    myDiaryViewModel.updatePeriodDiaries(it)
-                }
-            }
-            defenceFirstMonthMoveListener = false
+            detachMonthChangeListener()
+            binding.materialCalendarView.currentDate = toCalenderDay(it)
+            myDiaryViewModel.updatePeriodDiaries(it)
+            attachMonthChangeListener()
         }
 
 
@@ -141,6 +133,7 @@ class CalendarWithDiaryFragment :
                     selectedDateWithMonthDiaries.collectLatest { (date, _) ->
                         when (date) {
                             null -> {
+                                binding.materialCalendarView.selectedDate = null
                                 setSelectedDiary(null)
                                 getDayWrittenComment(null)
                             }
@@ -260,13 +253,30 @@ class CalendarWithDiaryFragment :
         }
     }
 
-    private fun setMonthMoveListener() = with(binding) {
-
-        materialCalendarView.setOnMonthChangedListener { _, date ->
-            myDiaryViewModel.setSelectedYearMonth(ymFormatForLocalDate(date))
+    /**
+    * 월 변경시 동작
+    * */
+    private fun attachMonthChangeListener()  = with(myDiaryViewModel){
+        binding.materialCalendarView.setOnMonthChangedListener { _, date ->
+            ymFormatForLocalDate(date)?.let { dateYM ->
+                updatePeriodDiaries(dateYM)
+                setSelectedYearMonth(dateYM)
+            }
+            setSelectedDate(null)
         }
+    }
 
-        // -> monthChangeListener
+    /**
+    * 화면 재진입하여 월 변경되는 경우 포커싱 해제 방지
+    * */
+    private fun detachMonthChangeListener() {
+        binding.materialCalendarView.setOnMonthChangedListener { _, _ -> /*no-op*/ }
+    }
+
+    /**
+    * trigger monthChangeListener
+    * */
+    private fun setMonthMoveListener() = with(binding) {
         leftArrowButton.setOnClickListener {
             val beforeDate = materialCalendarView.currentDate
             val nextDate = CalendarDay.from(beforeDate.year, beforeDate.month - 1, beforeDate.day)
