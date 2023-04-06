@@ -625,7 +625,8 @@ class MyDiaryViewModel @Inject constructor(
                 )
             )
         } else {
-//            임시 저장 일기 삭제 후 리모트에 저장 -> 리모트 일기 로컬에 캐시
+            //임시 저장 일기 삭제 후 리모트에 저장 -> 리모트 일기 로컬에 캐시
+            //todo state Temp인 경우에만 deleteTemp
             deleteTempCommentDiary()
             saveDiary(
                 SaveDiaryModel(
