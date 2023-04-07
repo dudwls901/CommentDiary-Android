@@ -12,7 +12,7 @@ class MyCommentListAdapter : ListAdapter<Comment, MyCommentListAdapter.ItemViewH
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): MyCommentListAdapter.ItemViewHolder = ItemViewHolder(
+    ): ItemViewHolder = ItemViewHolder(
         RvItemMypageCommentBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -20,7 +20,7 @@ class MyCommentListAdapter : ListAdapter<Comment, MyCommentListAdapter.ItemViewH
         )
     )
 
-    override fun onBindViewHolder(holder: MyCommentListAdapter.ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bind(currentList[position])
 
     }
@@ -33,7 +33,7 @@ class MyCommentListAdapter : ListAdapter<Comment, MyCommentListAdapter.ItemViewH
         return currentList[position].id
     }
 
-    inner class ItemViewHolder(private val binding: RvItemMypageCommentBinding) :
+    class ItemViewHolder(private val binding: RvItemMypageCommentBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(comment: Comment) {
             binding.comment = comment

@@ -9,7 +9,7 @@ import com.movingmaker.domain.model.response.Diary
 import com.movingmaker.presentation.databinding.RvItemGatherdiaryDiaryBinding
 import com.movingmaker.presentation.view.main.gatherdiary.OnDiarySelectListener
 
-class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener) :
+class DiaryListAdapter(private val onDiarySelectListener: OnDiarySelectListener) :
     ListAdapter<Diary, DiaryListAdapter.ItemViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -19,7 +19,8 @@ class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener) :
             LayoutInflater.from(parent.context),
             parent,
             false
-        )
+        ),
+        onDiarySelectListener
     )
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
@@ -35,7 +36,10 @@ class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener) :
         return currentList[position].id
     }
 
-    inner class ItemViewHolder(private val binding: RvItemGatherdiaryDiaryBinding) :
+     class ItemViewHolder(
+         private val binding: RvItemGatherdiaryDiaryBinding,
+         private val onDiarySelectListener: OnDiarySelectListener
+         ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(diary: Diary) {
             binding.diary = diary
@@ -54,9 +58,6 @@ class DiaryListAdapter(val onDiarySelectListener: OnDiarySelectListener) :
             override fun areContentsTheSame(oldItem: Diary, newItem: Diary): Boolean {
                 return oldItem == newItem
             }
-
-
         }
     }
-
 }
