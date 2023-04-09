@@ -16,9 +16,6 @@
         <action
             android:id="@+id/action_calendarWithDiaryFragment_to_commentDiaryDetailFragment"
             app:destination="@id/commentDiaryDetailFragment" />
-        <action
-            android:id="@+id/action_calendarWithDiaryFragment_to_aloneDiaryDetailFragment"
-            app:destination="@id/aloneDiaryDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/receivedDiaryFragment"
@@ -63,13 +60,8 @@
         <action
             android:id="@+id/action_writeDiaryFragment_to_commentDiaryDetailFragment"
             app:destination="@id/commentDiaryDetailFragment"
-            app:popUpTo="@id/writeDiaryFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_writeDiaryFragment_to_aloneDiaryDetailFragment"
-            app:destination="@id/aloneDiaryDetailFragment"
-            app:popUpTo="@id/writeDiaryFragment"
-            app:popUpToInclusive="true" />
+            app:popUpTo="@id/calendarWithDiaryFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/commentDiaryDetailFragment"
@@ -120,13 +112,5 @@
         <action
             android:id="@+id/action_changePasswordFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/aloneDiaryDetailFragment"
-        android:name="com.movingmaker.presentation.view.main.mydiary.AloneDiaryDetailFragment"
-        android:label="AloneDiaryDetailFragment">
-        <action
-            android:id="@+id/action_aloneDiaryDetailFragment_to_writeDiaryFragment"
-            app:destination="@id/writeDiaryFragment" />
     </fragment>
 </navigation>

@@ -11,9 +11,10 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseActivity
 import com.movingmaker.presentation.databinding.ActivitySplashBinding
-import com.movingmaker.presentation.util.DateConverter
 import com.movingmaker.presentation.util.EMPTY_TOKEN
 import com.movingmaker.presentation.util.PreferencesUtil
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.ymdFormat
 import com.movingmaker.presentation.view.main.MainActivity
 import com.movingmaker.presentation.view.snackbar.CodaSnackBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,8 +46,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
                 val value = intent!!.extras!!.get(key)
                 if (value.toString().contains("코멘트가 도착하였습니다.")) {
                     Timber.d("$value Key: $key           Value: $value")
-                    val yesterday = DateConverter.getCodaToday().minusDays(1)
-                    pushDate = DateConverter.ymdFormat(yesterday)
+                    val yesterday = getCodaToday().minusDays(1)
+                    pushDate = ymdFormat(yesterday)
                 }
             }
         }

@@ -165,6 +165,7 @@
                         android:layout_height="30dp"
                         android:layout_marginTop="14dp"
                         android:layout_marginEnd="16dp"
+                        android:gravity="center"
                         android:alpha="@{vm.commentTextCount >= 20 ? 1.0f : 0.4f}"
                         android:background="@drawable/background_pure_green_radius_15"
                         android:enabled="@{vm.commentTextCount >= 20 &amp;&amp; vm.receivedDiary.myComment.isEmpty() ? true : false}"

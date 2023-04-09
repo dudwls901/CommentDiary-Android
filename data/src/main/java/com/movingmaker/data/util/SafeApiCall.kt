@@ -18,6 +18,7 @@ suspend fun <R, T> safeApiCall(callFunction: suspend () -> Response<BaseResponse
         if (response.isSuccessful) {
             NetworkResult.Success(response.body()!!.toDomainModel())
         } else {
+            //http status
             if (response.code() in 400 until 500) {
                 NetworkResult.Fail(getErrorMessage(response.errorBody()))
             } else {
@@ -34,6 +35,9 @@ suspend fun <R, T> safeApiCall(callFunction: suspend () -> Response<BaseResponse
     }
 }
 
+/**
+* json response 안의 code 혹은 message 접근
+* */
 private fun getErrorMessage(responseBody: ResponseBody?): String {
     return try {
         val json = Json {

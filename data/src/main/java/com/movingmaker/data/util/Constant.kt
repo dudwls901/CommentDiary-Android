@@ -3,7 +3,7 @@ package com.movingmaker.data.util
 
 // https://comment-diary.shop/api/v1/ 운영 서버
 // http://jwyang.shop:8080/api/v1/ 테스트 서버
-const val BASE_URL = "https://comment-diary.shop/api/v1/"
+const val BASE_URL = "https://comment-diary.store/api/v1/"
 
 //    const val BASE_URL = "http://jwyang.shop:8080/api/v1/"
 const val SEND_EMAIL_CODE = "email"
@@ -14,7 +14,6 @@ const val AUTH_SIGNUP = "/oauth-sign-up"
 const val LOG_IN = "members/login"
 const val AUTH_LOG_IN = "members/auth-login"
 const val FIND_PW = "email/password"
-const val MONTH_DIARY = "diary/main"
 const val REISSUE = "members/reissue"
 const val LOG_OUT = "/logout"
 const val DIARY = "diary"
@@ -26,5 +25,5 @@ const val COMMENT = "comment"
 const val LIKE = "like"
 const val PUSH = "/push"
 
-const val MESSAGE_KEY = "message"
-const val ERROR_KEY = "error"
+const val DB_NAME = "diary_database"
+const val DIARY_TABLE = "diary_table"

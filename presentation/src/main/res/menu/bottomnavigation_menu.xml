@@ -4,17 +4,21 @@
     <item
         android:id="@+id/calendarWithDiaryFragment"
         android:icon="@drawable/bottom_ic_mydiary"
+        android:menuCategory="secondary"
         android:title="@string/bottomnavigation_title_mydiary" />
     <item
         android:id="@+id/receivedDiaryFragment"
+        android:menuCategory="secondary"
         android:icon="@drawable/bottom_ic_received"
         android:title="@string/bottomnavigation_title_receiveddiary" />
     <item
         android:id="@+id/diaryListFragment"
+        android:menuCategory="secondary"
         android:icon="@drawable/bottom_ic_gather"
         android:title="@string/bottomnavigation_title_alldiary" />
     <item
         android:id="@+id/myPageFragment"
+        android:menuCategory="secondary"
         android:icon="@drawable/bottom_ic_mypage"
         android:title="@string/bottomnavigation_title_my" />
 </menu>

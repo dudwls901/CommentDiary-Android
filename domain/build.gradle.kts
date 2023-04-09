@@ -2,6 +2,7 @@ plugins {
     id("java-library")
     id("org.jetbrains.kotlin.jvm")
     id("kotlin-kapt")
+    id("kotlinx-serialization")
 }
 
 java {
@@ -15,4 +16,7 @@ dependencies {
 
     //coroutines
     implementation(Coroutines.COROUTINES_CORE)
+
+    //Serialization
+    implementation(Serialization.SERIALIZATION)
 }

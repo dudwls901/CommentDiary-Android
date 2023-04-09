@@ -3,13 +3,13 @@ package com.movingmaker.domain.usecase
 import com.movingmaker.domain.model.UiState
 import com.movingmaker.domain.model.mapUiState
 import com.movingmaker.domain.model.toUiState
-import com.movingmaker.domain.repository.GatherDiaryRepository
+import com.movingmaker.domain.repository.CommentRepository
 import javax.inject.Inject
 
 class LikeCommentUseCase @Inject constructor(
-    private val gatherDiaryRepository: GatherDiaryRepository,
+    private val commentRepository: CommentRepository,
 ) {
     suspend operator fun invoke(commentId: Long): UiState<String> =
-        gatherDiaryRepository.likeComment(commentId).toUiState().mapUiState { it.result }
+        commentRepository.likeComment(commentId).toUiState().mapUiState { it.result }
 
 }

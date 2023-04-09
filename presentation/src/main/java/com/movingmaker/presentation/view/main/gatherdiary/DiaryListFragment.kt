@@ -16,60 +16,88 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.movingmaker.domain.model.response.Diary
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentGatherdiaryDiarylistBinding
-import com.movingmaker.presentation.util.DateConverter
 import com.movingmaker.presentation.util.FRAGMENT_NAME
+import com.movingmaker.presentation.util.PreferencesUtil
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.ymFormatForLocalDate
+import com.movingmaker.presentation.util.ymdFormat
+import com.movingmaker.presentation.util.ymdToDate
+import com.movingmaker.presentation.view.main.gatherdiary.adapter.DiaryListAdapter
+import com.movingmaker.presentation.view.snackbar.CodaSnackBar
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.gatherdiary.GatherDiaryViewModel
 import com.movingmaker.presentation.viewmodel.mydiary.MyDiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import javax.inject.Inject
 
+/*
+* diary state 필요
+* diary state actvitiy viewmodel로 분리
+* */
 @AndroidEntryPoint
 class DiaryListFragment :
     BaseFragment<FragmentGatherdiaryDiarylistBinding>(R.layout.fragment_gatherdiary_diarylist),
     OnDiarySelectListener {
-
-    private val fragmentViewModel: FragmentViewModel by activityViewModels()
-    private val gatherDiaryViewModel: GatherDiaryViewModel by activityViewModels()
-    private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
-    private lateinit var diaryListAdapter: DiaryListAdapter
-    private var searchPeriod = "all"
 
     companion object {
         private const val MAX_YEAR = 2099
         private const val MIN_YEAR = 1980
     }
 
+    private val fragmentViewModel: FragmentViewModel by activityViewModels()
+    private val gatherDiaryViewModel: GatherDiaryViewModel by activityViewModels()
+    private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
+    private lateinit var diaryListAdapter: DiaryListAdapter
+
+    @Inject
+    lateinit var preferencesUtil: PreferencesUtil
+    private val userId by lazy {
+        preferencesUtil.getUserId()
+    }
+
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = gatherDiaryViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         fragmentViewModel.setCurrentFragment(FRAGMENT_NAME.GATHER_DIARY)
-        setDiaries()
         observeDatas()
         initViews()
     }
 
-    private fun observeDatas() {
+    @ExperimentalCoroutinesApi
+    private fun observeDatas() = with(gatherDiaryViewModel) {
 
-        gatherDiaryViewModel.loading.observe(viewLifecycleOwner) {
+        loading.observe(viewLifecycleOwner) {
             binding.loadingBar.isVisible = it
         }
 
-        gatherDiaryViewModel.diaryList.observe(viewLifecycleOwner) { list ->
-            binding.noDiaryTextView.isVisible = list.isEmpty()
-            diaryListAdapter.submitList(list.toMutableList())
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    diaries.collectLatest { list ->
+                        binding.noDiaryTextView.isVisible = list.isEmpty()
+                        diaryListAdapter.submitList(list.toMutableList())
+                    }
+                }
+                launch {
+                    selectedMonth.collectLatest {period ->
+                        gatherDiaryViewModel.updateDiaries(period)
+                    }
+                }
+            }
         }
-    }
-
-    private fun setDiaries() {
-        gatherDiaryViewModel.getDiaries(searchPeriod)
     }
 
     private fun initViews() = with(binding) {
@@ -103,7 +131,11 @@ class DiaryListFragment :
         monthPicker.maxValue = 12
         yearPicker.minValue = MIN_YEAR
         yearPicker.maxValue = MAX_YEAR
-        val (y, m) = gatherDiaryViewModel.selectedMonth.value!!.split('.')
+        val (y, m) = if (gatherDiaryViewModel.selectedMonth.value == "all") {
+            ymFormatForLocalDate(getCodaToday())!!.split('.')
+        } else {
+            gatherDiaryViewModel.selectedMonth.value.split('.')
+        }
         yearPicker.value = y.toInt()
         monthPicker.value = m.toInt()
 
@@ -113,39 +145,32 @@ class DiaryListFragment :
         saveButton.setOnClickListener {
             // 날짜로 일기 불러오기 검색
             val date = "${yearPicker.value}.${String.format("%02d", monthPicker.value)}"
-            searchPeriod = date
-            setDiaries()
             gatherDiaryViewModel.setSelectedMonth(date)
-            binding.selectDateTextView.text =
-                "${yearPicker.value}년 ${String.format("%02d", monthPicker.value)}월"
             dialogView.dismiss()
         }
 
         allPeriodButton.setOnClickListener {
             // 전체 보기
-            searchPeriod = "all"
-            setDiaries()
-            gatherDiaryViewModel.setSelectedMonth(DateConverter.ymFormat(DateConverter.getCodaToday())!!)
-            binding.selectDateTextView.text = getString(R.string.show_all)
+            gatherDiaryViewModel.setSelectedMonth("all")
             dialogView.dismiss()
         }
 
     }
 
     override fun onDiarySelectListener(diary: Diary) {
-        Timber.d("onDiarySelectListener: $diary")
         myDiaryViewModel.setSelectedDiary(diary)
         //혼자 쓰는 일기, 코멘트 일기 분기 처리
 
-        if (diary.deliveryYN == 'N') {
-//            myDiaryViewModel.setSaveOrEdit("save")
+        if (diary.deliveryYN == 'N' || diary.userId == userId) {
             val action = DiaryListFragmentDirections.actionDiaryListFragmentToWriteDiaryFragment()
             findNavController().navigate(action)
         } else {
-            val nextDate = DateConverter.ymdToDate(diary.date)
-            val nextDateToString = nextDate.plusDays(1).toString().replace('-', '.')
-            lifecycleScope.launch {
-                myDiaryViewModel.setResponseGetDayComment(nextDateToString)
+            ymdToDate(diary.date)?.let { date ->
+                ymdFormat(date.plusDays(1))?.let { nextDate ->
+                    lifecycleScope.launch {
+                        myDiaryViewModel.getDayWrittenComment(nextDate)
+                    }
+                }
             }
             val action =
                 DiaryListFragmentDirections.actionDiaryListFragmentToCommentDiaryDetailFragment()
@@ -186,6 +211,7 @@ class DiaryListFragment :
                         (selectionDividerField.get(numberPicker) as Paint).typeface = typeface
                         numberPicker.invalidate()
                     } catch (exception: Exception) {
+                        CodaSnackBar.make(binding.root, getString(R.string.common_error)).show()
                     }
                 }
             }
@@ -203,6 +229,7 @@ class DiaryListFragment :
                         numberPicker.invalidate()
                     }
                 } catch (exception: Exception) {
+                    CodaSnackBar.make(binding.root, getString(R.string.common_error)).show()
                 }
 
                 numberPicker.invalidate()

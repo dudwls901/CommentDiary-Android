@@ -1,6 +1,5 @@
 package com.movingmaker.data.remote.model.request
 
-import com.movingmaker.data.remote.model.RemoteModel
 import com.movingmaker.domain.model.request.EditDiaryModel
 import kotlinx.serialization.Serializable
 
@@ -8,13 +7,11 @@ import kotlinx.serialization.Serializable
 data class EditDiaryRequest(
     val title: String,
     val content: String,
-    val tempYn: Char,
-) : RemoteModel {
-    override fun toDomainModel() = EditDiaryModel(
-        title, content, tempYn
-    )
-}
+    val deliveryYn: Char,
+    //tempYn api에서 제거될 예정
+    val tempYn: Char
+)
 
 fun EditDiaryModel.toDataModel() = EditDiaryRequest(
-    title, content, tempYN
+    title, content, deliveryYN, tempYN
 )

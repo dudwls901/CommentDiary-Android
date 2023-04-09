@@ -42,6 +42,7 @@ object Versions {
     const val HILT = "2.42"
     const val ROOM = "2.4.3"
     const val NAVIGATION = "2.5.2"
+    const val RECYCLERVIEW = "1.2.1"
 
     //legacy
     const val LEGACY_SUPPORT_V4 = "1.0.0"

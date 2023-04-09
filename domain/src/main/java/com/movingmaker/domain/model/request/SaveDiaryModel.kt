@@ -5,5 +5,5 @@ data class SaveDiaryModel(
     val content: String,
     val date: String,
     val deliveryYN: Char,
-    val tempYN: Char,
+    val tempYN: Char = 'N',
 )

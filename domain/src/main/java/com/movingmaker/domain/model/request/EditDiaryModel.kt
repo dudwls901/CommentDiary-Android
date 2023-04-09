@@ -3,5 +3,6 @@ package com.movingmaker.domain.model.request
 data class EditDiaryModel(
     val title: String,
     val content: String,
-    val tempYN: Char,
+    val deliveryYN: Char,
+    val tempYN: Char = 'N',
 )

@@ -47,9 +47,9 @@
     <string name="diary_test_head">배가 고프다</string>
     <string name="calendar_with_diary_button_write_text">오늘의 일기 쓰기</string>
     <string name="calendar_with_diary_button_text">오늘은 어떤 하루였나요?</string>
-    <string name="write_diary_head_hint">제목을 작성해 주세요.</string>
-    <string name="write_diary_content_hint">내용을 작성해 주세요.</string>
-    <string name="write_diary_content_100_hint">내용을 100자 이상 작성해 주세요.</string>
+    <string name="write_diary_head_hint">제목을 작성해주세요.</string>
+    <string name="write_alone_diary_content_hint">내용을 작성해주세요.</string>
+    <string name="write_comment_diary_content_hint">일기를 작성하고, 코멘트를 받을 수 있어요.\n일기전송은 다가오는 오전 7시에 종료돼요.</string>
     <string name="mydiary_text_decoration">오늘은 기록이 없어요. 기록을 하고 코멘트를 받아봐요 :)</string>
     <string name="write_text">작성하기</string>
     <string name="store_text">저장하기</string>
@@ -57,14 +57,15 @@
     <string name="send_text">전송하기</string>
     <string name="temp_store_text">임시저장</string>
     <string name="show_all">전체보기</string>
-    <string name="calendar_with_diary_comment_soon">코멘트가 곧 도착해요 :) 조금만 기다려주세요.</string>
+    <string name="temp_diary_before_send">임시저장된 일기에요. 일기를 전송해주세요.</string>
+    <string name="calendar_with_diary_comment_soon">코멘트가 곧 도착해요. 조금만 기다려주세요.</string>
     <string name="bottom_sheet_type_comment_text">다른 누군가에게 전송하고 코멘트를 받아볼게요.</string>
     <string name="bottom_sheet_type_alone_text">전송하지 않고 혼자 볼게요.</string>
     <string name="bottom_sheet_head_text">일기 저장유형을 선택해 주세요.</string>
     <string name="backButton">backButton</string>
     <string name="deleteButton">deleteButton</string>
     <string name="editButton">editButton</string>
-    <string name="write_comment_diary_notice">코멘트를 받기 위해서는 100자 이상 작성해야 해요.</string>
+    <string name="write_comment_diary_notice">내용을 100자 이상 작성해주세요.</string>
     <string name="comment_diary_text_limit">%s/100자 이상 작성</string>
     <string name="upload_temp_time_comment_diary">일기 전송은 다가오는 오전 7시에 종료돼요.</string>
     <string name="upload_temp_comment_please">임시 저장된 일기예요. 일기를 전송해주세요.</string>
@@ -81,10 +82,10 @@
     <string name="comment_content">괜찮아. 우리는 모두 처음 사는 인생이잖아.\n너무 서툰 것에 마음 쓰지마. 너만의 어려움이\n있겠지만, 그걸 내가 다 이해할 수는 없겠지만,\n그래도 응원을 보내. 힘내.</string>
     <string name="comment_head">누군가의 코멘트</string>
     <string name="comment_report">신고하기</string>
-    <string name="already_pass_diary_send_time">일기전송 시간이 지났어요..</string>
-    <string name="arrived_comment">코멘트가 도착했어요. 확인해 주세요!</string>
+    <string name="pass_diary_send_time">※ 일기전송 시간이 지났어요. ※</string>
+    <string name="arrived_comment">코멘트가 도착했어요. 확인해보세요!</string>
     <string name="write_diary_yet">아직 일기를 쓸 날이 오지 않았어요!</string>
-    <string name="no_comment">아쉽게도 코멘트가 도착하지 않았어요.\n그래도 오늘의 기록은 내일의 기억이 될 거예요 :)</string>
+    <string name="no_comment">아쉽게도 코멘트가 도착하지 않았어요.</string>
     <string name="gatherdiary_nodiary">작성해둔 일기가 없어요!</string>
     <string name="binding_date_format">%s년 %월</string>
     <string name="look_period">기간별 보기</string>
@@ -95,7 +96,9 @@
     <string name="send_text1">보내기</string>
     <string name="comment_write_hint">일기를 읽고, 따뜻한 코멘트를 달아주세요</string>
     <string name="no_received_diary_yet">매일 아침 7시에 누군가의 일기가 도착합니다.\n 도착한 일기를 읽고 따뜻한 코멘트를 남겨주세요 :)</string>
+    <string name="comment_yet">\'누군가의 코멘트\'가 곧 도착합니다.</string>
     <string name="comment_write_limit">%s/20자 이상 작성</string>
+    <string name="diary_head_date_text">"%s월 %s일 일기"</string>
     <string name="send_comment_notice">코멘트를 전송합니다.\n 전송 후에는 수정 및 삭제가 어렵습니다.\n 전송하시겠어요?</string>
     <string name="report_content">신고 사유를 자세히 작성해 주세요.\n사실과 다를 경우 이용 제재를\n받을 수 있습니다.</string>
     <string name="mypage">마이페이지</string>
@@ -116,14 +119,19 @@
     <string name="change_password">비밀번호 변경</string>
     <string name="change">변경하기</string>
     <string name="write_comment">코멘트 작성하기</string>
-    <string name="yet_write_comment">‘도착한 일기’의 코멘트를 작성해야\n내게 온 코멘트를 확인할 수 있어요.</string>
-    <string name="no_write_comment">‘도착한 일기’의 코멘트를 작성하지 않아서\n코멘트를 놓쳤어요. 다음에는 꼭 작성해주세요.</string>
+    <string name="yet_write_comment">\'도착한 일기\'의 코멘트를 작성해야\n내게 온 코멘트를 확인할 수 있어요.</string>
+    <string name="no_write_comment">\'도착한 일기\'의 코멘트를 작성하지 않아서\n코멘트를 놓쳤어요.</string>
     <string name="logo">로고</string>
     <string name="push_arrived_comment">코멘트 도착</string>
     <string name="block">차단하기</string>
     <string name="block_notice">차단한 글은 다시 볼 수 없습니다.\n정말 차단하시겠어요?</string>
     <string name="find_password_notice">임시 비밀번호를 발급하시겠어요?</string>
-    <string-array name="custom_weekdays">
+    <string name="temp_diary_out_time_notice">일기 전송 시간이 지났어요</string>
+
+    <string name="common_error">오류가 발생했습니다.</string>
+
+    <!--todo 당구장 기호 깨짐-->
+    <string-array name="custom_weekdays">※ 일기 전송 시간이 지났어요. ※
         <item>일</item>
         <item>월</item>
         <item>화</item>
@@ -163,4 +171,7 @@
     <string name="send">전송</string>
     <string name="select_diary_type">일기 유형 선택</string>
     <string name="diary_type_alone">혼자 쓰는 일기</string>
+    <string name="someones_comment">누군가의 코멘트</string>
+    <string name="open_comment">코멘트 열어보기</string>
+    <string name="lock">lock</string>
 </resources>

@@ -37,9 +37,9 @@ abstract class BaseFragment<VB : ViewDataBinding>(@LayoutRes val layoutRes: Int)
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Timber.i("onCreateView")
         _binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
+        Timber.i("onCreateView")
         return binding.root
     }
 
@@ -74,9 +74,9 @@ abstract class BaseFragment<VB : ViewDataBinding>(@LayoutRes val layoutRes: Int)
     }
 
     override fun onDestroyView() {
+        Timber.i("onDestroyView")
         _binding = null
         super.onDestroyView()
-        Timber.i("onDestroyView")
     }
 
     override fun onDestroy() {

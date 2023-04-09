@@ -5,5 +5,6 @@ data class AuthTokens(
     val accessToken: String,
     val refreshToken: String,
     val accessTokenExpiresIn: Long,
-    val isNewMember: Boolean?
+    val isNewMember: Boolean?,
+    val userId: Long
 )

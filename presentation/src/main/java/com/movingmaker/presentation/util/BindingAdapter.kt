@@ -7,7 +7,6 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
@@ -17,9 +16,10 @@ import com.movingmaker.domain.model.response.Comment
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.view.main.mypage.MyCommentListAdapter
 import timber.log.Timber
+//todo bindingadapter 분리
 
 @BindingAdapter("items")
-fun setItems(recyclerView: RecyclerView, items: LiveData<List<Comment>>) {
+fun bindItems(recyclerView: RecyclerView, items: LiveData<List<Comment>>) {
     if (recyclerView.adapter == null) {
         val adapter = MyCommentListAdapter()
         adapter.setHasStableIds(true)
@@ -29,8 +29,8 @@ fun setItems(recyclerView: RecyclerView, items: LiveData<List<Comment>>) {
     diaryListAdapter.submitList(items.value)
 }
 
-@BindingAdapter("android:signUpProgress")
-fun signUpProgress(view: ProgressBar, currentFragment: LiveData<FRAGMENT_NAME>) {
+@BindingAdapter("signUpProgress")
+fun bindSignUpProgress(view: ProgressBar, currentFragment: LiveData<FRAGMENT_NAME>) {
     when (currentFragment.value) {
         FRAGMENT_NAME.SIGNUP_TERMS -> {
             view.visibility = View.VISIBLE
@@ -54,8 +54,8 @@ fun signUpProgress(view: ProgressBar, currentFragment: LiveData<FRAGMENT_NAME>) 
     }
 }
 
-@BindingAdapter("android:checkState")
-fun setCheckState(view: ImageView, checkState: LiveData<Boolean>) {
+@BindingAdapter("checkState")
+fun bindCheckState(view: ImageView, checkState: LiveData<Boolean>) {
     when (checkState.value) {
         true -> {
             view.setImageResource(R.drawable.ic_check_green)
@@ -67,7 +67,7 @@ fun setCheckState(view: ImageView, checkState: LiveData<Boolean>) {
 }
 
 @BindingAdapter("isCorrectEmail", "noticeEmail")
-fun changeEmailNotice(view: TextView, isCorrect: LiveData<Boolean>, text: LiveData<String>) {
+fun bindEmailNotice(view: TextView, isCorrect: LiveData<Boolean>, text: LiveData<String>) {
     when (isCorrect.value) {
         false -> {
             view.text = view.context.getString(R.string.onboarding_email_incorrect)
@@ -80,8 +80,8 @@ fun changeEmailNotice(view: TextView, isCorrect: LiveData<Boolean>, text: LiveDa
         view.text = text.value
 }
 
-@BindingAdapter("android:validateFindPasswordEmail")
-fun changeFindPasswordEmailNotice(view: TextView, isCorrect: LiveData<Boolean>) {
+@BindingAdapter("validateFindPasswordEmail")
+fun bindFindPasswordEmailNotice(view: TextView, isCorrect: LiveData<Boolean>) {
     when (isCorrect.value) {
         false -> {
             view.visibility = View.VISIBLE
@@ -94,8 +94,8 @@ fun changeFindPasswordEmailNotice(view: TextView, isCorrect: LiveData<Boolean>) 
     }
 }
 
-@BindingAdapter("android:visibleEmail")
-fun changeVisible(view: TextView, text: LiveData<String>) {
+@BindingAdapter("visibleEmail")
+fun bindVisible(view: TextView, text: LiveData<String>) {
     when (text.value) {
         KAKAO -> {
             view.visibility = View.GONE
@@ -106,100 +106,8 @@ fun changeVisible(view: TextView, text: LiveData<String>) {
     }
 }
 
-@BindingAdapter("diaryType", "isExpand", "selectedDate")
-fun changeVisibleWithDiaryType(
-    view: View,
-    diaryType: LiveData<DIARY_TYPE>,
-    isExpand: LiveData<Boolean>,
-    tempSelectedDiaryDate: LiveData<String>
-) {
-    when (isExpand.value) {
-        true -> {
-            when (view.id) {
-                R.id.sendButton, R.id.saveButton -> {
-                    view.visibility = View.INVISIBLE
-                }
-                R.id.selectAloneDiaryInRadioButton -> {
-                    when (diaryType.value) {
-                        DIARY_TYPE.COMMENT_DIARY -> {
-                            view.visibility = View.GONE
-                        }
-                        DIARY_TYPE.ALONE_DIARY -> {
-                            view.visibility = View.VISIBLE
-                        }
-                        else -> {}
-                    }
-                }
-                R.id.selectCommentDiaryInRadioButton -> {
-                    when (diaryType.value) {
-                        DIARY_TYPE.COMMENT_DIARY -> {
-                            view.visibility = View.VISIBLE
-                        }
-                        DIARY_TYPE.ALONE_DIARY -> {
-                            view.visibility = View.GONE
-                        }
-                        else -> {}
-                    }
-                }
-                else -> {}
-            }
-        }
-        else -> {
-            when (view.id) {
-                R.id.sendButton -> {
-                    when (diaryType.value) {
-                        DIARY_TYPE.COMMENT_DIARY -> {
-                            view.visibility = View.VISIBLE
-                        }
-                        DIARY_TYPE.ALONE_DIARY -> {
-                            view.visibility = View.INVISIBLE
-                        }
-                        else -> {}
-                    }
-                }
-                R.id.saveButton -> {
-                    when (diaryType.value) {
-                        DIARY_TYPE.COMMENT_DIARY -> {
-                            view.visibility = View.INVISIBLE
-                        }
-                        DIARY_TYPE.ALONE_DIARY -> {
-                            view.visibility = View.VISIBLE
-                        }
-                        else -> {}
-                    }
-                }
-                R.id.selectCommentDiaryInRadioButton, R.id.selectAloneDiaryInRadioButton -> {
-                    view.visibility = View.GONE
-                }
-                else -> {
-                    (view as TextView)
-                    tempSelectedDiaryDate.value?.let {
-                        val selectedDiaryDate = DateConverter.ymdToDate(it)
-                        if (selectedDiaryDate < DateConverter.getCodaToday()) {
-                            view.isEnabled = false
-                            view.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-                        } else {
-                            view.isEnabled = true
-                            view.setCompoundDrawablesWithIntrinsicBounds(
-                                0,
-                                0,
-                                R.drawable.ic_arrow_down,
-                                0
-                            )
-                        }
-                    }
-                    view.text = when (diaryType.value) {
-                        DIARY_TYPE.COMMENT_DIARY -> view.context.getString(R.string.diary_type_comment)
-                        else -> view.context.getString(R.string.diary_type_alone)
-                    }
-                }
-            }
-        }
-    }
-}
-
-@BindingAdapter("app:nonClickableActivity", "app:nonClickableLoading")
-fun setNonClickableLoading(view: ProgressBar, activity: Activity, state: LiveData<Boolean>) {
+@BindingAdapter("nonClickableActivity", "nonClickableLoading")
+fun bindNonClickableLoading(view: ProgressBar, activity: Activity, state: LiveData<Boolean>) {
     when (state.value) {
         true -> {
             activity.window.setFlags(
@@ -215,8 +123,8 @@ fun setNonClickableLoading(view: ProgressBar, activity: Activity, state: LiveDat
     }
 }
 
-@BindingAdapter("app:loading")
-fun setLoading(view: ProgressBar, state: LiveData<Boolean>) {
+@BindingAdapter("loading")
+fun bindLoading(view: ProgressBar, state: LiveData<Boolean>) {
     view.visibility = when (state.value) {
         true -> View.VISIBLE
         else -> View.GONE
@@ -224,8 +132,8 @@ fun setLoading(view: ProgressBar, state: LiveData<Boolean>) {
 }
 
 @SuppressLint("SetTextI18n")
-@BindingAdapter("android:yearMonth")
-fun changeYearMonth(view: TextView, text: LiveData<String>) {
+@BindingAdapter("yearMonth")
+fun bindYearMonth(view: TextView, text: LiveData<String>) {
     try {
         val (y, m) = text.value!!.split('.')
         view.text = "${y}년 ${m}월"
@@ -235,8 +143,8 @@ fun changeYearMonth(view: TextView, text: LiveData<String>) {
     }
 }
 
-@BindingAdapter("android:buttonState")
-fun changeButtonState(view: AppCompatButton, currentFragment: LiveData<FRAGMENT_NAME>) {
+@BindingAdapter("buttonState")
+fun bindButtonState(view: AppCompatButton, currentFragment: LiveData<FRAGMENT_NAME>) {
     when (currentFragment.value) {
         FRAGMENT_NAME.LOGIN_BEFORE -> {
             view.visibility = View.GONE
@@ -272,33 +180,9 @@ fun changeButtonState(view: AppCompatButton, currentFragment: LiveData<FRAGMENT_
     }
 }
 
-/*
-* write diary
-* */
-@BindingAdapter("app:colorWithDiaryType")
-fun TextView.setColorWithDiaryType(diaryType: LiveData<DIARY_TYPE>) {
-    setTextColor(
-        when (diaryType.value) {
-            DIARY_TYPE.COMMENT_DIARY -> context.getColor(R.color.core_green)
-            else -> context.getColor(R.color.core_orange)
-        }
-    )
-}
-
-@BindingAdapter("app:sendButtonState")
-fun AppCompatButton.setSendButtonState(canSendCommentDiary: LiveData<Boolean>) {
-    background = when (canSendCommentDiary.value) {
-        true -> AppCompatResources.getDrawable(context, R.drawable.background_green_radius_10)
-        else -> AppCompatResources.getDrawable(
-            context,
-            R.drawable.background_green_alpha_40_radius_10
-        )
-    }
-}
-
-@BindingAdapter("app:navigateUp")
-fun navigateUp(view: View, dummy: Any?) {
+@BindingAdapter("popBackStack")
+fun bindPopBackStack(view: View, dummy: Any?) {
     view.setOnClickListener {
-        view.findNavController().navigateUp()
+        view.findNavController().popBackStack()
     }
 }

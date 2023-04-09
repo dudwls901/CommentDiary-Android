@@ -23,6 +23,7 @@ import com.movingmaker.presentation.viewmodel.FragmentViewModel
 import com.movingmaker.presentation.viewmodel.receiveddiary.ReceivedDiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+//todo commentDiaryDetail에서 온 경우 뒤로 가기시 이전 화면으로 돌아가기
 @AndroidEntryPoint
 class ReceivedDiaryFragment :
     BaseFragment<FragmentReceiveddiaryBinding>(R.layout.fragment_receiveddiary) {
@@ -54,7 +55,7 @@ class ReceivedDiaryFragment :
                 binding.commentLayout.isVisible = true
                 binding.diaryLayout.isVisible = true
                 binding.noReceivedDiaryYet.isVisible = false
-                if (receivedDiary.myComment?.isNotEmpty() == true) {
+                if (receivedDiary.myComment.isNotEmpty()) {
                     binding.sendCommentButton.background = ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.background_ivory_radius_15_border_brown_1
@@ -67,7 +68,7 @@ class ReceivedDiaryFragment :
                         )
                     )
                     binding.commentLimitTextView.isVisible = false
-                    binding.commentEditTextView.setText(receivedDiary.myComment!![0].content)
+                    binding.commentEditTextView.setText(receivedDiary.myComment[0].content)
                     binding.commentEditTextView.isEnabled = false
                 } else {
                     binding.sendCommentButton.background = ContextCompat.getDrawable(

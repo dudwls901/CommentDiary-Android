@@ -1,6 +1,6 @@
 package com.movingmaker.data.remote.model.response
 
-import com.movingmaker.data.remote.model.RemoteModel
+import com.movingmaker.data.remote.model.RemoteResponse
 import com.movingmaker.domain.model.response.AuthTokens
 import kotlinx.serialization.Serializable
 
@@ -10,13 +10,10 @@ data class AuthTokensResponse(
     val accessToken: String,
     val refreshToken: String,
     val accessTokenExpiresIn: Long,
-    val newMember: Boolean? = null
-) : RemoteModel {
+    val newMember: Boolean? = null,
+    val userId: Long
+) : RemoteResponse {
     override fun toDomainModel() = AuthTokens(
-        grantType, accessToken, refreshToken, accessTokenExpiresIn, newMember
+        grantType, accessToken, refreshToken, accessTokenExpiresIn, newMember, userId
     )
 }
-
-fun AuthTokens.toDataModel() = AuthTokensResponse(
-    grantType, accessToken, refreshToken, accessTokenExpiresIn, isNewMember
-)
