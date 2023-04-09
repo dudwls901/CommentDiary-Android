@@ -40,7 +40,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/diaryTypeTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/diaryTypeTextView"
-                app:navigateUp="@{null}"
+                app:popBackStack="@{null}"
                 tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
 
             <TextView

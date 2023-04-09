@@ -16,6 +16,7 @@ import com.movingmaker.domain.model.response.Comment
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.view.main.mypage.MyCommentListAdapter
 import timber.log.Timber
+//todo bindingadapter 분리
 
 @BindingAdapter("items")
 fun bindItems(recyclerView: RecyclerView, items: LiveData<List<Comment>>) {
@@ -179,9 +180,9 @@ fun bindButtonState(view: AppCompatButton, currentFragment: LiveData<FRAGMENT_NA
     }
 }
 
-@BindingAdapter("navigateUp")
-fun bindNavigateUp(view: View, dummy: Any?) {
+@BindingAdapter("popBackStack")
+fun bindPopBackStack(view: View, dummy: Any?) {
     view.setOnClickListener {
-        view.findNavController().navigateUp()
+        view.findNavController().popBackStack()
     }
 }
