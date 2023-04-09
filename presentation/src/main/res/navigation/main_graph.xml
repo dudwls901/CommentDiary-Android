@@ -59,7 +59,9 @@
         tools:layout="@layout/fragment_mydiary_writediary">
         <action
             android:id="@+id/action_writeDiaryFragment_to_commentDiaryDetailFragment"
-            app:destination="@id/commentDiaryDetailFragment" />
+            app:destination="@id/commentDiaryDetailFragment"
+            app:popUpTo="@id/calendarWithDiaryFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/commentDiaryDetailFragment"
