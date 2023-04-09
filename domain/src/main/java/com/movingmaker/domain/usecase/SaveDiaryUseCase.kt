@@ -7,6 +7,7 @@ import com.movingmaker.domain.model.request.SaveDiaryModel
 import com.movingmaker.domain.model.response.DiaryId
 import com.movingmaker.domain.model.toUiState
 import com.movingmaker.domain.repository.DiaryRepository
+import com.movingmaker.domain.util.ymFormatForString
 import javax.inject.Inject
 
 class SaveDiaryUseCase @Inject constructor(
@@ -19,7 +20,7 @@ class SaveDiaryUseCase @Inject constructor(
         val saveDiaryResult = diaryRepository.saveDiary(saveDiaryModel)
         when (saveDiaryResult) {
             is NetworkResult.Success -> {
-                diaryRepository.updatePeriodDiaries(saveDiaryModel.date)
+                diaryRepository.updatePeriodDiaries(saveDiaryModel.date.ymFormatForString())
             }
             else -> { /*no-op*/
             }

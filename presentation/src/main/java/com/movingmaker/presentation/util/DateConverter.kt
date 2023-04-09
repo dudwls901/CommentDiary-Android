@@ -90,9 +90,13 @@ fun ymdFormat(date: Any): String? {
     }
 }
 
-fun String.ymFormatForString(): String? {
-    val (y, m, _) = getSplitYMD()
-    return if (y == "") null else "$y.$m"
+fun String.ymFormatForString(): String {
+    return try {
+        val (y, m, _) = getSplitYMD()
+        if (y == "") "unknown error" else "$y.$m"
+    }catch (e: Exception){
+        e.message?:""
+    }
 }
 
 //0~11월
