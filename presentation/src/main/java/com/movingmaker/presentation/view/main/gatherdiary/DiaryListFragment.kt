@@ -25,6 +25,7 @@ import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentGatherdiaryDiarylistBinding
 import com.movingmaker.presentation.util.FRAGMENT_NAME
+import com.movingmaker.presentation.util.PreferencesUtil
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.ymFormatForLocalDate
 import com.movingmaker.presentation.util.ymdFormat
@@ -38,7 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import javax.inject.Inject
 
 /*
 * diary state 필요
@@ -59,6 +60,11 @@ class DiaryListFragment :
     private val myDiaryViewModel: MyDiaryViewModel by activityViewModels()
     private lateinit var diaryListAdapter: DiaryListAdapter
 
+    @Inject
+    lateinit var preferencesUtil: PreferencesUtil
+    private val userId by lazy {
+        preferencesUtil.getUserId()
+    }
 
     @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,11 +82,19 @@ class DiaryListFragment :
         loading.observe(viewLifecycleOwner) {
             binding.loadingBar.isVisible = it
         }
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                diaries.collectLatest { list ->
-                    binding.noDiaryTextView.isVisible = list.isEmpty()
-                    diaryListAdapter.submitList(list.toMutableList())
+                launch {
+                    diaries.collectLatest { list ->
+                        binding.noDiaryTextView.isVisible = list.isEmpty()
+                        diaryListAdapter.submitList(list.toMutableList())
+                    }
+                }
+                launch {
+                    selectedMonth.collectLatest {period ->
+                        gatherDiaryViewModel.updateDiaries(period)
+                    }
                 }
             }
         }
@@ -144,12 +158,10 @@ class DiaryListFragment :
     }
 
     override fun onDiarySelectListener(diary: Diary) {
-        Timber.d("onDiarySelectListener: $diary")
         myDiaryViewModel.setSelectedDiary(diary)
         //혼자 쓰는 일기, 코멘트 일기 분기 처리
 
-        if (diary.deliveryYN == 'N') {
-//            myDiaryViewModel.setSaveOrEdit("save")
+        if (diary.deliveryYN == 'N' || diary.userId == userId) {
             val action = DiaryListFragmentDirections.actionDiaryListFragmentToWriteDiaryFragment()
             findNavController().navigate(action)
         } else {
@@ -217,7 +229,7 @@ class DiaryListFragment :
                         numberPicker.invalidate()
                     }
                 } catch (exception: Exception) {
-                    CodaSnackBar.make(binding.root,getString(R.string.common_error)).show()
+                    CodaSnackBar.make(binding.root, getString(R.string.common_error)).show()
                 }
 
                 numberPicker.invalidate()

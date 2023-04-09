@@ -254,9 +254,9 @@ class CalendarWithDiaryFragment :
     }
 
     /**
-    * 월 변경시 동작
-    * */
-    private fun attachMonthChangeListener()  = with(myDiaryViewModel){
+     * 월 변경시 동작
+     * */
+    private fun attachMonthChangeListener() = with(myDiaryViewModel) {
         binding.materialCalendarView.setOnMonthChangedListener { _, date ->
             ymFormatForLocalDate(date)?.let { dateYM ->
                 updatePeriodDiaries(dateYM)
@@ -267,15 +267,15 @@ class CalendarWithDiaryFragment :
     }
 
     /**
-    * 화면 재진입하여 월 변경되는 경우 포커싱 해제 방지
-    * */
+     * 화면 재진입하여 월 변경되는 경우 포커싱 해제 방지
+     * */
     private fun detachMonthChangeListener() {
         binding.materialCalendarView.setOnMonthChangedListener { _, _ -> /*no-op*/ }
     }
 
     /**
-    * trigger monthChangeListener
-    * */
+     * trigger monthChangeListener
+     * */
     private fun setMonthMoveListener() = with(binding) {
         leftArrowButton.setOnClickListener {
             val beforeDate = materialCalendarView.currentDate

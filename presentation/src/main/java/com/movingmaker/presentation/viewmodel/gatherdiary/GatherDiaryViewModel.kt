@@ -19,7 +19,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
@@ -40,7 +39,7 @@ class GatherDiaryViewModel @Inject constructor(
     val handleComment: LiveData<Pair<Long, String>>
         get() = _handleComment
 
-   private var _selectedMonth = MutableStateFlow<String>("all")
+   private var _selectedMonth = MutableStateFlow<String>(ymFormatForLocalDate(getCodaToday())!!)
     val selectedMonth: StateFlow<String> = _selectedMonth.asStateFlow()
 
     @ExperimentalCoroutinesApi
@@ -54,34 +53,29 @@ class GatherDiaryViewModel @Inject constructor(
             }
         }
     }
-    init {
-        _selectedMonth.value = ymFormatForLocalDate(getCodaToday())!!
-        viewModelScope.launch {
-            selectedMonth.collectLatest { period ->
-                onLoading()
-                val response = if (period == "all") {
-                    updateAllDiariesUseCase()
-                } else {
-                    updatePeriodDiariesUseCase(period)
+
+    fun updateDiaries(period: String) = viewModelScope.launch{
+        onLoading()
+        val response = if (period == "all") {
+            updateAllDiariesUseCase()
+        } else {
+            updatePeriodDiariesUseCase(period)
+        }
+        offLoading()
+        with(response) {
+            offLoading()
+            when (this) {
+                is UiState.Success -> {/*no-op*/
                 }
-                offLoading()
-                with(response) {
-                    offLoading()
-                    when (this) {
-                        is UiState.Success -> {/*no-op*/
-                        }
-                        is UiState.Error -> {
-                            setMessage(message)
-                        }
-                        is UiState.Fail -> {
-                            setMessage(message)
-                        }
-                    }
+                is UiState.Error -> {
+                    setMessage(message)
+                }
+                is UiState.Fail -> {
+                    setMessage(message)
                 }
             }
         }
     }
-
 
     fun setSelectedMonth(date: String) {
         _selectedMonth.value = date

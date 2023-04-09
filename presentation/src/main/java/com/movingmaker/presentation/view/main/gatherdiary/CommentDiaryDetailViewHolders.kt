@@ -52,7 +52,6 @@ sealed class CommentDiaryDetailViewHolders(binding: ViewDataBinding) :
     ) : CommentDiaryDetailViewHolders(binding) {
         fun bind(comment: Comment) {
             binding.comment = comment
-            //todo 하트 애니메이션
             binding.commentHeartImageView.setOnClickListener {
 //                if(!comment.like) {
                 onCommentSelectListener.onHeartClickListener(comment.id)
