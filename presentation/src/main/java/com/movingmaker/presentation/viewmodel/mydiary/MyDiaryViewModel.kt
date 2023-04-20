@@ -172,7 +172,7 @@ class MyDiaryViewModel @Inject constructor(
     val diaryState: StateFlow<DiaryState> = combine(
         selectedDate, selectedDiary, _haveDayWrittenComment
     ) { ymdDate, diary, haveWrittenComment ->
-        Timber.e("여기 diaryState combine date: ${ymdDate} diary: ${diary} writtenCOmeent: ${haveWrittenComment}")
+        Timber.e("여기 diaryState combine date: ${ymdDate} diary: ${diary} writtenComment: ${haveWrittenComment}")
         if (ymdDate == null) {
             //선택한 날짜 없는 경우
             DiaryState.NoneSelectedDiary
@@ -254,7 +254,7 @@ class MyDiaryViewModel @Inject constructor(
                 }
             }
         }
-    }.filter {//본인 or 서버 저장된 일기 아닌경우 filter
+    }.filter {//본인 or 서버 저장된 일기 아닌 경우 filter
         (it is DiaryState.CommentDiary && it.diary.userId != -1L && it.diary.userId != userId).not()
 //        .debounce(100L)
     }.mapLatest {

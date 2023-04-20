@@ -158,6 +158,7 @@ class DiaryListFragment :
     }
 
     override fun onDiarySelectListener(diary: Diary) {
+        myDiaryViewModel.setSelectedDate(diary.date)
         myDiaryViewModel.setSelectedDiary(diary)
         //혼자 쓰는 일기, 코멘트 일기 분기 처리
 
