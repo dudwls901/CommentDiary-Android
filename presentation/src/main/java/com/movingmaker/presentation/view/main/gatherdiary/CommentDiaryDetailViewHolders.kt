@@ -23,12 +23,15 @@ sealed class CommentDiaryDetailViewHolders(binding: ViewDataBinding) :
 
     class CommentDiaryOpenYetViewHolder(private val binding: RvItemCommentDiaryOpenYetBinding) :
         CommentDiaryDetailViewHolders(binding) {
-        fun bind(selectedDiary: Diary) {
-            binding.selectedDiary = selectedDiary
+
+        init {
             binding.goToWriteCommentButton.setOnClickListener {
                 binding.root.findNavController()
                     .navigate(CommentDiaryDetailFragmentDirections.actionCommentDiaryDetailFragmentToReceivedDiaryFragment())
             }
+        }
+        fun bind(selectedDiary: Diary) {
+            binding.selectedDiary = selectedDiary
         }
     }
 
