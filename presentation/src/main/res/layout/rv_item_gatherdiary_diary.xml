@@ -50,6 +50,7 @@
                 tools:text="n" />
         </LinearLayout>
 
+        <!--todo 커스텀뷰로 만들기-->
         <TextView
             android:id="@+id/dateTextView"
             style="@style/BHeadline2"
@@ -57,7 +58,7 @@
             android:layout_height="25dp"
             android:gravity="center"
             android:text="@{diary.date}"
-            android:textColor="@color/core_pure_orange"
+            diaryDateColor="@{diary.deliveryYN}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="2022.12.22" />

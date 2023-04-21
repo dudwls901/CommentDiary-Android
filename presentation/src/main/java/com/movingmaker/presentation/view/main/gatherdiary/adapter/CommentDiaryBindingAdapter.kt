@@ -10,7 +10,19 @@ import com.movingmaker.presentation.R
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.ymdToDate
 
-@BindingAdapter("app:commentYetState")
+
+@BindingAdapter("diaryDateColor")
+fun TextView.bindDateTextViewColor(deliveryYN: Char) {
+    setTextColor(
+        if (deliveryYN == 'Y') {
+            context.getColor(R.color.core_green)
+        } else {
+            context.getColor(R.color.core_orange)
+        }
+    )
+}
+
+@BindingAdapter("commentYetState")
 fun View.bindCommentYetButtonState(selectedDiary: Diary) {
     ymdToDate(selectedDiary.date)?.let { diaryDate ->
         handleCommentYetButton(
@@ -21,11 +33,11 @@ fun View.bindCommentYetButtonState(selectedDiary: Diary) {
 }
 
 @BindingAdapter("spinnerPeriodText")
-fun TextView.bindSpinnerPeriodText(period: String){
-    text = if(period == "all"){
+fun TextView.bindSpinnerPeriodText(period: String) {
+    text = if (period == "all") {
         context.getString(R.string.show_all)
     } else {
-        "${period.replace(".","년")}월"
+        "${period.replace(".", "년")}월"
     }
 }
 
