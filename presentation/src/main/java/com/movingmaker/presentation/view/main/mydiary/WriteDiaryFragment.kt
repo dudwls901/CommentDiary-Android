@@ -22,6 +22,7 @@ import com.movingmaker.presentation.util.DIARY_CONTENT_MINIMUM_LENGTH
 import com.movingmaker.presentation.util.DIARY_TYPE
 import com.movingmaker.presentation.util.FRAGMENT_NAME
 import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.getDiaryType
 import com.movingmaker.presentation.util.ymdToDate
 import com.movingmaker.presentation.view.snackbar.CodaSnackBar
 import com.movingmaker.presentation.viewmodel.FragmentViewModel
@@ -71,17 +72,23 @@ class WriteDiaryFragment :
     override fun onStop() {
         super.onStop()
         with(myDiaryViewModel) {
+            //todo, temp -> alone 글자 안 바꾸는 경우 false, temp -> alone 글자 바꿔서 저장시켜도 오류
+//            Timber.e("임시저장 여부 before selected: ${ }")
             Timber.e(
                 "임시저장 여부 ${
-                    isSendedDiary.not() &&
+                    isSendedDiary.not() && (
                             (selectedDiary.value?.title == diaryHead.value && selectedDiary.value?.content == diaryContent.value).not()
+                                    || selectedDiaryType.value != selectedDiary.value?.deliveryYN?.getDiaryType()
+                            )
                 }"
             )
             //서버에 저장시켜서 화면 나가는 경우 임시저장 방지
             //글자 안 바뀐 경우 임시저장 방지
             if (
-                isSendedDiary.not() &&
-                (selectedDiary.value?.title == diaryHead.value && selectedDiary.value?.content == diaryContent.value).not()
+                isSendedDiary.not() && (
+                        (selectedDiary.value?.title == diaryHead.value && selectedDiary.value?.content == diaryContent.value).not()
+                                || selectedDiaryType.value != selectedDiary.value?.deliveryYN?.getDiaryType()
+                        )
             ) {
                 myDiaryViewModel.handleDiary(myDiaryViewModel.selectedDiaryType.value)
             }

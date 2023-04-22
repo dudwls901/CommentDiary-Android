@@ -9,3 +9,10 @@ inline fun <reified T> combineList(
         else list2[it - list1.size]
     }
 }
+
+fun Char.getDiaryType(): DIARY_TYPE{
+    return when(this){
+        'Y' -> DIARY_TYPE.COMMENT_DIARY
+        else -> DIARY_TYPE.ALONE_DIARY
+    }
+}

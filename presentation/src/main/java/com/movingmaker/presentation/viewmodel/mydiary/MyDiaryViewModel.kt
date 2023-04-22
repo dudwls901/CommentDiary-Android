@@ -122,7 +122,7 @@ class MyDiaryViewModel @Inject constructor(
     /*
     * write diary
     * */
-    private var _selectedDiaryType = MutableLiveData<DIARY_TYPE>()
+    var _selectedDiaryType = MutableLiveData<DIARY_TYPE>()
     val selectedDiaryType: LiveData<DIARY_TYPE>
         get() = _selectedDiaryType
 
