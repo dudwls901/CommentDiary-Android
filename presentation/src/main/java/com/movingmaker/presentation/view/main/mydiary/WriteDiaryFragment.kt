@@ -75,7 +75,7 @@ class WriteDiaryFragment :
             //todo, temp -> alone 글자 안 바꾸는 경우 false, temp -> alone 글자 바꿔서 저장시켜도 오류
 //            Timber.e("임시저장 여부 before selected: ${ }")
             Timber.e(
-                "임시저장 여부 ${
+                "여기 임시저장 여부 ${
                     isSendedDiary.not() && (
                             (selectedDiary.value?.title == diaryHead.value && selectedDiary.value?.content == diaryContent.value).not()
                                     || selectedDiaryType.value != selectedDiary.value?.deliveryYN?.getDiaryType()
@@ -90,6 +90,7 @@ class WriteDiaryFragment :
                                 || selectedDiaryType.value != selectedDiary.value?.deliveryYN?.getDiaryType()
                         )
             ) {
+                Timber.e("여기 저장 된다~!")
                 myDiaryViewModel.handleDiary(myDiaryViewModel.selectedDiaryType.value)
             }
         }
