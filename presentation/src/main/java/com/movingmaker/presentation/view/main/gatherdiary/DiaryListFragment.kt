@@ -88,11 +88,13 @@ class DiaryListFragment :
                 launch {
                     diaries.collectLatest { list ->
                         binding.noDiaryTextView.isVisible = list.isEmpty()
-                        diaryListAdapter.submitList(list.toMutableList())
+                        diaryListAdapter.submitList(list.toMutableList()) {
+                            binding.diaryListRecyclerView.smoothScrollToPosition(0)
+                        }
                     }
                 }
                 launch {
-                    selectedMonth.collectLatest {period ->
+                    selectedMonth.collectLatest { period ->
                         gatherDiaryViewModel.updateDiaries(period)
                     }
                 }
@@ -103,8 +105,8 @@ class DiaryListFragment :
     private fun initViews() = with(binding) {
 
         diaryListAdapter = DiaryListAdapter(this@DiaryListFragment)
-        diaryListAdapter.setHasStableIds(true)
-        binding.diaryListRecyclerView.adapter = diaryListAdapter
+        diaryListRecyclerView.setHasFixedSize(true)
+        diaryListRecyclerView.adapter = diaryListAdapter
         selectDateLayout.setOnClickListener {
             showDialog()
         }
@@ -158,10 +160,12 @@ class DiaryListFragment :
     }
 
     override fun onDiarySelectListener(diary: Diary) {
+        myDiaryViewModel.setSelectedDate(diary.date)
         myDiaryViewModel.setSelectedDiary(diary)
         //혼자 쓰는 일기, 코멘트 일기 분기 처리
-
-        if (diary.deliveryYN == 'N' || diary.userId == userId) {
+        if (diary.deliveryYN == 'N' ||
+            (diary.userId == userId && diary.date == ymdFormat(getCodaToday()))
+        ) {
             val action = DiaryListFragmentDirections.actionDiaryListFragmentToWriteDiaryFragment()
             findNavController().navigate(action)
         } else {

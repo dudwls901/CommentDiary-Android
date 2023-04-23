@@ -172,7 +172,7 @@ class MyDiaryViewModel @Inject constructor(
     val diaryState: StateFlow<DiaryState> = combine(
         selectedDate, selectedDiary, _haveDayWrittenComment
     ) { ymdDate, diary, haveWrittenComment ->
-        Timber.e("여기 diaryState combine date: ${ymdDate} diary: ${diary} writtenCOmeent: ${haveWrittenComment}")
+        Timber.e("여기 diaryState combine date: ${ymdDate} diary: ${diary} writtenComment: ${haveWrittenComment}")
         if (ymdDate == null) {
             //선택한 날짜 없는 경우
             DiaryState.NoneSelectedDiary
@@ -254,7 +254,7 @@ class MyDiaryViewModel @Inject constructor(
                 }
             }
         }
-    }.filter {//본인 or 서버 저장된 일기 아닌경우 filter
+    }.filter {//본인 or 서버 저장된 일기 아닌 경우 filter
         (it is DiaryState.CommentDiary && it.diary.userId != -1L && it.diary.userId != userId).not()
 //        .debounce(100L)
     }.mapLatest {
@@ -289,7 +289,7 @@ class MyDiaryViewModel @Inject constructor(
     private fun combineDiaryHead(aloneDiary: MediatorLiveData<Any>) = with(aloneDiary) {
         addSource(diaryHead) { head ->
             //신규 작성
-            value = if (selectedDiary.value == null) {
+            value = if (selectedDiary.value == null || selectedDiary.value?.id == -1L) {
                 getSaveAloneDiary(
                     head,
                     diaryContent.value ?: ""
@@ -307,7 +307,7 @@ class MyDiaryViewModel @Inject constructor(
     private fun combineDiaryContent(aloneDiary: MediatorLiveData<Any>) = with(aloneDiary) {
         addSource(diaryContent) { content ->
             //신규 작성
-            value = if (selectedDiary.value == null) {
+            value = if (selectedDiary.value == null || selectedDiary.value?.id == -1L) {
                 getSaveAloneDiary(
                     diaryHead.value ?: "",
                     content
@@ -494,6 +494,7 @@ class MyDiaryViewModel @Inject constructor(
     }
 
     fun handleDiary(selectedDiaryType: DIARY_TYPE?) {
+        Timber.e("여기 handleDiary ${selectedDiaryType}")
         viewModelScope.launch {
             when (selectedDiaryType) {
                 DIARY_TYPE.ALONE_DIARY -> {
@@ -524,6 +525,7 @@ class MyDiaryViewModel @Inject constructor(
 
     private fun handleAloneDiary() {
         if (aloneDiary.value == null) return
+        Timber.e("여기 삭제 테스트 selectedDiary : ${selectedDiary.value}\n aloneDiary : ${aloneDiary.value}")
         onLoading()
         when (val request = aloneDiary.value) {
             //id 없는 경우 저장
@@ -547,6 +549,7 @@ class MyDiaryViewModel @Inject constructor(
     }
 
     private fun saveDiary(request: SaveDiaryModel) = viewModelScope.launch {
+        deleteTempCommentDiary()
         with(saveDiaryUseCase(request)) {
             offLoading()
             when (this) {
@@ -572,6 +575,7 @@ class MyDiaryViewModel @Inject constructor(
     }
 
     private fun editDiary(request: EditDiaryModel) = viewModelScope.launch {
+        deleteTempCommentDiary()
         selectedDiary.value?.let { diary ->
             if (diary.content == request.content && diary.title == request.title) return@launch
             val date = diary.date.ymFormatForString()

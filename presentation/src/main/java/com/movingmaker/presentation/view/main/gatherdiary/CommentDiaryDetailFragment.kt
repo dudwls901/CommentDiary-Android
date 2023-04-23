@@ -84,7 +84,7 @@ class CommentDiaryDetailFragment :
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     myDiaryViewModel.diaryState.collectLatest { diaryState ->
-                        Timber.e("diaryState DetailFragment ${diaryState.javaClass.simpleName}")
+                        Timber.e("여기 diaryState DetailFragment ${diaryState.javaClass.simpleName}")
                         if (diaryState !is DiaryState.CommentDiary || diaryState is DiaryState.CommentDiary.TempDiaryInTime) return@collectLatest
                         setDefaultUi(diaryState.diary)
                         when (diaryState) {
