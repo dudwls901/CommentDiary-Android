@@ -310,7 +310,9 @@ class OnboardingViewModel @Inject constructor(
 
     suspend fun checkCode() = viewModelScope.async {
         onLoading()
-        if (email.value == null || code.value == null) {
+        val email = email.value
+        val code = code.value
+        if (email == null || code == null) {
             offLoading()
             setCodeCorrect(false)
             setShakeView(true)
@@ -319,7 +321,7 @@ class OnboardingViewModel @Inject constructor(
         with(
             sendCheckEmailCodeUseCase(
                 EmailCodeCheckModel(
-                    email.value!!, code.value!!.toInt()
+                    email, code.toInt()
                 )
             )
         ) {
