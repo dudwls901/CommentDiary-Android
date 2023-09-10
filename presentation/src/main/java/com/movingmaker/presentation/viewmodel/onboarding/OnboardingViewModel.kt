@@ -357,7 +357,8 @@ class OnboardingViewModel @Inject constructor(
                     email = email.value!!,
                     password = password.value!!,
                     checkPassword = checkPassword.value!!,
-                    loginType = EMAIL
+                    loginType = EMAIL,
+                    isPushAgree = isPushAccept.value!!,
                 )
             )
         ) {

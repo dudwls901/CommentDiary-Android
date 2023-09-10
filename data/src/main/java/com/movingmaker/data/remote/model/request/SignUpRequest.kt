@@ -8,9 +8,10 @@ data class SignUpRequest(
     val email: String,
     val password: String,
     val checkPassword: String,
-    val loginType: String
+    val loginType: String,
+    val isPushAgree: Boolean,
 )
 
 fun SignUpModel.toDataModel() = SignUpRequest(
-    email, password, checkPassword, loginType
+    email, password, checkPassword, loginType, isPushAgree
 )

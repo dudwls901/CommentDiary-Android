@@ -4,5 +4,6 @@ data class SignUpModel(
     val email: String,
     val password: String,
     val checkPassword: String,
-    val loginType: String
+    val loginType: String,
+    val isPushAgree: Boolean,
 )
