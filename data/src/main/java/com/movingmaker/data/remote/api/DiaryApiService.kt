@@ -5,9 +5,9 @@ import com.movingmaker.data.remote.model.request.SaveDiaryRequest
 import com.movingmaker.data.remote.model.response.BaseResponse
 import com.movingmaker.data.remote.model.response.DiaryIdResponse
 import com.movingmaker.data.remote.model.response.DiaryResponse
-import com.movingmaker.data.util.ALL
 import com.movingmaker.data.util.DIARY
-import com.movingmaker.data.util.MY
+import com.movingmaker.data.util.DIARY_ALL
+import com.movingmaker.data.util.DIARY_MY
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -31,13 +31,13 @@ interface DiaryApiService {
     @DELETE("${DIARY}/{diaryId}")
     suspend fun deleteDiary(@Path("diaryId") diaryId: Long): Response<BaseResponse<String>>
 
-    @GET(DIARY + MY + ALL)
+    @GET(DIARY_ALL)
     suspend fun getAllDiaries(): Response<BaseResponse<List<DiaryResponse>>>
 
     /**
      * date = ym인 경우 한 달 일기, date = ymd인 경우 하루 일기
      * */
-    @GET(DIARY + MY)
+    @GET(DIARY_MY)
     suspend fun getPeriodDiaries(@Query("date") date: String): Response<BaseResponse<List<DiaryResponse>>>
 
     @GET("${DIARY}/{diaryId}")
