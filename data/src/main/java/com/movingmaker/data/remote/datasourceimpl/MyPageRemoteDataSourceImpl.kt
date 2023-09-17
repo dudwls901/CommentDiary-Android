@@ -18,7 +18,7 @@ class MyPageRemoteDataSourceImpl @Inject constructor(
     override suspend fun getMyPage(): NetworkResult<BaseResponse<MyInfo>> =
         safeApiCall { myPageApiService.getMyPage() }
 
-    override suspend fun patchCommentPushState(): NetworkResult<BaseResponse<Map<String, Char>>> =
+    override suspend fun patchCommentPushState(): NetworkResult<BaseResponse<Map<String, Boolean>>> =
         safeApiCall { myPageApiService.patchCommentPushState() }
 
     override suspend fun logOut(): NetworkResult<BaseResponse<String>> =

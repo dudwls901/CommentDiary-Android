@@ -11,7 +11,7 @@ class MyPageRepositoryImpl @Inject constructor(
     private val myPageRemoteDataSource: MyPageRemoteDataSource
 ) : MyPageRepository {
 
-    override suspend fun patchCommentPushState(): NetworkResult<BaseResponse<Map<String, Char>>> =
+    override suspend fun patchCommentPushState(): NetworkResult<BaseResponse<Map<String, Boolean>>> =
         myPageRemoteDataSource.patchCommentPushState()
 
     override suspend fun signOut(): NetworkResult<BaseResponse<String>> =

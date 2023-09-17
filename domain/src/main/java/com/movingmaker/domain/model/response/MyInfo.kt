@@ -4,5 +4,5 @@ data class MyInfo(
     val email: String,
     val loginType: String,
     val temperature: Double,
-    val pushYN: Char
+    val isPushAgree: Boolean
 )

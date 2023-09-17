@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="24dp"
-            android:checked="@{vm.pushYN =='Y' ? true : false}"
+            android:checked="@{vm.isPushAgree}"
             app:layout_constraintBottom_toTopOf="@id/line2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/line1" />

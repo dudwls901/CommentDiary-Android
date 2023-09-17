@@ -12,12 +12,12 @@ import retrofit2.http.PATCH
 
 interface MyPageApiService {
 
-//    todo Bearer, X-AUTH header 필요한지 확인
+    //    todo Bearer, X-AUTH header 필요한지 확인
     @DELETE(LOG_OUT)
     suspend fun logOut(): Response<BaseResponse<String>>
 
     @PATCH(PUSH)
-    suspend fun patchCommentPushState(): Response<BaseResponse<Map<String, Char>>>
+    suspend fun patchCommentPushState(): Response<BaseResponse<Map<String, Boolean>>>
 
     @DELETE(MEMBERS)
     suspend fun signOut(): Response<BaseResponse<String>>

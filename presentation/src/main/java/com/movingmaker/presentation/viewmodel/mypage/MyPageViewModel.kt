@@ -76,9 +76,9 @@ class MyPageViewModel @Inject constructor(
     val canChangePassword: LiveData<Boolean>
         get() = _canChangePassword
 
-    private var _pushYN = MutableLiveData<Char>()
-    val pushYN: LiveData<Char>
-        get() = _pushYN
+    private var _isPushAgree = MutableLiveData<Boolean>()
+    val isPushAgree: LiveData<Boolean>
+        get() = _isPushAgree
 
     private fun setMyAccount(email: String) {
         _myAccount.value = email
@@ -128,8 +128,8 @@ class MyPageViewModel @Inject constructor(
         _canChangePassword.value = passwordCorrect.value!! && passwordCheckCorrect.value!!
     }
 
-    private fun setPushYN(yn: Char) {
-        _pushYN.value = yn
+    private fun setIsPushAgree(isPushAgree: Boolean) {
+        _isPushAgree.value = isPushAgree
     }
 
     fun signOut() = viewModelScope.launch {
@@ -202,7 +202,7 @@ class MyPageViewModel @Inject constructor(
                 is UiState.Success -> {
                     setMyAccount(data.email)
                     setTemperature(data.temperature)
-                    setPushYN(data.pushYN)
+                    setIsPushAgree(data.isPushAgree)
                     setLoginType(data.loginType)
                 }
                 is UiState.Error -> {
@@ -244,7 +244,7 @@ class MyPageViewModel @Inject constructor(
             offLoading()
             when (this) {
                 is UiState.Success -> {
-                    data["pushYn"]?.let { yn -> setPushYN(yn) }
+                    data["pushAgree"]?.let { isPushAgree -> setIsPushAgree(isPushAgree) }
                 }
                 is UiState.Error -> {
                     setMessage(message)
