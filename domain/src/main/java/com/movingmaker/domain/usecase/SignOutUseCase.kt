@@ -3,12 +3,12 @@ package com.movingmaker.domain.usecase
 import com.movingmaker.domain.model.UiState
 import com.movingmaker.domain.model.mapUiState
 import com.movingmaker.domain.model.toUiState
-import com.movingmaker.domain.repository.MyPageRepository
+import com.movingmaker.domain.repository.MemberRepository
 import javax.inject.Inject
 
 class SignOutUseCase @Inject constructor(
-    private val myPageRepository: MyPageRepository,
+    private val memberRepository: MemberRepository,
 ) {
     suspend operator fun invoke(): UiState<String> =
-        myPageRepository.signOut().toUiState().mapUiState { it.result }
+        memberRepository.signOut().toUiState().mapUiState { it.result }
 }

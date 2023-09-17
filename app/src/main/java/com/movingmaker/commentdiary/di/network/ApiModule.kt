@@ -1,13 +1,10 @@
 package com.movingmaker.commentdiary.di.network
 
 
-import com.movingmaker.data.remote.api.CommentApiService
-import com.movingmaker.data.remote.api.DiaryApiService
-import com.movingmaker.data.remote.api.MemberApiService
-import com.movingmaker.data.remote.api.MyPageApiService
-import com.movingmaker.data.remote.api.ReIssueTokenApiService
-import com.movingmaker.data.remote.api.ReceivedDiaryApiService
-import com.movingmaker.data.remote.api.ReportApiService
+import com.movingmaker.data.remote.api.BearerAndXAuthTokenApiService
+import com.movingmaker.data.remote.api.BearerApiService
+import com.movingmaker.data.remote.api.NoHeaderApiService
+import com.movingmaker.data.remote.api.XAuthTokenAndRefreshTokenApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,59 +18,34 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideMemberApiService(
+    fun provideNoHeaderApiService(
         @RetrofitModule.NoHeaderRetrofit retrofit: Retrofit
-    ): MemberApiService {
-        return retrofit.create(MemberApiService::class.java)
+    ): NoHeaderApiService {
+        return retrofit.create(NoHeaderApiService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideMyPageApiService(
+    fun provideXAuthTokenAndRefreshTokenApiService(
+        @RetrofitModule.XAuthTokenAndRefreshTokenRetrofit retrofit: Retrofit
+    ): XAuthTokenAndRefreshTokenApiService {
+        return retrofit.create(XAuthTokenAndRefreshTokenApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBearerAndXAuthTokenApiService(
+        @RetrofitModule.BearerAndXAuthTokenRetrofit retrofit: Retrofit
+    ): BearerAndXAuthTokenApiService {
+        return retrofit.create(BearerAndXAuthTokenApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBearerApiService(
         @RetrofitModule.BearerRetrofit retrofit: Retrofit
-    ): MyPageApiService {
-        return retrofit
-            .create(MyPageApiService::class.java)
+    ): BearerApiService {
+        return retrofit.create(BearerApiService::class.java)
     }
 
-    @Provides
-    @Singleton
-    fun provideReIssueTokenApiService(
-        @RetrofitModule.TwoHeaderRetrofit retrofit: Retrofit
-    ): ReIssueTokenApiService {
-        return retrofit.create(ReIssueTokenApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideDiaryApiService(
-        @RetrofitModule.BearerRetrofit retrofit: Retrofit
-    ): DiaryApiService {
-        return retrofit
-            .create(DiaryApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideReceivedDiaryApiService(
-        @RetrofitModule.BearerRetrofit retrofit: Retrofit
-    ): ReceivedDiaryApiService {
-        return retrofit.create(ReceivedDiaryApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideCommentApiService(
-        @RetrofitModule.BearerRetrofit retrofit: Retrofit
-    ): CommentApiService{
-        return retrofit.create(CommentApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideReportApiService(
-        @RetrofitModule.BearerRetrofit retrofit: Retrofit
-    ): ReportApiService{
-        return retrofit.create(ReportApiService::class.java)
-    }
 }

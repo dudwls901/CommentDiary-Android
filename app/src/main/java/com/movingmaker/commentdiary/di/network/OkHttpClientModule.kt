@@ -1,6 +1,5 @@
 package com.movingmaker.commentdiary.di.network
 
-import com.movingmaker.commentdiary.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,27 +25,15 @@ object OkHttpClientModule {
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)
-    annotation class OneHeaderInterceptorHttpClient
+    annotation class XAuthTokenAndRefreshTokenHeaderInterceptorHttpClient
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)
-    annotation class TwoHeaderInterceptorHttpClient
-
-
-    @Provides
-    @Singleton
-    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor().apply {
-            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
-            else HttpLoggingInterceptor.Level.NONE
-        }
-    }
-
+    annotation class BearerAndXAuthTokenHeaderInterceptorHttpClient
 
     @Provides
     @Singleton
     @NoHeaderInterceptorHttpClient
-    //okHttp 의존성 주입 (아래 retrofit 의존성 주입에 사용)
     fun provideNoHeaderInterceptorHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
@@ -59,7 +46,6 @@ object OkHttpClientModule {
     @Provides
     @Singleton
     @BearerInterceptorHttpClient
-    //okHttp 의존성 주입 (아래 retrofit 의존성 주입에 사용)
     fun provideBearerInterceptorHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
         @InterceptorModule.BearerInterceptor bearerInterceptor: Interceptor
@@ -74,32 +60,30 @@ object OkHttpClientModule {
 
     @Provides
     @Singleton
-    @OneHeaderInterceptorHttpClient
-    //okHttp 의존성 주입 (아래 retrofit 의존성 주입에 사용)
+    @XAuthTokenAndRefreshTokenHeaderInterceptorHttpClient
     fun provideOneHeaderHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
-        @InterceptorModule.OneHeaderInterceptor oneHeaderInterceptor: Interceptor
+        @InterceptorModule.XAuthTokenAndRefreshTokenHeaderInterceptor xAuthTokenAndRefreshTokenHeaderInterceptor: Interceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(5, TimeUnit.SECONDS)
             .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(oneHeaderInterceptor)
+            .addInterceptor(xAuthTokenAndRefreshTokenHeaderInterceptor)
             .build()
 
     }
 
     @Provides
     @Singleton
-    @TwoHeaderInterceptorHttpClient
-    //okHttp 의존성 주입 (아래 retrofit 의존성 주입에 사용)
+    @BearerAndXAuthTokenHeaderInterceptorHttpClient
     fun provideTwoHeaHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
-        @InterceptorModule.TwoHeaderInterceptor twoHeaderInterceptor: Interceptor
+        @InterceptorModule.BearerAndXAuthTokenHeaderInterceptor bearerAndXAuthTokenHeaderInterceptor: Interceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(5, TimeUnit.SECONDS)
             .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(twoHeaderInterceptor)
+            .addInterceptor(bearerAndXAuthTokenHeaderInterceptor)
             .build()
     }
 }

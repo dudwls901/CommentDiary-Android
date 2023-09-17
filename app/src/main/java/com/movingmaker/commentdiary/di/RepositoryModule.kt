@@ -4,13 +4,11 @@ package com.movingmaker.commentdiary.di
 import com.movingmaker.data.repositoryimpl.CommentRepositoryImpl
 import com.movingmaker.data.repositoryimpl.DiaryRepositoryImpl
 import com.movingmaker.data.repositoryimpl.MemberRepositoryImpl
-import com.movingmaker.data.repositoryimpl.MyPageRepositoryImpl
 import com.movingmaker.data.repositoryimpl.ReceivedDiaryRepositoryImpl
 import com.movingmaker.data.repositoryimpl.ReportRepositoryImpl
 import com.movingmaker.domain.repository.CommentRepository
 import com.movingmaker.domain.repository.DiaryRepository
 import com.movingmaker.domain.repository.MemberRepository
-import com.movingmaker.domain.repository.MyPageRepository
 import com.movingmaker.domain.repository.ReceivedDiaryRepository
 import com.movingmaker.domain.repository.ReportRepository
 import dagger.Binds
@@ -47,11 +45,6 @@ abstract class RepositoryModule {
         diaryRepositoryImpl: DiaryRepositoryImpl,
     ): DiaryRepository
 
-    @Binds
-    @Singleton
-    abstract fun bindMyPageRepository(
-        myPageRepositoryImpl: MyPageRepositoryImpl,
-    ): MyPageRepository
 
     @Binds
     @Singleton

@@ -6,7 +6,11 @@ import com.movingmaker.data.util.REISSUE
 import retrofit2.Response
 import retrofit2.http.POST
 
-interface ReIssueTokenApiService {
+interface XAuthTokenAndRefreshTokenApiService{
+
+    /*
+    * MEMBER
+    * */
 
     @POST(REISSUE)
     suspend fun reIssueToken(): Response<BaseResponse<AuthTokensResponse>>

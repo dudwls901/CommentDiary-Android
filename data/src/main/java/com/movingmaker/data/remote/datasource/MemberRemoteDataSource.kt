@@ -7,8 +7,10 @@ import com.movingmaker.data.remote.model.request.KakaoSignUpRequest
 import com.movingmaker.data.remote.model.request.LogInRequest
 import com.movingmaker.data.remote.model.request.SignUpRequest
 import com.movingmaker.domain.model.NetworkResult
+import com.movingmaker.domain.model.response.AuthTokens
 import com.movingmaker.domain.model.response.BaseResponse
 import com.movingmaker.domain.model.response.Login
+import com.movingmaker.domain.model.response.MyInfo
 
 interface MemberRemoteDataSource {
 
@@ -27,4 +29,15 @@ interface MemberRemoteDataSource {
     suspend fun findPassword(email: String): NetworkResult<BaseResponse<String>>
 
     suspend fun changePassword(changePasswordRequest: ChangePasswordRequest): NetworkResult<BaseResponse<String>>
+
+    suspend fun patchCommentPushState(): NetworkResult<BaseResponse<Map<String, Boolean>>>
+
+    suspend fun logOut(): NetworkResult<BaseResponse<String>>
+
+    suspend fun signOut(): NetworkResult<BaseResponse<String>>
+
+    suspend fun getMyPage(): NetworkResult<BaseResponse<MyInfo>>
+
+    suspend fun reIssueToken(): NetworkResult<BaseResponse<AuthTokens>>
+
 }

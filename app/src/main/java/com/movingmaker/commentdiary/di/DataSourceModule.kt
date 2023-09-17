@@ -6,15 +6,11 @@ import com.movingmaker.data.local.datasourceimpl.DiaryLocalDataSourceImpl
 import com.movingmaker.data.remote.datasource.CommentRemoteDataSource
 import com.movingmaker.data.remote.datasource.DiaryRemoteDataSource
 import com.movingmaker.data.remote.datasource.MemberRemoteDataSource
-import com.movingmaker.data.remote.datasource.MyPageRemoteDataSource
-import com.movingmaker.data.remote.datasource.ReIssueTokenRemoteDataSource
 import com.movingmaker.data.remote.datasource.ReceivedDiaryRemoteDataSource
 import com.movingmaker.data.remote.datasource.ReportRemoteDataSource
 import com.movingmaker.data.remote.datasourceimpl.CommentRemoteDataSourceImpl
 import com.movingmaker.data.remote.datasourceimpl.DiaryRemoteDataSourceImpl
 import com.movingmaker.data.remote.datasourceimpl.MemberRemoteDataSourceImpl
-import com.movingmaker.data.remote.datasourceimpl.MyPageRemoteDataSourceImpl
-import com.movingmaker.data.remote.datasourceimpl.ReIssueTokenRemoteDataSourceImpl
 import com.movingmaker.data.remote.datasourceimpl.ReceivedDiaryRemoteDataSourceImpl
 import com.movingmaker.data.remote.datasourceimpl.ReportRemoteDataSourceImpl
 import dagger.Binds
@@ -52,18 +48,6 @@ abstract class DataSourceModule {
     abstract fun bindCommentRemoteDataSource(
         commentRemoteDataSourceImpl: CommentRemoteDataSourceImpl
     ): CommentRemoteDataSource
-
-    @Binds
-    @Singleton
-    abstract fun bindReIssueTokenRemoteDataSource(
-        reIssueTokenRemoteDataSourceImpl: ReIssueTokenRemoteDataSourceImpl,
-    ): ReIssueTokenRemoteDataSource
-
-    @Binds
-    @Singleton
-    abstract fun bindMyPageRemoteDataSource(
-        myPageRemoteDataSourceImpl: MyPageRemoteDataSourceImpl,
-    ): MyPageRemoteDataSource
 
     @Binds
     @Singleton

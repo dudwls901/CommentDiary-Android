@@ -1,6 +1,6 @@
 package com.movingmaker.data.remote.datasourceimpl
 
-import com.movingmaker.data.remote.api.CommentApiService
+import com.movingmaker.data.remote.api.BearerApiService
 import com.movingmaker.data.remote.datasource.CommentRemoteDataSource
 import com.movingmaker.data.remote.model.request.SaveCommentRequest
 import com.movingmaker.data.util.safeApiCall
@@ -11,17 +11,17 @@ import com.movingmaker.domain.model.response.SavedComment
 import javax.inject.Inject
 
 class CommentRemoteDataSourceImpl @Inject constructor(
-    private val commentApiService: CommentApiService
+    private val bearerApiService: BearerApiService
 ) : CommentRemoteDataSource {
     override suspend fun saveComment(saveCommentRequest: SaveCommentRequest): NetworkResult<BaseResponse<SavedComment>> =
-        safeApiCall { commentApiService.saveComment(saveCommentRequest) }
+        safeApiCall { bearerApiService.saveComment(saveCommentRequest) }
 
     override suspend fun likeComment(commentId: Long): NetworkResult<BaseResponse<String>> =
-        safeApiCall { commentApiService.likeComment(commentId) }
+        safeApiCall { bearerApiService.likeComment(commentId) }
 
     override suspend fun getAllComments(): NetworkResult<BaseResponse<List<Comment>>> =
-        safeApiCall { commentApiService.getAllComments() }
+        safeApiCall { bearerApiService.getAllComments() }
 
     override suspend fun getPeriodComments(date: String): NetworkResult<BaseResponse<List<Comment>>> =
-        safeApiCall { commentApiService.getPeriodComments(date) }
+        safeApiCall { bearerApiService.getPeriodComments(date) }
 }
