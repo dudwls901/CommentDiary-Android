@@ -7,8 +7,8 @@ import com.movingmaker.domain.model.request.KakaoLoginModel
 import com.movingmaker.domain.model.request.KakaoSignUpModel
 import com.movingmaker.domain.model.request.LogInModel
 import com.movingmaker.domain.model.request.SignUpModel
-import com.movingmaker.domain.model.response.AuthTokens
 import com.movingmaker.domain.model.response.BaseResponse
+import com.movingmaker.domain.model.response.Login
 
 interface MemberRepository {
 
@@ -18,9 +18,9 @@ interface MemberRepository {
 
     suspend fun signUp(signUpModel: SignUpModel): NetworkResult<BaseResponse<String>>
 
-    suspend fun logIn(logInModel: LogInModel): NetworkResult<BaseResponse<AuthTokens>>
+    suspend fun logIn(logInModel: LogInModel): NetworkResult<BaseResponse<Login>>
 
-    suspend fun kakaoLogIn(kakaoLoginModel: KakaoLoginModel): NetworkResult<BaseResponse<AuthTokens>>
+    suspend fun kakaoLogIn(kakaoLoginModel: KakaoLoginModel): NetworkResult<BaseResponse<Login>>
 
     suspend fun kakaoSignUpSetAccepts(kakaoSignUpModel: KakaoSignUpModel): NetworkResult<BaseResponse<String>>
 

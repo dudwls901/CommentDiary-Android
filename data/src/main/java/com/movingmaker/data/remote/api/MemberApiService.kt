@@ -6,8 +6,8 @@ import com.movingmaker.data.remote.model.request.KakaoLoginRequest
 import com.movingmaker.data.remote.model.request.KakaoSignUpRequest
 import com.movingmaker.data.remote.model.request.LogInRequest
 import com.movingmaker.data.remote.model.request.SignUpRequest
-import com.movingmaker.data.remote.model.response.AuthTokensResponse
 import com.movingmaker.data.remote.model.response.BaseResponse
+import com.movingmaker.data.remote.model.response.LoginResponse
 import com.movingmaker.data.util.AUTH_SIGNUP
 import com.movingmaker.data.util.EMAIL
 import com.movingmaker.data.util.EMAIL_CODE_CHECK
@@ -35,10 +35,10 @@ interface MemberApiService {
     suspend fun signUp(@Body signUpRequest: SignUpRequest): Response<BaseResponse<String>>
 
     @POST(LOG_IN)
-    suspend fun logIn(@Body logInRequest: LogInRequest): Response<BaseResponse<AuthTokensResponse>>
+    suspend fun logIn(@Body logInRequest: LogInRequest): Response<BaseResponse<LoginResponse>>
 
     @POST(SOCIAL_LOG_IN)
-    suspend fun kakaoLogIn(@Body kakaoLoginRequest: KakaoLoginRequest): Response<BaseResponse<AuthTokensResponse>>
+    suspend fun kakaoLogIn(@Body kakaoLoginRequest: KakaoLoginRequest): Response<BaseResponse<LoginResponse>>
 
     //todo bearear 필요 없는지 확인
     @POST(AUTH_SIGNUP)

@@ -10,8 +10,8 @@ import com.movingmaker.data.remote.model.request.LogInRequest
 import com.movingmaker.data.remote.model.request.SignUpRequest
 import com.movingmaker.data.util.safeApiCall
 import com.movingmaker.domain.model.NetworkResult
-import com.movingmaker.domain.model.response.AuthTokens
 import com.movingmaker.domain.model.response.BaseResponse
+import com.movingmaker.domain.model.response.Login
 import javax.inject.Inject
 
 class MemberRemoteDataSourceImpl @Inject constructor(
@@ -26,7 +26,7 @@ class MemberRemoteDataSourceImpl @Inject constructor(
     override suspend fun signUp(signUpRequest: SignUpRequest): NetworkResult<BaseResponse<String>> =
         safeApiCall { memberApiService.signUp(signUpRequest) }
 
-    override suspend fun kakaoLogIn(kakaoLoginRequest: KakaoLoginRequest): NetworkResult<BaseResponse<AuthTokens>> =
+    override suspend fun kakaoLogIn(kakaoLoginRequest: KakaoLoginRequest): NetworkResult<BaseResponse<Login>> =
         safeApiCall { memberApiService.kakaoLogIn(kakaoLoginRequest) }
 
     override suspend fun findPassword(email: String): NetworkResult<BaseResponse<String>> =
@@ -35,7 +35,7 @@ class MemberRemoteDataSourceImpl @Inject constructor(
     override suspend fun changePassword(changePasswordRequest: ChangePasswordRequest): NetworkResult<BaseResponse<String>> =
         safeApiCall { memberApiService.changePassword(changePasswordRequest) }
 
-    override suspend fun logIn(logInRequest: LogInRequest): NetworkResult<BaseResponse<AuthTokens>> =
+    override suspend fun logIn(logInRequest: LogInRequest): NetworkResult<BaseResponse<Login>> =
         safeApiCall { memberApiService.logIn(logInRequest) }
 
     override suspend fun kakaoSignUpSetAccepts(kakaoSignUpRequest: KakaoSignUpRequest): NetworkResult<BaseResponse<String>> =

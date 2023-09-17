@@ -7,8 +7,8 @@ import com.movingmaker.data.remote.model.request.KakaoSignUpRequest
 import com.movingmaker.data.remote.model.request.LogInRequest
 import com.movingmaker.data.remote.model.request.SignUpRequest
 import com.movingmaker.domain.model.NetworkResult
-import com.movingmaker.domain.model.response.AuthTokens
 import com.movingmaker.domain.model.response.BaseResponse
+import com.movingmaker.domain.model.response.Login
 
 interface MemberRemoteDataSource {
 
@@ -18,9 +18,9 @@ interface MemberRemoteDataSource {
 
     suspend fun signUp(signUpRequest: SignUpRequest): NetworkResult<BaseResponse<String>>
 
-    suspend fun logIn(logInRequest: LogInRequest): NetworkResult<BaseResponse<AuthTokens>>
+    suspend fun logIn(logInRequest: LogInRequest): NetworkResult<BaseResponse<Login>>
 
-    suspend fun kakaoLogIn(kakaoLoginRequest: KakaoLoginRequest): NetworkResult<BaseResponse<AuthTokens>>
+    suspend fun kakaoLogIn(kakaoLoginRequest: KakaoLoginRequest): NetworkResult<BaseResponse<Login>>
 
     suspend fun kakaoSignUpSetAccepts(kakaoSignUpRequest: KakaoSignUpRequest): NetworkResult<BaseResponse<String>>
 

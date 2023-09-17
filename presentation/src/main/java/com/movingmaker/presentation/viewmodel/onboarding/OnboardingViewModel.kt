@@ -431,9 +431,9 @@ class OnboardingViewModel @Inject constructor(
             offLoading()
             when (this) {
                 is UiState.Success -> {
-                    val accessToken = this.data.accessToken
-                    val refreshToken = this.data.refreshToken
-                    val accessTokenExpiresIn = this.data.accessTokenExpiresIn
+                    val accessToken = this.data.authTokens.accessToken
+                    val refreshToken = this.data.authTokens.refreshToken
+                    val accessTokenExpiresIn = this.data.authTokens.accessTokenExpiresIn
                     val userId = this.data.userId
                     Timber.d("login: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}")
                     clearCachedDiaries(userId)
@@ -467,11 +467,11 @@ class OnboardingViewModel @Inject constructor(
             when (this) {
                 is UiState.Success -> {
                     successLogin = true
-                    val accessToken = this.data.accessToken
-                    val refreshToken = this.data.refreshToken
-                    val accessTokenExpiresIn = this.data.accessTokenExpiresIn
+                    val accessToken = this.data.authTokens.accessToken
+                    val refreshToken = this.data.authTokens.refreshToken
+                    val accessTokenExpiresIn = this.data.authTokens.accessTokenExpiresIn
                     val userId = this.data.userId
-                    isNewMember = this.data.isNewMember == true
+                    isNewMember = this.data.authTokens.isNewMember == true
                     Timber.d(
                         "kakaoLogin: ${accessToken} ${refreshToken} ${accessTokenExpiresIn}"
                     )

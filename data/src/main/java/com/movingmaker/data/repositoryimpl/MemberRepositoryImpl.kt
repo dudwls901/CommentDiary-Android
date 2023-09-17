@@ -9,8 +9,8 @@ import com.movingmaker.domain.model.request.KakaoLoginModel
 import com.movingmaker.domain.model.request.KakaoSignUpModel
 import com.movingmaker.domain.model.request.LogInModel
 import com.movingmaker.domain.model.request.SignUpModel
-import com.movingmaker.domain.model.response.AuthTokens
 import com.movingmaker.domain.model.response.BaseResponse
+import com.movingmaker.domain.model.response.Login
 import com.movingmaker.domain.repository.MemberRepository
 import javax.inject.Inject
 
@@ -26,11 +26,11 @@ class MemberRepositoryImpl @Inject constructor(
     override suspend fun signUp(signUpModel: SignUpModel): NetworkResult<BaseResponse<String>> =
         memberRemoteDataSource.signUp(signUpModel.toDataModel())
 
-    override suspend fun logIn(logInModel: LogInModel): NetworkResult<BaseResponse<AuthTokens>> =
+    override suspend fun logIn(logInModel: LogInModel): NetworkResult<BaseResponse<Login>> =
         memberRemoteDataSource.logIn(logInModel.toDataModel())
 
 
-    override suspend fun kakaoLogIn(kakaoLoginModel: KakaoLoginModel): NetworkResult<BaseResponse<AuthTokens>> =
+    override suspend fun kakaoLogIn(kakaoLoginModel: KakaoLoginModel): NetworkResult<BaseResponse<Login>> =
         memberRemoteDataSource.kakaoLogIn(kakaoLoginModel.toDataModel())
 
 

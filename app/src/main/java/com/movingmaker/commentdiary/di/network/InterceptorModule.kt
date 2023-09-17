@@ -82,8 +82,7 @@ object InterceptorModule {
                                         authTokens.refreshToken,
                                         //todo 현재 서버에서 받은 만료 시간이 아닌 커스텀 만료 시간 (현재 시간 + 1초) -> release 버전엔 서버 데이터
 //                                        authTokens.accessTokenExpiresIn
-                                        CodaApplication.getCustomExpire(),
-                                        authTokens.userId
+                                        CodaApplication.getCustomExpire()
                                     )
                                     ret = authTokens.accessToken
                                 }

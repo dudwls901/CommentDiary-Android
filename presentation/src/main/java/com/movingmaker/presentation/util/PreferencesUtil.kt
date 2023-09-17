@@ -13,7 +13,7 @@ class PreferencesUtil @Inject constructor(
         accessToken: String,
         refreshToken: String,
         accessTokenExpiresIn: Long,
-        userId: Long
+        userId: Long? = null, // 토큰 재발급의 경우 Null
     ) {
         // 자동 로그인 데이터 저장
         sharedPreferences.edit().apply {
@@ -21,7 +21,7 @@ class PreferencesUtil @Inject constructor(
             putString(ACCESS_TOKEN, accessToken)
             putString(REFRESH_TOKEN, refreshToken)
             putLong(ACCESS_TOKEN_EXPIRES_IN, accessTokenExpiresIn)
-            putLong(USER_ID, userId)
+            putLong(USER_ID, userId ?: getUserId())
         }.apply()
     }
 

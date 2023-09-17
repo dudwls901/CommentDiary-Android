@@ -11,9 +11,8 @@ data class AuthTokensResponse(
     val refreshToken: String,
     val accessTokenExpiresIn: Long,
     val newMember: Boolean? = null,
-    val userId: Long
 ) : RemoteResponse {
     override fun toDomainModel() = AuthTokens(
-        grantType, accessToken, refreshToken, accessTokenExpiresIn, newMember, userId
+        grantType, accessToken, refreshToken, accessTokenExpiresIn, newMember
     )
 }
