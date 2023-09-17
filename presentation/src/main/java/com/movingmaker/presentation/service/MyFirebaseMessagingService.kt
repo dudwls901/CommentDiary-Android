@@ -18,10 +18,11 @@ import com.movingmaker.presentation.util.PreferencesUtil
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.ymdFormat
 import com.movingmaker.presentation.view.main.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class MyFirebaseMessagingService: FirebaseMessagingService() {
 
     @Inject

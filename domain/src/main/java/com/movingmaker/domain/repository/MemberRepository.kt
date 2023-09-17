@@ -9,6 +9,7 @@ import com.movingmaker.domain.model.request.LogInModel
 import com.movingmaker.domain.model.request.SignUpModel
 import com.movingmaker.domain.model.response.BaseResponse
 import com.movingmaker.domain.model.response.Login
+import com.movingmaker.domain.model.response.MyInfo
 
 interface MemberRepository {
 
@@ -27,4 +28,12 @@ interface MemberRepository {
     suspend fun findPassword(email: String): NetworkResult<BaseResponse<String>>
 
     suspend fun changePassword(changePasswordModel: ChangePasswordModel): NetworkResult<BaseResponse<String>>
+
+    suspend fun patchCommentPushState(): NetworkResult<BaseResponse<Map<String, Boolean>>>
+
+    suspend fun logOut(): NetworkResult<BaseResponse<String>>
+
+    suspend fun signOut(): NetworkResult<BaseResponse<String>>
+
+    suspend fun getMyPage(): NetworkResult<BaseResponse<MyInfo>>
 }

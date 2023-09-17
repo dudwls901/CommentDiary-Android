@@ -21,11 +21,11 @@ object RetrofitModule {
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)
-    annotation class OneHeaderRetrofit
+    annotation class XAuthTokenAndRefreshTokenRetrofit
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)
-    annotation class TwoHeaderRetrofit
+    annotation class BearerAndXAuthTokenRetrofit
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)
@@ -47,9 +47,9 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    @TwoHeaderRetrofit
+    @XAuthTokenAndRefreshTokenRetrofit
     fun provideTwoHeaderRetrofit(
-        @OkHttpClientModule.TwoHeaderInterceptorHttpClient okHttpClient: OkHttpClient,
+        @OkHttpClientModule.XAuthTokenAndRefreshTokenHeaderInterceptorHttpClient okHttpClient: OkHttpClient,
         converterFactory: Converter.Factory
     ): Retrofit {
         return Retrofit.Builder()
@@ -61,9 +61,9 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    @OneHeaderRetrofit
+    @BearerAndXAuthTokenRetrofit
     fun provideOneHeaderRetrofit(
-        @OkHttpClientModule.OneHeaderInterceptorHttpClient okHttpClient: OkHttpClient,
+        @OkHttpClientModule.BearerAndXAuthTokenHeaderInterceptorHttpClient okHttpClient: OkHttpClient,
         converterFactory: Converter.Factory
     ): Retrofit {
         return Retrofit.Builder()

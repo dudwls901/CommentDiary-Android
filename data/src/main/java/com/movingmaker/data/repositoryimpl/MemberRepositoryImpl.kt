@@ -11,6 +11,7 @@ import com.movingmaker.domain.model.request.LogInModel
 import com.movingmaker.domain.model.request.SignUpModel
 import com.movingmaker.domain.model.response.BaseResponse
 import com.movingmaker.domain.model.response.Login
+import com.movingmaker.domain.model.response.MyInfo
 import com.movingmaker.domain.repository.MemberRepository
 import javax.inject.Inject
 
@@ -29,10 +30,8 @@ class MemberRepositoryImpl @Inject constructor(
     override suspend fun logIn(logInModel: LogInModel): NetworkResult<BaseResponse<Login>> =
         memberRemoteDataSource.logIn(logInModel.toDataModel())
 
-
     override suspend fun kakaoLogIn(kakaoLoginModel: KakaoLoginModel): NetworkResult<BaseResponse<Login>> =
         memberRemoteDataSource.kakaoLogIn(kakaoLoginModel.toDataModel())
-
 
     override suspend fun findPassword(email: String): NetworkResult<BaseResponse<String>> =
         memberRemoteDataSource.findPassword(email)
@@ -42,4 +41,16 @@ class MemberRepositoryImpl @Inject constructor(
 
     override suspend fun kakaoSignUpSetAccepts(kakaoSignUpModel: KakaoSignUpModel): NetworkResult<BaseResponse<String>> =
         memberRemoteDataSource.kakaoSignUpSetAccepts(kakaoSignUpModel.toDataModel())
+
+    override suspend fun patchCommentPushState(): NetworkResult<BaseResponse<Map<String, Boolean>>> =
+        memberRemoteDataSource.patchCommentPushState()
+
+    override suspend fun signOut(): NetworkResult<BaseResponse<String>> =
+        memberRemoteDataSource.signOut()
+
+    override suspend fun getMyPage(): NetworkResult<BaseResponse<MyInfo>> =
+        memberRemoteDataSource.getMyPage()
+
+    override suspend fun logOut(): NetworkResult<BaseResponse<String>> =
+        memberRemoteDataSource.logOut()
 }

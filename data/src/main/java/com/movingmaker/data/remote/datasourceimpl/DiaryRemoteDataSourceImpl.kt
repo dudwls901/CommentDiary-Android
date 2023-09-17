@@ -1,6 +1,6 @@
 package com.movingmaker.data.remote.datasourceimpl
 
-import com.movingmaker.data.remote.api.DiaryApiService
+import com.movingmaker.data.remote.api.BearerApiService
 import com.movingmaker.data.remote.datasource.DiaryRemoteDataSource
 import com.movingmaker.data.remote.model.request.EditDiaryRequest
 import com.movingmaker.data.remote.model.request.SaveDiaryRequest
@@ -12,27 +12,27 @@ import com.movingmaker.domain.model.response.DiaryId
 import javax.inject.Inject
 
 class DiaryRemoteDataSourceImpl @Inject constructor(
-    private val diaryApiService: DiaryApiService
+    private val bearerApiService: BearerApiService
 ) : DiaryRemoteDataSource {
 
     override suspend fun saveDiary(saveDiaryRequest: SaveDiaryRequest): NetworkResult<BaseResponse<DiaryId>> =
-        safeApiCall { diaryApiService.saveDiary(saveDiaryRequest) }
+        safeApiCall { bearerApiService.saveDiary(saveDiaryRequest) }
 
     override suspend fun editDiary(
         diaryId: Long,
         editDiaryRequest: EditDiaryRequest
     ): NetworkResult<BaseResponse<String>> =
-        safeApiCall { diaryApiService.editDiary(diaryId, editDiaryRequest) }
+        safeApiCall { bearerApiService.editDiary(diaryId, editDiaryRequest) }
 
     override suspend fun deleteDiary(diaryId: Long): NetworkResult<BaseResponse<String>> =
-        safeApiCall { diaryApiService.deleteDiary(diaryId) }
+        safeApiCall { bearerApiService.deleteDiary(diaryId) }
 
     override suspend fun getAllDiaries(): NetworkResult<BaseResponse<List<Diary>>> =
-        safeApiCall { diaryApiService.getAllDiaries() }
+        safeApiCall { bearerApiService.getAllDiaries() }
 
     override suspend fun getPeriodDiaries(date: String): NetworkResult<BaseResponse<List<Diary>>> =
-        safeApiCall { diaryApiService.getPeriodDiaries(date) }
+        safeApiCall { bearerApiService.getPeriodDiaries(date) }
 
     override suspend fun getDiary(diaryId: Long): NetworkResult<BaseResponse<Diary>> =
-        safeApiCall { diaryApiService.getDiary(diaryId) }
+        safeApiCall { bearerApiService.getDiary(diaryId) }
 }
