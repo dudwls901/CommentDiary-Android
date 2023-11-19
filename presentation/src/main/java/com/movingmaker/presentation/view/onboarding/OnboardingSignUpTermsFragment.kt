@@ -51,8 +51,8 @@ class OnboardingSignUpTermsFragment :
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(TERMS_URL)))
         }
 
-        binding.backButton.setOnClickListener {
-            findNavController().popBackStack()
+        binding.okButton.setOnClickListener {
+            findNavController().navigate(OnboardingSignUpTermsFragmentDirections.actionOnboardingSignUpTermsFragmentToOnboardingLoginFragment())
         }
 
     }
