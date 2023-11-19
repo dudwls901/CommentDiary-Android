@@ -5,126 +5,74 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="vm"
             type="com.movingmaker.presentation.viewmodel.onboarding.OnboardingViewModel" />
-
-        <variable
-            name="activity"
-            type="com.movingmaker.presentation.view.onboarding.OnboardingLoginActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_ivory">
-
-        <ImageButton
-            android:id="@+id/backButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="17dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/backButton"
-            android:src="@drawable/ic_arrow_left"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:background="@color/background_ivory"
+        tools:context=".presentation.view.onboarding.OnboardingLoginBeforeFragment">
 
         <TextView
-            android:id="@+id/loginTextView"
+            android:id="@+id/headTextView"
             style="@style/BLargetitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="52dp"
             android:layout_marginTop="52dp"
-            android:layout_marginBottom="24dp"
-            android:text="@string/onboarding_login"
+            android:text="@string/start_coda"
             android:textColor="@color/text_dark_brown"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/emailTextView"
-            style="@style/BCaption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="52dp"
-            android:layout_marginTop="29dp"
-            android:text="@string/onboarding_email"
-            android:textColor="@color/text_dark_brown"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loginTextView" />
-
-        <EditText
-            android:id="@+id/emailEditText"
-            style="@style/MCaption2"
+        <LinearLayout
+            android:id="@+id/startWithKakaoButton"
             android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="52dp"
-            android:layout_marginTop="6dp"
-            android:autofillHints="no"
-            android:background="@drawable/background_ivory_radius_4_border_green_2"
-            android:hint="@string/onboarding_email_hint"
-            android:inputType="textEmailAddress"
-            android:paddingHorizontal="12dp"
-            android:text="@={vm.email}"
-            android:textColor="@color/text_black"
-            android:textColorHint="@color/text_light_brown"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/background_kakao_radius_8"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@id/startWithEmailButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/emailTextView"
-            tools:ignore="RtlSymmetry" />
+            app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/passwordTextView"
-            style="@style/BCaption"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_kakao_logo"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                style="@style/BCaption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_with_kakao"
+                android:textColor="@color/text_black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/startWithEmailButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="52dp"
-            android:layout_marginTop="12dp"
-            android:text="@string/onboarding_password"
-            android:textColor="@color/text_dark_brown"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/emailEditText" />
-
-
-        <EditText
-            android:id="@+id/passwordEditText"
-            style="@style/MCaption2"
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="52dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="11dp"
-            android:autofillHints="no"
-            android:background="@drawable/background_ivory_radius_4_border_green_2"
-            android:hint="@string/onboarding_password_hint"
-            android:inputType="textPassword"
-            android:paddingHorizontal="12dp"
-            android:text="@={vm.password}"
-            android:textColor="@color/text_black"
-            android:textColorHint="@color/text_light_brown"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="72dp"
+            android:background="@drawable/background_radius_8_border_black_1"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/passwordTextView"
-            tools:ignore="RtlSymmetry" />
+            app:layout_constraintStart_toStartOf="parent">
 
-
-        <TextView
-            android:id="@+id/loginNoticeTextView"
-            style="@style/MCaption2"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginTop="6dp"
-            android:gravity="center_vertical"
-            android:text="@{vm.loginNotice}"
-            android:textColor="@color/core_notice"
-            app:layout_constraintStart_toStartOf="@id/loginTextView"
-            app:layout_constraintTop_toBottomOf="@id/passwordEditText" />
+            <TextView
+                style="@style/BCaption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_with_email"
+                android:textColor="@color/text_black" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

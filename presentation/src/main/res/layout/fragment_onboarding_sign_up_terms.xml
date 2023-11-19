@@ -15,18 +15,6 @@
         android:layout_height="match_parent"
         android:background="@color/background_ivory">
 
-        <ImageButton
-            android:id="@+id/backButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="14dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/backButton"
-            android:src="@drawable/ic_arrow_left"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
             android:id="@+id/signUpTextView"
             style="@style/BLargetitle"
@@ -34,7 +22,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="52dp"
             android:layout_marginTop="65dp"
-            android:text="@string/onboarding_makeaccount"
+            android:text="@string/accepts_terms"
             android:textColor="@color/text_dark_brown"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -77,12 +65,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                app:checkState="@{vm.isAllAccept}"
                 android:contentDescription="@string/accepts_terms"
                 android:paddingVertical="12dp"
                 android:paddingStart="23dp"
                 android:paddingEnd="23dp"
-                android:src="@drawable/ic_check" />
+                android:src="@drawable/ic_check"
+                app:checkState="@{vm.isAllAccept}" />
 
         </LinearLayout>
 
@@ -103,9 +91,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="11dp"
-                app:checkState="@{vm.isPolicyAccept}"
                 android:contentDescription="@string/policy_accept"
-                android:src="@drawable/ic_check" />
+                android:src="@drawable/ic_check"
+                app:checkState="@{vm.isPolicyAccept}" />
 
             <TextView
                 style="@style/MCaption2"
@@ -144,9 +132,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="11dp"
-                app:checkState="@{vm.isTermsAccept}"
                 android:contentDescription="@string/policy_accept"
-                android:src="@drawable/ic_check" />
+                android:src="@drawable/ic_check"
+                app:checkState="@{vm.isTermsAccept}" />
 
             <TextView
                 style="@style/MCaption2"
@@ -174,8 +162,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="19dp"
             android:layout_marginTop="10dp"
-            android:paddingTop="7dp"
             android:orientation="horizontal"
+            android:paddingTop="7dp"
             app:layout_constraintEnd_toEndOf="@id/allAcceptsLayout"
             app:layout_constraintStart_toStartOf="@id/allAcceptsLayout"
             app:layout_constraintTop_toBottomOf="@id/termsAcceptLayout"
@@ -185,9 +173,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="11dp"
-                app:checkState="@{vm.isPushAccept}"
                 android:contentDescription="@string/policy_accept"
-                android:src="@drawable/ic_check" />
+                android:src="@drawable/ic_check"
+                app:checkState="@{vm.isPushAccept}" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -211,6 +199,21 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/okButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/background_green_radius_10"
+            android:text="@string/submit"
+            android:textAlignment="center"
+            android:textAppearance="@style/BSubheadline"
+            android:textColor="@color/background_ivory"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

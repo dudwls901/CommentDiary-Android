@@ -11,7 +11,6 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseActivity
 import com.movingmaker.presentation.databinding.ActivitySplashBinding
-import com.movingmaker.presentation.util.EMPTY_TOKEN
 import com.movingmaker.presentation.util.PreferencesUtil
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.ymdFormat
@@ -65,16 +64,16 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
             delay(1000L)
             //자동 로그인
-            if (refreshToken != EMPTY_TOKEN) {
-                startActivity(loginIntent)
-            } else {
+//            if (refreshToken != EMPTY_TOKEN) {
+//                startActivity(loginIntent)
+//            } else {
                 startActivity(
                     Intent(
                         this@SplashActivity,
                         OnboardingIntroActivity::class.java
                     )
                 )
-            }
+//            }
             finish()
         }
     }
