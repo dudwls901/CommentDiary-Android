@@ -27,6 +27,7 @@ object Versions {
     //google
     const val MATERIAL = "1.6.1"
     const val PLAY_CORE = "1.8.1"
+    const val GOOGLE_PLAY_SERIVCE_AUTH = "20.7.0"
 
     // test
     const val JUNIT = "4.13.2"
@@ -61,8 +62,9 @@ object Versions {
 
     //firebase
     const val GOOGLE_SERVICES = "4.3.14"
-    const val FIREBASE_BOM = "30.5.0"
+    const val FIREBASE_BOM = "32.3.1"
     const val FIREBASE_CRASHLYTICS = "2.9.2"
+    const val FIREBASE_UI_AUTH = "7.2.0"
 
     //manifest secret
     const val MANIFEST_SECRET = "2.0.1"

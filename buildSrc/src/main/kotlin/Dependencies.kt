@@ -14,6 +14,7 @@ object Ktx {
 object Google {
     const val MATERIAL = "com.google.android.material:material:${Versions.MATERIAL}"
     const val PLAY_CORE = "com.google.android.play:core-ktx:${Versions.PLAY_CORE}"
+    const val GOOGLE_PLAY_SERVICES_AUTH = "com.google.android.gms:play-services-auth:${Versions.GOOGLE_PLAY_SERIVCE_AUTH}"
 }
 
 object Test {
@@ -49,7 +50,8 @@ object OkHttp {
 object ViewPager2 {
     const val VIEW_PAGER2 = "androidx.viewpager2:viewpager2:${Versions.VIEW_PAGER2}"
 }
-object Indicator{
+
+object Indicator {
     const val INDICATOR = "me.relex:circleindicator:${Versions.CIRCLE_INDICATOR}"
 }
 
@@ -100,8 +102,10 @@ object Firebase {
     const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging-ktx"
     const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
     const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics-ktx"
+    const val FIREBASE_AUTHENTICATION = "com.google.firebase:firebase-auth-ktx"
+    const val FIREBASE_UI_AUTH = "com.firebaseui:firebase-ui-auth:${Versions.FIREBASE_UI_AUTH}"
 }
 
-object Kakao{
+object Kakao {
     const val KAKAO = "com.kakao.sdk:v2-user:${Versions.KAKAO}"
 }

@@ -87,6 +87,12 @@ dependencies {
     implementation(Firebase.FIREBASE_MESSAGING)
     implementation(Firebase.FIREBASE_ANALYTICS)
     implementation(Firebase.FIREBASE_CRASHLYTICS)
+    implementation(Firebase.FIREBASE_AUTHENTICATION)
+    implementation (Firebase.FIREBASE_UI_AUTH)
+
+    //Google
+    implementation(Google.GOOGLE_PLAY_SERVICES_AUTH)
+
 
     //Navigation
     implementation(Navigation.NAVIGATION_UI)
