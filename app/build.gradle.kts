@@ -33,7 +33,6 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField("String", "KAKAO_APP_KEY", getProperty("kakao_app_key"))
-        buildConfigField("String", "GOOGLE_OAUTH_KEY", getProperty("GOOGLE_OAUTH_KEY"))
         //manifest에서 사용할 경우
         manifestPlaceholders["KAKAO_OAUTH_KEY"] = getProperty("kakao_oauth_key")
 
@@ -44,6 +43,19 @@ android {
             keyPassword = getProperty("RELEASE_KEY_PASSWORD")
             storePassword = getProperty("RELEASE_STORE_PASSWORD")
             storeFile = file(getProperty("RELEASE_STORE_FILE"))
+        }
+    }
+
+    flavorDimensions += "environment"
+    productFlavors {
+        create("dev") {
+            resValue("string", "app_name", "Coda.dev")
+            applicationIdSuffix = ".dev"
+            dimension = "environment"
+        }
+        create("prod") {
+            resValue("string", "app_name", "Coda")
+            dimension = "environment"
         }
     }
 
@@ -104,7 +116,7 @@ dependencies {
     implementation(Firebase.FIREBASE_ANALYTICS)
     implementation(Firebase.FIREBASE_CRASHLYTICS)
     implementation(Firebase.FIREBASE_AUTHENTICATION)
-    implementation (Firebase.FIREBASE_UI_AUTH)
+    implementation(Firebase.FIREBASE_UI_AUTH)
 
 
     //Google
