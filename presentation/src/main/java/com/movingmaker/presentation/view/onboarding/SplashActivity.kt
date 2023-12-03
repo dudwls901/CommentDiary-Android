@@ -8,12 +8,12 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseActivity
 import com.movingmaker.presentation.databinding.ActivitySplashBinding
 import com.movingmaker.presentation.util.PreferencesUtil
-import com.movingmaker.presentation.util.getCodaToday
-import com.movingmaker.presentation.util.ymdFormat
 import com.movingmaker.presentation.view.main.MainActivity
 import com.movingmaker.presentation.view.snackbar.CodaSnackBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,40 +40,40 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
         updateVersion()
 
-        if (intent?.extras != null) {
-            for (key: String in intent!!.extras!!.keySet()) {
-                val value = intent!!.extras!!.get(key)
-                if (value.toString().contains("코멘트가 도착하였습니다.")) {
-                    Timber.d("$value Key: $key           Value: $value")
-                    val yesterday = getCodaToday().minusDays(1)
-                    pushDate = ymdFormat(yesterday)
-                }
-            }
-        }
+//        if (intent?.extras != null) {
+//            for (key: String in intent!!.extras!!.keySet()) {
+//                val value = intent!!.extras!!.get(key)
+//                if (value.toString().contains("코멘트가 도착하였습니다.")) {
+//                    Timber.d("$value Key: $key           Value: $value")
+//                    val yesterday = getCodaToday().minusDays(1)
+//                    pushDate = ymdFormat(yesterday)
+//                }
+//            }
+//        }
         val loginIntent = Intent(this@SplashActivity, MainActivity::class.java)
         loginIntent.putExtra("pushDate", pushDate)
-
-//        window.statusBarColor = getColor(R.color.onboarding_background)
 
         lifecycleScope.launch {
             if (this@SplashActivity::preferencesUtil.isInitialized.not()) {
                 CodaSnackBar.make(binding.root, "오류가 발생하였습니다.").show()
                 return@launch
             }
-            val refreshToken = preferencesUtil.getRefreshToken()
 
             delay(1000L)
+
+
             //자동 로그인
-//            if (refreshToken != EMPTY_TOKEN) {
-//                startActivity(loginIntent)
-//            } else {
+            val user = Firebase.auth.currentUser
+            if(user != null){
+                startActivity(loginIntent)
+            }else{
                 startActivity(
                     Intent(
                         this@SplashActivity,
                         OnboardingIntroActivity::class.java
                     )
                 )
-//            }
+            }
             finish()
         }
     }
