@@ -15,6 +15,7 @@ import com.movingmaker.domain.model.response.Comment
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.view.main.mypage.MyCommentListAdapter
 import timber.log.Timber
+
 //todo bindingadapter 분리
 
 @BindingAdapter("items")
@@ -29,14 +30,10 @@ fun bindItems(recyclerView: RecyclerView, items: LiveData<List<Comment>>) {
 }
 
 @BindingAdapter("checkState")
-fun bindCheckState(view: ImageView, checkState: LiveData<Boolean>) {
-    when (checkState.value) {
-        true -> {
-            view.setImageResource(R.drawable.ic_check_green)
-        }
-        else -> {
-            view.setImageResource(R.drawable.ic_check)
-        }
+fun bindCheckState(view: ImageView, checkState: Boolean) {
+    when (checkState) {
+        true -> view.setImageResource(R.drawable.ic_check_green)
+        else -> view.setImageResource(R.drawable.ic_check)
     }
 }
 
@@ -46,6 +43,7 @@ fun bindVisible(view: TextView, text: LiveData<String>) {
         KAKAO -> {
             view.visibility = View.GONE
         }
+
         EMAIL -> {
             view.visibility = View.VISIBLE
         }
@@ -62,6 +60,7 @@ fun bindNonClickableLoading(view: ProgressBar, activity: Activity, state: LiveDa
             )
             view.visibility = View.VISIBLE
         }
+
         else -> {
             activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             view.visibility = View.GONE

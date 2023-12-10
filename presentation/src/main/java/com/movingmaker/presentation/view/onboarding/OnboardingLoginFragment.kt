@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.activityViewModels
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
@@ -12,10 +11,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentOnboardingLoginBinding
-import com.movingmaker.presentation.util.FRAGMENT_NAME
 import com.movingmaker.presentation.util.setOnSingleClickListener
 import com.movingmaker.presentation.view.main.MainActivity
-import com.movingmaker.presentation.viewmodel.onboarding.OnboardingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -23,7 +20,6 @@ import timber.log.Timber
 class OnboardingLoginFragment :
     BaseFragment<FragmentOnboardingLoginBinding>(R.layout.fragment_onboarding_login) {
 
-    private val onboardingViewModel: OnboardingViewModel by activityViewModels()
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract(),
     ) { res ->
@@ -46,8 +42,6 @@ class OnboardingLoginFragment :
                 .build()
             signInLauncher.launch(signInIntent)
         }
-
-        onboardingViewModel.setCurrentFragment(FRAGMENT_NAME.LOGIN)
     }
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {

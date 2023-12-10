@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.movingmaker.presentation.viewmodel.onboarding.OnboardingViewModel" />
+            type="com.movingmaker.presentation.viewmodel.onboarding.OnboardingTermsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,41 +16,42 @@
         android:background="@color/background_ivory">
 
         <TextView
-            android:id="@+id/signUpTextView"
             style="@style/BLargetitle"
+            android:id="@+id/signUpTextView"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_marginStart="52dp"
             android:layout_marginTop="65dp"
+            android:layout_marginStart="52dp"
             android:text="@string/accepts_terms"
             android:textColor="@color/text_dark_brown"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/termsConditionTextView"
             style="@style/MCaption2"
+            android:id="@+id/termsConditionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/terms_condition"
             android:textColor="@color/text_dark_brown"
-            app:layout_constraintStart_toStartOf="@id/signUpTextView"
-            app:layout_constraintTop_toBottomOf="@id/signUpTextView" />
+            app:layout_constraintTop_toBottomOf="@id/signUpTextView"
+            app:layout_constraintStart_toStartOf="@id/signUpTextView" />
 
         <LinearLayout
             android:id="@+id/allAcceptsLayout"
             android:layout_width="294dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="33dp"
             android:layout_marginTop="103dp"
+            android:layout_marginHorizontal="33dp"
+            android:paddingStart="19dp"
             android:background="@drawable/background_brown_radius_10"
             android:gravity="center_vertical"
+            android:onClick="@{() -> vm.onClickAcceptAll()}"
             android:orientation="horizontal"
-            android:paddingStart="19dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/termsConditionTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="RtlSymmetry">
 
             <TextView
@@ -64,11 +65,11 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="23dp"
+                android:paddingEnd="23dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/accepts_terms"
                 android:paddingVertical="12dp"
-                android:paddingStart="23dp"
-                android:paddingEnd="23dp"
                 android:src="@drawable/ic_check"
                 app:checkState="@{vm.isAllAccept}" />
 
@@ -78,13 +79,14 @@
             android:id="@+id/policyAcceptLayout"
             android:layout_width="0dp"
             android:layout_height="34dp"
-            android:layout_marginStart="19dp"
             android:layout_marginTop="10dp"
+            android:layout_marginStart="19dp"
             android:gravity="center_vertical"
+            android:onClick="@{() -> vm.onClickPolicyAccept()}"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toStartOf="@id/goPolicyButton"
-            app:layout_constraintStart_toStartOf="@id/allAcceptsLayout"
             app:layout_constraintTop_toBottomOf="@id/allAcceptsLayout"
+            app:layout_constraintStart_toStartOf="@id/allAcceptsLayout"
+            app:layout_constraintEnd_toStartOf="@id/goPolicyButton"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
@@ -110,22 +112,24 @@
             android:layout_marginEnd="19dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/policy"
+            android:onClick="@{() -> vm.onClickGoPolicy()}"
             android:src="@drawable/ic_arrow_bold"
-            app:layout_constraintBottom_toBottomOf="@id/policyAcceptLayout"
+            app:layout_constraintTop_toTopOf="@id/policyAcceptLayout"
             app:layout_constraintEnd_toEndOf="@id/allAcceptsLayout"
-            app:layout_constraintTop_toTopOf="@id/policyAcceptLayout" />
+            app:layout_constraintBottom_toBottomOf="@id/policyAcceptLayout" />
 
         <LinearLayout
             android:id="@+id/termsAcceptLayout"
             android:layout_width="0dp"
             android:layout_height="34dp"
-            android:layout_marginStart="19dp"
             android:layout_marginTop="10dp"
+            android:layout_marginStart="19dp"
             android:gravity="center_vertical"
+            android:onClick="@{() -> vm.onClickTermsAccept()}"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toStartOf="@id/goPolicyButton"
-            app:layout_constraintStart_toStartOf="@id/allAcceptsLayout"
             app:layout_constraintTop_toBottomOf="@id/policyAcceptLayout"
+            app:layout_constraintStart_toStartOf="@id/allAcceptsLayout"
+            app:layout_constraintEnd_toStartOf="@id/goPolicyButton"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
@@ -151,22 +155,24 @@
             android:layout_marginEnd="19dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/terms"
+            android:onClick="@{() -> vm.onClickGoTerms()}"
             android:src="@drawable/ic_arrow_bold"
-            app:layout_constraintBottom_toBottomOf="@id/termsAcceptLayout"
+            app:layout_constraintTop_toTopOf="@id/termsAcceptLayout"
             app:layout_constraintEnd_toEndOf="@id/allAcceptsLayout"
-            app:layout_constraintTop_toTopOf="@id/termsAcceptLayout" />
+            app:layout_constraintBottom_toBottomOf="@id/termsAcceptLayout" />
 
         <LinearLayout
             android:id="@+id/pushAcceptLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="19dp"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal"
+            android:layout_marginStart="19dp"
             android:paddingTop="7dp"
-            app:layout_constraintEnd_toEndOf="@id/allAcceptsLayout"
-            app:layout_constraintStart_toStartOf="@id/allAcceptsLayout"
+            android:onClick="@{() -> vm.onClickPushAccept()}"
+            android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@id/termsAcceptLayout"
+            app:layout_constraintStart_toStartOf="@id/allAcceptsLayout"
+            app:layout_constraintEnd_toEndOf="@id/allAcceptsLayout"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
@@ -200,20 +206,22 @@
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/okButton"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/submitButton"
             android:layout_width="0dp"
             android:layout_height="56dp"
-            android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="40dp"
+            android:layout_marginHorizontal="16dp"
             android:background="@drawable/background_green_radius_10"
+            android:enabled="@{vm.isPolicyAccept() &amp;&amp; vm.isTermsAccept()}"
+            android:onClick="@{() -> vm.onClickSubmit()}"
             android:text="@string/submit"
             android:textAlignment="center"
             android:textAppearance="@style/BSubheadline"
             android:textColor="@color/background_ivory"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
