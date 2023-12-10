@@ -10,7 +10,7 @@
         android:label="OnboardingLoginBeforeFragment"/>
     <fragment
         android:id="@+id/onboardingSignUpTermsFragment"
-        android:name="com.movingmaker.presentation.view.onboarding.OnboardingSignUpTermsFragment"
+        android:name="com.movingmaker.presentation.view.onboarding.OnboardingTermsFragment"
         android:label="OnboardingSignUpTermsFragment">
         <action
             android:id="@+id/action_onboardingSignUpTermsFragment_to_onboardingLoginFragment"
