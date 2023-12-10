@@ -67,4 +67,7 @@ dependencies {
     implementation(Room.ROOM_KTX)
     implementation(Room.ROOM_RUNTIME)
     kapt(Room.ROOM_COMPILER)
+
+    // Preferences DataStore (SharedPreferences like APIs)
+    implementation(DataStore.DATASTORE_PREFERENCES)
 }

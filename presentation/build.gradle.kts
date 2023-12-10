@@ -93,7 +93,7 @@ dependencies {
     implementation(Firebase.FIREBASE_ANALYTICS)
     implementation(Firebase.FIREBASE_CRASHLYTICS)
     implementation(Firebase.FIREBASE_AUTHENTICATION)
-    implementation (Firebase.FIREBASE_UI_AUTH)
+    implementation(Firebase.FIREBASE_UI_AUTH)
 
     //Google
     implementation(Google.GOOGLE_PLAY_SERVICES_AUTH)
@@ -119,5 +119,8 @@ dependencies {
 
     // Timber
     implementation(Timber.TIMBER)
+
+    // Preferences DataStore (SharedPreferences like APIs)
+    implementation(DataStore.DATASTORE_PREFERENCES)
 
 }

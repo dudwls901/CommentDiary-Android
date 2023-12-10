@@ -55,7 +55,7 @@ object Indicator {
     const val INDICATOR = "me.relex:circleindicator:${Versions.CIRCLE_INDICATOR}"
 }
 
-object MaterialCalendar{
+object MaterialCalendar {
     const val MATERIAL_CALENDAR_VIEW = "com.prolificinteractive:material-calendarview:${Versions.MATERIAL_CALENDAR_VIEW}"
 }
 
@@ -84,7 +84,7 @@ object Navigation {
     const val NAVIGATION_DYNAMIC_FEATURES_FRAGMENT = "androidx.navigation:navigation-dynamic-features-fragment:${Versions.NAVIGATION}"
 }
 
-object EncryptedSharedPreferences{
+object EncryptedSharedPreferences {
     const val SECURITY_CRYPTO = "androidx.security:security-crypto:${Versions.SECURITY_CRYPTO}"
 }
 
@@ -108,4 +108,13 @@ object Firebase {
 
 object Kakao {
     const val KAKAO = "com.kakao.sdk:v2-user:${Versions.KAKAO}"
+}
+
+object DataStore {
+    const val DATASTORE_PREFERENCES = "androidx.datastore:datastore-preferences:${Versions.DATASTORE_PREFERENCES}"
+    const val DATASTORE_PROTO = "androidx.datastore:datastore:${Versions.DATASTORE_PROTO}"
+
+    // without an Android dependency
+    const val DATASTORE_PREFERENCES_CORE = "androidx.datastore:datastore-preferences-core:${Versions.DATASTORE_PREFERENCES}"
+    const val DATASTORE_PROTO_CORE = "androidx.datastore:datastore-core:${Versions.DATASTORE_PROTO}"
 }

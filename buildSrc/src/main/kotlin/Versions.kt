@@ -72,4 +72,6 @@ object Versions {
     //kakao
     const val KAKAO = "2.10.0"
 
+    const val DATASTORE_PREFERENCES = "1.0.0"
+    const val DATASTORE_PROTO = "1.0.0"
 }
