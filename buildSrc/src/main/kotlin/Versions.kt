@@ -2,8 +2,8 @@ object Versions {
 
     const val APPLICATION_ID = "com.movingmaker.commentdiary"
 
-    const val TARGET_SDK = 32
-    const val COMPILE_SDK = 32
+    const val TARGET_SDK = 34
+    const val COMPILE_SDK = 34
     const val MIN_SDK = 26
 
 
@@ -13,8 +13,8 @@ object Versions {
     const val ANDROID_VERSION_CODE = 19
     const val ANDROID_VERSION_NAME = "$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH"
 
-    const val GRADLE_VERSION = "7.3.0"
-    const val KOTLIN_VERSION = "1.7.10"
+    const val GRADLE_VERSION = "8.2.0"
+    const val KOTLIN_VERSION = "1.9.0"
 
     //coroutine
     const val COROUTINE = "1.6.4"
@@ -27,6 +27,7 @@ object Versions {
     //google
     const val MATERIAL = "1.6.1"
     const val PLAY_CORE = "1.8.1"
+    const val GOOGLE_PLAY_SERIVCE_AUTH = "20.7.0"
 
     // test
     const val JUNIT = "4.13.2"
@@ -39,8 +40,8 @@ object Versions {
     const val APP_COMPAT = "1.5.1"
     const val CONSTRAINT_LAYOUT = "2.1.4"
     const val LIFECYCLE = "2.5.1"
-    const val HILT = "2.42"
-    const val ROOM = "2.4.3"
+    const val HILT = "2.48.1"
+    const val ROOM = "2.6.1"
     const val NAVIGATION = "2.5.2"
     const val RECYCLERVIEW = "1.2.1"
 
@@ -60,9 +61,10 @@ object Versions {
 
 
     //firebase
-    const val GOOGLE_SERVICES = "4.3.14"
-    const val FIREBASE_BOM = "30.5.0"
-    const val FIREBASE_CRASHLYTICS = "2.9.2"
+    const val GOOGLE_SERVICES = "4.4.0"
+    const val FIREBASE_BOM = "32.3.1"
+    const val FIREBASE_CRASHLYTICS = "2.9.9"
+    const val FIREBASE_UI_AUTH = "7.2.0"
 
     //manifest secret
     const val MANIFEST_SECRET = "2.0.1"
@@ -70,4 +72,6 @@ object Versions {
     //kakao
     const val KAKAO = "2.10.0"
 
+    const val DATASTORE_PREFERENCES = "1.0.0"
+    const val DATASTORE_PROTO = "1.0.0"
 }

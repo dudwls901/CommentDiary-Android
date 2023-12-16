@@ -17,6 +17,10 @@ plugins {
     id("kotlinx-serialization")
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 android {
     namespace = Versions.APPLICATION_ID
     compileSdk = Versions.COMPILE_SDK
@@ -46,6 +50,19 @@ android {
         }
     }
 
+    flavorDimensions += "environment"
+    productFlavors {
+        create("dev") {
+            resValue("string", "app_name", "Coda.dev")
+            applicationIdSuffix = ".dev"
+            dimension = "environment"
+        }
+        create("prod") {
+            resValue("string", "app_name", "Coda")
+            dimension = "environment"
+        }
+    }
+
     buildTypes {
         getByName("debug") {
             signingConfig = signingConfigs.getByName("release")
@@ -65,15 +82,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     buildFeatures {
         dataBinding = true
+        buildConfig = true
     }
 
 }
@@ -102,6 +120,12 @@ dependencies {
     implementation(Firebase.FIREBASE_MESSAGING)
     implementation(Firebase.FIREBASE_ANALYTICS)
     implementation(Firebase.FIREBASE_CRASHLYTICS)
+    implementation(Firebase.FIREBASE_AUTHENTICATION)
+    implementation(Firebase.FIREBASE_UI_AUTH)
+
+
+    //Google
+    implementation(Google.GOOGLE_PLAY_SERVICES_AUTH)
 
     //EncryptedSharedPreferences
     implementation(EncryptedSharedPreferences.SECURITY_CRYPTO)
@@ -130,4 +154,7 @@ dependencies {
     implementation(Room.ROOM_KTX)
     implementation(Room.ROOM_RUNTIME)
     kapt(Room.ROOM_COMPILER)
+
+    // Preferences DataStore (SharedPreferences like APIs)
+    implementation(DataStore.DATASTORE_PREFERENCES)
 }

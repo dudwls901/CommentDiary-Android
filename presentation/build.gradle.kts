@@ -13,6 +13,10 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 android {
     namespace = "com.movingmaker.presentation"
     compileSdk = Versions.COMPILE_SDK
@@ -30,16 +34,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     buildFeatures {
         dataBinding = true
+        buildConfig = true
     }
 }
 
@@ -87,6 +92,12 @@ dependencies {
     implementation(Firebase.FIREBASE_MESSAGING)
     implementation(Firebase.FIREBASE_ANALYTICS)
     implementation(Firebase.FIREBASE_CRASHLYTICS)
+    implementation(Firebase.FIREBASE_AUTHENTICATION)
+    implementation(Firebase.FIREBASE_UI_AUTH)
+
+    //Google
+    implementation(Google.GOOGLE_PLAY_SERVICES_AUTH)
+
 
     //Navigation
     implementation(Navigation.NAVIGATION_UI)
@@ -108,5 +119,8 @@ dependencies {
 
     // Timber
     implementation(Timber.TIMBER)
+
+    // Preferences DataStore (SharedPreferences like APIs)
+    implementation(DataStore.DATASTORE_PREFERENCES)
 
 }

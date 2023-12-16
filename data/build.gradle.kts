@@ -4,6 +4,11 @@ plugins {
     id("kotlin-kapt")
     id("kotlinx-serialization")
 }
+
+kotlin {
+    jvmToolchain(17)
+}
+
 android {
     namespace = "com.movingmaker.data"
     compileSdk = Versions.COMPILE_SDK
@@ -17,11 +22,15 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 }
 
@@ -58,4 +67,7 @@ dependencies {
     implementation(Room.ROOM_KTX)
     implementation(Room.ROOM_RUNTIME)
     kapt(Room.ROOM_COMPILER)
+
+    // Preferences DataStore (SharedPreferences like APIs)
+    implementation(DataStore.DATASTORE_PREFERENCES)
 }

@@ -14,6 +14,7 @@ object Ktx {
 object Google {
     const val MATERIAL = "com.google.android.material:material:${Versions.MATERIAL}"
     const val PLAY_CORE = "com.google.android.play:core-ktx:${Versions.PLAY_CORE}"
+    const val GOOGLE_PLAY_SERVICES_AUTH = "com.google.android.gms:play-services-auth:${Versions.GOOGLE_PLAY_SERIVCE_AUTH}"
 }
 
 object Test {
@@ -49,11 +50,12 @@ object OkHttp {
 object ViewPager2 {
     const val VIEW_PAGER2 = "androidx.viewpager2:viewpager2:${Versions.VIEW_PAGER2}"
 }
-object Indicator{
+
+object Indicator {
     const val INDICATOR = "me.relex:circleindicator:${Versions.CIRCLE_INDICATOR}"
 }
 
-object MaterialCalendar{
+object MaterialCalendar {
     const val MATERIAL_CALENDAR_VIEW = "com.prolificinteractive:material-calendarview:${Versions.MATERIAL_CALENDAR_VIEW}"
 }
 
@@ -82,7 +84,7 @@ object Navigation {
     const val NAVIGATION_DYNAMIC_FEATURES_FRAGMENT = "androidx.navigation:navigation-dynamic-features-fragment:${Versions.NAVIGATION}"
 }
 
-object EncryptedSharedPreferences{
+object EncryptedSharedPreferences {
     const val SECURITY_CRYPTO = "androidx.security:security-crypto:${Versions.SECURITY_CRYPTO}"
 }
 
@@ -100,8 +102,19 @@ object Firebase {
     const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging-ktx"
     const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
     const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics-ktx"
+    const val FIREBASE_AUTHENTICATION = "com.google.firebase:firebase-auth-ktx"
+    const val FIREBASE_UI_AUTH = "com.firebaseui:firebase-ui-auth:${Versions.FIREBASE_UI_AUTH}"
 }
 
-object Kakao{
+object Kakao {
     const val KAKAO = "com.kakao.sdk:v2-user:${Versions.KAKAO}"
+}
+
+object DataStore {
+    const val DATASTORE_PREFERENCES = "androidx.datastore:datastore-preferences:${Versions.DATASTORE_PREFERENCES}"
+    const val DATASTORE_PROTO = "androidx.datastore:datastore:${Versions.DATASTORE_PROTO}"
+
+    // without an Android dependency
+    const val DATASTORE_PREFERENCES_CORE = "androidx.datastore:datastore-preferences-core:${Versions.DATASTORE_PREFERENCES}"
+    const val DATASTORE_PROTO_CORE = "androidx.datastore:datastore-core:${Versions.DATASTORE_PROTO}"
 }
