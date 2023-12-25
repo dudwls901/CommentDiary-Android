@@ -22,22 +22,22 @@ suspend fun <R, T> safeApiCall(callFunction: suspend () -> Response<BaseResponse
             if (response.code() in 400 until 500) {
                 NetworkResult.Fail(getErrorMessage(response.errorBody()))
             } else {
-                NetworkResult.Exception(ErrorType.SERVER_ERROR)
+                NetworkResult.Exception(null, ErrorType.SERVER_ERROR)
             }
         }
     } catch (e: Exception) {
         Timber.e("error $e")
         when (e) {
-            is SocketTimeoutException -> NetworkResult.Exception(ErrorType.TIMEOUT)
-            is IOException -> NetworkResult.Exception(ErrorType.NETWORK)
-            else -> NetworkResult.Exception(ErrorType.UNKNOWN)
+            is SocketTimeoutException -> NetworkResult.Exception(e.message, ErrorType.TIMEOUT)
+            is IOException -> NetworkResult.Exception(e.message, ErrorType.NETWORK)
+            else -> NetworkResult.Exception(e.message, ErrorType.UNKNOWN)
         }
     }
 }
 
 /**
-* json response 안의 code 혹은 message 접근
-* */
+ * json response 안의 code 혹은 message 접근
+ * */
 private fun getErrorMessage(responseBody: ResponseBody?): String {
     return try {
         val json = Json {
