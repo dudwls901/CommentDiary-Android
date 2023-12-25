@@ -70,4 +70,8 @@ dependencies {
 
     // Preferences DataStore (SharedPreferences like APIs)
     implementation(DataStore.DATASTORE_PREFERENCES)
+
+    //firebase
+    implementation(platform(Firebase.FIREBASE_BOM))
+    implementation(Firebase.FIREBASE_FIRESTORE)
 }

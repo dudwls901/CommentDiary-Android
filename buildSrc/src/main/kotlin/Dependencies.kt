@@ -104,6 +104,7 @@ object Firebase {
     const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics-ktx"
     const val FIREBASE_AUTHENTICATION = "com.google.firebase:firebase-auth-ktx"
     const val FIREBASE_UI_AUTH = "com.firebaseui:firebase-ui-auth:${Versions.FIREBASE_UI_AUTH}"
+    const val FIREBASE_FIRESTORE = "com.google.firebase:firebase-firestore-ktx"
 }
 
 object Kakao {
