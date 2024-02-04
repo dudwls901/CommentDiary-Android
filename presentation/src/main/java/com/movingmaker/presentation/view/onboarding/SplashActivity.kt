@@ -14,6 +14,8 @@ import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseActivity
 import com.movingmaker.presentation.databinding.ActivitySplashBinding
 import com.movingmaker.presentation.util.PreferencesUtil
+import com.movingmaker.presentation.util.getCodaToday
+import com.movingmaker.presentation.util.ymdFormat
 import com.movingmaker.presentation.view.main.MainActivity
 import com.movingmaker.presentation.view.snackbar.CodaSnackBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,56 +39,55 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-
-        updateVersion()
-
-//        if (intent?.extras != null) {
-//            for (key: String in intent!!.extras!!.keySet()) {
-//                val value = intent!!.extras!!.get(key)
-//                if (value.toString().contains("코멘트가 도착하였습니다.")) {
-//                    Timber.d("$value Key: $key           Value: $value")
-//                    val yesterday = getCodaToday().minusDays(1)
-//                    pushDate = ymdFormat(yesterday)
-//                }
-//            }
-//        }
-        val loginIntent = Intent(this@SplashActivity, MainActivity::class.java)
-        loginIntent.putExtra("pushDate", pushDate)
-
         lifecycleScope.launch {
-            if (this@SplashActivity::preferencesUtil.isInitialized.not()) {
-                CodaSnackBar.make(binding.root, "오류가 발생하였습니다.").show()
-                return@launch
-            }
+            updateVersion()
 
             delay(1000L)
-
-
             //자동 로그인
-            val user = Firebase.auth.currentUser
-            if(user != null){
-                startActivity(loginIntent)
-            }else{
-                startActivity(
-                    Intent(
-                        this@SplashActivity,
-                        OnboardingIntroActivity::class.java
-                    )
-                )
-            }
-            finish()
+            login()
         }
     }
 
-    //    //업데이트 확인 + 수락하면 업데이트
+    private fun login() {
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            startActivity(getLoginIntent())
+        } else {
+            startActivity(
+                Intent(
+                    this@SplashActivity,
+                    OnboardingIntroActivity::class.java
+                )
+            )
+        }
+        finish()
+    }
+
+    private fun getLoginIntent(): Intent {
+        if (intent?.extras != null) {
+            for (key: String in intent!!.extras!!.keySet()) {
+                val value = intent!!.extras!!.get(key)
+                if (value.toString().contains("코멘트가 도착하였습니다.")) {
+                    Timber.d("$value Key: $key           Value: $value")
+                    val yesterday = getCodaToday().minusDays(1)
+                    pushDate = ymdFormat(yesterday)
+                }
+            }
+        }
+        return Intent(this@SplashActivity, MainActivity::class.java).apply {
+            putExtra("pushDate", pushDate)
+        }
+    }
+
+    //업데이트 확인 + 수락하면 업데이트
     private fun updateVersion() {
         val appUpdateManager = AppUpdateManagerFactory.create(this)
 
-// Returns an intent object that you use to check for an update.
+        // Returns an intent object that you use to check for an update.
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
 
 
-// Checks that the platform will allow the specified type of update.
+        // Checks that the platform will allow the specified type of update.
         appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
             Timber.d("updateVersion: $appUpdateInfo")
             Timber.d("updateVersion: ${UpdateAvailability.UPDATE_AVAILABLE}")

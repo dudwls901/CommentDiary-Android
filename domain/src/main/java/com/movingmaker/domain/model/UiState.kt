@@ -14,7 +14,7 @@ private fun <R> changeUiState(replaceData: R): UiState<R> {
     return UiState.Success(replaceData)
 }
 
-//success 분리
+//BaseResponse 사용 시 success 분리
 suspend fun <T, R> UiState<T>.mapUiState(getData: suspend (T) -> R): UiState<R> {
     return when (this) {
         is UiState.Success -> changeUiState(getData(toModel()))

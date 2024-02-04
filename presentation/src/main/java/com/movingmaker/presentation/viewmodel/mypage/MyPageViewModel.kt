@@ -3,6 +3,8 @@ package com.movingmaker.presentation.viewmodel.mypage
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.movingmaker.domain.model.UiState
 import com.movingmaker.domain.model.request.ChangePasswordModel
 import com.movingmaker.domain.model.response.Comment
@@ -18,8 +20,14 @@ import com.movingmaker.presentation.util.PreferencesUtil
 import com.movingmaker.presentation.util.getCodaToday
 import com.movingmaker.presentation.util.ymFormatForLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+sealed interface MyPageScreenUiEvent {
+    data object Logout : MyPageScreenUiEvent
+}
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
@@ -30,8 +38,11 @@ class MyPageViewModel @Inject constructor(
     private val getMyPageUseCase: GetMyPageUseCase,
     private val getAllCommentUseCase: GetAllCommentUseCase,
     private val getPeriodCommentsUseCase: GetPeriodCommentsUseCase,
-    private val patchCommentPushStateUseCase: PatchCommentPushStateUseCase
+    private val patchCommentPushStateUseCase: PatchCommentPushStateUseCase,
 ) : BaseViewModel() {
+
+    private var _uiEvent = MutableSharedFlow<MyPageScreenUiEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
 
     private var _isPasswordChanged = MutableLiveData<Boolean>()
     val isPasswordChanged: LiveData<Boolean>
@@ -120,7 +131,7 @@ class MyPageViewModel @Inject constructor(
 
     fun validatedPasswordCheck() {
         _passwordCheckCorrect.value = !(passwordCheck.value!!.isNotEmpty() &&
-                (password.value != passwordCheck.value))
+            (password.value != passwordCheck.value))
         setCanChangePassword()
     }
 
@@ -140,9 +151,11 @@ class MyPageViewModel @Inject constructor(
                     setMessage("회원 탈퇴가 완료되었습니다.")
                     preferencesUtil.signOut()
                 }
+
                 is UiState.Error -> {
                     setMessage(message)
                 }
+
                 is UiState.Fail -> {
                     setMessage(message)
                 }
@@ -166,9 +179,11 @@ class MyPageViewModel @Inject constructor(
                     is UiState.Success -> {
                         setMessage("비밀번호를 변경하였습니다.")
                     }
+
                     is UiState.Error -> {
                         setMessage(message)
                     }
+
                     is UiState.Fail -> {
                         setMessage(message)
                     }
@@ -176,22 +191,9 @@ class MyPageViewModel @Inject constructor(
             }
         }
 
-    fun logout() = viewModelScope.launch {
-        onLoading()
-        with(logOutUseCase()) {
-            offLoading()
-            when (this) {
-                is UiState.Success -> {
-                    preferencesUtil.logOut()
-                }
-                is UiState.Error -> {
-                    setMessage(message)
-                }
-                is UiState.Fail -> {
-                    setMessage(message)
-                }
-            }
-        }
+    fun onClickLogout() = viewModelScope.launch {
+        Firebase.auth.signOut()
+        _uiEvent.emit(MyPageScreenUiEvent.Logout)
     }
 
     fun getMyPage() = viewModelScope.launch {
@@ -205,9 +207,11 @@ class MyPageViewModel @Inject constructor(
                     setIsPushAgree(data.isPushAgree)
                     setLoginType(data.loginType)
                 }
+
                 is UiState.Error -> {
                     setMessage(message)
                 }
+
                 is UiState.Fail -> {
                     setMessage(message)
                 }
@@ -228,9 +232,11 @@ class MyPageViewModel @Inject constructor(
                 is UiState.Success -> {
                     setCommentList(data)
                 }
+
                 is UiState.Error -> {
                     setMessage(message)
                 }
+
                 is UiState.Fail -> {
                     setMessage(message)
                 }
@@ -246,9 +252,11 @@ class MyPageViewModel @Inject constructor(
                 is UiState.Success -> {
                     data["pushAgree"]?.let { isPushAgree -> setIsPushAgree(isPushAgree) }
                 }
+
                 is UiState.Error -> {
                     setMessage(message)
                 }
+
                 is UiState.Fail -> {
                     setMessage(message)
                 }

@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
@@ -11,10 +14,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.movingmaker.presentation.R
 import com.movingmaker.presentation.base.BaseFragment
 import com.movingmaker.presentation.databinding.FragmentOnboardingLoginBinding
-import com.movingmaker.presentation.util.setOnSingleClickListener
 import com.movingmaker.presentation.view.main.MainActivity
+import com.movingmaker.presentation.view.snackbar.CodaSnackBar
+import com.movingmaker.presentation.viewmodel.onboarding.LoginScreenUiEvent
+import com.movingmaker.presentation.viewmodel.onboarding.OnboardingLoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class OnboardingLoginFragment :
@@ -26,34 +32,54 @@ class OnboardingLoginFragment :
         onSignInResult(res)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initViews()
+    private val viewmodel: OnboardingLoginViewModel by viewModels()
+
+    private val signInIntent: Intent by lazy {
+        AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(listOf(AuthUI.IdpConfig.GoogleBuilder().build()))
+            .setLogo(R.drawable.img_logo)
+            .setTheme(R.style.Onboarding)
+            .build()
     }
 
-    private fun initViews() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.vm = viewmodel
+        observeDatas()
+    }
 
-        binding.googleLoginButton.setOnSingleClickListener {
-            val signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(listOf(AuthUI.IdpConfig.GoogleBuilder().build()))
-                .setLogo(R.drawable.img_logo)
-                .setTheme(R.style.Onboarding)
-                .build()
-            signInLauncher.launch(signInIntent)
+    private fun observeDatas() {
+        viewmodel.uiEvent
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { handleEvent(it) }
+            .launchIn(lifecycleScope)
+    }
+
+    private fun handleEvent(event: LoginScreenUiEvent) {
+        when (event) {
+            LoginScreenUiEvent.Login.Start -> {
+                signInLauncher.launch(signInIntent)
+            }
+
+            LoginScreenUiEvent.Login.Fail -> {
+                CodaSnackBar.make(binding.root, "오류가 발생했습니다.")
+            }
+
+            LoginScreenUiEvent.Login.Success -> {
+                startActivity(Intent(requireContext(), MainActivity::class.java).apply {
+                    requireActivity().finish()
+                })
+            }
         }
     }
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
-        val response = result.idpResponse
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
             val user = FirebaseAuth.getInstance().currentUser
-            Timber.e("영진 $user $response")
-            startActivity(Intent(requireContext(), MainActivity::class.java).apply {
-                requireActivity().finish()
-            })
+            viewmodel.registerUser(user)
         } else {
-            Timber.e("실패")
+            CodaSnackBar.make(binding.root, "오류가 발생했습니다.")
         }
     }
 }

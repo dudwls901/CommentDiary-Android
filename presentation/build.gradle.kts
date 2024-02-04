@@ -94,6 +94,7 @@ dependencies {
     implementation(Firebase.FIREBASE_CRASHLYTICS)
     implementation(Firebase.FIREBASE_AUTHENTICATION)
     implementation(Firebase.FIREBASE_UI_AUTH)
+    implementation(Firebase.FIREBASE_FIRESTORE)
 
     //Google
     implementation(Google.GOOGLE_PLAY_SERVICES_AUTH)

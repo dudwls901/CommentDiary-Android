@@ -11,33 +11,36 @@ import timber.log.Timber
 import java.io.IOException
 import java.net.SocketTimeoutException
 
-suspend fun <R, T> safeApiCall(callFunction: suspend () -> Response<BaseResponse<T>>): NetworkResult<com.movingmaker.domain.model.response.BaseResponse<R>> {
+suspend fun <T> safeApiCall(callFunction: suspend () -> Response<BaseResponse<T>>): NetworkResult<T> {
     return try {
         val response = callFunction.invoke()
-        Timber.d("result ${response.body()}")
+        val responseBody = response.body()
         if (response.isSuccessful) {
-            NetworkResult.Success(response.body()!!.toDomainModel())
+            Timber.d("safeApiCall succes message ${responseBody?.message}")
+            //result 없이 message만 내려주는 경우 Unit으로 변환
+            @Suppress("UNCHECKED_CAST")
+            NetworkResult.Success(responseBody!!.result?: Unit as T)
         } else {
             //http status
             if (response.code() in 400 until 500) {
                 NetworkResult.Fail(getErrorMessage(response.errorBody()))
             } else {
-                NetworkResult.Exception(ErrorType.SERVER_ERROR)
+                NetworkResult.Exception(null, ErrorType.SERVER_ERROR)
             }
         }
     } catch (e: Exception) {
-        Timber.e("error $e")
+        Timber.e("safeApiCall error $e")
         when (e) {
-            is SocketTimeoutException -> NetworkResult.Exception(ErrorType.TIMEOUT)
-            is IOException -> NetworkResult.Exception(ErrorType.NETWORK)
-            else -> NetworkResult.Exception(ErrorType.UNKNOWN)
+            is SocketTimeoutException -> NetworkResult.Exception(e.message, ErrorType.TIMEOUT)
+            is IOException -> NetworkResult.Exception(e.message, ErrorType.NETWORK)
+            else -> NetworkResult.Exception(e.message, ErrorType.UNKNOWN)
         }
     }
 }
 
 /**
-* json response 안의 code 혹은 message 접근
-* */
+ * json response 안의 code 혹은 message 접근
+ * */
 private fun getErrorMessage(responseBody: ResponseBody?): String {
     return try {
         val json = Json {
