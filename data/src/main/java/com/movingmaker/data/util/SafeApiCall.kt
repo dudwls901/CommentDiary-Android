@@ -11,12 +11,15 @@ import timber.log.Timber
 import java.io.IOException
 import java.net.SocketTimeoutException
 
-suspend fun <R, T> safeApiCall(callFunction: suspend () -> Response<BaseResponse<T>>): NetworkResult<com.movingmaker.domain.model.response.BaseResponse<R>> {
+suspend fun <T> safeApiCall(callFunction: suspend () -> Response<BaseResponse<T>>): NetworkResult<T> {
     return try {
         val response = callFunction.invoke()
-        Timber.d("result ${response.body()}")
+        val responseBody = response.body()
         if (response.isSuccessful) {
-            NetworkResult.Success(response.body()!!.toDomainModel())
+            Timber.d("safeApiCall succes message ${responseBody?.message}")
+            //result 없이 message만 내려주는 경우 Unit으로 변환
+            @Suppress("UNCHECKED_CAST")
+            NetworkResult.Success(responseBody!!.result?: Unit as T)
         } else {
             //http status
             if (response.code() in 400 until 500) {
@@ -26,7 +29,7 @@ suspend fun <R, T> safeApiCall(callFunction: suspend () -> Response<BaseResponse
             }
         }
     } catch (e: Exception) {
-        Timber.e("error $e")
+        Timber.e("safeApiCall error $e")
         when (e) {
             is SocketTimeoutException -> NetworkResult.Exception(e.message, ErrorType.TIMEOUT)
             is IOException -> NetworkResult.Exception(e.message, ErrorType.NETWORK)
