@@ -14,7 +14,7 @@ import com.movingmaker.presentation.databinding.FragmentOnboardingSignUpTermsBin
 import com.movingmaker.presentation.util.POLICY_URL
 import com.movingmaker.presentation.util.TERMS_URL
 import com.movingmaker.presentation.viewmodel.onboarding.OnboardingTermsViewModel
-import com.movingmaker.presentation.viewmodel.onboarding.UiEvent
+import com.movingmaker.presentation.viewmodel.onboarding.TermsScreenUiEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -38,18 +38,18 @@ class OnboardingTermsFragment :
             .launchIn(lifecycleScope)
     }
 
-    private fun handleEvent(event: UiEvent) {
+    private fun handleEvent(event: TermsScreenUiEvent) {
         when (event) {
-            UiEvent.GoPolicy -> {
+            TermsScreenUiEvent.GoPolicy -> {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(POLICY_URL)))
             }
 
-            UiEvent.GoTerms -> {
+            TermsScreenUiEvent.GoTerms -> {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(TERMS_URL)))
             }
 
-            UiEvent.Submit -> {
-                findNavController().navigate(OnboardingTermsFragmentDirections.actionOnboardingSignUpTermsFragmentToOnboardingLoginFragment())
+            is TermsScreenUiEvent.Submit -> {
+                findNavController().navigate(OnboardingTermsFragmentDirections.actionOnboardingSignUpTermsFragmentToOnboardingLoginFragment(event.isPushAccept))
             }
         }
     }

@@ -11,10 +11,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed class UiEvent {
-    data object GoPolicy : UiEvent()
-    data object GoTerms : UiEvent()
-    data object Submit : UiEvent()
+sealed interface TermsScreenUiEvent {
+    data object GoPolicy : TermsScreenUiEvent
+    data object GoTerms : TermsScreenUiEvent
+    data class Submit(
+        val isPushAccept: Boolean
+    ) : TermsScreenUiEvent
 }
 
 @HiltViewModel
@@ -22,7 +24,7 @@ class OnboardingTermsViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
 ) : BaseViewModel() {
 
-    private var _uiEvent = MutableSharedFlow<UiEvent>()
+    private var _uiEvent = MutableSharedFlow<TermsScreenUiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
     private var _isTermsAccept = MutableStateFlow<Boolean>(false)
@@ -68,20 +70,20 @@ class OnboardingTermsViewModel @Inject constructor(
 
     fun onClickGoPolicy() {
         viewModelScope.launch {
-            _uiEvent.emit(UiEvent.GoPolicy)
+            _uiEvent.emit(TermsScreenUiEvent.GoPolicy)
         }
     }
 
     fun onClickGoTerms() {
         viewModelScope.launch {
-            _uiEvent.emit(UiEvent.GoTerms)
+            _uiEvent.emit(TermsScreenUiEvent.GoTerms)
         }
     }
 
     fun onClickSubmit() {
         viewModelScope.launch {
             setPreferences()
-            _uiEvent.emit(UiEvent.Submit)
+            _uiEvent.emit(TermsScreenUiEvent.Submit(isPushAccept.value))
         }
     }
 
